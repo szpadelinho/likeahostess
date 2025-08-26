@@ -1,7 +1,15 @@
-import Image from "next/image";
+import {redirect} from 'next/navigation'
+import {auth} from "@/lib/auth";
+import Navbar from "@/components/navbar";
 
-export default function Home() {
-  return (
-      <h1>True</h1>
-  )
+export default async function Home() {
+    const session = await auth()
+
+    // if (!session) {
+    //     redirect("/auth")
+    // }
+
+    return (
+        <Navbar/>
+    )
 }

@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -14,6 +13,7 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
+  money         Int       @default(100000)
   accounts      Account[]
   sessions      Session[]
   createdAt     DateTime  @default(now())
@@ -60,37 +60,44 @@ model VerificationToken {
 }
 
 model Club {
-  id          String @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
   description String
-  money       Float
-  cost        Float
-  popularity  Int
+  cost        Float     @default(100000)
+  popularity  Int       @default(100)
+  cover       String
+  interior    String
   hostId      String
-  host        Host   @relation(fields: [hostId], references: [id])
+  host        Host      @relation(fields: [hostId], references: [id])
+  hostesses   Hostess[] @relation("ClubHostesses")
+  hostessId   String?
 }
 
 model Host {
   id      String @id @default(cuid())
   name    String
   surname String
+  image   String
 
   Club Club[]
 }
 
 model Hostess {
-  id      String @id @default(cuid())
-  name    String
-  surname String
+  id             String @id @default(cuid())
+  name           String
+  surname        String
+  image          String
+  attractiveness Int    @default(1)
+  clubs          Club[] @relation("ClubHostesses")
 }
 
 model Activity {
   id             String    @id @default(cuid())
   name           String
   description    String
-  popularityGain Int
+  popularityGain Int       @default(1)
   cost           Float
-  media          String
+  media          String[]
   performerId    String
   performer      Performer @relation(fields: [performerId], references: [id])
 }
