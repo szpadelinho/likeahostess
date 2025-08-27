@@ -2,7 +2,6 @@
 
 import {useState} from "react";
 import {ChevronsLeft, ChevronsRight} from "lucide-react";
-import Image from "next/image";
 
 const Selection = () => {
     const items = [1, 2, 3, 4, 5, 6]
@@ -33,8 +32,7 @@ const Selection = () => {
                 </div>
                 <div className={"flex transform translate-x-[-60%] translate-y-[-20%]"}>
                     <img
-                        src={"https://img.favpng.com/20/14/5/shun-akiyama-yakuza-5-yakuza-6-kazuma-kiryu-png-favpng-CLJDhQGpK6UGZatJ7L7bfQe5d.jpg"}
-                        alt={"Host"}
+                        src={"https://static.wikia.nocookie.net/yakuza/images/5/5d/Shun_Akiyama.png"} alt={"Host"}
                         height={"500px"}
                         width={"300px"}
                     />

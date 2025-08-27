@@ -1,6 +1,7 @@
 import {redirect} from 'next/navigation'
 import {auth} from "@/lib/auth";
 import Navbar from "@/components/navbar";
+import Hud from "@/components/hud";
 
 export default async function Home() {
     const session = await auth()
@@ -10,6 +11,9 @@ export default async function Home() {
     // }
 
     return (
-        <Navbar/>
+        <>
+            <Navbar/>
+            <Hud/>
+        </>
     )
 }

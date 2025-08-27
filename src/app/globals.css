@@ -1,12 +1,12 @@
 @import "tailwindcss";
 
-:root{
-  --primary: #ff00de;
-  --secondary: #b600bc;
-  --tertiary: #ffb700;
-  --accent: #855cff;
+:root {
+    --primary: #ff00de;
+    --secondary: #b600bc;
+    --tertiary: #ffb700;
+    --accent: #855cff;
 }
 
-body{
-  background-color: var(--primary);
+body {
+    background-color: #000000;
 }
