@@ -18,6 +18,8 @@ model User {
   sessions      Session[]
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+
+  userClub UserClub[]
 }
 
 model Account {
@@ -60,35 +62,60 @@ model VerificationToken {
 }
 
 model Club {
-  id          String    @id @default(cuid())
+  id          String @id @default(cuid())
   name        String
   description String
-  cost        Float     @default(100000)
-  popularity  Int       @default(100)
-  cover       String
-  interior    String
+  cost        Float  @default(100000)
+  exterior    String
   hostId      String
-  host        Host      @relation(fields: [hostId], references: [id])
-  hostesses   Hostess[] @relation("ClubHostesses")
-  hostessId   String?
+  host        Host   @relation(fields: [hostId], references: [id])
+
+  userClub UserClub[]
+}
+
+model UserClub {
+  id         String @id @default(cuid())
+  userId     String
+  clubId     String
+  money      Int    @default(100000)
+  popularity Int    @default(100)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  club Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
+
+  userClubHostess UserClubHostess[]
+
+  @@unique([userId, clubId])
+}
+
+model UserClubHostess {
+  id         String @id @default(cuid())
+  userClubId String
+  hostessId  String
+
+  userClub UserClub @relation(fields: [userClubId], references: [id], onDelete: Cascade)
+  hostess  Hostess  @relation(fields: [hostessId], references: [id], onDelete: Cascade)
+
+  @@unique([userClubId, hostessId])
 }
 
 model Host {
-  id      String @id @default(cuid())
+  id      String  @id @default(cuid())
   name    String
-  surname String
+  surname String?
   image   String
 
   Club Club[]
 }
 
 model Hostess {
-  id             String @id @default(cuid())
+  id             String  @id @default(cuid())
   name           String
-  surname        String
+  surname        String?
   image          String
-  attractiveness Int    @default(1)
-  clubs          Club[] @relation("ClubHostesses")
+  attractiveness Int     @default(1)
+
+  userClubHostess UserClubHostess[]
 }
 
 model Activity {
@@ -96,16 +123,16 @@ model Activity {
   name           String
   description    String
   popularityGain Int       @default(1)
-  cost           Float
+  cost           Float     @default(1000)
   media          String[]
   performerId    String
   performer      Performer @relation(fields: [performerId], references: [id])
 }
 
 model Performer {
-  id      String @id @default(cuid())
+  id      String  @id @default(cuid())
   name    String
-  surname String
+  surname String?
   image   String
 
   Activity Activity[]

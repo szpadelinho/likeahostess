@@ -1,29 +1,41 @@
 import {CarTaxiFront, HeartHandshake, LogOut} from "lucide-react";
+import Image from "next/image";
 
-const Hud = () => {
+type Club = {
+    name: string,
+    host: {
+        name: string,
+        surname: string,
+        image: string
+    },
+    money: number,
+    popularity: number
+}
+
+const Hud = ({club}: { club: Club }) => {
     return (
         <div className={"flex flex-row max-w-screen justify-between m-5"}>
             <div
                 className={`bg-pink-500 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[10] text-white`}>
                 <div className={"bg-pink-700 h-[130%] w-[40%] rounded-[10%]"}>
-                    <img
+                    <Image
                         className={"flex transform translate-y-[-30%] justify-center content-center"}
-                        src={"https://static.wikia.nocookie.net/yakuza/images/5/5d/Shun_Akiyama.png"}
+                        src={club.host.image}
                         alt={"Host"}
-                        height={"300px"}
-                        width={"200px"}
+                        height={200}
+                        width={125}
                     />
                 </div>
                 <div className={"flex flex-row text-center justify-center content-center w-[60%] h-[100%] p-5"}>
                     <div className={"flex flex-col justify-center w-[60%]"}>
-                        <h1 className={"text-[22px] font-[700]"}>Shun Akiyama</h1>
-                        <h2 className={"text-[18px] font-[600]"}>Club Elise</h2>
+                        <h1 className={"text-[22px] font-[700]"}>{club.host.name} {club.host.surname}</h1>
+                        <h2 className={"text-[18px] font-[600]"}>{club.name}</h2>
                     </div>
                     <div className={"flex flex-col justify-center w-[40%]"}>
-                        <h2 className={"text-[20px] font-[400]"}>¥100000</h2>
+                        <h2 className={"text-[20px] font-[400]"}>¥{club.money}</h2>
                         <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 content-center text-center items-center w-full"}>
                             <HeartHandshake/>
-                            <p>10000</p>
+                            <p>{club.popularity}</p>
                         </h2>
                     </div>
                 </div>
