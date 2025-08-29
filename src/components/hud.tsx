@@ -1,5 +1,6 @@
 import {CarTaxiFront, HeartHandshake, LogOut} from "lucide-react";
 import Image from "next/image";
+import {Dispatch, SetStateAction} from "react";
 
 type Club = {
     name: string,
@@ -12,7 +13,14 @@ type Club = {
     popularity: number
 }
 
-const Hud = ({club}: { club: Club }) => {
+interface Hud {
+    setLogOff: Dispatch<SetStateAction<boolean>>
+    setSelectionPrompt: Dispatch<SetStateAction<boolean>>
+    club: Club
+}
+
+
+const Hud = ({club, setLogOff, setSelectionPrompt}: Hud) => {
     return (
         <div className={"flex flex-row max-w-screen justify-between m-5"}>
             <div
@@ -50,8 +58,14 @@ const Hud = ({club}: { club: Club }) => {
                     </button>
                 </div>
                 <div className={"flex content-center justify-center gap-2"}>
-                    <button className={"border-white border-2 rounded-[5] p-1 cursor-wait"}><CarTaxiFront/></button>
-                    <button className={"border-white border-2 rounded-[5] p-1 cursor-alias"}><LogOut/></button>
+                    <button
+                        onClick={() => {
+                            setSelectionPrompt(true)
+                        }}
+                        className={"border-white border-2 rounded-[5] p-1 cursor-wait"}><CarTaxiFront/></button>
+                    <button onClick={() => {
+                        setLogOff(true)
+                    }} className={"border-white border-2 rounded-[5] p-1 cursor-alias"}><LogOut/></button>
                 </div>
             </div>
         </div>

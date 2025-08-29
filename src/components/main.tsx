@@ -3,6 +3,8 @@
 import {useEffect, useState} from "react";
 import Hud from "@/components/hud";
 import Navbar from "@/components/navbar"
+import LogOut from "@/components/logOut";
+import SelectionPrompt from "@/components/selection";
 
 type Club = {
     name: string,
@@ -17,6 +19,8 @@ type Club = {
 
 const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
+    const [logOff, setLogOff] = useState<boolean>(false)
+    const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
 
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
@@ -47,7 +51,9 @@ const Main = () => {
     return (
         <>
             <Navbar/>
-            <Hud club={club}/>
+            {selectionPrompt && <SelectionPrompt setSelectionPrompt={setSelectionPrompt}/>}
+            {logOff && <LogOut setLogOff={setLogOff}/>}
+            <Hud club={club} setLogOff={setLogOff} setSelectionPrompt={setSelectionPrompt}/>
         </>
     )
 }
