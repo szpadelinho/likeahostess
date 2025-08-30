@@ -1,10 +1,13 @@
 'use client'
 
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import Hud from "@/components/hud";
 import Navbar from "@/components/navbar"
 import LogOut from "@/components/logOut";
 import SelectionPrompt from "@/components/selection";
+import MainWrapper from "@/components/mainWrapper";
+import Interior from "@/components/interior";
+import ModalWrapper from "@/components/modalWrapper";
 
 type Club = {
     name: string,
@@ -46,14 +49,27 @@ const Main = () => {
             })
     }, [])
 
-    if (!club) return <div>Loading...</div>
+    if (!club) return <div className={"flex w-screen h-screen justify-center items-center"}><h1
+        className={"text-white text-[30px]"}>Loading...</h1></div>
 
     return (
         <>
-            <Navbar/>
-            {selectionPrompt && <SelectionPrompt setSelectionPrompt={setSelectionPrompt}/>}
-            {logOff && <LogOut setLogOff={setLogOff}/>}
-            <Hud club={club} setLogOff={setLogOff} setSelectionPrompt={setSelectionPrompt}/>
+            <MainWrapper>
+                <Navbar/>
+                <Interior/>
+                {selectionPrompt && (
+                    <ModalWrapper onClose={() => setSelectionPrompt(false)}>
+                        <SelectionPrompt setSelectionPrompt={setSelectionPrompt}/>
+                    </ModalWrapper>
+                )}
+                {logOff && (
+                    <ModalWrapper onClose={() => setLogOff(false)}>
+                        <LogOut setLogOff={setLogOff}/>
+                    </ModalWrapper>
+                )}
+                <Hud club={club} logOff={logOff} setLogOff={setLogOff} selectionPrompt={selectionPrompt}
+                     setSelectionPrompt={setSelectionPrompt}/>
+            </MainWrapper>
         </>
     )
 }

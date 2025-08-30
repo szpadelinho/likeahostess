@@ -61,7 +61,7 @@ const Selection = () => {
             </div>
             <div className={"flex flex-8/10 content-center items-center justify-center flex-col gap-10"}>
                 <div className={"relative flex content-center items-center justify-center flex-row-reverse"}>
-                    <div className={"flex"}>
+                    <div className={"flex z-0"}>
                         <Image
                             key={currentClub.exterior}
                             src={`${currentClub.exterior}?ts=${refresh}`}
@@ -69,8 +69,10 @@ const Selection = () => {
                             width={800}
                             height={400}
                         />
+                        <div
+                            className="absolute inset-0 z-10 pointer-events-none bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0)_40%,_rgba(0,0,0,0)_0%,_rgba(0,0,0,1)_70%)]"/>
                     </div>
-                    <div className={"flex absolute left-5 bottom-[-20]"}>
+                    <div className={"flex absolute left-5 bottom-[-20] rounded-[20px]"}>
                         <Image
                             key={currentClub.host.image}
                             src={`${currentClub.host.image}?ts=${refresh}`}

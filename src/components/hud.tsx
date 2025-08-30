@@ -14,24 +14,27 @@ type Club = {
 }
 
 interface Hud {
+    logOff: boolean
     setLogOff: Dispatch<SetStateAction<boolean>>
+    selectionPrompt: boolean
     setSelectionPrompt: Dispatch<SetStateAction<boolean>>
     club: Club
 }
 
 
-const Hud = ({club, setLogOff, setSelectionPrompt}: Hud) => {
+const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt}: Hud) => {
     return (
-        <div className={"flex flex-row max-w-screen justify-between m-5"}>
+        <div
+            className={"flex flex-row max-w-screen justify-between mb-10 ml-5 mr-5 items-end z-10"}>
             <div
-                className={`bg-pink-500 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[10] text-white`}>
-                <div className={"bg-pink-700 h-[130%] w-[40%] rounded-[10%]"}>
+                className={`bg-pink-500 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white`}>
+                <div className={"bg-pink-700 h-[130%] w-[40%] rounded-[20] flex justify-center relative"}>
                     <Image
-                        className={"flex transform translate-y-[-30%] justify-center content-center"}
+                        className={"flex absolute bottom-[-80%]"}
                         src={club.host.image}
                         alt={"Host"}
-                        height={200}
-                        width={125}
+                        height={500}
+                        width={150}
                     />
                 </div>
                 <div className={"flex flex-row text-center justify-center content-center w-[60%] h-[100%] p-5"}>
@@ -49,23 +52,37 @@ const Hud = ({club, setLogOff, setSelectionPrompt}: Hud) => {
                 </div>
             </div>
             <div
-                className={"gap-5 bg-pink-500 w-60 h-30 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[10] text-white font-[600]"}>
+                className={"gap-5 bg-pink-500 w-60 h-30 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}>
                 <div className={"flex content-center justify-center flex-col gap-2"}>
                     <button
-                        className={"border-white border-2 rounded-[5] p-2 cursor-zoom-in text-[15px] w-30"}>Management
+                        className={"border-white border-2 rounded-[10] p-2 cursor-zoom-in text-[15px] w-30"}>Management
                     </button>
-                    <button className={"border-white border-2 rounded-[5] p-2 cursor-copy text-[15px] w-30"}>Activities
+                    <button className={"border-white border-2 rounded-[10] p-2 cursor-copy text-[15px] w-30"}>Activities
                     </button>
                 </div>
                 <div className={"flex content-center justify-center gap-2"}>
                     <button
                         onClick={() => {
-                            setSelectionPrompt(true)
+                            if (logOff) {
+                                setLogOff(false)
+                            }
+                            if (selectionPrompt) {
+                                setSelectionPrompt(false)
+                            } else {
+                                setSelectionPrompt(true)
+                            }
                         }}
-                        className={"border-white border-2 rounded-[5] p-1 cursor-wait"}><CarTaxiFront/></button>
+                        className={"border-white border-2 rounded-[10] p-1 cursor-wait"}><CarTaxiFront/></button>
                     <button onClick={() => {
-                        setLogOff(true)
-                    }} className={"border-white border-2 rounded-[5] p-1 cursor-alias"}><LogOut/></button>
+                        if (selectionPrompt) {
+                            setSelectionPrompt(false)
+                        }
+                        if (logOff) {
+                            setLogOff(false)
+                        } else {
+                            setLogOff(true)
+                        }
+                    }} className={"border-white border-2 rounded-[10] p-1 cursor-alias"}><LogOut/></button>
                 </div>
             </div>
         </div>
