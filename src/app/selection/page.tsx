@@ -93,8 +93,10 @@ const Selection = () => {
 
     return (
         <div className={"flex justify-center content-center w-screen h-screen"}>
-            <div className={"flex flex-1/200 content-center items-center justify-start m-5"}>
-                <button className={"border-white border-2 rounded-[5] p-1 text-white"} onClick={prev}>
+            <div className={"flex flex-1/200 content-center items-center justify-start m-5 "}>
+                <button
+                    className={"border-white border-2 rounded-[10] p-1 text-white hover:bg-white hover:text-black transition duration-200 ease-in-out"}
+                    onClick={prev}>
                     <ChevronsLeft/>
                 </button>
             </div>
@@ -134,23 +136,27 @@ const Selection = () => {
                     <h2 className={"m-5"}>{currentClub.description}</h2>
                 </div>
                 <div className={"absolute bottom-20 flex items-center justify-center"}>
-                    <button className={"border-white border-2 rounded-[5] p-1 text-white w-50"} onClick={async () => {
-                        localStorage.setItem("selectedClub", JSON.stringify(currentClub))
+                    <button
+                        className={"border-white border-2 rounded-[10] p-1 text-white w-50 hover:bg-white hover:text-black transition duration-200 ease-in-out"}
+                        onClick={async () => {
+                            localStorage.setItem("selectedClub", JSON.stringify(currentClub))
 
-                        await fetch("/api/user-club", {
-                            method: "POST",
-                            headers: {
-                                "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({clubId: currentClub.id})
-                        })
-                        router.push("/")
-                    }}>Select
+                            await fetch("/api/user-club", {
+                                method: "POST",
+                                headers: {
+                                    "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({clubId: currentClub.id})
+                            })
+                            router.push("/")
+                        }}>Select
                     </button>
                 </div>
             </div>
             <div className={"flex flex-1/200 content-center items-center justify-end m-5"}>
-                <button className={"border-white border-2 rounded-[5] p-1 text-white"} onClick={next}><ChevronsRight/>
+                <button
+                    className={"border-white border-2 rounded-[10] p-1 text-white hover:bg-white hover:text-black transition duration-200 ease-in-out"}
+                    onClick={next}><ChevronsRight/>
                 </button>
             </div>
         </div>

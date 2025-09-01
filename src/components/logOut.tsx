@@ -1,12 +1,11 @@
 import Image from "next/image";
-import {Dispatch, SetStateAction} from "react";
 import {signOut} from "next-auth/react";
 
-interface LogOut {
-    setLogOff: Dispatch<SetStateAction<boolean>>
+interface Props {
+    onCloseModal: () => void
 }
 
-const LogOut = ({setLogOff}: LogOut) => {
+const LogOut = ({onCloseModal}: Props) => {
     return (
         <div
             className={`max-w-screen h-100 text-center content-center justify-center items-center flex flex-row text-white z-51`}>
@@ -30,11 +29,13 @@ const LogOut = ({setLogOff}: LogOut) => {
                     <div className={"flex content-center justify-center items-center flex-row text-[25px] gap-10"}>
                         <button onClick={() => {
                             signOut({redirectTo: "/auth"})
-                        }} className={"border-white border-2 rounded-[10] p-1 cursor-zoom-in w-50"}>Log me off
+                        }}
+                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition duration-200 ease-in-out"}>Log
+                            me off
                         </button>
-                        <button onClick={() => {
-                            setLogOff(false)
-                        }} className={"border-white border-2 rounded-[10] p-1 cursor-zoom-out w-50"}>I will stay
+                        <button onClick={onCloseModal}
+                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition duration-200 ease-in-out"}>I
+                            will stay
                         </button>
                     </div>
                 </div>

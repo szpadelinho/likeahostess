@@ -59,12 +59,13 @@ const Main = () => {
                 <Interior/>
                 {selectionPrompt && (
                     <ModalWrapper onClose={() => setSelectionPrompt(false)}>
-                        <SelectionPrompt setSelectionPrompt={setSelectionPrompt}/>
+                        {({onCloseModal}) => <SelectionPrompt onCloseModal={onCloseModal}/>}
                     </ModalWrapper>
                 )}
+
                 {logOff && (
                     <ModalWrapper onClose={() => setLogOff(false)}>
-                        <LogOut setLogOff={setLogOff}/>
+                        {({onCloseModal}) => <LogOut onCloseModal={onCloseModal}/>}
                     </ModalWrapper>
                 )}
                 <Hud club={club} logOff={logOff} setLogOff={setLogOff} selectionPrompt={selectionPrompt}

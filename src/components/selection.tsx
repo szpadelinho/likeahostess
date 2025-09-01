@@ -1,12 +1,11 @@
 import Image from "next/image";
-import {Dispatch, SetStateAction} from "react";
 import {useRouter} from "next/navigation";
 
-interface SelectPrompt {
-    setSelectionPrompt: Dispatch<SetStateAction<boolean>>
+interface Props {
+    onCloseModal: () => void
 }
 
-const SelectionPrompt = ({setSelectionPrompt}: SelectPrompt) => {
+const SelectionPrompt = ({onCloseModal}: Props) => {
     const router = useRouter();
 
     return (
@@ -32,11 +31,13 @@ const SelectionPrompt = ({setSelectionPrompt}: SelectPrompt) => {
                     <div className={"flex content-center justify-center items-center flex-row text-[25px] gap-10"}>
                         <button onClick={() => {
                             router.push("/selection");
-                        }} className={"border-white border-2 rounded-[10] p-1 cursor-zoom-in w-50"}>Get in the cab
+                        }}
+                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition duration-200 ease-in-out"}>Get
+                            in the cab
                         </button>
-                        <button onClick={() => {
-                            setSelectionPrompt(false)
-                        }} className={"border-white border-2 rounded-[10] p-1 cursor-zoom-out w-50"}>I will stay
+                        <button onClick={onCloseModal}
+                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition duration-200 ease-in-out"}>I
+                            will stay
                         </button>
                     </div>
                 </div>
