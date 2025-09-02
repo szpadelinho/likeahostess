@@ -18,11 +18,12 @@ interface Hud {
     setLogOff: Dispatch<SetStateAction<boolean>>
     selectionPrompt: boolean
     setSelectionPrompt: Dispatch<SetStateAction<boolean>>
+    setManagement: Dispatch<SetStateAction<boolean>>
     club: Club
 }
 
 
-const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt}: Hud) => {
+const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setManagement}: Hud) => {
     return (
         <div
             className={"flex flex-row max-w-screen justify-between mb-10 ml-5 mr-5 items-end z-10"}>
@@ -55,7 +56,11 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt}: Hud
                 className={"gap-5 bg-pink-500 w-60 h-30 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}>
                 <div className={"flex content-center justify-center flex-col gap-2"}>
                     <button
-                        className={"border-white border-2 rounded-[10] p-2 cursor-zoom-in text-[15px] w-30 hover:bg-white hover:text-black transition duration-200 ease-in-out"}>Management
+                        className={"border-white border-2 rounded-[10] p-2 cursor-zoom-in text-[15px] w-30 hover:bg-white hover:text-black transition duration-200 ease-in-out"}
+                        onClick={() => {
+                            setManagement(true)
+                        }}
+                    >Management
                     </button>
                     <button
                         className={"border-white border-2 rounded-[10] p-2 cursor-copy text-[15px] w-30 hover:bg-white hover:text-black transition duration-200 ease-in-out"}>Activities

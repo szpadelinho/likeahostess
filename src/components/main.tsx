@@ -8,6 +8,8 @@ import SelectionPrompt from "@/components/selection";
 import MainWrapper from "@/components/mainWrapper";
 import Interior from "@/components/interior";
 import ModalWrapper from "@/components/modalWrapper";
+import Management from "@/components/management";
+import HostessPanel from "@/components/hostessPanel";
 
 type Club = {
     name: string,
@@ -24,6 +26,7 @@ const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
     const [logOff, setLogOff] = useState<boolean>(false)
     const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
+    const [management, setManagement] = useState<boolean>(false)
 
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
@@ -57,6 +60,9 @@ const Main = () => {
             <MainWrapper>
                 <Navbar/>
                 <Interior/>
+                <Hud club={club} logOff={logOff} setLogOff={setLogOff} selectionPrompt={selectionPrompt}
+                     setSelectionPrompt={setSelectionPrompt} setManagement={setManagement}/>
+                <HostessPanel management={management}/>
                 {selectionPrompt && (
                     <ModalWrapper onClose={() => setSelectionPrompt(false)}>
                         {({onCloseModal}) => <SelectionPrompt onCloseModal={onCloseModal}/>}
@@ -68,8 +74,11 @@ const Main = () => {
                         {({onCloseModal}) => <LogOut onCloseModal={onCloseModal}/>}
                     </ModalWrapper>
                 )}
-                <Hud club={club} logOff={logOff} setLogOff={setLogOff} selectionPrompt={selectionPrompt}
-                     setSelectionPrompt={setSelectionPrompt}/>
+                {management && (
+                    <ModalWrapper onClose={() => setManagement(false)}>
+                        {({onCloseModal}) => <Management onCloseModal={onCloseModal}/>}
+                    </ModalWrapper>
+                )}
             </MainWrapper>
         </>
     )
