@@ -3,8 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
@@ -85,7 +86,7 @@ model UserClub {
 
   userClubHostess UserClubHostess[]
 
-  @@unique([userId, clubId])
+  @@unique([userId, clubId], name: "userId_clubId")
 }
 
 model UserClubHostess {
@@ -113,6 +114,7 @@ model Hostess {
   name           String
   surname        String?
   image          String
+  cover          String
   attractiveness Int     @default(1)
 
   userClubHostess UserClubHostess[]

@@ -10,6 +10,7 @@ import Interior from "@/components/interior";
 import ModalWrapper from "@/components/modalWrapper";
 import Management from "@/components/management";
 import HostessPanel from "@/components/hostessPanel";
+import Activities from "@/components/activities";
 
 type Club = {
     name: string,
@@ -27,6 +28,7 @@ const Main = () => {
     const [logOff, setLogOff] = useState<boolean>(false)
     const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
     const [management, setManagement] = useState<boolean>(false)
+    const [activites, setActivities] = useState<boolean>(false)
 
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
@@ -36,10 +38,12 @@ const Main = () => {
 
         fetch(`/api/user-club?clubId=${clubData.id}`, {method: "POST"})
             .then(async (res) => {
+                const data = await res.text()
                 if (!res.ok) {
+                    console.error("API error:", res.status, data)
                     throw new Error("Failed to fetch club data")
                 }
-                return res.json()
+                return JSON.parse(data)
             })
             .then((userData) => {
                 const mergedClub: Club = {
@@ -61,14 +65,14 @@ const Main = () => {
                 <Navbar/>
                 <Interior/>
                 <Hud club={club} logOff={logOff} setLogOff={setLogOff} selectionPrompt={selectionPrompt}
-                     setSelectionPrompt={setSelectionPrompt} setManagement={setManagement}/>
+                     setSelectionPrompt={setSelectionPrompt} setManagement={setManagement}
+                     setActivities={setActivities}/>
                 <HostessPanel management={management}/>
                 {selectionPrompt && (
                     <ModalWrapper onClose={() => setSelectionPrompt(false)}>
                         {({onCloseModal}) => <SelectionPrompt onCloseModal={onCloseModal}/>}
                     </ModalWrapper>
                 )}
-
                 {logOff && (
                     <ModalWrapper onClose={() => setLogOff(false)}>
                         {({onCloseModal}) => <LogOut onCloseModal={onCloseModal}/>}
@@ -77,6 +81,11 @@ const Main = () => {
                 {management && (
                     <ModalWrapper onClose={() => setManagement(false)}>
                         {({onCloseModal}) => <Management onCloseModal={onCloseModal}/>}
+                    </ModalWrapper>
+                )}
+                {activites && (
+                    <ModalWrapper onClose={() => setActivities(false)}>
+                        {({onCloseModal}) => <Activities onCloseModal={onCloseModal}/>}
                     </ModalWrapper>
                 )}
             </MainWrapper>

@@ -6,7 +6,7 @@ interface Props {
     onCloseModal: () => void
 }
 
-const Management = ({onCloseModal}: Props) => {
+const Activities = ({onCloseModal}: Props) => {
     const [hover, setHover] = useState(false)
     return (
         <div
@@ -36,20 +36,14 @@ const Management = ({onCloseModal}: Props) => {
             </div>
             <div
                 className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35"}>
-                <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
-                    <div className={"flex justify-center items-center flex-col max-w-150"}>
-                        <h1>Hostess name and surname</h1>
-                        <h1>Hostess attractiveness</h1>
-                        <h1>Lorem ipsum dolores soloers roeaorweroaowerobwraiwbowbehtauwhrt aert oeurhtiuaehrot iehr
-                            tioe rhtia herith aehriutertiuheor tauerh taiurh toai etuheritu eoirht aoeirut</h1>
-                    </div>
-                    <div className={"flex justify-center items-center"}>
-                        <Image src={"/images/yuki_cover.png"} alt={"Hostess cover shot"} height={150} width={150}/>
-                    </div>
+                <div>
+                    <h1>Activity name</h1>
+                    <h1>Activity performer</h1>
+                    <h1>Activity bio</h1>
                 </div>
             </div>
         </div>
     )
 }
 
-export default Management;
+export default Activities;

@@ -1,6 +1,6 @@
 'use client'
 
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ChevronsLeft, ChevronsRight} from "lucide-react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
@@ -85,8 +85,10 @@ const Selection = () => {
 
     if (clubs.length === 0 || !clubs[currentIndex]) {
         return (
-            <div className={"flex justify-center content-center w-screen h-screen flex-row"}>
-                <h1>Loading...</h1>
+            <div className={"flex w-screen h-screen justify-center items-center"}>
+                <h1 className={"text-white text-[30px]"}>
+                    Loading...
+                </h1>
             </div>
         )
     }

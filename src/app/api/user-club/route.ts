@@ -67,12 +67,19 @@ export async function GET(req: Request) {
         return NextResponse.json({error: "User not found"}, {status: 404})
     }
 
-    const club = await prisma.userClub.findUnique({
+    const club = await prisma.userClub.upsert({
         where: {
             userId_clubId: {
                 userId: user.id,
                 clubId,
             }
+        },
+        update: {},
+        create: {
+            userId: user.id,
+            clubId,
+            money: 100000,
+            popularity: 100
         }
     })
 
