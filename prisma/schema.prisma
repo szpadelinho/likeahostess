@@ -116,6 +116,7 @@ model Hostess {
   image          String
   cover          String
   attractiveness Int     @default(1)
+  bio            String  @default("Nothing is actually known about this hostess...")
 
   userClubHostess UserClubHostess[]
 }
