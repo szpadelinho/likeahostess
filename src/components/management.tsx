@@ -1,9 +1,12 @@
 import Image from "next/image";
 import {Candy, X} from "lucide-react";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 
 interface Props {
     onCloseModal: () => void
+    hostesses: Hostess[]
+    selectedHostess: Hostess | null
+    setSelectedHostess: (hostess: Hostess) => void
 }
 
 interface Hostess {
@@ -16,24 +19,8 @@ interface Hostess {
     bio: string
 }
 
-const Management = ({onCloseModal}: Props) => {
+const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostess}: Props) => {
     const [hover, setHover] = useState(false)
-    const [hostesses, setHostesses] = useState<Hostess[]>([])
-    const [selectedHostess, setSelectedHostess] = useState<Hostess | null>(null)
-
-    useEffect(() => {
-        const fetchHostesses = async () => {
-            try {
-                const res = await fetch("/api/hostess")
-                const data = await res.json()
-                setHostesses(data)
-            } catch (err) {
-                console.log("Failed to fetch hostesses", err)
-            }
-        }
-
-        fetchHostesses()
-    }, [])
 
     return (
         <div
@@ -55,8 +42,11 @@ const Management = ({onCloseModal}: Props) => {
                         return (
                             <div
                                 key={hostess.id}
-                                onClick={() => setSelectedHostess(hostess)}
-                                className={`flex justify-center items-center rounded-[20] border-white border-2 transition duration-200 ${isSelected ? "bg-pink-900 shadow-white shadow-sm" : "bg-transparent"}`}>
+                                data-swapy-item={hostess.id}
+                                onClick={() => {
+                                    setSelectedHostess(hostess)
+                                }}
+                                className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out ${isSelected ? "bg-pink-900 shadow-white shadow-sm" : "bg-transparent"}`}>
                                 <Image src={hostess.image} alt={`${hostess.name} ${hostess.surname} head shot`}
                                        height={100}
                                        width={100}
@@ -66,28 +56,29 @@ const Management = ({onCloseModal}: Props) => {
                     })}
                 </div>
             </div>
-            <div
-                className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35"}
-                style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
-                    {selectedHostess ? (
-                        <>
-                            <div className={"flex justify-center items-center flex-col max-w-150 gap-5"}>
-                                <h1 className={"text-[50px]"}>{selectedHostess.name} {selectedHostess.surname}</h1>
-                                <h1 className={"flex flex-row justify-center items-center gap-2"}>
-                                    <Candy/>{selectedHostess.attractiveness}/5
-                                </h1>
-                                <h1>{selectedHostess.bio}</h1>
-                            </div>
-                            <div className={"flex justify-center items-center"}>
-                                <Image src={selectedHostess.cover}
-                                       alt={`${selectedHostess.name} ${selectedHostess.surname} full body shot`}
-                                       height={300} width={300}/>
-                            </div>
-                        </>
-                    ) : ""}
+            {selectedHostess ? (
+                <div
+                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35"}
+                    style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+                    <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
+                        <div className={"flex justify-center items-center flex-col max-w-150 gap-5"}>
+                            <h1 className={"text-[50px]"}>{selectedHostess.name} {selectedHostess.surname}</h1>
+                            <h1 className={"flex flex-row justify-center items-center gap-2"}>
+                                <Candy/>{selectedHostess.attractiveness}/5
+                            </h1>
+                            <h1>{selectedHostess.bio}</h1>
+                        </div>
+                        <div className={"flex justify-center items-center"}>
+                            <Image src={selectedHostess.cover}
+                                   alt={`${selectedHostess.name} ${selectedHostess.surname} full body shot`}
+                                   height={300} width={300}/>
+                        </div>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div
+                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35"}/>
+            )}
         </div>
     )
 }

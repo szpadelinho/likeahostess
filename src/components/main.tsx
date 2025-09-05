@@ -23,12 +23,40 @@ type Club = {
     popularity: number
 }
 
+interface Hostess {
+    id: string
+    name: string
+    surname?: string
+    image: string
+    cover: string
+    attractiveness: number
+    bio: string
+}
+
 const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
     const [logOff, setLogOff] = useState<boolean>(false)
     const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
     const [management, setManagement] = useState<boolean>(false)
     const [activites, setActivities] = useState<boolean>(false)
+
+    const [hostessesManagement, setHostessesManagement] = useState<Hostess[]>([])
+    const [hostessesPanel, setHostessesPanel] = useState<(Hostess | null)[]>(Array(8).fill(null))
+    const [selectedHostess, setSelectedHostess] = useState<Hostess | null>(null)
+
+    useEffect(() => {
+        const fetchHostesses = async () => {
+            try {
+                const res = await fetch("/api/hostess")
+                const data = await res.json()
+                setHostessesManagement(data)
+            } catch (err) {
+                console.log("Failed to fetch hostesses", err)
+            }
+        }
+
+        fetchHostesses()
+    }, [])
 
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
@@ -67,7 +95,8 @@ const Main = () => {
                 <Hud club={club} logOff={logOff} setLogOff={setLogOff} selectionPrompt={selectionPrompt}
                      setSelectionPrompt={setSelectionPrompt} setManagement={setManagement}
                      setActivities={setActivities}/>
-                <HostessPanel management={management}/>
+                <HostessPanel management={management} hostesses={hostessesPanel} setHostesses={setHostessesPanel}
+                              selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}/>
                 {selectionPrompt && (
                     <ModalWrapper onClose={() => setSelectionPrompt(false)}>
                         {({onCloseModal}) => <SelectionPrompt onCloseModal={onCloseModal}/>}
@@ -80,7 +109,9 @@ const Main = () => {
                 )}
                 {management && (
                     <ModalWrapper onClose={() => setManagement(false)}>
-                        {({onCloseModal}) => <Management onCloseModal={onCloseModal}/>}
+                        {({onCloseModal}) => <Management onCloseModal={onCloseModal} hostesses={hostessesManagement}
+                                                         selectedHostess={selectedHostess}
+                                                         setSelectedHostess={setSelectedHostess}/>}
                     </ModalWrapper>
                 )}
                 {activites && (
