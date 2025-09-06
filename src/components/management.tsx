@@ -33,7 +33,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                 <X size={35} color={hover ? "black" : "white"} strokeWidth={3}/>
             </button>
             <div
-                className={"gap-5 bg-pink-700 w-100 h-180 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}
+                className={"gap-5 bg-pink-700 w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                 <div className={"w-full grid m-5 grid-cols-[repeat(3,auto)] gap-5"}>
                     {hostesses.map((hostess) => {

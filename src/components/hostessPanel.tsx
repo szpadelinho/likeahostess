@@ -1,5 +1,6 @@
 import Image from "next/image"
-import {HeartPlus} from "lucide-react";
+import {EyeClosed, HeartPlus} from "lucide-react";
+import {Dispatch, SetStateAction} from "react";
 
 interface Hostess {
     id: string
@@ -17,9 +18,19 @@ interface Props {
     setHostesses: (newState: (Hostess | null)[]) => void,
     selectedHostess: Hostess | null
     setSelectedHostess: (hostess: null) => void
+    setHostessesManagement: (fn: (prev: Hostess[]) => Hostess[]) => void
+    setManagement: Dispatch<SetStateAction<boolean>>
 }
 
-const HostessPanel = ({management, hostesses, setHostesses, selectedHostess, setSelectedHostess}: Props) => {
+const HostessPanel = ({
+                          management,
+                          hostesses,
+                          setHostesses,
+                          setHostessesManagement,
+                          selectedHostess,
+                          setSelectedHostess,
+                          setManagement
+                      }: Props) => {
     const visibilityIndexSetter = management ? "z-[100]" : "z-10"
     return (
         <div className={"flex relative w-screen"}>
@@ -36,16 +47,39 @@ const HostessPanel = ({management, hostesses, setHostesses, selectedHostess, set
                                         updated[index] = selectedHostess
                                         setHostesses(updated)
                                         setSelectedHostess(null)
+                                        setHostessesManagement(prev => prev.filter(h => h.id !== selectedHostess.id))
                                     }
                                 }}
                                 className={"flex justify-center items-center rounded-[20] border-white border-2"}>
                                 {hostess ? (
-                                    <Image src={hostess.image} alt={""} height={100} width={100}
-                                           className={"rounded-[20] bg-pink-900 hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white"}/>
+                                    <div className={"flex justify-center items-center flex-col"}>
+                                        <div className={"absolute bottom-[-20]"}>
+                                            <button
+                                                onClick={() => {
+                                                    if (hostess) {
+                                                        const updatedHostessPanel = [...hostesses]
+                                                        updatedHostessPanel[index] = null
+                                                        setHostesses(updatedHostessPanel)
+                                                        setHostessesManagement(prev => [...prev, hostess].sort((a, b) => Number(a.id) - Number(b.id)))
+                                                    }
+                                                }}
+                                                className={"flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px]"}>
+                                                <EyeClosed size={20}/>
+                                            </button>
+                                        </div>
+                                        <Image src={hostess.image} alt={""} height={100} width={100}
+                                               className={"rounded-[20] bg-pink-900 hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white"}/>
+                                    </div>
                                 ) : (
                                     <div
-                                        className="w-[100px] h-[100px] flex justify-center items-center text-white hover:bg-white hover:text-black transition duration-200 ease-in-out rounded-[15]">
-                                        <HeartPlus/>
+                                        className={`w-[100px] h-[100px] flex justify-center items-center text-white ${selectedHostess ? "hover:bg-white hover:text-black" : "hover:bg-pink-800 hover:text-pink-950"} transition duration-200 ease-in-out rounded-[18]`}>
+                                        <button
+                                            className={"flex justify-center items-center w-full h-full rounded-[20]"}
+                                            onClick={() => {
+                                                setManagement(true)
+                                            }}>
+                                            <HeartPlus/>
+                                        </button>
                                     </div>
                                 )}
                             </div>

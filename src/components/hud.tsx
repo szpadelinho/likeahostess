@@ -1,4 +1,4 @@
-import {CarTaxiFront, HeartHandshake, LogOut} from "lucide-react";
+import {CarTaxiFront, HeartHandshake, JapaneseYen, LogOut} from "lucide-react";
 import Image from "next/image";
 import {Dispatch, SetStateAction} from "react";
 
@@ -45,7 +45,10 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setM
                         <h2 className={"text-[18px] font-[600]"}>{club.name}</h2>
                     </div>
                     <div className={"flex flex-col justify-center w-[40%]"}>
-                        <h2 className={"text-[20px] font-[400]"}>¥{club.money}</h2>
+                        <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center"}>
+                            <JapaneseYen/>
+                            <p>{club.money}</p>
+                        </h2>
                         <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 content-center text-center items-center w-full"}>
                             <HeartHandshake/>
                             <p>{club.popularity}</p>

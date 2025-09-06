@@ -38,7 +38,7 @@ const Main = () => {
     const [logOff, setLogOff] = useState<boolean>(false)
     const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
     const [management, setManagement] = useState<boolean>(false)
-    const [activites, setActivities] = useState<boolean>(false)
+    const [activities, setActivities] = useState<boolean>(false)
 
     const [hostessesManagement, setHostessesManagement] = useState<Hostess[]>([])
     const [hostessesPanel, setHostessesPanel] = useState<(Hostess | null)[]>(Array(8).fill(null))
@@ -49,7 +49,8 @@ const Main = () => {
             try {
                 const res = await fetch("/api/hostess")
                 const data = await res.json()
-                setHostessesManagement(data)
+                const sortedData = data.sort((a: Hostess, b: Hostess) => Number(a.id) - Number(b.id))
+                setHostessesManagement(sortedData)
             } catch (err) {
                 console.log("Failed to fetch hostesses", err)
             }
@@ -96,7 +97,8 @@ const Main = () => {
                      setSelectionPrompt={setSelectionPrompt} setManagement={setManagement}
                      setActivities={setActivities}/>
                 <HostessPanel management={management} hostesses={hostessesPanel} setHostesses={setHostessesPanel}
-                              selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}/>
+                              selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}
+                              setHostessesManagement={setHostessesManagement} setManagement={setManagement}/>
                 {selectionPrompt && (
                     <ModalWrapper onClose={() => setSelectionPrompt(false)}>
                         {({onCloseModal}) => <SelectionPrompt onCloseModal={onCloseModal}/>}
@@ -114,7 +116,7 @@ const Main = () => {
                                                          setSelectedHostess={setSelectedHostess}/>}
                     </ModalWrapper>
                 )}
-                {activites && (
+                {activities && (
                     <ModalWrapper onClose={() => setActivities(false)}>
                         {({onCloseModal}) => <Activities onCloseModal={onCloseModal}/>}
                     </ModalWrapper>
