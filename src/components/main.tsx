@@ -33,12 +33,24 @@ interface Hostess {
     bio: string
 }
 
+interface Performer {
+    id: string
+    name: string
+    surname?: string
+    image: string
+    cover: string
+    bio: string
+}
+
 const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
     const [logOff, setLogOff] = useState<boolean>(false)
     const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
     const [management, setManagement] = useState<boolean>(false)
     const [activities, setActivities] = useState<boolean>(false)
+
+    const [performers, setPerformers] = useState<Performer[]>([])
+    const [selectedPerformer, setSelectedPerformer] = useState<Performer | null>(null)
 
     const [hostessesManagement, setHostessesManagement] = useState<Hostess[]>([])
     const [hostessesPanel, setHostessesPanel] = useState<(Hostess | null)[]>(Array(8).fill(null))
@@ -57,6 +69,21 @@ const Main = () => {
         }
 
         fetchHostesses()
+    }, [])
+
+    useEffect(() => {
+        const fetchPerformers = async () => {
+            try {
+                const res = await fetch("/api/performers")
+                const data = await res.json()
+                const sortedData = data.sort((a: Performer, b: Performer) => Number(a.id) - Number(b.id))
+                setPerformers(sortedData)
+            } catch (err) {
+                console.log("Failed to fetch performers", err)
+            }
+        }
+
+        fetchPerformers()
     }, [])
 
     useEffect(() => {
@@ -110,15 +137,23 @@ const Main = () => {
                     </ModalWrapper>
                 )}
                 {management && (
-                    <ModalWrapper onClose={() => setManagement(false)}>
+                    <ModalWrapper onClose={() => {
+                        setSelectedHostess(null)
+                        setManagement(false)
+                    }}>
                         {({onCloseModal}) => <Management onCloseModal={onCloseModal} hostesses={hostessesManagement}
                                                          selectedHostess={selectedHostess}
                                                          setSelectedHostess={setSelectedHostess}/>}
                     </ModalWrapper>
                 )}
                 {activities && (
-                    <ModalWrapper onClose={() => setActivities(false)}>
-                        {({onCloseModal}) => <Activities onCloseModal={onCloseModal}/>}
+                    <ModalWrapper onClose={() => {
+                        setSelectedPerformer(null)
+                        setActivities(false)
+                    }}>
+                        {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
+                                                         selectedPerformer={selectedPerformer}
+                                                         setSelectedPerformer={setSelectedPerformer}/>}
                     </ModalWrapper>
                 )}
             </MainWrapper>

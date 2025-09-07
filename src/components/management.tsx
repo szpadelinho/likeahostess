@@ -6,7 +6,7 @@ interface Props {
     onCloseModal: () => void
     hostesses: Hostess[]
     selectedHostess: Hostess | null
-    setSelectedHostess: (hostess: Hostess) => void
+    setSelectedHostess: (hostess: Hostess | null) => void
 }
 
 interface Hostess {
@@ -25,7 +25,10 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
     return (
         <div
             className={`w-screen h-180 text-center content-center justify-center items-start flex flex-row text-white z-51 gap-20`}>
-            <button onClick={onCloseModal}
+            <button onClick={() => {
+                setSelectedHostess(null)
+                onCloseModal()
+            }}
                     className={"absolute top-[-75] left-5 hover:cursor-pointer border-white border-2 rounded-[10] p-1 text-white hover:bg-white hover:text-black transition duration-200 ease-in-out hover:"}
                     onMouseEnter={() => setHover(true)}
                     onMouseLeave={() => setHover(false)}
@@ -42,9 +45,12 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                         return (
                             <div
                                 key={hostess.id}
-                                data-swapy-item={hostess.id}
                                 onClick={() => {
-                                    setSelectedHostess(hostess)
+                                    if (isSelected) {
+                                        setSelectedHostess(null)
+                                    } else {
+                                        setSelectedHostess(hostess)
+                                    }
                                 }}
                                 className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out ${isSelected ? "bg-pink-900 shadow-white shadow-sm" : "bg-transparent"}`}>
                                 <Image src={hostess.image} alt={`${hostess.name} ${hostess.surname} head shot`}
@@ -58,7 +64,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
             </div>
             {selectedHostess ? (
                 <div
-                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35"}
+                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition duration-200 ease-in-out"}
                     style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                     <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
                         <div className={"flex justify-center items-center flex-col max-w-150 gap-5"}>
@@ -77,7 +83,14 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                 </div>
             ) : (
                 <div
-                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35"}/>
+                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition duration-200 ease-in-out"}>
+                    <button
+                        className={"flex justify-center items-center w-full h-full rounded-[20]"}
+                        onClick={() => {
+                            onCloseModal()
+                        }}>
+                    </button>
+                </div>
             )}
         </div>
     )

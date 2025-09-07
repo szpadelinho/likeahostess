@@ -137,6 +137,8 @@ model Performer {
   name    String
   surname String?
   image   String
+  cover   String
+  bio     String  @default("Nothing is really known about this performer...")
 
   Activity Activity[]
 }
