@@ -11,6 +11,7 @@ import ModalWrapper from "@/components/modalWrapper";
 import Management from "@/components/management";
 import HostessPanel from "@/components/hostessPanel";
 import Activities from "@/components/activities";
+import LoadingBanner from "@/components/loadingBanner";
 
 type Club = {
     name: string,
@@ -56,6 +57,8 @@ const Main = () => {
     const [hostessesPanel, setHostessesPanel] = useState<(Hostess | null)[]>(Array(8).fill(null))
     const [selectedHostess, setSelectedHostess] = useState<Hostess | null>(null)
 
+    const [loading, setLoading] = useState(true)
+
     useEffect(() => {
         const fetchHostesses = async () => {
             try {
@@ -70,6 +73,15 @@ const Main = () => {
 
         fetchHostesses()
     }, [])
+
+    useEffect(() => {
+        if(!club){
+            setLoading(true)
+        }
+        else{
+            setLoading(false)
+        }
+    }, [club]);
 
     useEffect(() => {
         const fetchPerformers = async () => {
@@ -112,51 +124,59 @@ const Main = () => {
             })
     }, [])
 
-    if (!club) return <div className={"flex w-screen h-screen justify-center items-center"}><h1
-        className={"text-white text-[30px]"}>Loading...</h1></div>
-
     return (
         <>
-            <MainWrapper>
-                <Navbar/>
-                <Interior/>
-                <Hud club={club} logOff={logOff} setLogOff={setLogOff} selectionPrompt={selectionPrompt}
-                     setSelectionPrompt={setSelectionPrompt} setManagement={setManagement}
-                     setActivities={setActivities}/>
-                <HostessPanel management={management} hostesses={hostessesPanel} setHostesses={setHostessesPanel}
-                              selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}
-                              setHostessesManagement={setHostessesManagement} setManagement={setManagement}/>
-                {selectionPrompt && (
-                    <ModalWrapper onClose={() => setSelectionPrompt(false)}>
-                        {({onCloseModal}) => <SelectionPrompt onCloseModal={onCloseModal}/>}
-                    </ModalWrapper>
-                )}
-                {logOff && (
-                    <ModalWrapper onClose={() => setLogOff(false)}>
-                        {({onCloseModal}) => <LogOut onCloseModal={onCloseModal}/>}
-                    </ModalWrapper>
-                )}
-                {management && (
-                    <ModalWrapper onClose={() => {
-                        setSelectedHostess(null)
-                        setManagement(false)
-                    }}>
-                        {({onCloseModal}) => <Management onCloseModal={onCloseModal} hostesses={hostessesManagement}
-                                                         selectedHostess={selectedHostess}
-                                                         setSelectedHostess={setSelectedHostess}/>}
-                    </ModalWrapper>
-                )}
-                {activities && (
-                    <ModalWrapper onClose={() => {
-                        setSelectedPerformer(null)
-                        setActivities(false)
-                    }}>
-                        {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
-                                                         selectedPerformer={selectedPerformer}
-                                                         setSelectedPerformer={setSelectedPerformer}/>}
-                    </ModalWrapper>
-                )}
-            </MainWrapper>
+            <LoadingBanner show={loading}/>
+            {!loading && (
+                <MainWrapper>
+                    <Navbar/>
+                    <Interior/>
+                    {club && (
+                        <Hud
+                            club={club}
+                            logOff={logOff}
+                            setLogOff={setLogOff}
+                            selectionPrompt={selectionPrompt}
+                            setSelectionPrompt={setSelectionPrompt}
+                            setManagement={setManagement}
+                            setActivities={setActivities}
+                        />
+                    )}
+                    <HostessPanel management={management} hostesses={hostessesPanel} setHostesses={setHostessesPanel}
+                                  selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}
+                                  setHostessesManagement={setHostessesManagement} setManagement={setManagement}/>
+                    {selectionPrompt && (
+                        <ModalWrapper onClose={() => setSelectionPrompt(false)}>
+                            {({onCloseModal}) => <SelectionPrompt onCloseModal={onCloseModal}/>}
+                        </ModalWrapper>
+                    )}
+                    {logOff && (
+                        <ModalWrapper onClose={() => setLogOff(false)}>
+                            {({onCloseModal}) => <LogOut onCloseModal={onCloseModal}/>}
+                        </ModalWrapper>
+                    )}
+                    {management && (
+                        <ModalWrapper onClose={() => {
+                            setSelectedHostess(null)
+                            setManagement(false)
+                        }}>
+                            {({onCloseModal}) => <Management onCloseModal={onCloseModal} hostesses={hostessesManagement}
+                                                             selectedHostess={selectedHostess}
+                                                             setSelectedHostess={setSelectedHostess}/>}
+                        </ModalWrapper>
+                    )}
+                    {activities && (
+                        <ModalWrapper onClose={() => {
+                            setSelectedPerformer(null)
+                            setActivities(false)
+                        }}>
+                            {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
+                                                             selectedPerformer={selectedPerformer}
+                                                             setSelectedPerformer={setSelectedPerformer}/>}
+                        </ModalWrapper>
+                    )}
+                </MainWrapper>
+            )}
         </>
     )
 }

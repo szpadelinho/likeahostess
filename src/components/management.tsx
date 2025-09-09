@@ -64,7 +64,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
             </div>
             {selectedHostess ? (
                 <div
-                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition duration-200 ease-in-out"}
+                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition-all duration-200 ease-in-out"}
                     style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                     <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
                         <div className={"flex justify-center items-center flex-col max-w-150 gap-5"}>
@@ -83,7 +83,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                 </div>
             ) : (
                 <div
-                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition duration-200 ease-in-out"}>
+                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition-all duration-200 ease-in-out"}>
                     <button
                         className={"flex justify-center items-center w-full h-full rounded-[20]"}
                         onClick={() => {

@@ -29,7 +29,7 @@ export default function AuthPage() {
     useEffect(() => {
         const timeout = setTimeout(() => {
             setBannerVisible(false)
-            setTimeout(() => setShowBanner(false), 500)
+            setTimeout(() => setShowBanner(false), 1000)
         }, 5000)
         return () => clearTimeout(timeout)
     }, [])
