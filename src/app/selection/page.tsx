@@ -1,10 +1,11 @@
 'use client'
 
 import React, {useEffect, useState} from "react";
-import {ChevronsLeft, ChevronsRight} from "lucide-react";
+import {ChevronsLeft, ChevronsRight, LogOut} from "lucide-react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import LoadingBanner from "@/components/loadingBanner";
+import {signOut} from "next-auth/react";
 
 type Club = {
     id: string;
@@ -98,6 +99,12 @@ const Selection = () => {
     return (
         <>
             <LoadingBanner show={loading}/>
+            <button onClick={() => {
+                signOut({redirectTo: "/auth"})
+            }}
+                    className={"absolute top-10 right-10 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out text-white"}>
+                <LogOut/>
+            </button>
             {!loading && (
                 <div className={"flex justify-center content-center w-screen h-screen"}>
                     <div className={"flex flex-1/200 content-center items-center justify-start m-5 "}>

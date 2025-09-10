@@ -4,9 +4,10 @@ import {useSession, signIn} from "next-auth/react"
 import {Github} from "lucide-react";
 import Link from "next/link";
 import {useEffect, useState} from "react";
-import {useRouter} from "next/navigation"
+import {redirect, useRouter} from "next/navigation"
 import {Yesteryear} from "next/font/google"
 import IntroBanner from "@/components/introBanner";
+import Image from "next/image";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -37,12 +38,19 @@ export default function AuthPage() {
     if (!session) {
         return (
             <>
+                <Image src={"/images/business_card_hands.png"} alt={"Hands handing over a business card"} fill={true} className={"absolute inset-0 z-39"}/>
                 {showBanner && (
                     <IntroBanner bannerVisible={bannerVisible} />
                 )}
-                <div className={"w-screen h-screen flex content-center items-center justify-center mask-center"}>
+                <div className={"absolute w-screen h-screen flex content-center items-center justify-center mask-center z-40"}>
                     <div
                         className="relative flex items-center justify-center flex-col bg-white h-80 w-160 shadow-lg shadow-gray-500">
+                        <button
+                            className={`absolute w-15 top-12 right-6 bg-gray-50 p-2 rounded-xl flex-row cursor-pointer hover:bg-gray-200 transition duration-200 ease-in-out flex items-center justify-center ${yesteryear.className}`}
+                            onClick={() => redirect("/rules")}>
+                            Rules
+                        </button>
+                        <h1 className={`flex absolute bottom-23 right-40 text-black text-[15px] ${yesteryear.className}`}>{new Date().getFullYear()}</h1>
                         <h2 className={`text-5xl border-t-2 pt-6 pb-2 w-80 text-center ${yesteryear.className}`}>Join our
                             club</h2>
                         <h3 className={`text-xl border-b-2 pb-6 w-80 text-center ${yesteryear.className}`}>Enjoy right now,
