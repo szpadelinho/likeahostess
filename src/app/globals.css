@@ -1,5 +1,12 @@
 @import "tailwindcss";
 
+html{
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
 :root {
     --primary: #ff00de;
     --secondary: #b600bc;
