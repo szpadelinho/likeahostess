@@ -1,7 +1,7 @@
 'use client'
 
 import React, {useEffect, useState} from "react";
-import {ChevronsLeft, ChevronsRight, LogOut} from "lucide-react";
+import {LogOut} from "lucide-react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import LoadingBanner from "@/components/loadingBanner";
@@ -106,15 +106,8 @@ const Selection = () => {
                 <LogOut/>
             </button>
             {!loading && (
-                <div className={"flex justify-center content-center w-screen h-screen"}>
-                    <div className={"flex flex-1/200 content-center items-center justify-start m-5 "}>
-                        <button
-                            className={"border-white border-2 rounded-[10] p-1 text-white hover:bg-white hover:text-black transition duration-200 ease-in-out"}
-                            onClick={prev}>
-                            <ChevronsLeft/>
-                        </button>
-                    </div>
-                    <div className={"flex flex-198/200 content-center items-center justify-center flex-col gap-10"}>
+                <div className={"flex justify-center content-center w-screen h-screen overflow-hidden"}>
+                    <div className={"flex content-center items-center justify-center flex-col gap-10"}>
                         <div className="relative flex flex-row items-center justify-center gap-10">
                             {getClubs().map((club) => (
                                 <div
@@ -141,37 +134,40 @@ const Selection = () => {
                                             className="rounded-md"
                                         />
                                     </div>
+                                    {club.position === "left" && (
+                                        <button
+                                            className={"absolute h-full w-full z-50 transition duration-200 ease-in-out"}
+                                            onClick={prev}
+                                        />
+                                    )}
+                                    {club.position === "center" && (
+                                        <button
+                                            className={"absolute h-full w-full z-50 transition duration-200 ease-in-out"}
+                                            onClick={async () => {
+                                                localStorage.setItem("selectedClub", JSON.stringify(club))
+                                                await fetch("/api/user-club", {
+                                                    method: "POST",
+                                                    headers: { "Content-Type": "application/json" },
+                                                    body: JSON.stringify({ clubId: club.id })
+                                                })
+                                                router.push("/")
+                                            }}
+                                        />
+                                    )}
+                                    {club.position === "right" && (
+                                        <button
+                                            className="absolute h-full w-full z-50 transition duration-200 ease-in-out"
+                                            onClick={next}
+                                        />
+                                    )}
                                 </div>
                             ))}
                         </div>
 
                         <div
-                            className={"flex flex-col text-center justify-center rounded-[20] h-1/8 w-[800px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,1)_70%)]"}>
+                            className={"flex flex-col text-center justify-center rounded-[20] -mb-20 mt-20 h-1/8 w-[800px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,1)_70%)]"}>
                             <h2 className={"m-5"}>{currentClub.description}</h2>
                         </div>
-                        <div className={"absolute bottom-20 flex items-center justify-center"}>
-                            <button
-                                className={"border-white border-2 text-[25px] rounded-[15] p-1 text-white w-60 hover:bg-white hover:text-black transition duration-200 ease-in-out"}
-                                onClick={async () => {
-                                    localStorage.setItem("selectedClub", JSON.stringify(currentClub))
-
-                                    await fetch("/api/user-club", {
-                                        method: "POST",
-                                        headers: {
-                                            "Content-Type": "application/json",
-                                        },
-                                        body: JSON.stringify({clubId: currentClub.id})
-                                    })
-                                    router.push("/")
-                                }}>Select
-                            </button>
-                        </div>
-                    </div>
-                    <div className={"flex flex-1/200 content-center items-center justify-end m-5"}>
-                        <button
-                            className={"border-white border-2 rounded-[10] p-1 text-white hover:bg-white hover:text-black transition duration-200 ease-in-out"}
-                            onClick={next}><ChevronsRight/>
-                        </button>
                     </div>
                 </div>
             )}

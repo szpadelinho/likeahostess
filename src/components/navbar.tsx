@@ -1,10 +1,4 @@
-import {Yesteryear} from "next/font/google"
 import Image from "next/image";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
 
 const Navbar = () => {
     return (
