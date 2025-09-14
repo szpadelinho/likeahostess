@@ -17,7 +17,7 @@ interface Props {
     hostesses: (Hostess | null)[],
     setHostesses: (newState: (Hostess | null)[]) => void,
     selectedHostess: Hostess | null
-    setSelectedHostess: (hostess: null) => void
+    setSelectedHostess: (hostess: Hostess | null) => void
     setHostessesManagement: (fn: (prev: Hostess[]) => Hostess[]) => void
     setManagement: Dispatch<SetStateAction<boolean>>
 }
@@ -32,6 +32,7 @@ const HostessPanel = ({
                           setManagement
                       }: Props) => {
     const visibilityIndexSetter = management ? "z-[100]" : "z-10"
+
     return (
         <div className={"flex relative w-screen"}>
             <div
@@ -42,12 +43,28 @@ const HostessPanel = ({
                             <div
                                 key={index}
                                 onClick={() => {
-                                    if (selectedHostess) {
+                                    if (!selectedHostess && hostess) {
+                                        setSelectedHostess(hostess)
+                                    }
+                                    else if (selectedHostess) {
                                         const updated = [...hostesses]
+                                        const fromIndex = hostesses.findIndex(h => h?.id === selectedHostess.id)
+                                        const targetHostess = updated[index]
+                                        if (fromIndex !== -1) {
+                                            if (fromIndex !== index) {
+                                                if (targetHostess) {
+                                                    updated[fromIndex] = targetHostess
+                                                } else {
+                                                    updated[fromIndex] = null
+                                                }
+                                            }
+                                        }
                                         updated[index] = selectedHostess
                                         setHostesses(updated)
                                         setSelectedHostess(null)
-                                        setHostessesManagement(prev => prev.filter(h => h.id !== selectedHostess.id))
+                                        setHostessesManagement(prev =>
+                                            prev.filter(h => h.id !== selectedHostess.id)
+                                        )
                                     }
                                 }}
                                 className={"flex justify-center items-center rounded-[20] border-white border-2"}>
@@ -55,8 +72,9 @@ const HostessPanel = ({
                                     <div className={"flex justify-center items-center flex-col"}>
                                         <div className={"absolute bottom-[-20]"}>
                                             <button
-                                                onClick={() => {
+                                                onClick={(e) => {
                                                     if (hostess) {
+                                                        e.stopPropagation()
                                                         const updatedHostessPanel = [...hostesses]
                                                         updatedHostessPanel[index] = null
                                                         setHostesses(updatedHostessPanel)
@@ -76,7 +94,9 @@ const HostessPanel = ({
                                         <button
                                             className={"flex justify-center items-center w-full h-full rounded-[20]"}
                                             onClick={() => {
-                                                setManagement(true)
+                                                if(!selectedHostess) {
+                                                    setManagement(true)
+                                                }
                                             }}>
                                             <HeartPlus/>
                                         </button>

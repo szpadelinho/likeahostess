@@ -9,18 +9,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String    @unique
+  email         String     @unique
   emailVerified DateTime?
   image         String?
-  money         Int       @default(100000)
+  money         Int        @default(100000)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
   accounts      Account[]
   sessions      Session[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-
-  userClub UserClub[]
+  userClub      UserClub[]
 }
 
 model Account {
@@ -35,11 +34,9 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@id([provider, providerAccountId])
 }
@@ -48,10 +45,9 @@ model Session {
   sessionToken String   @unique
   userId       String
   expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -63,39 +59,36 @@ model VerificationToken {
 }
 
 model Club {
-  id          String @id @default(cuid())
+  id          String     @id @default(cuid())
   name        String
   description String
-  cost        Float  @default(100000)
-  exterior    String
+  cost        Float      @default(100000)
   hostId      String
-  host        Host   @relation(fields: [hostId], references: [id])
-
-  userClub UserClub[]
+  exterior    String
+  logo        String     @default("/images/dragon2.png")
+  host        Host       @relation(fields: [hostId], references: [id])
+  userClub    UserClub[]
 }
 
 model UserClub {
-  id         String @id @default(cuid())
-  userId     String
-  clubId     String
-  money      Int    @default(100000)
-  popularity Int    @default(100)
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  club Club @relation(fields: [clubId], references: [id], onDelete: Cascade)
-
+  id              String            @id @default(cuid())
+  userId          String
+  clubId          String
+  money           Int               @default(100000)
+  popularity      Int               @default(100)
+  club            Club              @relation(fields: [clubId], references: [id], onDelete: Cascade)
+  user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
   userClubHostess UserClubHostess[]
 
   @@unique([userId, clubId], name: "userId_clubId")
 }
 
 model UserClubHostess {
-  id         String @id @default(cuid())
+  id         String   @id @default(cuid())
   userClubId String
   hostessId  String
-
-  userClub UserClub @relation(fields: [userClubId], references: [id], onDelete: Cascade)
-  hostess  Hostess  @relation(fields: [hostessId], references: [id], onDelete: Cascade)
+  hostess    Hostess  @relation(fields: [hostessId], references: [id], onDelete: Cascade)
+  userClub   UserClub @relation(fields: [userClubId], references: [id], onDelete: Cascade)
 
   @@unique([userClubId, hostessId])
 }
@@ -105,19 +98,17 @@ model Host {
   name    String
   surname String?
   image   String
-
-  Club Club[]
+  Club    Club[]
 }
 
 model Hostess {
-  id             String  @id @default(cuid())
-  name           String
-  surname        String?
-  image          String
-  cover          String
-  attractiveness Int     @default(1)
-  bio            String  @default("Nothing is actually known about this hostess...")
-
+  id              String            @id @default(cuid())
+  name            String
+  surname         String?
+  image           String
+  attractiveness  Int               @default(1)
+  cover           String
+  bio             String            @default("Nothing is actually known about this hostess...")
   userClubHostess UserClubHostess[]
 }
 
@@ -133,12 +124,11 @@ model Activity {
 }
 
 model Performer {
-  id      String  @id @default(cuid())
-  name    String
-  surname String?
-  image   String
-  cover   String
-  bio     String  @default("Nothing is really known about this performer...")
-
+  id       String     @id @default(cuid())
+  name     String
+  surname  String?
+  image    String
+  cover    String
+  bio      String     @default("Nothing is really known about this performer...")
   Activity Activity[]
 }

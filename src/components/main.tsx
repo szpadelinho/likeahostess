@@ -22,6 +22,7 @@ type Club = {
     },
     money: number,
     popularity: number
+    logo: string
 }
 
 interface Hostess {
@@ -57,7 +58,10 @@ const Main = () => {
     const [hostessesPanel, setHostessesPanel] = useState<(Hostess | null)[]>(Array(8).fill(null))
     const [selectedHostess, setSelectedHostess] = useState<Hostess | null>(null)
 
+    const [hostessesWorking, setHostessesWorking] = useState<(Hostess | null)[]>(Array(8).fill(null))
+
     const [loading, setLoading] = useState(true)
+    const [clubLogo, setClubLogo] = useState("")
 
     useEffect(() => {
         const fetchHostesses = async () => {
@@ -117,9 +121,11 @@ const Main = () => {
                 const mergedClub: Club = {
                     name: clubData.name,
                     host: clubData.host,
+                    logo: clubData.logo,
                     money: userData.money,
                     popularity: userData.popularity,
                 }
+                setClubLogo(clubData.logo)
                 setClub(mergedClub)
             })
     }, [])
@@ -129,8 +135,8 @@ const Main = () => {
             <LoadingBanner show={loading}/>
             {!loading && (
                 <MainWrapper>
-                    <Navbar/>
-                    <Interior/>
+                    <Navbar logo={clubLogo}/>
+                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel}/>
                     {club && (
                         <Hud
                             club={club}

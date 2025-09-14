@@ -13,6 +13,7 @@ type Club = {
     description: string
     cost: number
     exterior: string
+    logo: string
     host: {
         image: string
     }
@@ -133,6 +134,9 @@ const Selection = () => {
                                             width={125}
                                             className="rounded-md"
                                         />
+                                    </div>
+                                    <div className={`absolute right-5 h-20 w-50 flex justify-center items-center bottom-[-20px] z-10 ${club.position !== 'center' ? 'scale-75 opacity-80' : ''} bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-60%,_rgba(0,0,0,0)_65%)]`}>
+                                        <Image src={`${club.logo}?ts=${refresh}`} alt="Club logo" height={100} width={150}/>
                                     </div>
                                     {club.position === "left" && (
                                         <button
