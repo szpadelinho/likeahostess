@@ -38,6 +38,7 @@ export default function AuthPage() {
     if (!session) {
         return (
             <>
+                <Image src={"/icon.png"} alt={"App icon"} height={200} width={100} className={"absolute top-5 left-5 z-40"}/>
                 <Image src={"/images/business_card_hands.png"} alt={"Hands handing over a business card"} fill={true} className={"absolute inset-0 z-39"}/>
                 {showBanner && (
                     <IntroBanner bannerVisible={bannerVisible} />

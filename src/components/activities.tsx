@@ -1,6 +1,6 @@
 import Image from "next/image";
-import {HandHeart, JapaneseYen, SkipBack, SkipForward, X} from "lucide-react";
-import {Dispatch, SetStateAction, useState} from "react";
+import {HandHeart, JapaneseYen, PiggyBank, SkipBack, SkipForward, X} from "lucide-react";
+import {useState} from "react";
 
 interface Props {
     onCloseModal: () => void
@@ -9,6 +9,19 @@ interface Props {
     setSelectedPerformer: (performer: Performer | null) => void;
     activities: Activity[]
     setSelectedActivity: (activity: Activity | null) => void;
+    club: Club | null
+}
+
+type Club = {
+    name: string,
+    host: {
+        name: string,
+        surname: string,
+        image: string
+    },
+    money: number,
+    popularity: number
+    logo: string
 }
 
 interface Performer {
@@ -29,9 +42,11 @@ interface Activity {
     performerId: string
 }
 
-const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPerformer, activities, setSelectedActivity}: Props) => {
+const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPerformer, activities, setSelectedActivity, club}: Props) => {
     const [hover, setHover] = useState(false)
     const [activityIndex, setActivityIndex] = useState(0)
+    const isOnSale = club?.host?.surname === selectedPerformer?.surname
+    const saleValue = isOnSale ? "text-pink-300 font-[700] text-shadow text-shadow-sm text-shadow-pink-600" : ""
 
     const performerActivities = selectedPerformer
         ? activities.filter((a) => a.performerId === selectedPerformer.id)
@@ -45,6 +60,11 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
         setActivityIndex(
             (prev) => (prev - 1 + performerActivities.length) % performerActivities.length
         )
+    }
+
+    const checkOwnership = (hostSurname?: string, performerSurname?: string, activityCost?: number) => {
+        if (!hostSurname || !performerSurname || activityCost === undefined) return activityCost ?? 0
+        return hostSurname === performerSurname ? activityCost * 0.5 : activityCost
     }
 
     return (
@@ -109,8 +129,12 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                         }}
                                              className={"flex justify-center items-center flex-row border-white border-2 rounded-[15] p-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-pink-200 transition duration-200 ease-in-out"}>
                                             <p className={"w-100 flex flex-row justify-center items-center gap-2"}>{performerActivities[activityIndex].name}</p>
-                                            <p className={"w-15 flex flex-row justify-center items-center"}><JapaneseYen size={15}/>{performerActivities[activityIndex].cost}</p>
-                                            <p className={"w-15 flex flex-row justify-center items-center gap-1"}><HandHeart size={15}/>{performerActivities[activityIndex].popularityGain}</p>
+                                            <p className={`w-20 flex flex-row justify-center items-center ${saleValue}`}>
+                                                <JapaneseYen size={15}/>
+                                                {checkOwnership(club?.host?.surname, selectedPerformer?.surname, performerActivities[activityIndex]?.cost)}
+                                                {isOnSale ? <PiggyBank size={15} className={"ml-1"}/> : ""}
+                                            </p>
+                                            <p className={"w-20 flex flex-row justify-center items-center gap-1"}><HandHeart size={15}/>{performerActivities[activityIndex].popularityGain}</p>
                                         </div>
                                         <button onClick={nextActivity} className={"hover:text-pink-200 transition duration-200 ease-in-out scale-100 hover:scale-110"}>
                                             <SkipForward/>

@@ -15,13 +15,13 @@ import LoadingBanner from "@/components/loadingBanner";
 import VideoWindow from "@/components/videoWindow";
 
 type Club = {
-    name: string,
+    name: string
     host: {
-        name: string,
-        surname: string,
+        name: string
+        surname: string
         image: string
     },
-    money: number,
+    money: number
     popularity: number
     logo: string
 }
@@ -217,7 +217,7 @@ const Main = () => {
                         }}>
                             {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
                                                              selectedPerformer={selectedPerformer}
-                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity}/>}
+                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity} club={club}/>}
                         </ModalWrapper>
                     )}
                 </MainWrapper>

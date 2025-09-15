@@ -1,5 +1,6 @@
 import {X} from "lucide-react";
 import {useState} from "react";
+import ReactPlayer from 'react-player';
 
 interface Activity {
     id: string
@@ -20,8 +21,11 @@ const VideoWindow = ({selectedActivity, onCloseModal}: Props) => {
 
     return (
         <>
-            <iframe src={`https://youtube.com/embed/${selectedActivity?.media}?autoplay=1`} className={"flex rounded-[20]"} height={840}
-                    width={1493} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}} referrerPolicy="strict-origin-when-cross-origin"/>
+            <ReactPlayer src={`https://youtube.com/embed/${selectedActivity?.media}?autoplay=1`} height={840}
+                    width={1493} style={{ borderRadius: '20px', overflow: 'hidden', boxShadow: '0 0 25px rgba(0,0,0,0.4)' }} autoPlay={true} controls={false}
+                    onEnded={() => {
+                        onCloseModal()
+                    }}/>
             <button onClick={() => {
                 onCloseModal()
             }}
