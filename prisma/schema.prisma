@@ -115,10 +115,9 @@ model Hostess {
 model Activity {
   id             String    @id @default(cuid())
   name           String
-  description    String
   popularityGain Int       @default(1)
   cost           Float     @default(1000)
-  media          String[]
+  media          String
   performerId    String
   performer      Performer @relation(fields: [performerId], references: [id])
 }

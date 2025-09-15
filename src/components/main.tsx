@@ -12,6 +12,7 @@ import Management from "@/components/management";
 import HostessPanel from "@/components/hostessPanel";
 import Activities from "@/components/activities";
 import LoadingBanner from "@/components/loadingBanner";
+import VideoWindow from "@/components/videoWindow";
 
 type Club = {
     name: string,
@@ -44,12 +45,24 @@ interface Performer {
     bio: string
 }
 
+interface Activity {
+    id: string
+    name: string
+    popularityGain: number
+    cost: number
+    media: string
+    performerId: string
+}
+
 const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
     const [logOff, setLogOff] = useState<boolean>(false)
     const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
     const [management, setManagement] = useState<boolean>(false)
     const [activities, setActivities] = useState<boolean>(false)
+
+    const [activity, setActivity] = useState<Activity[]>([])
+    const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
 
     const [performers, setPerformers] = useState<Performer[]>([])
     const [selectedPerformer, setSelectedPerformer] = useState<Performer | null>(null)
@@ -76,6 +89,21 @@ const Main = () => {
         }
 
         fetchHostesses()
+    }, [])
+
+    useEffect(() => {
+        const fetchActivities = async () => {
+            try {
+                const res = await fetch("/api/activities")
+                const data = await res.json()
+                const sortedData = data.sort((a: Activity, b: Activity) => Number(a.id) - Number(b.id))
+                setActivity(sortedData)
+            } catch (err) {
+                console.log("Failed to fetch activities", err)
+            }
+        }
+
+        fetchActivities()
     }, [])
 
     useEffect(() => {
@@ -133,6 +161,17 @@ const Main = () => {
     return (
         <>
             <LoadingBanner show={loading}/>
+            {selectedActivity && (
+                <ModalWrapper
+                    onClose={() => {
+                        setSelectedActivity(null)
+                    }}
+                >
+                    {({ onCloseModal }) => (
+                        <VideoWindow selectedActivity={selectedActivity} onCloseModal={onCloseModal} />
+                    )}
+                </ModalWrapper>
+            )}
             {!loading && (
                 <MainWrapper>
                     <Navbar logo={clubLogo}/>
@@ -178,7 +217,7 @@ const Main = () => {
                         }}>
                             {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
                                                              selectedPerformer={selectedPerformer}
-                                                             setSelectedPerformer={setSelectedPerformer}/>}
+                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity}/>}
                         </ModalWrapper>
                     )}
                 </MainWrapper>
