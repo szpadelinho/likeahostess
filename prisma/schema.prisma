@@ -131,3 +131,9 @@ model Performer {
   bio      String     @default("Nothing is really known about this performer...")
   Activity Activity[]
 }
+
+model Jam {
+  id    String @id @default(cuid())
+  title String
+  media String
+}

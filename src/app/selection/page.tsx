@@ -1,11 +1,12 @@
 'use client'
 
 import React, {useEffect, useState} from "react";
-import {LogOut} from "lucide-react";
+import {LogOut, Volume2, VolumeOff} from "lucide-react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import LoadingBanner from "@/components/loadingBanner";
 import {signOut} from "next-auth/react";
+import ReactPlayer from "react-player";
 
 type Club = {
     id: string;
@@ -27,6 +28,17 @@ const Selection = () => {
     const [loading, setLoading] = useState(true)
 
     const router = useRouter();
+
+    const [isPlaying, setIsPlaying] = useState(true)
+    const [muted, setMuted] = useState(true)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setMuted(false)
+        }, 1)
+
+        return () => clearTimeout(timer)
+    }, [])
 
     useEffect(() => {
         const checkSession = async () => {
@@ -106,6 +118,19 @@ const Selection = () => {
                     className={"absolute top-10 right-10 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out text-white"}>
                 <LogOut/>
             </button>
+            <button onClick={() => {
+                if(isPlaying){
+                    setIsPlaying(false)
+                }
+                else{
+                    setIsPlaying(true)
+                }
+            }}
+                    className={"absolute top-10 right-25 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out text-white"}>
+                {
+                    isPlaying ? <Volume2/> : <VolumeOff/>
+                }
+            </button>
             {!loading && (
                 <div className={"flex justify-center content-center w-screen h-screen overflow-hidden"}>
                     <div className={"flex content-center items-center justify-center flex-col gap-10"}>
@@ -175,6 +200,15 @@ const Selection = () => {
                     </div>
                 </div>
             )}
+            <ReactPlayer
+                src={"https://youtube.com/embed/il5oBnsieks?autoplay=1"}
+                playing={isPlaying}
+                controls={false}
+                autoPlay={true}
+                muted={muted}
+                className={"flex absolute top-0 left-0 z-[-1]"}
+                style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
+            />
         </>
     )
 }

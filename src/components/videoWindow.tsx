@@ -14,9 +14,11 @@ interface Activity {
 interface Props {
     selectedActivity: Activity | null
     onCloseModal: () => void
+    isJamPlaying: boolean
+    setIsJamPlaying: (isJamPlaying: boolean) => void
 }
 
-const VideoWindow = ({selectedActivity, onCloseModal}: Props) => {
+const VideoWindow = ({selectedActivity, onCloseModal, isJamPlaying, setIsJamPlaying}: Props) => {
     const [hover, setHover] = useState(false)
 
     return (
@@ -25,9 +27,11 @@ const VideoWindow = ({selectedActivity, onCloseModal}: Props) => {
                     width={1493} style={{ borderRadius: '20px', overflow: 'hidden', boxShadow: '0 0 25px rgba(0,0,0,0.4)' }} autoPlay={true} controls={false}
                     onEnded={() => {
                         onCloseModal()
+                        setIsJamPlaying(true)
                     }}/>
             <button onClick={() => {
                 onCloseModal()
+                setIsJamPlaying(true)
             }}
                     className={"absolute top-[0] -right-35 hover:cursor-pointer border-white border-2 rounded-[10] p-1 text-white hover:bg-white hover:text-black transition duration-200 ease-in-out hover:"}
                     onMouseEnter={() => setHover(true)}

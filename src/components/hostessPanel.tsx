@@ -90,7 +90,7 @@ const HostessPanel = ({
                                     </div>
                                 ) : (
                                     <div
-                                        className={`w-[100px] h-[100px] flex justify-center items-center text-white ${selectedHostess ? "hover:bg-white hover:text-black" : "hover:bg-pink-800 hover:text-pink-950"} transition duration-200 ease-in-out rounded-[18]`}>
+                                        className={`w-[100px] h-[100px] flex justify-center items-center text-white ${selectedHostess ? "hover:bg-white hover:text-black" : "hover:bg-pink-800 hover:text-pink-300"} transition duration-200 ease-in-out rounded-[18]`}>
                                         <button
                                             className={"flex justify-center items-center w-full h-full rounded-[20]"}
                                             onClick={() => {

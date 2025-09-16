@@ -10,6 +10,7 @@ interface Props {
     activities: Activity[]
     setSelectedActivity: (activity: Activity | null) => void;
     club: Club | null
+    setIsJamPlaying: (isJamPlaying: boolean) => void;
 }
 
 type Club = {
@@ -42,7 +43,7 @@ interface Activity {
     performerId: string
 }
 
-const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPerformer, activities, setSelectedActivity, club}: Props) => {
+const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPerformer, activities, setSelectedActivity, club, setIsJamPlaying}: Props) => {
     const [hover, setHover] = useState(false)
     const [activityIndex, setActivityIndex] = useState(0)
     const isOnSale = club?.host?.surname === selectedPerformer?.surname
@@ -125,6 +126,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                         </button>
                                         <div onClick={() => {
                                             onCloseModal()
+                                            setIsJamPlaying(false)
                                             setSelectedActivity(performerActivities[activityIndex])
                                         }}
                                              className={"flex justify-center items-center flex-row border-white border-2 rounded-[15] p-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-pink-200 transition duration-200 ease-in-out"}>

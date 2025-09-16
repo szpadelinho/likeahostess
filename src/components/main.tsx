@@ -13,6 +13,7 @@ import HostessPanel from "@/components/hostessPanel";
 import Activities from "@/components/activities";
 import LoadingBanner from "@/components/loadingBanner";
 import VideoWindow from "@/components/videoWindow";
+import JamPlayer from "@/components/jamPlayer";
 
 type Club = {
     name: string
@@ -54,6 +55,12 @@ interface Activity {
     performerId: string
 }
 
+interface Jam {
+    id: string
+    title: string
+    media: string
+}
+
 const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
     const [logOff, setLogOff] = useState<boolean>(false)
@@ -75,6 +82,9 @@ const Main = () => {
 
     const [loading, setLoading] = useState(true)
     const [clubLogo, setClubLogo] = useState("")
+
+    const [jams, setJams] = useState<Jam[]>([])
+    const [isJamPlaying, setIsJamPlaying] = useState(true)
 
     useEffect(() => {
         const fetchHostesses = async () => {
@@ -107,13 +117,27 @@ const Main = () => {
     }, [])
 
     useEffect(() => {
-        if(!club){
-            setLoading(true)
+        const fetchJams = async () => {
+            try {
+                const res = await fetch("/api/jams")
+                const data = await res.json()
+                const sortedData = data.sort((a: Jam, b: Jam) => Number(a.id) - Number(b.id))
+                setJams(sortedData)
+            } catch (err) {
+                console.log("Failed to fetch jams", err)
+            }
         }
-        else{
+
+        fetchJams()
+    }, [])
+
+    useEffect(() => {
+        if (!club || jams.length === 0 || performers.length === 0 || activity.length === 0) {
+            setLoading(true)
+        } else {
             setLoading(false)
         }
-    }, [club]);
+    }, [club, jams, performers, activity])
 
     useEffect(() => {
         const fetchPerformers = async () => {
@@ -168,12 +192,13 @@ const Main = () => {
                     }}
                 >
                     {({ onCloseModal }) => (
-                        <VideoWindow selectedActivity={selectedActivity} onCloseModal={onCloseModal} />
+                        <VideoWindow selectedActivity={selectedActivity} onCloseModal={onCloseModal} setIsJamPlaying={setIsJamPlaying} isJamPlaying={isJamPlaying}/>
                     )}
                 </ModalWrapper>
             )}
             {!loading && (
                 <MainWrapper>
+                    <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
                     <Navbar logo={clubLogo}/>
                     <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel}/>
                     {club && (
@@ -217,7 +242,7 @@ const Main = () => {
                         }}>
                             {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
                                                              selectedPerformer={selectedPerformer}
-                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity} club={club}/>}
+                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity} club={club} setIsJamPlaying={setIsJamPlaying}/>}
                         </ModalWrapper>
                     )}
                 </MainWrapper>

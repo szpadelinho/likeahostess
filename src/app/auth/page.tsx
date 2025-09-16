@@ -1,13 +1,14 @@
 'use client'
 
 import {useSession, signIn} from "next-auth/react"
-import {Github} from "lucide-react";
+import {Github, Volume2, VolumeOff} from "lucide-react";
 import Link from "next/link";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {redirect, useRouter} from "next/navigation"
 import {Yesteryear} from "next/font/google"
 import IntroBanner from "@/components/introBanner";
 import Image from "next/image";
+import ReactPlayer from "react-player";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -20,6 +21,25 @@ export default function AuthPage() {
 
     const [showBanner, setShowBanner] = useState(true)
     const [bannerVisible, setBannerVisible] = useState(true)
+
+    const [isPlaying, setIsPlaying] = useState(false)
+    const [muted, setMuted] = useState(true)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setMuted(false)
+        }, 1)
+
+        return () => clearTimeout(timer)
+    }, [])
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setIsPlaying(true)
+        }, 4500)
+
+        return () => clearTimeout(timer)
+    }, [])
 
     useEffect(() => {
         if (session) {
@@ -39,6 +59,19 @@ export default function AuthPage() {
         return (
             <>
                 <Image src={"/icon.png"} alt={"App icon"} height={200} width={100} className={"absolute top-5 left-5 z-40"}/>
+                <button onClick={() => {
+                    if(isPlaying){
+                        setIsPlaying(false)
+                    }
+                    else{
+                        setIsPlaying(true)
+                    }
+                }}
+                        className={"absolute top-10 right-10 z-49 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out text-white"}>
+                    {
+                        isPlaying ? <Volume2/> : <VolumeOff/>
+                    }
+                </button>
                 <Image src={"/images/business_card_hands.png"} alt={"Hands handing over a business card"} fill={true} className={"absolute inset-0 z-39"}/>
                 {showBanner && (
                     <IntroBanner bannerVisible={bannerVisible} />
@@ -79,6 +112,14 @@ export default function AuthPage() {
                         </div>
                     </div>
                 </div>
+                <ReactPlayer
+                    src={"https://youtube.com/embed/CHE5PWK_ZOE?autoplay=1"}
+                    playing={isPlaying}
+                    controls={false}
+                    autoPlay={true}
+                    muted={muted}
+                    style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
+                />
             </>
         )
     }
