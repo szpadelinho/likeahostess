@@ -67,7 +67,7 @@ export default function AuthPage() {
                         setIsPlaying(true)
                     }
                 }}
-                        className={"absolute top-10 right-10 z-49 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out text-white"}>
+                        className={"absolute top-10 right-10 z-49 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
                     {
                         isPlaying ? <Volume2/> : <VolumeOff/>
                     }
@@ -85,7 +85,7 @@ export default function AuthPage() {
                     <div
                         className="relative flex items-center justify-center flex-col h-80 w-160 shadow-lg shadow-gray-500 rotate-x-[1.4deg] mb-10 bg-[url(/images/paper_texture.png)]">
                         <button
-                            className={`absolute border-black border-2 rounded-sm opacity-70 w-15 bottom-5 left-5 p-2 flex-row cursor-pointer hover:opacity-100 transition duration-200 ease-in-out flex items-center justify-center ${yesteryear.className}`}
+                            className={`absolute border-black border-2 rounded-sm opacity-70 w-15 bottom-5 left-5 p-2 flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 flex items-center justify-center ${yesteryear.className}`}
                             onClick={() => redirect("/rules")}>
                             Rules
                         </button>
@@ -95,12 +95,12 @@ export default function AuthPage() {
                         <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={200} width={64} className={"absolute top-5 right-5 z-40 mix-blend-color-burn"}/>
                         <div className={"absolute bottom-4 right-4 flex flex-row gap-2 items-center"}>
                             <button
-                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition duration-200 ease-in-out gap-2"}
+                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
                                 onClick={() => signIn('github', {redirectTo: "/selection"})}>
                                 <Github/><p>Github</p>
                             </button>
                             <button
-                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition duration-200 ease-in-out gap-2"}
+                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
                                 onClick={() => signIn('discord', {redirectTo: "/selection"})}>
                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24"
                                      viewBox="0 0 50 50">

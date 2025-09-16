@@ -98,7 +98,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                         setSelectedPerformer(performer)
                                     }
                                 }}
-                                className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out ${isSelected ? "bg-pink-900 shadow-white shadow-sm" : "bg-transparent"}`}>
+                                className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-pink-900 shadow-white shadow-sm" : "bg-transparent"}`}>
                                 <Image src={performer.image} alt={`${performer.name} ${performer.surname} head shot`}
                                        height={100}
                                        width={100}
@@ -121,7 +121,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                             <div className={"flex justify-center items-center flex-row absolute -bottom-15 left-190 text-[15px] bg-pink-900 p-5 rounded-[20] gap-5"} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                                 {performerActivities.length > 0 && (
                                     <>
-                                        <button onClick={prevActivity} className={"hover:text-pink-200 transition duration-200 ease-in-out scale-100 hover:scale-110"}>
+                                        <button onClick={prevActivity} className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
                                             <SkipBack/>
                                         </button>
                                         <div onClick={() => {
@@ -129,7 +129,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                             setIsJamPlaying(false)
                                             setSelectedActivity(performerActivities[activityIndex])
                                         }}
-                                             className={"flex justify-center items-center flex-row border-white border-2 rounded-[15] p-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-pink-200 transition duration-200 ease-in-out"}>
+                                             className={"flex justify-center items-center flex-row border-white border-2 rounded-[15] p-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-pink-200 transition-all duration-200 ease-in-out active:scale-105"}>
                                             <p className={"w-100 flex flex-row justify-center items-center gap-2"}>{performerActivities[activityIndex].name}</p>
                                             <p className={`w-20 flex flex-row justify-center items-center ${saleValue}`}>
                                                 <JapaneseYen size={15}/>
@@ -138,7 +138,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                             </p>
                                             <p className={"w-20 flex flex-row justify-center items-center gap-1"}><HandHeart size={15}/>{performerActivities[activityIndex].popularityGain}</p>
                                         </div>
-                                        <button onClick={nextActivity} className={"hover:text-pink-200 transition duration-200 ease-in-out scale-100 hover:scale-110"}>
+                                        <button onClick={nextActivity} className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 scale-100 hover:scale-110"}>
                                             <SkipForward/>
                                         </button>
                                     </>
@@ -154,9 +154,9 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                 </div>
             ) : (
                 <div
-                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition-all duration-200 ease-in-out"}>
+                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition-all duration-200 ease-in-out transform active:scale-110"}>
                     <button
-                        className={"flex justify-center items-center w-full h-full rounded-[20]"}
+                        className={"flex justify-center items-center w-full h-full rounded-[20] transition-all duration-200 ease-in-out transform active:scale-110"}
                         onClick={() => {
                             onCloseModal()
                         }}>

@@ -32,11 +32,11 @@ const SelectionPrompt = ({onCloseModal}: Props) => {
                         <button onClick={() => {
                             router.push("/selection");
                         }}
-                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition duration-200 ease-in-out"}>Get
+                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>Get
                             in the cab
                         </button>
                         <button onClick={onCloseModal}
-                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition duration-200 ease-in-out"}>I
+                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>I
                             will stay
                         </button>
                     </div>

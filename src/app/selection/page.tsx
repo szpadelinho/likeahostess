@@ -115,7 +115,7 @@ const Selection = () => {
             <button onClick={() => {
                 signOut({redirectTo: "/auth"})
             }}
-                    className={"absolute top-10 right-10 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out text-white"}>
+                    className={"absolute top-10 right-10 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
                 <LogOut/>
             </button>
             <button onClick={() => {
@@ -126,7 +126,7 @@ const Selection = () => {
                     setIsPlaying(true)
                 }
             }}
-                    className={"absolute top-10 right-25 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out text-white"}>
+                    className={"absolute top-10 right-25 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
                 {
                     isPlaying ? <Volume2/> : <VolumeOff/>
                 }

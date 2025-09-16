@@ -76,7 +76,7 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
             <div className="grid grid-cols-6 grid-rows-2 gap-10 h-full w-full">
                 <div className={"relative flex justify-center items-center row-start-1 col-start-1 mb-10"}>
                     <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={300} className={"z-0"}/>
-                    <div className={"absolute flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white z-49"}>
+                    <div className={"absolute flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white z-49"}>
                         <UsersRound size={50}/>
                     </div>
                     <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,0)_0%,_rgba(134,16,67,1)_70%,_rgba(134,16,67,1)_100%)] z-48"/>
@@ -114,7 +114,7 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                             />
                             <div className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
                                 {hostessAtTable ? (
-                                    <div className={"relative flex justify-center items-center rounded-[20] border-white border-2 transition-all duration-200 ease-in-out hover:shadow-sm hover:shadow-white"}>
+                                    <div className={"relative flex justify-center items-center rounded-[20] border-white border-2 transition-all duration-200 ease-in-out transform active:scale-110 hover:shadow-sm hover:shadow-white"}>
                                         <Image
                                             src={hostessAtTable.image}
                                             alt={hostessAtTable.name}
@@ -122,7 +122,7 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                             height={100}
                                             className={"rounded-[20] bg-pink-900 hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white"}
                                         />
-                                        <div className={"absolute bottom-[-20] z-50"}>
+                                        <div className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
                                             <button
                                                 onClick={() => {
                                                     setHostessesPanel(prev => {
@@ -152,11 +152,11 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                         </div>
                                     </div>
                                 ): (
-                                    <div className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white"}>
+                                    <div className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white"}>
                                         <Spotlight size={50}/>
                                     </div>
                                 )}
-                                <div className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white"}>
+                                <div className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white"}>
                                     <Flame size={50}/>
                                 </div>
                                 <div className={`absolute ${ArrowPositioning(i)} left-24 z-50`}>

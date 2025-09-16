@@ -60,14 +60,14 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setM
                 className={"gap-5 bg-pink-500 w-60 h-30 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}>
                 <div className={"flex content-center justify-center flex-col gap-2"}>
                     <button
-                        className={"border-white border-2 rounded-[10] p-2 cursor-zoom-in text-[15px] w-30 hover:bg-white hover:text-black transition duration-200 ease-in-out"}
+                        className={"border-white border-2 rounded-[10] p-2 cursor-zoom-in text-[15px] w-30 hover:bg-white hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
                         onClick={() => {
                             setManagement(true)
                         }}
                     >Management
                     </button>
                     <button
-                        className={"border-white border-2 rounded-[10] p-2 cursor-copy text-[15px] w-30 hover:bg-white hover:text-black transition duration-200 ease-in-out"}
+                        className={"border-white border-2 rounded-[10] p-2 cursor-copy text-[15px] w-30 hover:bg-white hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
                         onClick={() => {
                             setActivities(true)
                         }}
@@ -86,7 +86,7 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setM
                                 setSelectionPrompt(true)
                             }
                         }}
-                        className={"border-white border-2 rounded-[10] p-1 cursor-wait hover:bg-white hover:text-black transition duration-200 ease-in-out"}>
+                        className={"border-white border-2 rounded-[10] p-1 cursor-wait hover:bg-white hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
                         <CarTaxiFront/></button>
                     <button onClick={() => {
                         if (selectionPrompt) {
@@ -98,7 +98,7 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setM
                             setLogOff(true)
                         }
                     }}
-                            className={"border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out"}>
+                            className={"border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
                         <LogOut/></button>
                 </div>
             </div>

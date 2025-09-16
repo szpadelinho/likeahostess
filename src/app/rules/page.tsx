@@ -19,7 +19,7 @@ const Rules = () => {
             <button onClick={() => {
                 redirect("/auth")
             }}
-                    className={"absolute bottom-5 right-5 text-[15px] border-white border-2 rounded-[10] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black text-white transition duration-200 ease-in-out"}>
+                    className={"absolute bottom-5 right-5 text-[15px] border-white border-2 rounded-[10] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black text-white transition-all duration-200 ease-in-out transform active:scale-110"}>
                 I fully understand the rules
             </button>
         </div>

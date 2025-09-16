@@ -40,17 +40,17 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
         <div className={"absolute text-white z-49 top-5 right-5 flex justify-center items-center flex-row text-[15px] bg-pink-950 p-3 rounded-[20] gap-5 transition duration-200 ease-in-out opacity-30 hover:opacity-100"} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
             <div
                  className={"flex bg-red-950 justify-center items-center flex-row border-white border-2 rounded-[15] p-2 transition duration-200 ease-in-out"}>
-                <p className={"w-80 flex flex-row justify-center items-center gap-2 font-[600]"}>
+                <p className={"w-80 flex flex-row justify-center items-center gap-3 font-[600]"}>
                     <Disc3 className={`transition-transform ${isJamPlaying ? "spin" : ""}`}/> {jams[currentTrack].title}
                 </p>
             </div>
-            <button onClick={prevTrack} className={"hover:text-pink-200 transition duration-200 ease-in-out scale-100 hover:scale-110"}>
+            <button onClick={prevTrack} className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
                 <StepBack/>
             </button>
-            <button onClick={() => setIsJamPlaying(!isJamPlaying)} className="hover:text-pink-200 transition duration-200 ease-in-out scale-100 hover:scale-110">
+            <button onClick={() => setIsJamPlaying(!isJamPlaying)} className="hover:text-pink-200 transition duration-200 ease-in-out scale-100 hover:scale-110 transform active:scale-130">
                 {isJamPlaying ? <Pause/> : <Play/>}
             </button>
-            <button onClick={nextTrack} className={"hover:text-pink-200 transition duration-200 ease-in-out scale-100 hover:scale-110"}>
+            <button onClick={nextTrack} className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 scale-100 hover:scale-110"}>
                 <StepForward/>
             </button>
             <ReactPlayer

@@ -67,7 +67,7 @@ const HostessPanel = ({
                                         )
                                     }
                                 }}
-                                className={"flex justify-center items-center rounded-[20] border-white border-2"}>
+                                className={"flex justify-center items-center rounded-[20] border-white border-2 transition duration-200 ease-in-out transform active:scale-105"}>
                                 {hostess ? (
                                     <div className={"flex justify-center items-center flex-col"}>
                                         <div className={"absolute bottom-[-20]"}>
@@ -81,7 +81,7 @@ const HostessPanel = ({
                                                         setHostessesManagement(prev => [...prev, hostess].sort((a, b) => Number(a.id) - Number(b.id)))
                                                     }
                                                 }}
-                                                className={"flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px]"}>
+                                                className={"flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] transform active:scale-110"}>
                                                 <EyeClosed size={20}/>
                                             </button>
                                         </div>
@@ -92,7 +92,7 @@ const HostessPanel = ({
                                     <div
                                         className={`w-[100px] h-[100px] flex justify-center items-center text-white ${selectedHostess ? "hover:bg-white hover:text-black" : "hover:bg-pink-800 hover:text-pink-300"} transition duration-200 ease-in-out rounded-[18]`}>
                                         <button
-                                            className={"flex justify-center items-center w-full h-full rounded-[20]"}
+                                            className={"flex justify-center items-center w-full h-full rounded-[20] transform active:scale-110"}
                                             onClick={() => {
                                                 if(!selectedHostess) {
                                                     setManagement(true)
