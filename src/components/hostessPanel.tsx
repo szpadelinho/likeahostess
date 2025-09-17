@@ -69,7 +69,8 @@ const HostessPanel = ({
                                 }}
                                 className={"flex justify-center items-center rounded-[20] border-white border-2 transition duration-200 ease-in-out transform active:scale-105"}>
                                 {hostess ? (
-                                    <div className={"flex justify-center items-center flex-col"}>
+                                    <div
+                                        className={"flex justify-center items-center flex-col"}>
                                         <div className={"absolute bottom-[-20]"}>
                                             <button
                                                 onClick={(e) => {
@@ -86,7 +87,7 @@ const HostessPanel = ({
                                             </button>
                                         </div>
                                         <Image src={hostess.image} alt={""} height={100} width={100}
-                                               className={"rounded-[20] bg-pink-900 hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white"}/>
+                                               className={`rounded-[20]  hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white ${selectedHostess?.id === hostess.id ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}/>
                                     </div>
                                 ) : (
                                     <div

@@ -10,7 +10,9 @@ interface Props {
     activities: Activity[]
     setSelectedActivity: (activity: Activity | null) => void;
     club: Club | null
+    isJamPlaying: boolean
     setIsJamPlaying: (isJamPlaying: boolean) => void;
+    setJamToggle: (jamToggle: boolean) => void;
 }
 
 type Club = {
@@ -43,7 +45,7 @@ interface Activity {
     performerId: string
 }
 
-const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPerformer, activities, setSelectedActivity, club, setIsJamPlaying}: Props) => {
+const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPerformer, activities, setSelectedActivity, club, isJamPlaying, setIsJamPlaying, setJamToggle}: Props) => {
     const [hover, setHover] = useState(false)
     const [activityIndex, setActivityIndex] = useState(0)
     const isOnSale = club?.host?.surname === selectedPerformer?.surname
@@ -98,7 +100,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                         setSelectedPerformer(performer)
                                     }
                                 }}
-                                className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-pink-900 shadow-white shadow-sm" : "bg-transparent"}`}>
+                                className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
                                 <Image src={performer.image} alt={`${performer.name} ${performer.surname} head shot`}
                                        height={100}
                                        width={100}
@@ -126,6 +128,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                         </button>
                                         <div onClick={() => {
                                             onCloseModal()
+                                            setJamToggle(isJamPlaying)
                                             setIsJamPlaying(false)
                                             setSelectedActivity(performerActivities[activityIndex])
                                         }}

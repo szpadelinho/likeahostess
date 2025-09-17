@@ -52,7 +52,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                                         setSelectedHostess(hostess)
                                     }
                                 }}
-                                className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-pink-900 shadow-white shadow-sm" : "bg-transparent"}`}>
+                                className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
                                 <Image src={hostess.image} alt={`${hostess.name} ${hostess.surname} head shot`}
                                        height={100}
                                        width={100}

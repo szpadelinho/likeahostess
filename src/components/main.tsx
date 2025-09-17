@@ -85,6 +85,7 @@ const Main = () => {
 
     const [jams, setJams] = useState<Jam[]>([])
     const [isJamPlaying, setIsJamPlaying] = useState(true)
+    const [jamToggle, setJamToggle] = useState<boolean | null>(null)
 
     useEffect(() => {
         const fetchHostesses = async () => {
@@ -189,10 +190,13 @@ const Main = () => {
                 <ModalWrapper
                     onClose={() => {
                         setSelectedActivity(null)
+                        if(jamToggle !== null){
+                            setIsJamPlaying(jamToggle)
+                        }
                     }}
                 >
                     {({ onCloseModal }) => (
-                        <VideoWindow selectedActivity={selectedActivity} onCloseModal={onCloseModal} setIsJamPlaying={setIsJamPlaying} isJamPlaying={isJamPlaying}/>
+                        <VideoWindow selectedActivity={selectedActivity} onCloseModal={onCloseModal} setIsJamPlaying={setIsJamPlaying} jamToggle={jamToggle}/>
                     )}
                 </ModalWrapper>
             )}
@@ -242,7 +246,7 @@ const Main = () => {
                         }}>
                             {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
                                                              selectedPerformer={selectedPerformer}
-                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity} club={club} setIsJamPlaying={setIsJamPlaying}/>}
+                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity} club={club} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying} setJamToggle={setJamToggle}/>}
                         </ModalWrapper>
                     )}
                 </MainWrapper>
