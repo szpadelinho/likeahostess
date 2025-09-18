@@ -7,6 +7,7 @@ import {useRouter} from "next/navigation";
 import LoadingBanner from "@/components/loadingBanner";
 import {signOut} from "next-auth/react";
 import ReactPlayer from "react-player";
+import clsx from "clsx";
 
 type Club = {
     id: string;
@@ -23,7 +24,9 @@ type Club = {
 const Selection = () => {
     const [clubs, setClubs] = useState<Club[]>([])
     const [currentIndex, setCurrentIndex] = useState(1)
-    const [refresh, setRefresh] = useState(Date.now())
+
+    const [fadeOut, setFadeOut] = useState(false)
+    const [direction, setDirection] = useState<"prev" | null | "next">(null)
 
     const [loading, setLoading] = useState(true)
 
@@ -71,9 +74,11 @@ const Selection = () => {
     }, [])
 
     useEffect(() => {
-        if (!currentClub) return
-        setRefresh(Date.now())
-    }, [currentClub?.exterior])
+        if (direction) {
+            const timer = setTimeout(() => setDirection(null), 400)
+            return () => clearTimeout(timer)
+        }
+    }, [direction])
 
     const next = () => {
         setCurrentIndex((prev) => (prev + 1) % clubs.length)
@@ -96,16 +101,34 @@ const Selection = () => {
         ]
     }
 
-    const getClubsStyles = (position: string) => {
-        switch (position) {
-            case "left":
-                return "transform scale-50 opacity-70"
-            case "center":
-                return "transform scale-100 opacity-100"
-            case "right":
-                return "transform scale-50 opacity-70"
-            default:
-                return ""
+    const getTransform = (position: string) => {
+        if(direction === "prev"){
+            switch(position){
+                case "left": return "translateX(300px) scale(0.5)"
+                case "center": return "translateX(300px) scale(1)"
+                case "right": return "translateX(300px) scale(0.5)"
+            }
+        }
+        if(direction === "next"){
+            switch(position){
+                case "left": return "translateX(-300px) scale(0.5)"
+                case "center": return "translateX(-300px) scale(1)"
+                case "right": return "translateX(-300px) scale(0.5)"
+            }
+        }
+        switch(position){
+            case "left": return "translateX(0px) scale(0.5)"
+            case "center": return "translateX(0px) scale(1)"
+            case "right": return "translateX(0px) scale(0.5)"
+        }
+    }
+
+    const getOpacity = (position: string) => {
+        if(direction === "prev" || direction === "next") return 0
+        switch(position){
+            case "left": return 0.7
+            case "center": return 1
+            case "right": return 0.7
         }
     }
 
@@ -132,18 +155,23 @@ const Selection = () => {
                 }
             </button>
             {!loading && (
-                <div className={"flex justify-center content-center w-screen h-screen overflow-hidden"}>
+                <div className={`flex justify-center content-center w-screen h-screen overflow-hidden ${fadeOut ? "opacity-0" : "opacity-100"}`}>
                     <div className={"flex content-center items-center justify-center flex-col gap-10"}>
-                        <div className="relative flex flex-row items-center justify-center gap-10">
+                        <div className={"relative flex flex-row items-center justify-center gap-10"}>
                             {getClubs().map((club) => (
                                 <div
                                     key={club.id}
-                                    className={`relative flex flex-col items-center justify-center transition-all duration-300 ${getClubsStyles(club.position)}`}
+                                    className={`relative flex flex-col items-center justify-center`}
+                                    style={{
+                                        transform: getTransform(club.position),
+                                        opacity: getOpacity(club.position),
+                                        transition: 'transform 0.4s ease-in, opacity 0.4s ease-in-out'
+                                    }}
                                 >
                                     <div
                                         className="absolute inset-0 z-10 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,0)_40%,_rgba(0,0,0,0)_0%,_rgba(0,0,0,1)_70%)] scale-101"/>
                                     <Image
-                                        src={`${club.exterior}?ts=${refresh}`}
+                                        src={`${club.exterior}`}
                                         alt="Club exterior"
                                         width={club.position === "center" ? 800 : 600}
                                         height={club.position === "center" ? 400 : 300}
@@ -153,7 +181,7 @@ const Selection = () => {
                                     <div
                                         className={`absolute left-5 bottom-[-20px] z-10 ${club.position !== 'center' ? 'scale-75 opacity-80' : ''}`}>
                                         <Image
-                                            src={`${club.host.image}?ts=${refresh}`}
+                                            src={`${club.host.image}`}
                                             alt="Host"
                                             height={200}
                                             width={125}
@@ -161,32 +189,45 @@ const Selection = () => {
                                         />
                                     </div>
                                     <div className={`absolute right-5 h-20 w-50 flex justify-center items-center bottom-[-20px] z-10 ${club.position !== 'center' ? 'scale-75 opacity-80' : ''} bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-60%,_rgba(0,0,0,0)_65%)]`}>
-                                        <Image src={`${club.logo}?ts=${refresh}`} alt="Club logo" height={100} width={150}/>
+                                        <Image src={`${club.logo}`} alt="Club logo" height={100} width={150}/>
                                     </div>
                                     {club.position === "left" && (
                                         <button
-                                            className={"absolute h-full w-full z-50 transition duration-200 ease-in-out"}
-                                            onClick={prev}
+                                            className={"absolute h-full w-full z-50"}
+                                            onClick={() => {
+                                                setDirection("prev")
+                                                setTimeout(() => {
+                                                    prev()
+                                                }, 400)
+                                            }}
                                         />
                                     )}
                                     {club.position === "center" && (
                                         <button
-                                            className={"absolute h-full w-full z-50 transition duration-200 ease-in-out"}
+                                            className={"absolute h-full w-full z-50"}
                                             onClick={async () => {
-                                                localStorage.setItem("selectedClub", JSON.stringify(club))
-                                                await fetch("/api/user-club", {
-                                                    method: "POST",
-                                                    headers: { "Content-Type": "application/json" },
-                                                    body: JSON.stringify({ clubId: club.id })
-                                                })
-                                                router.push("/")
+                                                setFadeOut(true)
+                                                setTimeout(async () => {
+                                                    localStorage.setItem("selectedClub", JSON.stringify(club))
+                                                    await fetch("/api/user-club", {
+                                                        method: "POST",
+                                                        headers: { "Content-Type": "application/json" },
+                                                        body: JSON.stringify({ clubId: club.id })
+                                                    })
+                                                    router.push("/")
+                                                }, 500)
                                             }}
                                         />
                                     )}
                                     {club.position === "right" && (
                                         <button
-                                            className="absolute h-full w-full z-50 transition duration-200 ease-in-out"
-                                            onClick={next}
+                                            className="absolute h-full w-full z-50"
+                                            onClick={() => {
+                                                setDirection("next")
+                                                setTimeout(() => {
+                                                    next()
+                                                }, 400)
+                                            }}
                                         />
                                     )}
                                 </div>
@@ -194,7 +235,11 @@ const Selection = () => {
                         </div>
 
                         <div
-                            className={"flex flex-col text-center justify-center rounded-[20] -mb-20 mt-20 h-1/8 w-[800px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,1)_70%)]"}>
+                            className={`flex flex-col text-center justify-center rounded-[20] -mb-20 mt-20 h-1/8 w-[800px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,1)_70%)] ${clsx(
+                                "transition-opacity duration-400",
+                                direction === "prev" && "opacity-0",
+                                direction === "next" && "opacity-0"
+                            )}`}>
                             <h2 className={"m-5"}>{currentClub.description}</h2>
                         </div>
                     </div>
