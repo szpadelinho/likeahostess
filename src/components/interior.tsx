@@ -24,6 +24,7 @@ interface Hostess {
 
 const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess, setHostessesPanel}: InteriorProps) => {
     const items = Array(8).fill(null)
+    const [wiggle, setWiggle] = useState<boolean[]>(Array(8).fill(false))
 
     const positioning = (i: number) => {
         switch (i) {
@@ -88,7 +89,7 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                         <div key={i}
                              className={`relative flex justify-center items-center bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)] p-4 rounded-lg ${positioning(i)}`}
                              onClick={() => {
-                                if(selectedHostess){
+                                if(selectedHostess && !hostesses[i]){
                                     setHostesses(prev => {
                                         const updated = [...prev]
                                         updated[i] = selectedHostess
@@ -104,6 +105,16 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                         return updated
                                     })
                                 }
+                                else if(hostesses[i]){
+                                    const newWiggle = [...wiggle]
+                                    newWiggle[i] = true
+                                    setWiggle(newWiggle)
+                                    setTimeout(() => {
+                                        const reset = [...newWiggle]
+                                        reset[i] = false
+                                        setWiggle(reset)
+                                    }, 200)
+                                }
                         }}>
                             <Image
                                 src={tableSrcs[i]}
@@ -114,13 +125,13 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                             />
                             <div className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
                                 {hostessAtTable ? (
-                                    <div className={"relative flex justify-center items-center rounded-[20] border-white border-2 transition-all duration-200 ease-in-out transform active:scale-110 hover:shadow-sm hover:shadow-white"}>
+                                    <div className={`relative flex justify-center items-center rounded-[20] border-white border-2 transition-all duration-200 ease-in-out transform active:scale-110 hover:shadow-sm hover:shadow-white ${wiggle[i] ? "scale-120" : "scale-100"}`}>
                                         <Image
                                             src={hostessAtTable.image}
                                             alt={hostessAtTable.name}
                                             width={100}
                                             height={100}
-                                            className={"rounded-[20] bg-pink-900 hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white"}
+                                            className={`rounded-[20] hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white ${wiggle[i] ? "!bg-red-600" : "bg-pink-900"}`}
                                         />
                                         <div className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
                                             <button
