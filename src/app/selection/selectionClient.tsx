@@ -23,7 +23,7 @@ type Club = {
 
 const SelectionClient = () => {
     const [clubs, setClubs] = useState<Club[]>([])
-    const [currentIndex, setCurrentIndex] = useState(1)
+    const [currentIndex, setCurrentIndex] = useState(0)
 
     const [fadeOut, setFadeOut] = useState(false)
     const [direction, setDirection] = useState<"prev" | null | "next">(null)
