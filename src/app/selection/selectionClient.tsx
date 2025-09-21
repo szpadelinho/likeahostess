@@ -215,7 +215,7 @@ const SelectionClient = () => {
                                                         body: JSON.stringify({ clubId: club.id })
                                                     })
                                                     router.push("/")
-                                                }, 500)
+                                                })
                                             }}
                                         />
                                     )}

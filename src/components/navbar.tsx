@@ -9,7 +9,7 @@ const Navbar = ({logo}: Props) => {
         <div
             className={`max-w-screen z-10 h-25 text-center content-center justify-center items-center flex flex-row text-[40px] text-white`}>
             <div className={"flex content-center justify-center items-center"}>
-                <Image src={logo} alt={"Club logo"} height={50} width={200} className={"absolute top-1"}/>
+                <Image src={logo} alt={"Club logo"} height={50} width={175} className={"absolute top-5"}/>
             </div>
         </div>
     )

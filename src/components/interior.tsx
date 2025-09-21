@@ -2,7 +2,20 @@
 
 import React, {useEffect, useState} from "react";
 import Image from "next/image";
-import {BookUser, DoorClosed, DoorOpen, Gavel, Meh, Play, VenetianMask, Wind} from "lucide-react";
+import {
+    BookHeart,
+    BookUser,
+    DoorClosed,
+    DoorOpen,
+    Gavel,
+    HandHeart,
+    Martini,
+    Meh,
+    Play,
+    VenetianMask,
+    Wind
+} from "lucide-react";
+import LoadingBar from "@/components/loadingBar";
 
 interface InteriorProps {
     hostesses: (Hostess | null)[]
@@ -24,17 +37,28 @@ interface Hostess {
 
 const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess, setHostessesPanel}: InteriorProps) => {
     const items = Array(8).fill(null)
+    const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
+
+    const [visit, setVisit] = useState<boolean[]>(Array(8).fill(false))
+
+    const [inquiry, setInquiry] = useState<boolean[]>(Array(8).fill(false))
+    const [inquiryType, setInquiryType] = useState<("Service" | "Buffet" | "End" | null)[]>(Array(8).fill(null))
+
     const [wiggleHostess, setWiggleHostess] = useState<boolean[]>(Array(8).fill(false))
     const [wiggleClient, setWiggleClient] = useState<boolean[]>(Array(8).fill(false))
 
-    const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
     const [waitingClient, setWaitingClient] = useState<boolean>(false)
     const [selectedClient, setSelectedClient] = useState<boolean>(false)
+
+    const audio = new Audio("/sfx/client_arrived.m4a")
 
     useEffect(() => {
         if(!waitingClient){
             const random = Math.floor(Math.random() * 19000) + 1000
-            const timer = setTimeout(() => setWaitingClient(true), random)
+            const timer = setTimeout(() => {
+                setWaitingClient(true)
+                audio.play()
+            }, random)
             return () => clearTimeout(timer)
         }
     }, [waitingClient])
@@ -81,9 +105,37 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
         }
     }
 
-    const [tableSrcs, setTableSrcs] = useState<string[]>(
-        Array(8).fill("/images/position_empty.png")
-    )
+    const TimePositioning = (i: number) => {
+        switch (i) {
+            case 0: return "bottom-27.5"
+            case 1: return "top-30"
+            case 2: return "bottom-30"
+            case 3: return "top-30"
+            case 4: return "bottom-30"
+            case 5: return "top-30"
+            case 6: return "bottom-30"
+            case 7: return "top-30"
+            default: return ""
+        }
+    }
+
+    const InquiryHandler = (i: number, type: "Service" | "Buffet" | "End" | null, status: boolean) => {
+        setVisit(prev => {
+            const updated = [...prev]
+            updated[i] = status
+            return updated
+        })
+        setInquiry(prev => {
+            const updated = [...prev]
+            updated[i] = status
+            setInquiryType(prev => {
+                const updated = [...prev]
+                updated[i] = type
+                return updated
+            })
+            return updated
+        })
+    }
 
     return (
         <div className="w-screen h-full flex justify-center items-center p-10 text-white">
@@ -123,15 +175,23 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                         return prev.map(h => h?.id === selectedHostess.id ? null : h)
                                     })
                                     setSelectedHostess(null)
-                                    setTableSrcs(prev => {
-                                        const updated = [...prev]
-                                        updated[i] = updatedHostesses[i] && clients[i] ? "/images/position_full.png" : "/images/position_hostess.png"
-                                        return updated
-                                    })
+                                    if(clients[i]){
+                                        InquiryHandler(i, "Buffet", true)
+                                    }
                                 }
                              }}>
                             <Image
-                                src={tableSrcs[i]}
+                                src={
+                                    inquiry[i]
+                                        ? "/images/position_call.png"
+                                        : hostesses[i] && clients[i]
+                                            ? "/images/position_full.png"
+                                            : hostesses[i]
+                                                ? "/images/position_hostess.png"
+                                                : clients[i]
+                                                    ? "/images/position_client.png"
+                                                    : "/images/position_empty.png"
+                                }
                                 alt={"Meeting position"}
                                 height={424}
                                 width={528}
@@ -158,7 +218,7 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                             alt={hostessAtTable.name}
                                             width={100}
                                             height={100}
-                                            className={`rounded-[20] hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white ${wiggleHostess[i] ? "!bg-red-600" : "bg-pink-900"}`}
+                                            className={`rounded-[18] hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white ${wiggleHostess[i] ? "!bg-red-600" : "bg-pink-800"}`}
                                         />
                                         <div className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
                                             <button
@@ -172,26 +232,13 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                                             updated.push(hostesses[i]!)
                                                         }
                                                         return updated
-                                                    });
+                                                    })
                                                     setHostesses(prev => {
                                                         const updated = [...prev]
                                                         updated[i] = null
                                                         return updated
                                                     })
-                                                    if(!clients[i]) {
-                                                        setTableSrcs(prev => {
-                                                            const updated = [...prev]
-                                                            updated[i] = "/images/position_empty.png"
-                                                            return updated
-                                                        })
-                                                    }
-                                                    else {
-                                                        setTableSrcs(prev => {
-                                                            const updated = [...prev]
-                                                            updated[i] = "/images/position_client.png"
-                                                            return updated
-                                                        })
-                                                    }
+                                                    InquiryHandler(i, null, false)
                                                 }}
                                                 className={"flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
                                                 <Wind size={20}/>
@@ -210,16 +257,9 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                             updatedClients[i] = true
                                             setClients(updatedClients)
                                             setSelectedClient(false)
-
-                                            setTableSrcs(prev => {
-                                                const updated = [...prev]
-                                                if (hostesses[i] && updatedClients[i]) {
-                                                    updated[i] = "/images/position_full.png"
-                                                } else if (updatedClients[i]) {
-                                                    updated[i] = "/images/position_client.png"
-                                                }
-                                                return updated
-                                            })
+                                            if(hostesses[i]){
+                                                InquiryHandler(i, "Buffet", true)
+                                            }
                                         }
                                         else if ((selectedClient || selectedHostess) && clients[i]) {
                                             const newWiggle = [...wiggleClient]
@@ -232,7 +272,7 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                             }, 200)
                                         }
                                     }}
-                                    className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white ${wiggleClient[i] ? "!bg-red-600" : "bg-pink-900"} ${wiggleClient[i] ? "scale-120" : "scale-100"}`}>
+                                    className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white ${clients[i] ? "bg-pink-800 opacity-100" : "bg-pink-900"} ${wiggleClient[i] ? "!bg-red-600 scale-120" : "scale-100"}`}>
                                     {clients[i] ? (
                                         <>
                                             <Meh size={50}/>
@@ -242,8 +282,9 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                                         const updatedClients = [...clients]
                                                         updatedClients[i] = false
                                                         setClients(updatedClients)
+                                                        InquiryHandler(i, null, false)
                                                     }}
-                                                    className={"flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
+                                                    className={"flex justify-center items-center hover:bg-pink-950 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
                                                     <Gavel size={20}/>
                                                 </button>
                                             </div>
@@ -252,6 +293,18 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                         <BookUser size={50}/>
                                     )}
                                 </div>
+                                {visit[i] && (
+                                    <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
+                                        <LoadingBar key={`loading-${i}`} duration={60000} onComplete={() => ""}/>
+                                    </div>
+                                )}
+                                {inquiry[i] && (
+                                    <div className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}>
+                                        {inquiryType[i] === "Service" && <HandHeart scale={25}/>}
+                                        {inquiryType[i] === "Buffet" && <Martini scale={25}/>}
+                                        {inquiryType[i] === "End" && <BookHeart scale={25}/>}
+                                    </div>
+                                )}
                                 <div className={`absolute ${ArrowPositioning(i)} left-24 z-50`}>
                                     <Play size={30}/>
                                 </div>

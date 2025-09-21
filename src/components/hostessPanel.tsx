@@ -36,7 +36,7 @@ const HostessPanel = ({
     return (
         <div className={"flex relative w-screen"}>
             <div
-                className={`${visibilityIndexSetter} bg-pink-700 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] absolute left-150 bottom-10 max-w-[1012px]`}>
+                className={`${visibilityIndexSetter} bg-pink-700 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[25] text-white font-[600] absolute left-150 bottom-10 max-w-[1012px]`}>
                 <div className={"flex justify-center items-center m-2 gap-5"}>
                     {hostesses?.map((hostess, index) => {
                         return (
@@ -67,7 +67,7 @@ const HostessPanel = ({
                                         )
                                     }
                                 }}
-                                className={"flex justify-center items-center rounded-[20] border-white border-2 transition duration-200 ease-in-out transform active:scale-105"}>
+                                className={"flex justify-center items-center bg-pink-800 rounded-[20] border-white border-2 transition duration-200 ease-in-out transform active:scale-105"}>
                                 {hostess ? (
                                     <div
                                         className={"flex justify-center items-center flex-col"}>
@@ -91,7 +91,7 @@ const HostessPanel = ({
                                     </div>
                                 ) : (
                                     <div
-                                        className={`w-[100px] h-[100px] flex justify-center items-center text-white ${selectedHostess ? "hover:bg-white hover:text-black" : "hover:bg-pink-800 hover:text-pink-300"} transition duration-200 ease-in-out rounded-[18]`}>
+                                        className={`w-[100px] h-[100px] flex justify-center items-center text-white ${selectedHostess ? "hover:bg-white hover:text-black" : "hover:bg-pink-900 hover:text-pink-300"} transition duration-200 ease-in-out rounded-[17]`}>
                                         <button
                                             className={"flex justify-center items-center w-full h-full rounded-[20] transform active:scale-110"}
                                             onClick={() => {
