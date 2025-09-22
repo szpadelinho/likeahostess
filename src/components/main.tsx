@@ -14,6 +14,7 @@ import Activities from "@/components/activities";
 import LoadingBanner from "@/components/loadingBanner";
 import VideoWindow from "@/components/videoWindow";
 import JamPlayer from "@/components/jamPlayer";
+import {Inquiry} from "@/components/inquiry";
 
 type Club = {
     name: string
@@ -185,6 +186,13 @@ const Main = () => {
 
     return (
         <>
+            <ModalWrapper onClose={() => {
+
+            }}>
+                {() => (
+                    <Inquiry/>
+                )}
+            </ModalWrapper>
             <LoadingBanner show={loading}/>
             {selectedActivity && (
                 <ModalWrapper

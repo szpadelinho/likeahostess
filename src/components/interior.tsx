@@ -295,7 +295,7 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                 </div>
                                 {visit[i] && (
                                     <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
-                                        <LoadingBar key={`loading-${i}`} duration={60000} onComplete={() => ""}/>
+                                        <LoadingBar key={`loading-${i}`} duration={60000} onComplete={() => ""} paused={inquiry[i]}/>
                                     </div>
                                 )}
                                 {inquiry[i] && (
