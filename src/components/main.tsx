@@ -15,6 +15,7 @@ import LoadingBanner from "@/components/loadingBanner";
 import VideoWindow from "@/components/videoWindow";
 import JamPlayer from "@/components/jamPlayer";
 import {Inquiry} from "@/components/inquiry";
+import {BuffetType} from "@prisma/client";
 
 type Club = {
     name: string
@@ -62,6 +63,14 @@ interface Jam {
     media: string
 }
 
+interface Buffet{
+    id: string
+    name: string
+    price: number
+    description: string
+    type: BuffetType
+}
+
 const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
     const [logOff, setLogOff] = useState<boolean>(false)
@@ -87,6 +96,8 @@ const Main = () => {
     const [jams, setJams] = useState<Jam[]>([])
     const [isJamPlaying, setIsJamPlaying] = useState(true)
     const [jamToggle, setJamToggle] = useState<boolean | null>(null)
+
+    const [buffet, setBuffet] = useState<Buffet[]>([])
 
     useEffect(() => {
         const fetchHostesses = async () => {
@@ -131,6 +142,21 @@ const Main = () => {
         }
 
         fetchJams()
+    }, [])
+
+    useEffect(() => {
+        const fetchBuffet = async () => {
+            try {
+                const res = await fetch("/api/buffet")
+                const data = await res.json()
+                const sortedData = data.sort((a: Buffet, b: Buffet) => Number(a.id) - Number(b.id))
+                setBuffet(sortedData)
+            } catch (err) {
+                console.log("Failed to fetch buffet", err)
+            }
+        }
+
+        fetchBuffet()
     }, [])
 
     useEffect(() => {
@@ -190,7 +216,7 @@ const Main = () => {
 
             }}>
                 {() => (
-                    <Inquiry/>
+                    <Inquiry buffet={buffet}/>
                 )}
             </ModalWrapper>
             <LoadingBanner show={loading}/>

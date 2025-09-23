@@ -137,3 +137,16 @@ model Jam {
   title String
   media String
 }
+
+model Buffet {
+  id          String     @id @default(cuid())
+  name        String     @default("Nothing to see here")
+  price       Int        @default(5000)
+  description String     @default("Nothing is really known about this type of... uh... thing? I guess...")
+  type        BuffetType
+}
+
+enum BuffetType {
+  Beverage
+  Meal
+}

@@ -1,7 +1,20 @@
 import Image from "next/image";
 import {BottleWine, UtensilsCrossed} from "lucide-react";
+import {BuffetType} from "@prisma/client";
 
-export const Inquiry = () => {
+interface Buffet{
+    id: string
+    name: string
+    price: number
+    description: string
+    type: BuffetType
+}
+
+interface Props {
+    buffet: Buffet[]
+}
+
+export const Inquiry = ({buffet}: Props) => {
     const isSelected = false
     return (
         <div
@@ -24,36 +37,13 @@ export const Inquiry = () => {
             <div
                 className={"gap-5 bg-pink-800 w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                    <div className={"w-full grid m-5 grid-cols-[repeat(3,auto)] gap-5"}>
+                <div className={"w-full grid m-5 grid-cols-[repeat(3,auto)] gap-5"}>
+                    {buffet.map(buffet => (
                         <div className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
-                            balls
+                            {buffet.name}
                         </div>
-                        <div className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
-                            balls
-                        </div>
-                        <div className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
-                            balls
-                        </div>
-                        <div className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
-                            balls
-                        </div>
-                        <div className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
-                            balls
-                        </div>
-                        <div className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
-                            balls
-                        </div>
-                        <div className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
-                            balls
-                        </div>
-                        <div className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
-                            balls
-                        </div>
-                        <div className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
-                            balls
-                        </div>
-
-                    </div>
+                    ))}
+                </div>
             </div>
         </div>
     )
