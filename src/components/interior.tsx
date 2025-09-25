@@ -18,11 +18,18 @@ import {
 import LoadingBar from "@/components/loadingBar";
 
 interface InteriorProps {
-    hostesses: (Hostess | null)[]
-    setHostesses: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>;
-    selectedHostess: Hostess | null
-    setSelectedHostess: (hostess: Hostess | null) => void
-    setHostessesPanel: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>
+    hostesses: (Hostess | null)[],
+    setHostesses: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>,
+    selectedHostess: Hostess | null,
+    setSelectedHostess: (hostess: Hostess | null) => void,
+    setHostessesPanel: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>,
+    dinedTables: boolean[],
+    setInquiryTableId: React.Dispatch<React.SetStateAction<number | null>>,
+    setInquiryWindow: (value: (((prevState: boolean) => boolean) | boolean)) => void,
+    inquiry: boolean[],
+    setInquiry: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
+    inquiryType: ("Service" | "Buffet" | "End" | null)[],
+    setInquiryType: (value: (((prevState: ("Service" | "Buffet" | "End" | null)[]) => ("Service" | "Buffet" | "End" | null)[]) | ("Service" | "Buffet" | "End" | null)[])) => void
 }
 
 interface Hostess {
@@ -35,14 +42,24 @@ interface Hostess {
     bio: string
 }
 
-const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess, setHostessesPanel}: InteriorProps) => {
+const Interior = ({
+                      hostesses,
+                      setHostesses,
+                      selectedHostess,
+                      setSelectedHostess,
+                      setHostessesPanel,
+                      dinedTables,
+                      setInquiryTableId,
+                      setInquiryWindow,
+                      inquiry,
+                      setInquiry,
+                      inquiryType,
+                      setInquiryType
+                  }: InteriorProps) => {
     const items = Array(8).fill(null)
     const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
 
     const [visit, setVisit] = useState<boolean[]>(Array(8).fill(false))
-
-    const [inquiry, setInquiry] = useState<boolean[]>(Array(8).fill(false))
-    const [inquiryType, setInquiryType] = useState<("Service" | "Buffet" | "End" | null)[]>(Array(8).fill(null))
 
     const [wiggleHostess, setWiggleHostess] = useState<boolean[]>(Array(8).fill(false))
     const [wiggleClient, setWiggleClient] = useState<boolean[]>(Array(8).fill(false))
@@ -53,7 +70,7 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
     const audio = new Audio("/sfx/client_arrived.m4a")
 
     useEffect(() => {
-        if(!waitingClient){
+        if (!waitingClient) {
             const random = Math.floor(Math.random() * 19000) + 1000
             const timer = setTimeout(() => {
                 setWaitingClient(true)
@@ -65,57 +82,93 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
 
     const positioning = (i: number) => {
         switch (i) {
-            case 0: return "col-start-1 row-start-2"
-            case 1: return "col-start-2 row-start-1"
-            case 2: return "col-start-3 row-start-2"
-            case 3: return "col-start-4 row-start-1"
-            case 4: return "col-start-5 row-start-2"
-            case 5: return "col-start-6 row-start-1"
-            case 6: return "col-start-1 row-start-1 invisible"
-            case 7: return "col-start-1 row-start-1 invisible"
-            default: return ""
+            case 0:
+                return "col-start-1 row-start-2"
+            case 1:
+                return "col-start-2 row-start-1"
+            case 2:
+                return "col-start-3 row-start-2"
+            case 3:
+                return "col-start-4 row-start-1"
+            case 4:
+                return "col-start-5 row-start-2"
+            case 5:
+                return "col-start-6 row-start-1"
+            case 6:
+                return "col-start-1 row-start-1 invisible"
+            case 7:
+                return "col-start-1 row-start-1 invisible"
+            default:
+                return ""
         }
     }
 
     const tableUIPositioning = (i: number) => {
         switch (i) {
-            case 0: return "-top-30"
-            case 1: return "-bottom-30"
-            case 2: return "-top-30"
-            case 3: return "-bottom-30"
-            case 4: return "-top-30"
-            case 5: return "-bottom-30"
-            case 6: return "-top-30"
-            case 7: return "-bottom-30"
-            default: return ""
+            case 0:
+                return "-top-30"
+            case 1:
+                return "-bottom-30"
+            case 2:
+                return "-top-30"
+            case 3:
+                return "-bottom-30"
+            case 4:
+                return "-top-30"
+            case 5:
+                return "-bottom-30"
+            case 6:
+                return "-top-30"
+            case 7:
+                return "-bottom-30"
+            default:
+                return ""
         }
     }
 
     const ArrowPositioning = (i: number) => {
         switch (i) {
-            case 0: return "top-30 rotate-90"
-            case 1: return "bottom-30 -rotate-90"
-            case 2: return "top-30 rotate-90"
-            case 3: return "bottom-30 -rotate-90"
-            case 4: return "top-30 rotate-90"
-            case 5: return "bottom-30 -rotate-90"
-            case 6: return "top-30 rotate-90"
-            case 7: return "bottom-30 -rotate-90"
-            default: return ""
+            case 0:
+                return "top-30 rotate-90"
+            case 1:
+                return "bottom-30 -rotate-90"
+            case 2:
+                return "top-30 rotate-90"
+            case 3:
+                return "bottom-30 -rotate-90"
+            case 4:
+                return "top-30 rotate-90"
+            case 5:
+                return "bottom-30 -rotate-90"
+            case 6:
+                return "top-30 rotate-90"
+            case 7:
+                return "bottom-30 -rotate-90"
+            default:
+                return ""
         }
     }
 
     const TimePositioning = (i: number) => {
         switch (i) {
-            case 0: return "bottom-27.5"
-            case 1: return "top-30"
-            case 2: return "bottom-30"
-            case 3: return "top-30"
-            case 4: return "bottom-30"
-            case 5: return "top-30"
-            case 6: return "bottom-30"
-            case 7: return "top-30"
-            default: return ""
+            case 0:
+                return "bottom-27.5"
+            case 1:
+                return "top-30"
+            case 2:
+                return "bottom-30"
+            case 3:
+                return "top-30"
+            case 4:
+                return "bottom-30"
+            case 5:
+                return "top-30"
+            case 6:
+                return "bottom-30"
+            case 7:
+                return "top-30"
+            default:
+                return ""
         }
     }
 
@@ -135,6 +188,8 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
             })
             return updated
         })
+        setInquiryTableId(i)
+        setInquiryWindow(true)
     }
 
     return (
@@ -144,18 +199,20 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                     <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={300} className={"z-0"}/>
                     <div
                         onClick={() => {
-                            if(waitingClient){
+                            if (waitingClient) {
                                 setSelectedClient(true)
                                 setWaitingClient(false)
-                            }}}
+                            }
+                        }}
                         className={`absolute flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white z-49 ${waitingClient ? "bg-red-950" : "bg-pink-900"}`}>
                         {waitingClient ? (
                             <DoorOpen size={50}/>
-                            ) : (
+                        ) : (
                             <DoorClosed size={50}/>
                         )}
                     </div>
-                    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,0)_0%,_rgba(134,16,67,1)_70%,_rgba(134,16,67,1)_100%)] z-48"/>
+                    <div
+                        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,0)_0%,_rgba(134,16,67,1)_70%,_rgba(134,16,67,1)_100%)] z-48"/>
                 </div>
                 {items.map((_, i) => {
                     const hostessAtTable = hostesses[i]
@@ -164,40 +221,43 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                         <div key={i}
                              className={`relative flex justify-center items-center bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)] p-4 rounded-lg ${positioning(i)}`}
                              onClick={() => {
-                                if(selectedHostess && !hostesses[i]){
-                                    let updatedHostesses: (Hostess | null)[]
-                                    setHostesses(prev => {
-                                        updatedHostesses = [...prev]
-                                        updatedHostesses[i] = selectedHostess
-                                        return updatedHostesses
-                                    })
-                                    setHostessesPanel(prev => {
-                                        return prev.map(h => h?.id === selectedHostess.id ? null : h)
-                                    })
-                                    setSelectedHostess(null)
-                                    if(clients[i]){
-                                        InquiryHandler(i, "Buffet", true)
-                                    }
-                                }
+                                 if (selectedHostess && !hostesses[i]) {
+                                     let updatedHostesses: (Hostess | null)[]
+                                     setHostesses(prev => {
+                                         updatedHostesses = [...prev]
+                                         updatedHostesses[i] = selectedHostess
+                                         return updatedHostesses
+                                     })
+                                     setHostessesPanel(prev => {
+                                         return prev.map(h => h?.id === selectedHostess.id ? null : h)
+                                     })
+                                     setSelectedHostess(null)
+                                     if (clients[i]) {
+                                         InquiryHandler(i, "Buffet", true)
+                                     }
+                                 }
                              }}>
                             <Image
                                 src={
-                                    inquiry[i]
-                                        ? "/images/position_call.png"
-                                        : hostesses[i] && clients[i]
-                                            ? "/images/position_full.png"
-                                            : hostesses[i]
-                                                ? "/images/position_hostess.png"
-                                                : clients[i]
-                                                    ? "/images/position_client.png"
-                                                    : "/images/position_empty.png"
+                                    dinedTables[i] ?
+                                        "/images/position_dined.png" :
+                                        inquiry[i]
+                                            ? "/images/position_call.png"
+                                            : hostesses[i] && clients[i]
+                                                ? "/images/position_full.png"
+                                                : hostesses[i]
+                                                    ? "/images/position_hostess.png"
+                                                    : clients[i]
+                                                        ? "/images/position_client.png"
+                                                        : "/images/position_empty.png"
                                 }
                                 alt={"Meeting position"}
                                 height={424}
                                 width={528}
                                 className={"flex justify-center items-center"}
                             />
-                            <div className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
+                            <div
+                                className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
                                 {hostessAtTable ? (
                                     <div
                                         onClick={() => {
@@ -220,7 +280,8 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                             height={100}
                                             className={`rounded-[18] hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white ${wiggleHostess[i] ? "!bg-red-600" : "bg-pink-800"}`}
                                         />
-                                        <div className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
+                                        <div
+                                            className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
                                             <button
                                                 onClick={() => {
                                                     setHostessesPanel(prev => {
@@ -245,8 +306,9 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                             </button>
                                         </div>
                                     </div>
-                                ): (
-                                    <div className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white"}>
+                                ) : (
+                                    <div
+                                        className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white"}>
                                         <VenetianMask size={50}/>
                                     </div>
                                 )}
@@ -257,11 +319,10 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                             updatedClients[i] = true
                                             setClients(updatedClients)
                                             setSelectedClient(false)
-                                            if(hostesses[i]){
+                                            if (hostesses[i]) {
                                                 InquiryHandler(i, "Buffet", true)
                                             }
-                                        }
-                                        else if ((selectedClient || selectedHostess) && clients[i]) {
+                                        } else if ((selectedClient || selectedHostess) && clients[i]) {
                                             const newWiggle = [...wiggleClient]
                                             newWiggle[i] = true
                                             setWiggleClient(newWiggle)
@@ -276,7 +337,8 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                     {clients[i] ? (
                                         <>
                                             <Meh size={50}/>
-                                            <div className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
+                                            <div
+                                                className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
                                                 <button
                                                     onClick={() => {
                                                         const updatedClients = [...clients]
@@ -295,11 +357,13 @@ const Interior = ({hostesses, setHostesses, selectedHostess, setSelectedHostess,
                                 </div>
                                 {visit[i] && (
                                     <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
-                                        <LoadingBar key={`loading-${i}`} duration={60000} onComplete={() => ""} paused={inquiry[i]}/>
+                                        <LoadingBar key={`loading-${i}`} duration={60000} onComplete={() => ""}
+                                                    paused={inquiry[i]}/>
                                     </div>
                                 )}
                                 {inquiry[i] && (
-                                    <div className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}>
+                                    <div
+                                        className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}>
                                         {inquiryType[i] === "Service" && <HandHeart scale={25}/>}
                                         {inquiryType[i] === "Buffet" && <Martini scale={25}/>}
                                         {inquiryType[i] === "End" && <BookHeart scale={25}/>}

@@ -75,6 +75,7 @@ const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
     const [logOff, setLogOff] = useState<boolean>(false)
     const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
+
     const [management, setManagement] = useState<boolean>(false)
     const [activities, setActivities] = useState<boolean>(false)
 
@@ -98,6 +99,13 @@ const Main = () => {
     const [jamToggle, setJamToggle] = useState<boolean | null>(null)
 
     const [buffet, setBuffet] = useState<Buffet[]>([])
+
+    const [dinedTables, setDinedTables] = useState<boolean[]>(Array(8).fill(false))
+    const [inquiryTableId, setInquiryTableId] = useState<number | null>(null)
+    const [inquiryWindow, setInquiryWindow] = useState<boolean>(false)
+
+    const [inquiry, setInquiry] = useState<boolean[]>(Array(8).fill(false))
+    const [inquiryType, setInquiryType] = useState<("Service" | "Buffet" | "End" | null)[]>(Array(8).fill(null))
 
     useEffect(() => {
         const fetchHostesses = async () => {
@@ -212,13 +220,23 @@ const Main = () => {
 
     return (
         <>
-            <ModalWrapper onClose={() => {
-
-            }}>
-                {() => (
-                    <Inquiry buffet={buffet}/>
-                )}
-            </ModalWrapper>
+            {inquiryWindow && (
+                <ModalWrapper onClose={() => {
+                    setInquiryWindow(false)
+                    if(inquiryTableId !== null){
+                        setInquiry(prev => {
+                            const updated = [...prev]
+                            updated[inquiryTableId] = false
+                            return updated
+                        })
+                    }
+                    setInquiryTableId(null)
+                }}>
+                    {({onCloseModal}) => (
+                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId}/>
+                    )}
+                </ModalWrapper>
+            )}
             <LoadingBanner show={loading}/>
             {selectedActivity && (
                 <ModalWrapper
@@ -238,7 +256,7 @@ const Main = () => {
                 <MainWrapper>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
                     <Navbar logo={clubLogo}/>
-                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel}/>
+                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType}/>
                     {club && (
                         <Hud
                             club={club}
