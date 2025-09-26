@@ -98,6 +98,8 @@ const Main = () => {
     const [isJamPlaying, setIsJamPlaying] = useState(true)
     const [jamToggle, setJamToggle] = useState<boolean | null>(null)
 
+    const [visit, setVisit] = useState<boolean[]>(Array(8).fill(false))
+
     const [buffet, setBuffet] = useState<Buffet[]>([])
 
     const [dinedTables, setDinedTables] = useState<boolean[]>(Array(8).fill(false))
@@ -233,7 +235,7 @@ const Main = () => {
                     setInquiryTableId(null)
                 }}>
                     {({onCloseModal}) => (
-                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId}/>
+                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry}/>
                     )}
                 </ModalWrapper>
             )}
@@ -256,7 +258,7 @@ const Main = () => {
                 <MainWrapper>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
                     <Navbar logo={clubLogo}/>
-                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType}/>
+                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit}/>
                     {club && (
                         <Hud
                             club={club}

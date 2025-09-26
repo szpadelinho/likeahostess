@@ -29,7 +29,9 @@ interface InteriorProps {
     inquiry: boolean[],
     setInquiry: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
     inquiryType: ("Service" | "Buffet" | "End" | null)[],
-    setInquiryType: (value: (((prevState: ("Service" | "Buffet" | "End" | null)[]) => ("Service" | "Buffet" | "End" | null)[]) | ("Service" | "Buffet" | "End" | null)[])) => void
+    setInquiryType: (value: (((prevState: ("Service" | "Buffet" | "End" | null)[]) => ("Service" | "Buffet" | "End" | null)[]) | ("Service" | "Buffet" | "End" | null)[])) => void,
+    visit: boolean[],
+    setVisit: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void
 }
 
 interface Hostess {
@@ -54,12 +56,12 @@ const Interior = ({
                       inquiry,
                       setInquiry,
                       inquiryType,
-                      setInquiryType
+                      setInquiryType,
+                      visit,
+                      setVisit
                   }: InteriorProps) => {
     const items = Array(8).fill(null)
     const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
-
-    const [visit, setVisit] = useState<boolean[]>(Array(8).fill(false))
 
     const [wiggleHostess, setWiggleHostess] = useState<boolean[]>(Array(8).fill(false))
     const [wiggleClient, setWiggleClient] = useState<boolean[]>(Array(8).fill(false))
@@ -79,6 +81,38 @@ const Interior = ({
             return () => clearTimeout(timer)
         }
     }, [waitingClient])
+
+    useEffect(() => {
+        visit.forEach((v, i) => {
+            if (!v && !inquiry[i]) {
+                if (clients[i] && hostesses[i]) {
+                    setClients(prev => {
+                        const updated = [...prev]
+                        updated[i] = false
+                        return updated
+                    })
+                    const hostess = hostesses[i]
+                    if (hostess) {
+                        setHostesses(prev => {
+                            const updated = [...prev]
+                            updated[i] = null
+                            return updated
+                        })
+                        setHostessesPanel(prev => {
+                            const updated = [...prev]
+                            const firstEmpty = updated.findIndex(h => h === null)
+                            if (firstEmpty !== -1) {
+                                updated[firstEmpty] = hostess
+                            } else {
+                                updated.push(hostess)
+                            }
+                            return updated
+                        })
+                    }
+                }
+            }
+        })
+    }, [visit, inquiry, clients, hostesses, setClients, setHostesses, setHostessesPanel])
 
     const positioning = (i: number) => {
         switch (i) {
@@ -189,7 +223,6 @@ const Interior = ({
             return updated
         })
         setInquiryTableId(i)
-        setInquiryWindow(true)
     }
 
     return (
@@ -239,7 +272,7 @@ const Interior = ({
                              }}>
                             <Image
                                 src={
-                                    dinedTables[i] ?
+                                    dinedTables[i] && hostesses[i] && clients[i] ?
                                         "/images/position_dined.png" :
                                         inquiry[i]
                                             ? "/images/position_call.png"
@@ -357,13 +390,17 @@ const Interior = ({
                                 </div>
                                 {visit[i] && (
                                     <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
-                                        <LoadingBar key={`loading-${i}`} duration={60000} onComplete={() => ""}
+                                        <LoadingBar key={`loading-${i}`} duration={60000}
+                                                    onComplete={() => setTimeout(() => InquiryHandler(i, "End", true), 0)}
                                                     paused={inquiry[i]}/>
                                     </div>
                                 )}
                                 {inquiry[i] && (
                                     <div
-                                        className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}>
+                                        className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
+                                        onClick={() => {
+                                            setInquiryWindow(true)
+                                        }}>
                                         {inquiryType[i] === "Service" && <HandHeart scale={25}/>}
                                         {inquiryType[i] === "Buffet" && <Martini scale={25}/>}
                                         {inquiryType[i] === "End" && <BookHeart scale={25}/>}
