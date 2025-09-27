@@ -223,17 +223,23 @@ const Main = () => {
     return (
         <>
             {inquiryWindow && (
-                <ModalWrapper onClose={() => {
-                    setInquiryWindow(false)
-                    if(inquiryTableId !== null){
-                        setInquiry(prev => {
-                            const updated = [...prev]
-                            updated[inquiryTableId] = false
-                            return updated
-                        })
-                    }
-                    setInquiryTableId(null)
-                }}>
+                <ModalWrapper
+                    onClose={() => {
+                        if (inquiryTableId !== null) {
+                            setInquiry(prev => {
+                                const updated = [...prev]
+                                updated[inquiryTableId] = false
+                                return updated
+                            })
+                            setInquiryType(prev => {
+                                const updated = [...prev]
+                                updated[inquiryTableId] = null
+                                return updated
+                            })
+                            setInquiryWindow(false)
+                        }
+                    }}
+                >
                     {({onCloseModal}) => (
                         <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry}/>
                     )}

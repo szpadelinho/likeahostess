@@ -118,6 +118,28 @@ export const Inquiry = ({
         return false
     })()
 
+    const InquiryEndHandler = (type: "End" | "Extend", present: boolean, payment: boolean) => {
+        if(inquiryTableId){
+            setVisit(prev => {
+                const updated = [...prev]
+                updated[inquiryTableId] = false
+                return updated
+            })
+            setInquiry(prev => {
+                const updated = [...prev]
+                updated[inquiryTableId] = false
+                return updated
+            })
+            setInquiryType(prev => {
+                const updated = [...prev]
+                updated[inquiryTableId] = null
+                return updated
+            })
+            onCloseModal()
+            setInquiryWindow(false)
+        }
+    }
+
     const dealButtonText =
         !randomBeverage && !randomMeal
             ? "Walk off awkwardly"
@@ -317,73 +339,31 @@ export const Inquiry = ({
                         className={"bg-pink-800 w-150 h-150 text-center content-center items-center justify-center flex flex-col text-[20px] rounded-[20] text-white font-[600] gap-10"}
                         style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                         <button
-                            className={"border-white border-2 rounded-[15] p-1 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                            className={"border-white border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
                             onClick={() => {
-                                setVisit(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = false
-                                    return updated
-                                })
-                                setInquiry(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = false
-                                    return updated
-                                })
-                                setInquiryType(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = null
-                                    return updated
-                                })
-                                setInquiryWindow(false)
+                                InquiryEndHandler("End", false, true)
                             }}>
                             Thank the client and let him leave
                         </button>
                         <button
-                            className={"border-white border-2 rounded-[15] p-1 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                            className={"border-white border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
                             onClick={() => {
-                                setVisit(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = false
-                                    return updated
-                                })
-                                setInquiry(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = false
-                                    return updated
-                                })
-                                setInquiryType(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = null
-                                    return updated
-                                })
-                                setInquiryWindow(false)
+                                InquiryEndHandler("End", false, false)
                             }}>
                             Pay his tab
                         </button>
                         <button
-                            className={"border-white border-2 rounded-[15] p-1 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                            className={"border-white border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
                             onClick={() => {
-                                setVisit(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = false
-                                    return updated
-                                })
-                                setInquiry(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = false
-                                    return updated
-                                })
-                                setInquiryType(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = null
-                                    return updated
-                                })
-                                setInquiryWindow(false)
+                                InquiryEndHandler("End", true, true)
                             }}>
                             Give him a present
                         </button>
                         <button
-                            className={"border-white border-2 rounded-[15] p-1 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
+                            className={"border-white border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                            onClick={() => {
+                                InquiryEndHandler("Extend", false, true)
+                            }}>
                             Offer another session
                         </button>
                     </div>

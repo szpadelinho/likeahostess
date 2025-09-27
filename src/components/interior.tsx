@@ -31,7 +31,7 @@ interface InteriorProps {
     inquiryType: ("Service" | "Buffet" | "End" | null)[],
     setInquiryType: (value: (((prevState: ("Service" | "Buffet" | "End" | null)[]) => ("Service" | "Buffet" | "End" | null)[]) | ("Service" | "Buffet" | "End" | null)[])) => void,
     visit: boolean[],
-    setVisit: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void
+    setVisit: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
 }
 
 interface Hostess {
@@ -58,7 +58,7 @@ const Interior = ({
                       inquiryType,
                       setInquiryType,
                       visit,
-                      setVisit
+                      setVisit,
                   }: InteriorProps) => {
     const items = Array(8).fill(null)
     const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
@@ -215,14 +215,13 @@ const Interior = ({
         setInquiry(prev => {
             const updated = [...prev]
             updated[i] = status
-            setInquiryType(prev => {
-                const updated = [...prev]
-                updated[i] = type
-                return updated
-            })
             return updated
         })
-        setInquiryTableId(i)
+        setInquiryType(prev => {
+            const updated = [...prev]
+            updated[i] = type
+            return updated
+        })
     }
 
     return (
@@ -399,6 +398,7 @@ const Interior = ({
                                     <div
                                         className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
                                         onClick={() => {
+                                            setInquiryTableId(i)
                                             setInquiryWindow(true)
                                         }}>
                                         {inquiryType[i] === "Service" && <HandHeart scale={25}/>}
