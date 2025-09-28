@@ -7,16 +7,37 @@ import {
     UtensilsCrossed,
     Wine
 } from "lucide-react";
-import {BuffetType} from "@prisma/client";
 import React, {Dispatch, useEffect, useState} from "react";
+import {BuffetType} from "@prisma/client";
 
-interface Buffet {
+const SERVICE_TYPES = [
+    "ashtray",
+    "lady_glass",
+    "guest_glass",
+    "towel",
+    "menu",
+    "ice"
+] as const
+
+interface Hostess {
+    id: string
+    name: string
+    surname?: string
+    image: string
+    cover: string
+    attractiveness: number
+    bio: string
+}
+
+interface Buffet{
     id: string
     name: string
     price: number
     description: string
     type: BuffetType
 }
+
+type ServiceType = typeof SERVICE_TYPES[number]
 
 interface Props {
     buffet: Buffet[],
@@ -28,7 +49,10 @@ interface Props {
     setVisit: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
     setInquiryWindow: (value: (((prevState: boolean) => boolean) | boolean)) => void,
     setInquiryType: (value: (((prevState: ("Service" | "Buffet" | "End" | null)[]) => ("Service" | "Buffet" | "End" | null)[]) | ("Service" | "Buffet" | "End" | null)[])) => void,
-    setInquiry: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void
+    setInquiry: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
+    serviceType: (ServiceType | null)[],
+    setServiceType: (value: (((prevState: (ServiceType | null)[]) => (ServiceType | null)[]) | (ServiceType | null)[])) => void,
+    hostesses: (Hostess | null)[]
 }
 
 export const Inquiry = ({
@@ -41,12 +65,15 @@ export const Inquiry = ({
                             setVisit,
                             setInquiryWindow,
                             setInquiryType,
-                            setInquiry
+                            setInquiry,
+                            serviceType,
+                            setServiceType,
+                            hostesses
                         }: Props) => {
     const [beverageIndex, setBeverageIndex] = useState(0)
     const [mealIndex, setMealIndex] = useState(0)
 
-    const [wiggle, setWiggle] = useState<"Beverage" | "Meal" | null>(null)
+    const [wiggle, setWiggle] = useState<"Beverage" | "Meal" | ServiceType | null>(null)
 
     const beverages = buffet.filter(b => b.type === "Beverage")
     const meals = buffet.filter(b => b.type === "Meal")
@@ -119,7 +146,7 @@ export const Inquiry = ({
     })()
 
     const InquiryEndHandler = (type: "End" | "Extend", present: boolean, payment: boolean) => {
-        if(inquiryTableId){
+        if (inquiryTableId !== null) {
             setVisit(prev => {
                 const updated = [...prev]
                 updated[inquiryTableId] = false
@@ -137,6 +164,34 @@ export const Inquiry = ({
             })
             onCloseModal()
             setInquiryWindow(false)
+        }
+    }
+
+    const InquiryServiceHandler = (type: ServiceType)=> {
+        if(inquiryTableId !== null && type === serviceType[inquiryTableId]){
+            setInquiry(prev => {
+                const updated = [...prev]
+                updated[inquiryTableId] = false
+                return updated
+            })
+            setInquiryType(prev => {
+                const updated = [...prev]
+                updated[inquiryTableId] = null
+                return updated
+            })
+            setInquiryType(prev => {
+                const updated = [...prev]
+                updated[inquiryTableId] = null
+                return updated
+            })
+            onCloseModal()
+            setInquiryWindow(false)
+        }
+        else{
+            setWiggle(type)
+            setTimeout(() => {
+                setWiggle(null)
+            }, 200);
         }
     }
 
@@ -295,22 +350,22 @@ export const Inquiry = ({
                             </div>
                         </div>
                     </div>
-                {isOrderCorrect && (
-                    <button
-                        className={"absolute bottom-5 left-[69%] border-white border-2 rounded-[15] p-1 w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
-                        onClick={() => {
-                            if (inquiryTableId !== null) {
-                                setDinedTables(prev => {
-                                    const updated = [...prev]
-                                    updated[inquiryTableId] = !(!randomBeverage && !randomMeal)
-                                    return updated
-                                })
-                            }
-                            onCloseModal()
-                        }}>
-                        {dealButtonText}
-                    </button>
-                )}
+                    {isOrderCorrect && (
+                        <button
+                            className={"absolute bottom-5 left-[69%] border-white border-2 rounded-[15] p-1 w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                            onClick={() => {
+                                if (inquiryTableId !== null) {
+                                    setDinedTables(prev => {
+                                        const updated = [...prev]
+                                        updated[inquiryTableId] = !(!randomBeverage && !randomMeal)
+                                        return updated
+                                    })
+                                }
+                                onCloseModal()
+                            }}>
+                            {dealButtonText}
+                        </button>
+                    )}
                 </>
             )}
             {inquiryTableId !== null && inquiryType[inquiryTableId] === "Service" && (
@@ -318,7 +373,59 @@ export const Inquiry = ({
                     <div
                         className={"absolute top-20 left-30 flex w-120 h-15 justify-center items-center flex-row bg-pink-800 rounded-[15] p-2 text-[16px]"}
                         style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        Hostess is looking for some help
+                        {`${hostesses[inquiryTableId]?.name} ${hostesses[inquiryTableId]?.surname} is calling you for a service assistance`}
+                    </div>
+                    <Image
+                        src={`/images/hostess_service_${serviceType[inquiryTableId]}.png`}
+                        alt={"Hostess is calling for a service"}
+                        height={200}
+                        width={700}
+                        className={"mt-25"}/>
+                    <div
+                        className={"bg-pink-800 w-150 h-175 text-center content-center items-center justify-center flex flex-col text-[20px] rounded-[20] text-white font-[600] gap-10"}
+                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+                        <button
+                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "towel" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
+                            onClick={() => {
+                                InquiryServiceHandler("towel")
+                            }}>
+                            Give her a towel
+                        </button>
+                        <button
+                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "ice" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
+                            onClick={() => {
+                                InquiryServiceHandler("ice")
+                            }}>
+                            Refill ice
+                        </button>
+                        <button
+                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "lady_glass" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
+                            onClick={() => {
+                                InquiryServiceHandler("lady_glass")
+                            }}>
+                            Give a lady's glass
+                        </button>
+                        <button
+                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "guest_glass" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
+                            onClick={() => {
+                                InquiryServiceHandler("guest_glass")
+                            }}>
+                            Give a guests glass
+                        </button>
+                        <button
+                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "menu" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
+                            onClick={() => {
+                                InquiryServiceHandler("menu")
+                            }}>
+                            Hand over the menu
+                        </button>
+                        <button
+                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "ashtray" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
+                            onClick={() => {
+                                InquiryServiceHandler("ashtray")
+                            }}>
+                            Clean the ashtray
+                        </button>
                     </div>
                 </>
             )}
@@ -339,28 +446,28 @@ export const Inquiry = ({
                         className={"bg-pink-800 w-150 h-150 text-center content-center items-center justify-center flex flex-col text-[20px] rounded-[20] text-white font-[600] gap-10"}
                         style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                         <button
-                            className={"border-white border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                            className={"border-white bg-pink-900 border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
                             onClick={() => {
                                 InquiryEndHandler("End", false, true)
                             }}>
                             Thank the client and let him leave
                         </button>
                         <button
-                            className={"border-white border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                            className={"border-white bg-pink-900 border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
                             onClick={() => {
                                 InquiryEndHandler("End", false, false)
                             }}>
                             Pay his tab
                         </button>
                         <button
-                            className={"border-white border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                            className={"border-white bg-pink-900 border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
                             onClick={() => {
                                 InquiryEndHandler("End", true, true)
                             }}>
                             Give him a present
                         </button>
                         <button
-                            className={"border-white border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                            className={"border-white bg-pink-900 border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
                             onClick={() => {
                                 InquiryEndHandler("Extend", false, true)
                             }}>

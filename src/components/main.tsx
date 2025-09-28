@@ -109,6 +109,19 @@ const Main = () => {
     const [inquiry, setInquiry] = useState<boolean[]>(Array(8).fill(false))
     const [inquiryType, setInquiryType] = useState<("Service" | "Buffet" | "End" | null)[]>(Array(8).fill(null))
 
+    const SERVICE_TYPES = [
+        "ashtray",
+        "lady_glass",
+        "guest_glass",
+        "towel",
+        "menu",
+        "ice"
+    ] as const
+
+    type ServiceType = typeof SERVICE_TYPES[number]
+
+    const [serviceType, setServiceType] = useState<(ServiceType | null)[]>(Array(8).fill(null))
+
     useEffect(() => {
         const fetchHostesses = async () => {
             try {
@@ -241,7 +254,7 @@ const Main = () => {
                     }}
                 >
                     {({onCloseModal}) => (
-                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry}/>
+                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking}/>
                     )}
                 </ModalWrapper>
             )}
@@ -264,7 +277,7 @@ const Main = () => {
                 <MainWrapper>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
                     <Navbar logo={clubLogo}/>
-                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit}/>
+                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType}/>
                     {club && (
                         <Hud
                             club={club}

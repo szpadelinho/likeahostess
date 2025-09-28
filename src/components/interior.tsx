@@ -17,6 +17,17 @@ import {
 } from "lucide-react";
 import LoadingBar from "@/components/loadingBar";
 
+const SERVICE_TYPES = [
+    "ashtray",
+    "lady_glass",
+    "guest_glass",
+    "towel",
+    "menu",
+    "ice"
+] as const
+
+type ServiceType = typeof SERVICE_TYPES[number]
+
 interface InteriorProps {
     hostesses: (Hostess | null)[],
     setHostesses: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>,
@@ -32,6 +43,12 @@ interface InteriorProps {
     setInquiryType: (value: (((prevState: ("Service" | "Buffet" | "End" | null)[]) => ("Service" | "Buffet" | "End" | null)[]) | ("Service" | "Buffet" | "End" | null)[])) => void,
     visit: boolean[],
     setVisit: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
+    serviceType: (ServiceType | null)[]
+    setServiceType: (
+        value:
+            | ((prevState: (ServiceType | null)[]) => (ServiceType | null)[])
+            | (ServiceType | null)[]
+    ) => void
 }
 
 interface Hostess {
@@ -59,6 +76,8 @@ const Interior = ({
                       setInquiryType,
                       visit,
                       setVisit,
+                      serviceType,
+                      setServiceType
                   }: InteriorProps) => {
     const items = Array(8).fill(null)
     const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
@@ -222,6 +241,13 @@ const Interior = ({
             updated[i] = type
             return updated
         })
+        if(type === "Service"){
+            setServiceType(prev => {
+                const updated = [...prev]
+                updated[i] = SERVICE_TYPES[Math.floor(Math.random() * SERVICE_TYPES.length)]
+                return updated
+            })
+        }
     }
 
     return (
@@ -271,17 +297,19 @@ const Interior = ({
                              }}>
                             <Image
                                 src={
-                                    dinedTables[i] && hostesses[i] && clients[i] ?
-                                        "/images/position_dined.png" :
-                                        inquiry[i]
-                                            ? "/images/position_call.png"
-                                            : hostesses[i] && clients[i]
-                                                ? "/images/position_full.png"
-                                                : hostesses[i]
-                                                    ? "/images/position_hostess.png"
-                                                    : clients[i]
-                                                        ? "/images/position_client.png"
-                                                        : "/images/position_empty.png"
+                                    inquiry[i] && dinedTables[i] ?
+                                        "/images/position_call_dined.png"
+                                        : dinedTables[i] && hostesses[i] && clients[i]
+                                            ? "/images/position_dined.png"
+                                            : inquiry[i]
+                                                ? "/images/position_call.png"
+                                                : hostesses[i] && clients[i]
+                                                    ? "/images/position_full.png"
+                                                    : hostesses[i]
+                                                        ? "/images/position_hostess.png"
+                                                        : clients[i]
+                                                            ? "/images/position_client.png"
+                                                            : "/images/position_empty.png"
                                 }
                                 alt={"Meeting position"}
                                 height={424}
@@ -391,7 +419,12 @@ const Interior = ({
                                     <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
                                         <LoadingBar key={`loading-${i}`} duration={60000}
                                                     onComplete={() => setTimeout(() => InquiryHandler(i, "End", true), 0)}
-                                                    paused={inquiry[i]}/>
+                                                    paused={inquiry[i]}
+                                                    onProgressChange={(progress) => {
+                                                        if (Math.random() < 0.002) {
+                                                            setTimeout(() => InquiryHandler(i, "Service", true), 0)
+                                                        }
+                                                    }}/>
                                     </div>
                                 )}
                                 {inquiry[i] && (
