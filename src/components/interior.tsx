@@ -4,7 +4,7 @@ import React, {useEffect, useState} from "react";
 import Image from "next/image";
 import {
     BookHeart,
-    BookUser,
+    BookUser, BrushCleaning,
     DoorClosed,
     DoorOpen,
     Gavel,
@@ -43,12 +43,13 @@ interface InteriorProps {
     setInquiryType: (value: (((prevState: ("Service" | "Buffet" | "End" | null)[]) => ("Service" | "Buffet" | "End" | null)[]) | ("Service" | "Buffet" | "End" | null)[])) => void,
     visit: boolean[],
     setVisit: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
-    serviceType: (ServiceType | null)[]
+    serviceType: (ServiceType | null)[],
     setServiceType: (
         value:
             | ((prevState: (ServiceType | null)[]) => (ServiceType | null)[])
             | (ServiceType | null)[]
-    ) => void
+    ) => void,
+    setDinedTables: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void
 }
 
 interface Hostess {
@@ -77,7 +78,8 @@ const Interior = ({
                       visit,
                       setVisit,
                       serviceType,
-                      setServiceType
+                      setServiceType,
+                      setDinedTables
                   }: InteriorProps) => {
     const items = Array(8).fill(null)
     const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
@@ -241,7 +243,7 @@ const Interior = ({
             updated[i] = type
             return updated
         })
-        if(type === "Service"){
+        if (type === "Service") {
             setServiceType(prev => {
                 const updated = [...prev]
                 updated[i] = SERVICE_TYPES[Math.floor(Math.random() * SERVICE_TYPES.length)]
@@ -297,25 +299,40 @@ const Interior = ({
                              }}>
                             <Image
                                 src={
-                                    inquiry[i] && dinedTables[i] ?
-                                        "/images/position_call_dined.png"
-                                        : dinedTables[i] && hostesses[i] && clients[i]
-                                            ? "/images/position_dined.png"
-                                            : inquiry[i]
-                                                ? "/images/position_call.png"
-                                                : hostesses[i] && clients[i]
-                                                    ? "/images/position_full.png"
-                                                    : hostesses[i]
-                                                        ? "/images/position_hostess.png"
-                                                        : clients[i]
-                                                            ? "/images/position_client.png"
-                                                            : "/images/position_empty.png"
+                                    !visit[i] && dinedTables[i] ?
+                                        "/images/position_empty_dined.png"
+                                        : inquiry[i] && dinedTables[i]
+                                            ? "/images/position_call_dined.png"
+                                            : dinedTables[i] && hostesses[i] && clients[i]
+                                                ? "/images/position_dined.png"
+                                                : inquiry[i]
+                                                    ? "/images/position_call.png"
+                                                    : hostesses[i] && clients[i]
+                                                        ? "/images/position_full.png"
+                                                        : hostesses[i]
+                                                            ? "/images/position_hostess.png"
+                                                            : clients[i]
+                                                                ? "/images/position_client.png"
+                                                                : "/images/position_empty.png"
                                 }
                                 alt={"Meeting position"}
                                 height={424}
                                 width={528}
                                 className={"flex justify-center items-center"}
                             />
+                            {!visit[i] && dinedTables[i] && (
+                                <div
+                                    className={`absolute bottom-15 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
+                                    onClick={() => {
+                                        setDinedTables(prev => {
+                                            const updated = [...prev]
+                                            updated[i] = false
+                                            return updated
+                                        })
+                                    }}>
+                                    <BrushCleaning size={20}/>
+                                </div>
+                            )}
                             <div
                                 className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
                                 {hostessAtTable ? (
