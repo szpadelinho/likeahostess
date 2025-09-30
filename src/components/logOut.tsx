@@ -30,11 +30,12 @@ const LogOut = ({onCloseModal}: Props) => {
                         <button onClick={() => {
                             signOut({redirectTo: "/auth"})
                         }}
-                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>Log
-                            me off
+                                className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
+                            Log me off
                         </button>
                         <button onClick={onCloseModal}
-                                className={"border-white border-2 rounded-[10] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>I
+                                className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
+                            I
                             will stay
                         </button>
                     </div>

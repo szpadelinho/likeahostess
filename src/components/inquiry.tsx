@@ -163,7 +163,6 @@ export const Inquiry = ({
                 return updated
             })
             onCloseModal()
-            setInquiryWindow(false)
         }
     }
 
@@ -185,7 +184,6 @@ export const Inquiry = ({
                 return updated
             })
             onCloseModal()
-            setInquiryWindow(false)
         }
         else{
             setWiggle(type)

@@ -385,7 +385,7 @@ const Interior = ({
                                     </div>
                                 ) : (
                                     <div
-                                        className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-900 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white"}>
+                                        className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-700 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white"}>
                                         <VenetianMask size={50}/>
                                     </div>
                                 )}
@@ -410,7 +410,7 @@ const Interior = ({
                                             }, 200)
                                         }
                                     }}
-                                    className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white ${clients[i] ? "bg-pink-800 opacity-100" : "bg-pink-900"} ${wiggleClient[i] ? "!bg-red-600 scale-120" : "scale-100"}`}>
+                                    className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white ${clients[i] ? "bg-pink-800 opacity-100" : "bg-pink-700"} ${wiggleClient[i] ? "!bg-red-600 scale-120" : "scale-100"}`}>
                                     {clients[i] ? (
                                         <>
                                             <Meh size={50}/>

@@ -165,7 +165,9 @@ const SelectionClient = () => {
                                     style={{
                                         transform: getTransform(club.position),
                                         opacity: getOpacity(club.position),
-                                        transition: 'transform 0.4s ease-in, opacity 0.4s ease-in-out'
+                                        transition: direction
+                                            ? "transform 0.4s ease-in, opacity 0.4s ease-in-out"
+                                            : "opacity 0.4s ease-in-out"
                                     }}
                                 >
                                     <div

@@ -30,7 +30,7 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setM
             className={"flex flex-row max-w-screen justify-between mb-10 ml-5 mr-5 items-end z-10"}>
             <div
                 className={`bg-pink-500 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white`}>
-                <div className={"bg-pink-700 h-[130%] w-[40%] rounded-[20] flex justify-center relative"}>
+                <div className={"bg-[radial-gradient(circle_at_center,_#be185d_50%,_#9d174d_75%,_#831843_100%)] h-[130%] w-[40%] rounded-[20] flex justify-center relative"}>
                     <Image
                         className={"flex absolute bottom-[-80%]"}
                         src={club.host.image}
@@ -57,10 +57,10 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setM
                 </div>
             </div>
             <div
-                className={"gap-5 bg-pink-500 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}>
+                className={"gap-5 bg-pink-500 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[15] text-white font-[600]"}>
                 <div className={"flex content-center justify-center items-center flex-row gap-2"}>
                     <button
-                        className={"border-white border-2 rounded-[10] p-2 cursor-zoom-in text-[15px] hover:bg-white hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
+                        className={"border-white border-2 rounded-[12] p-2 cursor-zoom-in text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
                         onClick={() => {
                             setManagement(true)
                         }}
@@ -68,7 +68,7 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setM
                         <Flower/>
                     </button>
                     <button
-                        className={"border-white border-2 rounded-[10] p-2 cursor-copy text-[15px] hover:bg-white hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
+                        className={"border-white border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
                         onClick={() => {
                             setActivities(true)
                         }}
@@ -88,7 +88,7 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setM
                                 setSelectionPrompt(true)
                             }
                         }}
-                        className={"border-white border-2 rounded-[10] p-2 cursor-wait hover:bg-white hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
+                        className={"border-white border-2 rounded-[12] p-2 cursor-wait hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
                         <CarTaxiFront/></button>
                     <button onClick={() => {
                         if (selectionPrompt) {
@@ -100,7 +100,7 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, setM
                             setLogOff(true)
                         }
                     }}
-                            className={"border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
+                            className={"border-white border-2 rounded-[12] p-2 cursor-alias hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
                         <LogOut/></button>
                 </div>
             </div>
