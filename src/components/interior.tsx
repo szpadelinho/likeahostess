@@ -322,7 +322,7 @@ const Interior = ({
                             />
                             {!visit[i] && dinedTables[i] && (
                                 <div
-                                    className={`absolute bottom-15 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
+                                    className={`absolute top-17.5 border-pink-300 hover:border-pink-500 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-pink-300 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
                                     onClick={() => {
                                         setDinedTables(prev => {
                                             const updated = [...prev]
@@ -330,7 +330,7 @@ const Interior = ({
                                             return updated
                                         })
                                     }}>
-                                    <BrushCleaning size={20}/>
+                                    <BrushCleaning size={30}/>
                                 </div>
                             )}
                             <div

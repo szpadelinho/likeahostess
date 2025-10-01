@@ -3,8 +3,6 @@
 import React, {useEffect, useState} from "react";
 import Hud from "@/components/hud";
 import Navbar from "@/components/navbar"
-import LogOut from "@/components/logOut";
-import SelectionPrompt from "@/components/selection";
 import MainWrapper from "@/components/mainWrapper";
 import Interior from "@/components/interior";
 import ModalWrapper from "@/components/modalWrapper";
@@ -16,6 +14,7 @@ import VideoWindow from "@/components/videoWindow";
 import JamPlayer from "@/components/jamPlayer";
 import {Inquiry} from "@/components/inquiry";
 import {BuffetType} from "@prisma/client";
+import {ModalContent} from "@/components/modalContent";
 
 type Club = {
     name: string
@@ -78,6 +77,7 @@ const Main = () => {
 
     const [management, setManagement] = useState<boolean>(false)
     const [activities, setActivities] = useState<boolean>(false)
+    const [profile, setProfile] = useState<boolean>(false)
 
     const [activity, setActivity] = useState<Activity[]>([])
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
@@ -86,7 +86,7 @@ const Main = () => {
     const [selectedPerformer, setSelectedPerformer] = useState<Performer | null>(null)
 
     const [hostessesManagement, setHostessesManagement] = useState<Hostess[]>([])
-    const [hostessesPanel, setHostessesPanel] = useState<(Hostess | null)[]>(Array(8).fill(null))
+    const [hostessesPanel, setHostessesPanel] = useState<(Hostess | null)[]>(Array(6).fill(null))
     const [selectedHostess, setSelectedHostess] = useState<Hostess | null>(null)
 
     const [hostessesWorking, setHostessesWorking] = useState<(Hostess | null)[]>(Array(8).fill(null))
@@ -285,6 +285,8 @@ const Main = () => {
                             setLogOff={setLogOff}
                             selectionPrompt={selectionPrompt}
                             setSelectionPrompt={setSelectionPrompt}
+                            profile={profile}
+                            setProfile={setProfile}
                             setManagement={setManagement}
                             setActivities={setActivities}
                         />
@@ -292,14 +294,19 @@ const Main = () => {
                     <HostessPanel management={management} hostesses={hostessesPanel} setHostesses={setHostessesPanel}
                                   selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}
                                   setHostessesManagement={setHostessesManagement} setManagement={setManagement}/>
-                    {selectionPrompt && (
-                        <ModalWrapper onClose={() => setSelectionPrompt(false)}>
-                            {({onCloseModal}) => <SelectionPrompt onCloseModal={onCloseModal}/>}
-                        </ModalWrapper>
-                    )}
-                    {logOff && (
-                        <ModalWrapper onClose={() => setLogOff(false)}>
-                            {({onCloseModal}) => <LogOut onCloseModal={onCloseModal}/>}
+                    {(selectionPrompt || logOff || profile) && (
+                        <ModalWrapper onClose={() => {
+                            if(selectionPrompt){
+                                setSelectionPrompt(false)
+                            }
+                            else if(logOff){
+                                setLogOff(false)
+                            }
+                            else if(profile){
+                                setProfile(false)
+                            }
+                        }}>
+                            {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} selectionPrompt={selectionPrompt} logOff={logOff} profile={profile}/>}
                         </ModalWrapper>
                     )}
                     {management && (

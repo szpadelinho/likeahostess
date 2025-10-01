@@ -34,9 +34,9 @@ const HostessPanel = ({
     const visibilityIndexSetter = management ? "z-[100]" : "z-10"
 
     return (
-        <div className={"flex relative w-screen"}>
+        <div className={"flex absolute bottom-10 w-screen items-center justify-center"}>
             <div
-                className={`${visibilityIndexSetter} bg-pink-700 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[25] text-white font-[600] absolute left-150 bottom-10 max-w-[1012px]`}>
+                className={`${visibilityIndexSetter} ml-50 bg-pink-700 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[25] text-white font-[600] max-w-[1012px]`}>
                 <div className={"flex justify-center items-center m-2 gap-5"}>
                     {hostesses?.map((hostess, index) => {
                         return (
