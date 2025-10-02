@@ -19,7 +19,10 @@
 
 *{
     cursor: url("/cursors/default.png") 10 10, auto !important;
-    cursor: url("/cursors/active.png") 10 10, pointer;
+}
+
+a, button{
+    cursor: url("/cursors/active.png") 10 10, auto !important;
 }
 
 html{

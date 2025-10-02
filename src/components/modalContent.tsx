@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {signOut} from "next-auth/react";
-import {router} from "next/client";
+import {useRouter} from "next/navigation";
 
 interface ModalContentProps {
     onCloseModal: () => void,
@@ -10,6 +10,7 @@ interface ModalContentProps {
 }
 
 export const ModalContent = ({onCloseModal, selectionPrompt, logOff, profile}: ModalContentProps) => {
+    const router = useRouter()
     return (
         <div
             className={`max-w-screen h-100 text-center content-center justify-center items-center flex flex-row text-white z-51`}>
