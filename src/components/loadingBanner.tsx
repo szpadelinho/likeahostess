@@ -1,3 +1,5 @@
+'use client'
+
 import Image from "next/image";
 import {Yesteryear} from "next/font/google";
 import {useEffect, useState} from "react";

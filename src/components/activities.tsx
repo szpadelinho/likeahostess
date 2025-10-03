@@ -121,7 +121,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                 <h1>{selectedPerformer.bio}</h1>
                             </div>
                             <div className={"flex justify-center items-center flex-row absolute -bottom-15 left-190 text-[15px] bg-pink-900 p-5 rounded-[20] gap-5"} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                                {performerActivities.length > 0 && (
+                                {performerActivities.length > 0 && activityIndex >= 0 && activityIndex < performerActivities.length && (
                                     <>
                                         <button onClick={prevActivity} className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
                                             <SkipBack/>
