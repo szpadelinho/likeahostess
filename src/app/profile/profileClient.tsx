@@ -102,9 +102,13 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
                         isPlaying ? <Volume2/> : <VolumeOff/>
                     }
                 </button>
-                <h1 className={`z-50 text-[50px] absolute top-35 ${yesteryear.className}`}>
-                    {session?.user?.name}'s card
-                </h1>
+                <div className={"absolute top-35 flex items-center justify-center z-50 flex-row gap-10"}>
+                    <Image src={session?.user?.image ?? "/images/dragon.png"} alt={"Profile picture"} height={50} width={50} className={"rounded-full border-2 border-black"}/>
+                    <h1 className={`z-50 text-[50px] ${yesteryear.className}`}>
+                        {session?.user?.name}'s card
+                    </h1>
+                    <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={50} width={50}/>
+                </div>
                 <h2 className={`absolute top-70 z-50 text-[25px] ${yesteryear.className}`}>
                     Summed money: {totals?.money}
                 </h2>
@@ -123,16 +127,14 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
                             className={"absolute flex h-full w-full scale-200 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,.5)_-50%,_rgba(0,0,0,0)_50%)] z-49"}/>
                     </div>
                 </div>
-                <div className={"flex justify-center items-center gap-5 flex-row absolute bottom-50 left-[47.5%]"}>
+                <div className={"flex justify-center items-center gap-5 flex-row absolute bottom-50 left-[42%]"}>
                     <button
-                        className={"border-pink-500 hover:border-pink-300 border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-pink-500 bg-pink-300 text-pink-500 hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-110 z-50"}
-                        onClick={handleReset}>
-                        <DatabaseBackup/>
+                        className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}                        onClick={handleReset}>
+                        <p>Reset account</p><DatabaseBackup/>
                     </button>
                     <button
-                        className={"border-pink-500 hover:border-pink-300 border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-pink-500 bg-pink-300 text-pink-500 hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-110 z-50"}
-                        onClick={handleDelete}>
-                        <Trash2/>
+                        className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}                        onClick={handleDelete}>
+                        <p>Delete account</p><Trash2/>
                     </button>
                 </div>
             </div>

@@ -1,7 +1,7 @@
 'use client'
 
 import {useSession, signIn} from "next-auth/react"
-import {Github, Volume2, VolumeOff} from "lucide-react";
+import {Github, MailQuestionMark, Scale, Volume2, VolumeOff} from "lucide-react";
 import Link from "next/link";
 import React, {useEffect, useState} from "react";
 import {redirect, useRouter} from "next/navigation"
@@ -67,7 +67,7 @@ export default function AuthClient() {
                         setIsPlaying(true)
                     }
                 }}
-                        className={"absolute top-10 right-10 z-49 border-white border-2 rounded-[10] p-1 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
+                        className={"absolute top-10 right-10 z-49 border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
                     {
                         isPlaying ? <Volume2/> : <VolumeOff/>
                     }
@@ -84,23 +84,32 @@ export default function AuthClient() {
                         href={"https://github.com/szpadelinho"}>Check out my other projects!</Link></h4>
                     <div
                         className="relative flex items-center justify-center flex-col h-80 w-160 shadow-lg shadow-gray-500 rotate-x-[1.4deg] mb-10 bg-[url(/images/paper_texture.png)]">
-                        <button
-                            className={`absolute border-black border-2 rounded-sm opacity-70 w-15 bottom-5 left-5 p-2 flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 flex items-center justify-center ${yesteryear.className}`}
-                            onClick={() => redirect("/rules")}>
-                            Rules
-                        </button>
+                        <div className={"absolute bottom-4 left-4 flex items-center justify-center flex-row gap-2"}>
+                            <button
+                                className={`border-black border-2 rounded-sm w-[105px] gap-2 opacity-70 p-2 flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 flex items-center justify-center ${yesteryear.className}`}
+                                onClick={() => redirect("/rules")}>
+                                <Scale/>
+                                <p>Rules</p>
+                            </button>
+                            <button
+                                className={`border-black border-2 rounded-sm w-[105px] gap-2 opacity-70 p-2 flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 flex items-center justify-center ${yesteryear.className}`}
+                                onClick={() => redirect("/tutorial")}>
+                                <MailQuestionMark/>
+                                <p>Tutorial</p>
+                            </button>
+                        </div>
                         <h2 className={`text-5xl border-t-2 pt-6 border-b-2 pb-6 w-80 text-center opacity-70 ${yesteryear.className}`}>
                             Like a Hostess
                         </h2>
-                        <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={200} width={64} className={"absolute top-5 right-5 z-40 mix-blend-color-burn"}/>
+                        <Image src={"/images/dragon2.png"} alt={"Dragon2 icon"} height={200} width={128} className={"absolute top-5 right-5 z-40 mix-blend-color-burn invert"}/>
                         <div className={"absolute bottom-4 right-4 flex flex-row gap-2 items-center"}>
                             <button
-                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                                className={"border-black border-2 rounded-sm w-[105px] opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
                                 onClick={() => signIn('github', {redirectTo: "/selection"})}>
                                 <Github/><p>Github</p>
                             </button>
                             <button
-                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                                className={"border-black border-2 rounded-sm w-[105px] opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
                                 onClick={() => signIn('discord', {redirectTo: "/selection"})}>
                                 <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24"
                                      viewBox="0 0 50 50">
