@@ -6,10 +6,11 @@ interface ModalContentProps {
     onCloseModal: () => void,
     selectionPrompt: boolean,
     logOff: boolean,
-    profile: boolean
+    profile: boolean,
+    casino: boolean
 }
 
-export const ModalContent = ({onCloseModal, selectionPrompt, logOff, profile}: ModalContentProps) => {
+export const ModalContent = ({onCloseModal, selectionPrompt, logOff, profile, casino}: ModalContentProps) => {
     const router = useRouter()
     return (
         <div
@@ -109,6 +110,41 @@ export const ModalContent = ({onCloseModal, selectionPrompt, logOff, profile}: M
                             }}
                                     className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
                                 Go for it
+                            </button>
+                            <button onClick={onCloseModal}
+                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
+                                I will stay
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+            {casino && (
+                <div
+                    className={"w-200 flex content-center justify-center items-center flex-row bg-transparent"}>
+                    <div
+                        className={"w-[250px] h-[250px] flex content-center justify-center items-center flex-row bg-pink-700 rounded-[20]"}
+                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+                        <Image
+                            className={"rounded-[20] w-[250px] h-[250px]"}
+                            src={"/images/tanimura.png"}
+                            alt={"Masayoshi Tanimura"}
+                            width={250}
+                            height={250}
+                        />
+                    </div>
+                    <div
+                        className={"h-50 p-10 flex content-center justify-center items-center flex-col gap-5 bg-pink-500 rounded-br-[20] rounded-tr-[20]"}
+                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+                        <h1 className={"text-[30px]"}>
+                            Visit casino?
+                        </h1>
+                        <div className={"flex content-center justify-center items-center flex-row text-[25px] gap-10"}>
+                            <button onClick={() => {
+                                router.push("/casino");
+                            }}
+                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
+                                Let's go gamble!
                             </button>
                             <button onClick={onCloseModal}
                                     className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>

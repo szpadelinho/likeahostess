@@ -78,6 +78,7 @@ const Main = () => {
     const [management, setManagement] = useState<boolean>(false)
     const [activities, setActivities] = useState<boolean>(false)
     const [profile, setProfile] = useState<boolean>(false)
+    const [casino, setCasino] = useState<boolean>(false)
 
     const [activity, setActivity] = useState<Activity[]>([])
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
@@ -286,6 +287,8 @@ const Main = () => {
                             selectionPrompt={selectionPrompt}
                             setSelectionPrompt={setSelectionPrompt}
                             profile={profile}
+                            casino={casino}
+                            setCasino={setCasino}
                             setProfile={setProfile}
                             setManagement={setManagement}
                             setActivities={setActivities}
@@ -294,7 +297,7 @@ const Main = () => {
                     <HostessPanel management={management} hostesses={hostessesPanel} setHostesses={setHostessesPanel}
                                   selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}
                                   setHostessesManagement={setHostessesManagement} setManagement={setManagement}/>
-                    {(selectionPrompt || logOff || profile) && (
+                    {(selectionPrompt || logOff || profile || casino) && (
                         <ModalWrapper onClose={() => {
                             if(selectionPrompt){
                                 setSelectionPrompt(false)
@@ -305,8 +308,11 @@ const Main = () => {
                             else if(profile){
                                 setProfile(false)
                             }
+                            else if(casino){
+                                setCasino(false)
+                            }
                         }}>
-                            {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} selectionPrompt={selectionPrompt} logOff={logOff} profile={profile}/>}
+                            {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} selectionPrompt={selectionPrompt} logOff={logOff} profile={profile} casino={casino}/>}
                         </ModalWrapper>
                     )}
                     {management && (

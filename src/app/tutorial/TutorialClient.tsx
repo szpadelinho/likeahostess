@@ -12,7 +12,6 @@ const Tutorial = () => {
     const [muted, setMuted] = useState(true)
 
     const [active, setActive] = useState<string | null>(null)
-    const [isBookOpen, setIsBookOpen] = useState(false)
 
     function handleClick(label: string) {
         setActive(label)

@@ -133,10 +133,9 @@ model Performer {
 }
 
 model Jam {
-  id    String  @id @default(cuid())
+  id    String @id @default(cuid())
   title String
   media String
-  type  JamType @default(Club)
 }
 
 model Buffet {
@@ -150,15 +149,4 @@ model Buffet {
 enum BuffetType {
   Beverage
   Meal
-}
-
-enum JamType {
-  Club
-  Profile
-  Auth
-  Selection
-  Tutorial
-  Casino
-  Loan
-  NewSerena
 }

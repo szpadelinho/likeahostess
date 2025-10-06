@@ -1,4 +1,14 @@
-import {CarTaxiFront, Flower, HeartHandshake, IdCard, JapaneseYen, LogOut, MicVocal} from "lucide-react";
+import {
+    BottleWine,
+    CarTaxiFront,
+    ClubIcon,
+    Flower,
+    HeartHandshake,
+    IdCard,
+    JapaneseYen,
+    LogOut,
+    MicVocal
+} from "lucide-react";
 import Image from "next/image";
 import {Dispatch, SetStateAction} from "react";
 
@@ -19,6 +29,8 @@ interface Hud {
     selectionPrompt: boolean
     setSelectionPrompt: Dispatch<SetStateAction<boolean>>
     profile: boolean
+    casino: boolean
+    setCasino: Dispatch<SetStateAction<boolean>>
     setProfile: Dispatch<SetStateAction<boolean>>
     setManagement: Dispatch<SetStateAction<boolean>>
     setActivities: Dispatch<SetStateAction<boolean>>
@@ -26,7 +38,7 @@ interface Hud {
 }
 
 
-const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, profile, setProfile, setManagement, setActivities}: Hud) => {
+const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, profile, setProfile, setManagement, setActivities, casino, setCasino}: Hud) => {
     return (
         <div
             className={"flex flex-row max-w-screen justify-between mb-10 ml-5 mr-5 items-end z-10"}>
@@ -78,19 +90,47 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, prof
                         <MicVocal/>
                     </button>
                 </div>
-                <button
-                    className={"border-white border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
-                    onClick={() => {
-                        if(profile){
-                            setProfile(false)
-                        }
-                        else{
-                            setProfile(true)
-                        }
-                    }}
-                >
-                    <IdCard/>
-                </button>
+                <div className={"flex content-center justify-center items-center flex-row gap-2"}>
+                    <button
+                        className={"border-white border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
+                        onClick={() => {
+                            if(casino){
+                                setCasino(false)
+                            }
+                            else{
+                                setCasino(true)
+                            }
+                        }}
+                    >
+                        <ClubIcon/>
+                    </button>
+                    <button
+                        className={"border-white border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
+                        onClick={() => {
+                            if(profile){
+                                setProfile(false)
+                            }
+                            else{
+                                setProfile(true)
+                            }
+                        }}
+                    >
+                        <IdCard/>
+                    </button>
+                    <button
+                        className={"border-white border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}
+                        onClick={() => {
+                            if(profile){
+                                setProfile(false)
+                            }
+                            else{
+                                setProfile(true)
+                            }
+                        }}
+                    >
+                        <BottleWine/>
+                    </button>
+                </div>
                 <div className={"flex content-center justify-center gap-2"}>
                     <button
                         onClick={() => {

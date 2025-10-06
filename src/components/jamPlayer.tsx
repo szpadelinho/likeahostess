@@ -40,7 +40,11 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
     return(
         <div className={"absolute text-white z-49 top-5 right-5 flex justify-center items-center flex-row text-[15px] bg-pink-950 p-3 rounded-[20] gap-5 transition duration-200 ease-in-out opacity-30 hover:opacity-100"} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
             <div
-                 className={"flex bg-red-950 justify-center items-center flex-row border-white border-2 rounded-[15] p-2 transition duration-200 ease-in-out"}>
+                 className={"flex bg-red-950 active:scale-105 active:bg-pink-900 justify-center items-center flex-row border-white border-2 rounded-[15] p-2 transition duration-200 ease-in-out"}
+                 onClick={() => {
+                     navigator.clipboard.writeText(`https://youtube.com/watch/${jams[currentTrack].media}?autoplay=1`)
+                         .then(() => console.log("Successfully copied the URL"))
+                 }}>
                 <div className={"w-100 flex flex-row justify-center items-center gap-3 font-[600]"}>
                     <Disc3 className={`transition-transform ${isJamPlaying ? "spin" : ""}`}/>
                     {jams[currentTrack].title}
