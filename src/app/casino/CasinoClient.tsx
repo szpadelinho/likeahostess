@@ -2,7 +2,7 @@
 
 import ReactPlayer from "react-player";
 import React, {useEffect, useState} from "react";
-import {JapaneseYen, LogOut, SquareDashedMousePointer, Volume2, VolumeOff} from "lucide-react";
+import {BookCopy, JapaneseYen, LogOut, Volume2, VolumeOff} from "lucide-react";
 import {useRouter} from "next/navigation";
 import {Yesteryear} from "next/font/google";
 import Image from "next/image";
@@ -59,7 +59,16 @@ const CasinoClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(true)
 
-    const [game, setGame] = useState<"Roulette" | "Blackjack" | "Chohan" | null>(null)
+    const [game, setGame] = useState<"Roulette" | "Blackjack" | "Poker" | "Chohan" | null>(null)
+    const [background, setBackground] = useState("casino")
+
+    const cards = {
+        "spades": ["🂡", "🂢", "🂣", "🂤", "🂥", "🂦", "🂧", "🂨", "🂩", "🂪", "🂫", "🂬", "🂭", "🂮"],
+        "hearts": ["🂱", "🂲", "🂳", "🂴", "🂵", "🂶", "🂷", "🂸", "🂹", "🂺", "🂻", "🂼", "🂽", "🂾"],
+        "diamonds": ["🃁", "🃂", "🃃", "🃄", "🃅", "🃆", "🃇", "🃈", "🃉", "🃊", "🃋", "🃌", "🃍", "🃎"],
+        "clubs": ["🃑", "🃒", "🃓", "🃔", "🃕", "🃖", "🃗", "🃘", "🃙", "🃚", "🃛", "🃜", "🃝", "🃞"],
+        "default": "🂠"
+    }
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -70,7 +79,7 @@ const CasinoClient = () => {
     }, [])
     return(
         <div className={"flex flex-col h-screen w-screen items-center justify-center text-white z-50 gap-5"}>
-            <Image src={"/images/casino.png"} alt={"Casino interior"} fill={true} className={"absolute inset-0 z-[-1]"}/>
+            <Image src={`/images/${background}.png`} alt={"Casino interior"} fill={true} className={"absolute inset-0 z-[-1]"}/>
             <button onClick={() => {
                 router.push("/")
             }}
@@ -93,9 +102,10 @@ const CasinoClient = () => {
             {game && (
                 <button onClick={() => {
                     setGame(null)
+                    setBackground("casino")
                 }}
                         className={"backdrop-blur-xl z-50 absolute top-10 left-10  border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                    <SquareDashedMousePointer/>
+                    <BookCopy/>
                 </button>
             )}
             <ReactPlayer
@@ -110,13 +120,14 @@ const CasinoClient = () => {
             />
             {!game ? (
                 <>
-                    <Image className={"absolute -left-10 top-60"} src={"/images/tanimura_cover.png"} alt={"Masayoshi Tanimura"} height={0} width={400}/>
+                    <Image className={"absolute -left-20 top-100"} src={"/images/tanimura_cover.png"} alt={"Masayoshi Tanimura"} height={0} width={350}/>
                     <h1 className={`absolute top-20 text-[50px] ${yesteryear.className}`}>What will we play today?</h1>
                     <div className={"flex flex-row items-center justify-center gap-10"}>
                         <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
                              onClick={() => {
                                  if(!game) {
                                      setGame("Roulette")
+                                     setBackground("casino_roulette")
                                  }
                                  else {
                                      setGame(null)
@@ -129,6 +140,7 @@ const CasinoClient = () => {
                              onClick={() => {
                                  if(!game) {
                                      setGame("Blackjack")
+                                     setBackground("casino_blackjack")
                                  }
                                  else {
                                      setGame(null)
@@ -140,7 +152,21 @@ const CasinoClient = () => {
                         <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
                              onClick={() => {
                                  if(!game) {
+                                     setGame("Poker")
+                                     setBackground("casino_poker")
+                                 }
+                                 else {
+                                     setGame(null)
+                                 }
+                             }}>
+                            <h1 className={`text-[40px] ${yesteryear.className}`}>Poker</h1>
+                            <p className={"text-[20px]"}>A card game. The players take one card per round. They either bet or pass on the play. The goal is to have the most fitting 5-card hand with the cards on the table. The winner has the strongest hand.</p>
+                        </div>
+                        <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
+                             onClick={() => {
+                                 if(!game) {
                                      setGame("Chohan")
+                                     setBackground("casino_chohan")
                                  }
                                  else {
                                      setGame(null)
@@ -152,9 +178,9 @@ const CasinoClient = () => {
                     </div>
                 </>
             ):(
-                <CasinoGame game={game}/>
+                club && <CasinoGame game={game} money={club.money}/>
             )}
-            {club && (
+            {club && game && (
                 <div
                     className={`backdrop-blur-md absolute left-5 bottom-5 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}
                     style={{backgroundColor: "rgba(0, 0, 0, .1)"}}>
