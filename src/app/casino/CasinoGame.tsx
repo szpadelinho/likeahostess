@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Yesteryear} from "next/font/google";
 import {CircleSmall, GlassWater, JapaneseYen, Minus, Plus} from "lucide-react";
+import Image from "next/image";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -29,29 +30,30 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
     const [deck, setDeck] = useState<string[]>([])
 
     const cards = {
-        "spades": ["🂡", "🂢", "🂣", "🂤", "🂥", "🂦", "🂧", "🂨", "🂩", "🂪", "🂫", "🂬", "🂭", "🂮"],
-        "hearts": ["🂱", "🂲", "🂳", "🂴", "🂵", "🂶", "🂷", "🂸", "🂹", "🂺", "🂻", "🂼", "🂽", "🂾"],
-        "diamonds": ["🃁", "🃂", "🃃", "🃄", "🃅", "🃆", "🃇", "🃈", "🃉", "🃊", "🃋", "🃌", "🃍", "🃎"],
-        "clubs": ["🃑", "🃒", "🃓", "🃔", "🃕", "🃖", "🃗", "🃘", "🃙", "🃚", "🃛", "🃜", "🃝", "🃞"],
-        "default": "🂠"
+        "spades": ["spades_ace", "spades_two", "spades_three", "spades_four", "spades_five", "spades_six", "spades_seven", "spades_eight", "spades_nine", "spades_ten", "spades_jack", "spades_queen", "spades_king"],
+        "hearts": ["hearts_ace", "hearts_two", "hearts_three", "hearts_four", "hearts_five", "hearts_six", "hearts_seven", "hearts_eight", "hearts_nine", "hearts_ten", "hearts_jack", "hearts_queen", "hearts_king"],
+        "diamonds": ["diamonds_ace", "diamonds_two", "diamonds_three", "diamonds_four", "diamonds_five", "diamonds_six", "diamonds_seven", "diamonds_eight", "diamonds_nine", "diamonds_ten", "diamonds_jack", "diamonds_queen", "diamonds_king"],
+        "clubs": ["clubs_ace", "clubs_two", "clubs_three", "clubs_four", "clubs_five", "clubs_six", "clubs_seven", "clubs_eight", "clubs_nine", "clubs_ten", "clubs_jack", "clubs_queen", "clubs_king"],
+        "default": "default"
     }
 
     const getCardValue = (card: string): number => {
         const rankMap: Record<string, number> = {
-            "🂡": 11, "🂱": 11, "🃁": 11, "🃑": 11, // asy
-            "🂢": 2, "🂲": 2, "🃂": 2, "🃒": 2,
-            "🂣": 3, "🂳": 3, "🃃": 3, "🃓": 3,
-            "🂤": 4, "🂴": 4, "🃄": 4, "🃔": 4,
-            "🂥": 5, "🂵": 5, "🃅": 5, "🃕": 5,
-            "🂦": 6, "🂶": 6, "🃆": 6, "🃖": 6,
-            "🂧": 7, "🂷": 7, "🃇": 7, "🃗": 7,
-            "🂨": 8, "🂸": 8, "🃈": 8, "🃘": 8,
-            "🂩": 9, "🂹": 9, "🃉": 9, "🃙": 9,
-            "🂪": 10, "🂺": 10, "🃊": 10, "🃚": 10, // 10
-            "🂫": 10, "🂻": 10, "🃋": 10, "🃛": 10, // J
-            "🂭": 10, "🂽": 10, "🃍": 10, "🃝": 10, // Q
-            "🂮": 10, "🂾": 10, "🃎": 10, "🃞": 10, // K
+            "spades_ace": 11, "hearts_ace": 11, "diamonds_ace": 11, "clubs_ace": 11,
+            "spades_two": 2, "hearts_two": 2, "diamonds_two": 2, "clubs_two": 2,
+            "spades_three": 3, "hearts_three": 3, "diamonds_three": 3, "clubs_three": 3,
+            "spades_four": 4, "hearts_four": 4, "diamonds_four": 4, "clubs_four": 4,
+            "spades_five": 5, "hearts_five": 5, "diamonds_five": 5, "clubs_five": 5,
+            "spades_six": 6, "hearts_six": 6, "diamonds_six": 6, "clubs_six": 6,
+            "spades_seven": 7, "hearts_seven": 7, "diamonds_seven": 7, "clubs_seven": 7,
+            "spades_eight": 8, "hearts_eight": 8, "diamonds_eight": 8, "clubs_eight": 8,
+            "spades_nine": 9, "hearts_nine": 9, "diamonds_nine": 9, "clubs_nine": 9,
+            "spades_ten": 10, "hearts_ten": 10, "diamonds_ten": 10, "clubs_ten": 10,
+            "spades_jack": 10, "hearts_jack": 10, "diamonds_jack": 10, "clubs_jack": 10,
+            "spades_queen": 10, "hearts_queen": 10, "diamonds_queen": 10, "clubs_queen": 10,
+            "spades_king": 10, "hearts_king": 10, "diamonds_king": 10, "clubs_king": 10,
         }
+
         return rankMap[card] || 0
     }
 
@@ -151,6 +153,12 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
                 setIsPlayerTurn(false)
                 setGameOver(true)
                 setWin(2)
+            }
+            else if(calculateHandValue(dealerCards) === 21){
+                setScore("The dealer had a blackjack!")
+                setIsPlayerTurn(false)
+                setGameOver(true)
+                setWin(0)
             }
         }
     }, [userCards])
@@ -314,22 +322,20 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
                 </>
             )}
             {game === "Blackjack" && (
-               <>
+               <div className={"flex flex-col justify-center items-center gap-10"}>
                    <h1 className={`text-[75px] ${yesteryear.className}`}>Blackjack</h1>
-                   <div className={"flex flex-col justify-center items-center gap-5"}>
-                       <div className={"flex flex-row justify-center items-center gap-5"}>
+                   <div className={`flex flex-col justify-center items-center gap-5 p-10 h-150 w-225 rounded-[20] backdrop-blur-sm ${yesteryear.className}`}>
+                       <div className={"relative flex flex-row justify-center items-center gap-5"}>
+                           {isPlayerTurn && !gameOver && <h1 className={"absolute -top-15 z-50 text-white text-[30px]"}>Dealer</h1>}
                            {dealerCards.map((dealerCard, i) => (
-                               <span className={"text-[200px]"} key={i}>
-                                   {(i === 1 && isPlayerTurn && !gameOver) ? cards.default : dealerCard}
-                               </span>
+                               <Image key={i} className={"rounded-[10] object-fill"} src={`/cards/${(i === 1 && isPlayerTurn && !gameOver) ? cards.default : dealerCard}.png`} alt={`Dealer Card ${i}`} height={200} width={150}/>
                            ))}
                        </div>
-                       <div className={"flex flex-row justify-center items-center gap-5"}>
+                       <div className={"relative flex flex-row justify-center items-center gap-5"}>
                            {userCards.map((userCard, i) => (
-                               <span className={"text-[200px]"} key={i}>
-                                   {userCard}
-                               </span>
+                               <Image key={i} className={"rounded-[10] object-fill"} src={`/cards/${userCard}.png`} alt={`User Card ${i}`} height={200} width={150}/>
                            ))}
+                           {isPlayerTurn && !gameOver && <h1 className={`absolute -bottom-15 z-50 text-white text-[30px] ${yesteryear.className}`}>You</h1>}
                        </div>
                    </div>
                    <div className={"flex flex-col justify-center items-center gap-5"}>
@@ -381,7 +387,7 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
                            <p>{win === 0 ? `You lost ${bet}.`: win === 1 ? `You receive your ${bet} back.` : win === 2 && `You have won ${bet * 2} !`}</p>
                        </h1>
                    )}
-               </>
+               </div>
             )}
         </div>
     )

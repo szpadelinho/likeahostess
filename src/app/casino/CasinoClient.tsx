@@ -174,10 +174,8 @@ const CasinoClient = () => {
             )}
             {club && game && (
                 <div
-                    className={`backdrop-blur-md absolute left-5 bottom-5 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}
-                    style={{backgroundColor: "rgba(0, 0, 0, .1)"}}>
-                    <div className={"backdrop-blur-xl h-[130%] w-[40%] rounded-[20] flex justify-center relative"}
-                         style={{backgroundColor: "rgba(0, 0, 0, .1)"}}>
+                    className={`backdrop-blur-md absolute left-5 bottom-5 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}>
+                    <div className={"backdrop-blur-xl h-[130%] w-[40%] rounded-[20] flex justify-center relative"}>
                         <Image
                             className={"flex absolute bottom-[-80%]"}
                             src={club.host.image}
