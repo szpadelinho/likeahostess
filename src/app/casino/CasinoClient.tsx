@@ -112,7 +112,7 @@ const CasinoClient = () => {
             />
             {!game ? (
                 <>
-                    <Image className={"absolute -left-20 top-100"} src={"/images/tanimura_cover.png"} alt={"Masayoshi Tanimura"} height={0} width={350}/>
+                    <Image className={"absolute left-5 top-75"} src={"/images/tanimura_cover.png"} alt={"Masayoshi Tanimura"} height={0} width={150}/>
                     <h1 className={`absolute top-20 text-[50px] ${yesteryear.className}`}>What will we play today?</h1>
                     <div className={"flex flex-row items-center justify-center gap-10"}>
                         <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
@@ -170,19 +170,21 @@ const CasinoClient = () => {
                     </div>
                 </>
             ):(
-                club && <CasinoGame game={game} money={club.money}/>
+                club && <CasinoGame game={game} money={club.money} club={club}/>
             )}
             {club && game && (
                 <div
                     className={`backdrop-blur-md absolute left-5 bottom-5 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}>
                     <div className={"backdrop-blur-xl h-[130%] w-[40%] rounded-[20] flex justify-center relative"}>
-                        <Image
-                            className={"flex absolute bottom-[-80%]"}
-                            src={club.host.image}
-                            alt={"Host"}
-                            height={500}
-                            width={150}
-                        />
+                        {game !== "Blackjack" && (
+                            <Image
+                                className={"flex absolute bottom-[-80%]"}
+                                src={club.host.image}
+                                alt={"Host"}
+                                height={500}
+                                width={150}
+                            />
+                        )}
                     </div>
                     <div className={"flex flex-row text-center justify-center content-center w-[60%] h-[100%] p-5"}>
                         <div className={"flex flex-col justify-center w-[60%]"}>

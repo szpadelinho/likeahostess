@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {Yesteryear} from "next/font/google";
 import {CircleSmall, GlassWater, JapaneseYen, Minus, Plus} from "lucide-react";
 import Image from "next/image";
@@ -8,12 +8,25 @@ const yesteryear = Yesteryear({
     subsets: ['latin'],
 })
 
-interface CasinoGameProps {
-    game: "Roulette" | "Blackjack" | "Poker" | "Chohan" | null,
+type Club = {
+    name: string
+    host: {
+        name: string
+        surname: string
+        image: string
+    },
     money: number
+    popularity: number
+    logo: string
 }
 
-const CasinoGame = ({game, money}: CasinoGameProps) => {
+interface CasinoGameProps {
+    game: "Roulette" | "Blackjack" | "Poker" | "Chohan" | null,
+    money: number,
+    club: Club
+}
+
+const CasinoGame = ({game, money, club}: CasinoGameProps) => {
     const [score, setScore] = useState<boolean | string | null>(null)
     const [value, setValue] = useState<string>("")
     const [total, setTotal] = useState<number>(0)
@@ -28,6 +41,47 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
     const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(false)
     const [gameOver, setGameOver] = useState<boolean>(false)
     const [deck, setDeck] = useState<string[]>([])
+
+    const [showCard, setShowCard] = useState<string | null>(null)
+    const [cardModal, setCardModal] = useState<boolean>(false)
+
+    const cardRef = useRef<HTMLImageElement | null>(null)
+    const [rotation, setRotation] = useState({x: 0, y: 0})
+
+    const audio = new Audio("/sfx/name_introduction.m4a")
+
+    const handleCardTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+        const rect = e.currentTarget.getBoundingClientRect()
+        const x = e.clientX - rect.left
+        const y = e.clientY - rect.top
+
+        const midX = rect.width / 2
+        const midY = rect.height / 2
+
+        const rotateX = ((y - midY) / midY) * 6
+        const rotateY = ((x - midX) / midX) * 6
+
+        setRotation({x: rotateX, y: rotateY})
+    }
+
+    const resetTilt = () => {
+        setRotation({x: 0, y: 0})
+    }
+
+    const closeShowCard = () => {
+        setCardModal(false)
+        setTimeout(() => setShowCard(null), 500)
+    }
+
+    useEffect(() => {
+        if(showCard){
+            setCardModal(false)
+            requestAnimationFrame(() => {
+                setCardModal(true)
+                audio.play()
+            })
+        }
+    }, [showCard])
 
     const cards = {
         "spades": ["spades_ace", "spades_two", "spades_three", "spades_four", "spades_five", "spades_six", "spades_seven", "spades_eight", "spades_nine", "spades_ten", "spades_jack", "spades_queen", "spades_king"],
@@ -57,6 +111,57 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
         return rankMap[card] || 0
     }
 
+    const getCardPersona = (card: string): { title: string; persona: string } => {
+        const personaMap: Record<string, string> = {
+            "spades_ace": "Shintaro Kazama", "hearts_ace": "Sohei Dojima", "diamonds_ace": "Futoshi Shimano", "clubs_ace": "Jin Goda",
+            "spades_two": "Jun Oda", "hearts_two": "Makoto Makimura", "diamonds_two": "Homare Nishitani", "clubs_two": "Lao Gui",
+            "spades_three": "Makoto Date", "hearts_three": "Yumi Sawamura", "diamonds_three": "The Florist of Sai", "clubs_three": "Osamu Kashiwagi",
+            "spades_four": "Yukio Terada", "hearts_four": "Lady Yayoi Dojima", "diamonds_four": "Nishida", "clubs_four": "Toranosuke Sengoku",
+            "spades_five": "Rikiya Shimabukuro", "hearts_five": "Tsuyoshi Kanda", "diamonds_five": "Yoshitaka Mine", "clubs_five": "Lau Ka Long",
+            "spades_six": "Masayoshi Tanimura", "hearts_six": "Hana", "diamonds_six": "Daisaku Minami", "clubs_six": "Go Hamazaki",
+            "spades_seven": "Taco Shinada", "hearts_seven": "Masaru Watase", "diamonds_seven": "Kamon Kanai", "clubs_seven": "Masato Aizawa",
+            "spades_eight": "Joon-Gi Han", "hearts_eight": "Haruto Sawamura", "diamonds_eight": "Heizo Hiwami", "clubs_eight": "Kanji Koshimizu",
+            "spades_nine": "Yu Nanba", "hearts_nine": "Masato Arakawa", "diamonds_nine": "Koichi Adachi", "clubs_nine": "Tianyou Zhao",
+            "spades_ten": "Jo Amon", "hearts_ten": "Onimichio", "diamonds_ten": "Munancho Suzuki", "clubs_ten": "Pocket Circuit Fighter Fujisawa",
+            "spades_jack": "Shun Akiyama", "hearts_jack": "Akira Nishikiyama", "diamonds_jack": "Daigo Dojima", "clubs_jack": "Ryuji Goda",
+            "spades_queen": "Saeko Mukoda", "hearts_queen": "Haruka Sawamura", "diamonds_queen": "Seonhee", "clubs_queen": "Kaoru Sayama",
+            "spades_king": "Kiryu Kazuma", "hearts_king": "Ichiban Kasuga", "diamonds_king": "Goro Majima", "clubs_king": "Taiga Saejima",
+        }
+
+        const [suitKey, rankKey] = card.split("_")
+
+        const suitMap: Record<string, string> = {
+            spades: "Spades",
+            hearts: "Hearts",
+            diamonds: "Diamonds",
+            clubs: "Clubs",
+        };
+
+        const rankMap: Record<string, string> = {
+            ace: "Ace",
+            two: "Two",
+            three: "Three",
+            four: "Four",
+            five: "Five",
+            six: "Six",
+            seven: "Seven",
+            eight: "Eight",
+            nine: "Nine",
+            ten: "Ten",
+            jack: "Jack",
+            queen: "Queen",
+            king: "King",
+        };
+
+        const title = suitKey && rankKey
+            ? `${rankMap[rankKey]} of ${suitMap[suitKey]}`
+            : "Back of the card"
+
+        const persona = personaMap[card] || ""
+
+        return { title, persona }
+    }
+
     const calculateHandValue = (hand: string[]): number => {
         let total = 0
         let aces = 0
@@ -64,10 +169,10 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
         hand.forEach(card => {
             const value = getCardValue(card)
             total += value
-            if(value == 11) aces++
+            if (value == 11) aces++
         })
 
-        while (total > 21 && aces > 0){
+        while (total > 21 && aces > 0) {
             total -= 10
             aces--
         }
@@ -85,7 +190,7 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
 
     const handleDeckShuffle = (deck: string[]) => {
         const newDeck = [...deck]
-        for(let i = newDeck.length - 1; i > 0; i--) {
+        for (let i = newDeck.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [newDeck[i], newDeck[j]] = [newDeck[j], newDeck[i]]
         }
@@ -112,8 +217,7 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
                     handleScore("Chohan", "odd", total, sum, false)
                 }
             }
-        }
-        else if (type === "Blackjack"){
+        } else if (type === "Blackjack") {
             let freshDeck = handleDeckShuffle(handleDeckBuild())
             const userHand = freshDeck.slice(0, 2)
             const dealerHand = freshDeck.slice(2, 4)
@@ -147,14 +251,12 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
                 setIsPlayerTurn(false)
                 setGameOver(true)
                 setWin(0)
-            }
-            else if(calculateHandValue(userCards) === 21){
+            } else if (calculateHandValue(userCards) === 21) {
                 setScore("Blackjack! Congatulations, sir!")
                 setIsPlayerTurn(false)
                 setGameOver(true)
                 setWin(2)
-            }
-            else if(calculateHandValue(dealerCards) === 21){
+            } else if (calculateHandValue(dealerCards) === 21) {
                 setScore("The dealer had a blackjack!")
                 setIsPlayerTurn(false)
                 setGameOver(true)
@@ -200,10 +302,9 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
             setTotal(total)
             setArray(array)
             setScore(won)
-            if(won){
+            if (won) {
                 setPrize(bet * 2)
-            }
-            else{
+            } else {
                 setPrize(bet)
             }
         }
@@ -218,8 +319,7 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
                     return Math.max(prev - 1000, 1000)
                 }
             })
-        }
-        else if(type === "Blackjack"){
+        } else if (type === "Blackjack") {
             setBet(prev => {
                 if (action === "Add") {
                     return Math.min(prev + 1000, 50000, money)
@@ -322,72 +422,137 @@ const CasinoGame = ({game, money}: CasinoGameProps) => {
                 </>
             )}
             {game === "Blackjack" && (
-               <div className={"flex flex-col justify-center items-center gap-10"}>
-                   <h1 className={`text-[75px] ${yesteryear.className}`}>Blackjack</h1>
-                   <div className={`flex flex-col justify-center items-center gap-5 p-10 h-150 w-225 rounded-[20] backdrop-blur-sm ${yesteryear.className}`}>
-                       <div className={"relative flex flex-row justify-center items-center gap-5"}>
-                           {isPlayerTurn && !gameOver && <h1 className={"absolute -top-15 z-50 text-white text-[30px]"}>Dealer</h1>}
-                           {dealerCards.map((dealerCard, i) => (
-                               <Image key={i} className={"rounded-[10] object-fill"} src={`/cards/${(i === 1 && isPlayerTurn && !gameOver) ? cards.default : dealerCard}.png`} alt={`Dealer Card ${i}`} height={200} width={150}/>
-                           ))}
-                       </div>
-                       <div className={"relative flex flex-row justify-center items-center gap-5"}>
-                           {userCards.map((userCard, i) => (
-                               <Image key={i} className={"rounded-[10] object-fill"} src={`/cards/${userCard}.png`} alt={`User Card ${i}`} height={200} width={150}/>
-                           ))}
-                           {isPlayerTurn && !gameOver && <h1 className={`absolute -bottom-15 z-50 text-white text-[30px] ${yesteryear.className}`}>You</h1>}
-                       </div>
-                   </div>
-                   <div className={"flex flex-col justify-center items-center gap-5"}>
-                       {isPlayerTurn && !gameOver ? (
-                           <div className={"flex gap-5 flex-row"}>
-                               <button
-                                   className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] border-white border-2 rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                                   onClick={playerHit}>
-                                   Hit
-                               </button>
-                               <button
-                                   className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] border-white border-2 rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                                   onClick={playerStand}>
-                                   Stand
-                               </button>
-                           </div>
-                       ) : (
-                           <button
-                               className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] border-white border-2 rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                               onClick={() => {
-                                   handleGame("Blackjack", null)
-                               }}>
-                               Play
-                           </button>
-                       )}
-                       <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center"}>
-                           <button
-                               className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
-                               onClick={() => {
-                                   handleBet("Blackjack", "Lower")
-                               }}>
-                               <Minus size={30}/>
-                           </button>
-                           <p className={"p-2 rounded-[10] w-30 justify-center items-center text-center flex text-nowrap gap-2"}>
-                               <JapaneseYen size={15}/>{bet}
-                           </p>
-                           <button
-                               className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
-                               onClick={() => {
-                                   handleBet("Blackjack", "Add")
-                               }}>
-                               <Plus size={30}/>
-                           </button>
-                       </div>
-                   </div>
-                   {score !== null && (
-                       <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-md p-2 h-55 w-120 rounded-[20] text-[40px] flex justify-center items-center flex-col`}>
-                           <p>{score}</p>
-                           <p>{win === 0 ? `You lost ${bet}.`: win === 1 ? `You receive your ${bet} back.` : win === 2 && `You have won ${bet * 2} !`}</p>
-                       </h1>
-                   )}
-               </div>
+                <div className={"flex flex-col justify-center items-center gap-10"}>
+                    <h1 className={`text-[75px] ${yesteryear.className}`}>Blackjack</h1>
+                    <div
+                        className={`backdrop-blur-sm flex flex-row justify-center items-center gap-30 p-10 h-150 rounded-[20] ${yesteryear.className}`}>
+                        <div className="w-60 h-screen flex justify-center items-center">
+                            <Image src={club.host.image} alt={"You"} height={250} width={170}/>
+                        </div>
+                        <h1 className={`z-50 text-white text-[30px] w-25 flex justify-center items-center`}>{club.host.name} {club.host.surname}</h1>
+                        <div className={"relative flex flex-col justify-center items-center w-50 h-full"}>
+                            <div className={"relative h-50 w-50"}>
+                                {userCards.map((userCard, i) => (
+                                    <Image key={i} className={"absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"} src={`/cards/${userCard}.png`}
+                                           alt={`User Card ${i}`} height={200} width={125}
+                                           style={{
+                                               top: `${i * 25}px`,
+                                               left: `${i * 15}px`,
+                                               zIndex: i,
+                                           }}
+                                           onClick={() => {
+                                               setShowCard(userCard)
+                                           }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <div className={"flex flex-col justify-center items-center w-50 h-full"}>
+                            <div className={"relative h-50 w-50"}>
+                                {dealerCards.map((dealerCard, i) => (
+                                    <Image key={i} className={"absolute rounded-[10] absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"}
+                                           src={`/cards/${(i === 1 && isPlayerTurn && !gameOver) ? cards.default : dealerCard}.png`}
+                                           alt={`Dealer Card ${i}`} height={200} width={125}
+                                           style={{
+                                               top: `${i * 25}px`,
+                                               left: `${i * 15}px`,
+                                               zIndex: i,
+                                           }}
+                                           onClick={() => {
+                                               if(i === 1 && isPlayerTurn && !gameOver){
+                                                   setShowCard(cards.default)
+                                               }
+                                               else{
+                                                   setShowCard(dealerCard)
+                                               }
+                                           }}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+                        <h1 className={"z-50 text-white text-[30px] w-25 flex justify-center items-center"}>Dealer Tanimura</h1>
+                        <div className="w-60 h-screen flex justify-center items-center">
+                            <Image src={`/images/tanimura_cover.png`} alt={"Dealer"} height={250} width={150}/>
+                        </div>
+                    </div>
+                    <div className={"flex flex-col justify-center items-center gap-5"}>
+                        {isPlayerTurn && !gameOver ? (
+                            <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
+                                <button
+                                    className={`${yesteryear.className} text-[20px] p-2 w-25 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
+                                    onClick={playerHit}>
+                                    Hit
+                                </button>
+                                <button
+                                    className={`${yesteryear.className} text-[20px] p-2 w-25 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
+                                    onClick={playerStand}>
+                                    Stand
+                                </button>
+                            </div>
+                        ): (
+                            <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center"}>
+                                <button
+                                    className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
+                                    onClick={() => {
+                                        handleBet("Blackjack", "Lower")
+                                    }}>
+                                    <Minus size={30}/>
+                                </button>
+                                <button
+                                    className={"p-2 rounded-[10] w-50 justify-center items-center text-center flex text-nowrap gap-2 text-[20px] hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
+                                    onClick={() => {
+                                        handleGame("Blackjack", null)
+                                    }}>
+                                    <JapaneseYen size={20}/>{bet}
+                                </button>
+                                <button
+                                    className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
+                                    onClick={() => {
+                                        handleBet("Blackjack", "Add")
+                                    }}>
+                                    <Plus size={30}/>
+                                </button>
+                            </div>
+                        )}
+                    </div>
+                    {score !== null && (
+                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
+                            <p>{score}</p>
+                            <p>{win === 0 ? `- ${bet}.` : win === 1 ? `+ ${bet}.` : win === 2 && `+ ${bet * 2} `}</p>
+                        </h1>
+                    )}
+                    {showCard && (
+                        <div className={`absolute inset-0 backdrop-blur-md z-[99] flex justify-center items-center transition-opacity duration-500 ${cardModal ? "opacity-100" : "opacity-0"}`}
+                            onClick={closeShowCard}>
+                            <div
+                                onClick={(e) => e.stopPropagation()}
+                                onMouseMove={(e) => handleCardTilt(e)}
+                                onMouseOut={resetTilt}
+                            >
+                                <Image
+                                    ref={cardRef}
+                                    src={`/cards/${showCard}.png`}
+                                    alt={"Selected card"}
+                                    height={400}
+                                    width={400}
+                                    className={"z-[100] rounded-[20]"}
+                                    style={{
+                                        transform: `perspective(250px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+                                        transition: "all 400ms cubic-bezier(0.1, 0.99, 0.52, 0.99) 0s"
+                                    }}
+                                />
+                            </div>
+                            <div className={`absolute opacity-[.05] fit-content pointer-events-none flex flex-col items-center justify-center ${yesteryear.className} text-center`}>
+                                <h1 style={{ fontSize: "clamp(150px, 50vw, 250px)" }}>
+                                    {getCardPersona(showCard).persona}
+                                </h1>
+                                <h1 style={{ fontSize: "clamp(200px, 90vw, 250px)" }}>
+                                    {getCardPersona(showCard).title}
+                                </h1>
+                            </div>
+                        </div>
+                    )}
+                </div>
             )}
         </div>
     )
