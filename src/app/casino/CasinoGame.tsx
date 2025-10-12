@@ -2,6 +2,8 @@ import React, {useEffect, useRef, useState} from "react";
 import {Yesteryear} from "next/font/google";
 import {CircleSmall, GlassWater, JapaneseYen, Minus, Plus} from "lucide-react";
 import Image from "next/image";
+import RouletteBoard from "@/app/casino/RouletteBoard";
+import Roulette from "@/app/casino/Roulette";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -27,7 +29,9 @@ interface CasinoGameProps {
 }
 
 const CasinoGame = ({game, money, club}: CasinoGameProps) => {
-    const [score, setScore] = useState<boolean | string | null>(null)
+    const rouletteRef = useRef<{ spin: () => void } | null>(null)
+
+    const [score, setScore] = useState<boolean | string | number | null>(null)
     const [value, setValue] = useState<string>("")
     const [total, setTotal] = useState<number>(0)
     const [array, setArray] = useState<number[]>([])
@@ -553,6 +557,28 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                         </div>
                     )}
                 </div>
+            )}
+            {game === "Roulette" && (
+                <>
+                    <h1 className={`absolute top-15 text-[75px] ${yesteryear.className}`}>Roulette</h1>
+                    <div className={"p-10 gap-20 flex justify-center items-center flex-row bg-green-800 rounded-[50] border-20 border-amber-950"}>
+                        <Roulette ref={rouletteRef} setScore={setScore} setWin={setWin}/>
+                        <RouletteBoard/>
+                    </div>
+                    <button
+                        className={`${yesteryear.className} absolute bottom-10 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
+                        onClick={() => {
+                            rouletteRef.current?.spin()
+                        }}>
+                        Spin the roulette
+                    </button>
+                    {score !== null && (
+                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
+                            <p>The winning number is {score}</p>
+                            <p>{win === 0 ? `- ${bet}.` : win === 1 ? `+ ${bet}.` : win === 2 && `+ ${bet * 2} `}</p>
+                        </h1>
+                    )}
+                </>
             )}
         </div>
     )
