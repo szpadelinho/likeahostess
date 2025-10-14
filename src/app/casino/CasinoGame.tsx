@@ -52,7 +52,107 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
     const cardRef = useRef<HTMLImageElement | null>(null)
     const [rotation, setRotation] = useState({x: 0, y: 0})
 
+    const [bets, setBets] = useState<{type: string, amount: number}[]>([])
+
     const audio = new Audio("/sfx/name_introduction.m4a")
+
+    const [selectedBet, setSelectedBet] = useState<string | null>(null)
+
+    const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
+    const blackNumbers = Array.from({ length: 36 }, (_, i) => i + 1).filter(n => !redNumbers.includes(n))
+
+    const handleRouletteResult = (winningNumber: number) => {
+        setScore(winningNumber)
+
+        const getMultiplier = (type: string) => {
+            switch (type) {
+                case "Red":
+                case "Black":
+                case "Even":
+                case "Odd":
+                case "1 to 18":
+                case "19 to 36":
+                    return 2
+                case "1st 12":
+                case "2nd 12":
+                case "3rd 12":
+                case "Column 1":
+                case "Column 2":
+                case "Column 3":
+                    return 3
+                case "0":
+                    return 36
+                default:
+                    if (!isNaN(Number(type))) return 1
+                    return 0
+            }
+        }
+
+        const totalPayout = bets.reduce((sum, bet) => {
+            const { type, amount } = bet
+            const multiplier = getMultiplier(type)
+
+            let isWin = false
+            switch (type) {
+                case "Red":
+                    isWin = redNumbers.includes(winningNumber)
+                    break
+                case "Black":
+                    isWin = blackNumbers.includes(winningNumber)
+                    break
+                case "Even":
+                    isWin = winningNumber !== 0 && winningNumber % 2 === 0
+                    break
+                case "Odd":
+                    isWin = winningNumber % 2 === 1
+                    break
+                case "1 to 18":
+                    isWin = winningNumber >= 1 && winningNumber <= 18
+                    break
+                case "19 to 36":
+                    isWin = winningNumber >= 19 && winningNumber <= 36
+                    break
+                case "1st 12":
+                    isWin = winningNumber >= 1 && winningNumber <= 12
+                    break
+                case "2nd 12":
+                    isWin = winningNumber >= 13 && winningNumber <= 24
+                    break
+                case "3rd 12":
+                    isWin = winningNumber >= 25 && winningNumber <= 36
+                    break
+                case "Column 1":
+                    isWin = [1,4,7,10,13,16,19,22,25,28,31,34].includes(winningNumber)
+                    break
+                case "Column 2":
+                    isWin = [2,5,8,11,14,17,20,23,26,29,32,35].includes(winningNumber)
+                    break
+                case "Column 3":
+                    isWin = [3,6,9,12,15,18,21,24,27,30,33,36].includes(winningNumber)
+                    break
+                default:
+                    if (!isNaN(Number(type))) {
+                        isWin = Number(type) === winningNumber
+                    }
+                    break
+            }
+
+            if (isWin) {
+                return sum + amount * multiplier
+            } else {
+                return sum
+            }
+        }, 0)
+
+        const totalBet = bets.reduce((sum, bet) => sum + bet.amount, 0)
+        const net = totalPayout - totalBet
+
+        if (net > 0) setWin(2)
+        else if (net === 0) setWin(1)
+        else setWin(0)
+
+        setBet(totalPayout)
+    }
 
     const handleCardTilt = (e: React.MouseEvent<HTMLDivElement>) => {
         const rect = e.currentTarget.getBoundingClientRect()
@@ -221,7 +321,8 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                     handleScore("Chohan", "odd", total, sum, false)
                 }
             }
-        } else if (type === "Blackjack") {
+        }
+        else if (type === "Blackjack") {
             let freshDeck = handleDeckShuffle(handleDeckBuild())
             const userHand = freshDeck.slice(0, 2)
             const dealerHand = freshDeck.slice(2, 4)
@@ -315,7 +416,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
     }
 
     const handleBet = (type: string, action: "Add" | "Lower") => {
-        if (type === "Chohan") {
+        if (game === "Chohan") {
             setBet(prev => {
                 if (action === "Add") {
                     return Math.min(prev + 1000, 10000, money)
@@ -323,12 +424,33 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                     return Math.max(prev - 1000, 1000)
                 }
             })
-        } else if (type === "Blackjack") {
+        }
+        else if (game === "Blackjack") {
             setBet(prev => {
                 if (action === "Add") {
                     return Math.min(prev + 1000, 50000, money)
                 } else {
                     return Math.max(prev - 1000, 1000)
+                }
+            })
+        }
+        else if (game === "Roulette"){
+            setBets(prev => {
+                const existing = prev.find(b => b.type === type)
+                const change = action === "Add" ? 1000 : -1000
+                const newAmount = Math.min(10000, Math.max(0, (existing?.amount || 0) + change))
+
+                if(newAmount === 0){
+                    return prev.filter(b => b.type !== type)
+                }
+
+                if(existing){
+                    return prev.map(b =>
+                        b.type === type ? {...b, amount: newAmount} : b
+                    )
+                }
+                else{
+                    return [...prev, {type, amount: newAmount}]
                 }
             })
         }
@@ -561,9 +683,16 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
             {game === "Roulette" && (
                 <>
                     <h1 className={`absolute top-15 text-[75px] ${yesteryear.className}`}>Roulette</h1>
-                    <div className={"p-10 gap-20 flex justify-center items-center flex-row bg-green-800 rounded-[50] border-20 border-amber-950"}>
-                        <Roulette ref={rouletteRef} setScore={setScore} setWin={setWin}/>
-                        <RouletteBoard/>
+                    <div className={"relative p-10 gap-20 flex justify-center items-center flex-row bg-green-800 rounded-[50] border-20 border-amber-950"}>
+                        <Roulette ref={rouletteRef} handleRouletteResult={handleRouletteResult}/>
+                        <RouletteBoard handleBet={handleBet} bets={bets} selectedBet={selectedBet} setSelectedBet={setSelectedBet}/>
+                        <div className={`absolute left-1/2 top-5 z-50 flex flex-row justify-center items-center ${yesteryear.className} text-[40px] gap-5`}>
+                            <p>Total bet: ¥{bets.reduce((sum, bet) => sum + bet.amount, 0).toLocaleString()}</p>
+                            <button
+                                className={`p-1 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
+                                Clear bets
+                            </button>
+                        </div>
                     </div>
                     <button
                         className={`${yesteryear.className} absolute bottom-10 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
@@ -575,7 +704,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
                             <p>The winning number is {score}</p>
-                            <p>{win === 0 ? `- ${bet}.` : win === 1 ? `+ ${bet}.` : win === 2 && `+ ${bet * 2} `}</p>
+                            <p>{bet}</p>
                         </h1>
                     )}
                 </>

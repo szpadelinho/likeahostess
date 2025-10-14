@@ -1,11 +1,10 @@
 import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react"
 
 interface RouletteProps {
-    setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,
-    setWin: (value: (((prevState: (0 | 1 | 2)) => (0 | 1 | 2)) | 0 | 1 | 2)) => void
+    handleRouletteResult: (winningNumber: number) => void
 }
 
-const Roulette = forwardRef(function Roulette({setScore, setWin}: RouletteProps, ref) {
+const Roulette = forwardRef(function Roulette({handleRouletteResult}: RouletteProps, ref) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [spinning, setSpinning] = useState(false)
     const [rotation, setRotation] = useState(0)
@@ -117,21 +116,23 @@ const Roulette = forwardRef(function Roulette({setScore, setWin}: RouletteProps,
         ctx.strokeRect(-crossSize / 2 + circleRadius, -crossThickness / 2, crossSize - 2 * circleRadius, crossThickness)
 
         ctx.beginPath()
-        ctx.arc(-crossSize/2,0,circleRadius,0,Math.PI*2); ctx.fill()
-        ctx.stroke()
-        ctx.beginPath()
-        ctx.arc(crossSize/2,0,circleRadius,0,Math.PI*2); ctx.fill()
-        ctx.stroke()
-
-        ctx.fillRect(-crossThickness / 2, -crossSize / 2 + circleRadius, crossThickness, crossSize - 2*circleRadius)
-        ctx.strokeRect(-crossThickness / 2, -crossSize / 2 + circleRadius, crossThickness, crossSize - 2*circleRadius)
-
-        ctx.beginPath()
-        ctx.arc(0,-crossSize/2,circleRadius,0,Math.PI*2)
+        ctx.arc(-crossSize / 2, 0, circleRadius, 0, Math.PI * 2);
         ctx.fill()
         ctx.stroke()
         ctx.beginPath()
-        ctx.arc(0,crossSize/2,circleRadius,0,Math.PI*2)
+        ctx.arc(crossSize / 2, 0, circleRadius, 0, Math.PI * 2);
+        ctx.fill()
+        ctx.stroke()
+
+        ctx.fillRect(-crossThickness / 2, -crossSize / 2 + circleRadius, crossThickness, crossSize - 2 * circleRadius)
+        ctx.strokeRect(-crossThickness / 2, -crossSize / 2 + circleRadius, crossThickness, crossSize - 2 * circleRadius)
+
+        ctx.beginPath()
+        ctx.arc(0, -crossSize / 2, circleRadius, 0, Math.PI * 2)
+        ctx.fill()
+        ctx.stroke()
+        ctx.beginPath()
+        ctx.arc(0, crossSize / 2, circleRadius, 0, Math.PI * 2)
         ctx.fill()
         ctx.stroke()
 
@@ -145,7 +146,7 @@ const Roulette = forwardRef(function Roulette({setScore, setWin}: RouletteProps,
         ctx.beginPath()
         ctx.arc(ballRadiusFromCenter, 0, ballSize, 0, Math.PI * 2)
         ctx.fillStyle = "#a1a1a1"
-        ctx.strokeStyle =  "#000"
+        ctx.strokeStyle = "#000"
         ctx.shadowColor = "rgba(76,76,76,0.3)"
         ctx.shadowBlur = 5
         ctx.fill()
@@ -197,7 +198,7 @@ const Roulette = forwardRef(function Roulette({setScore, setWin}: RouletteProps,
             if (t < 1) requestAnimationFrame(animate)
             else {
                 setSpinning(false)
-                setScore(winningNumber)
+                handleRouletteResult(winningNumber)
 
                 const dropStart = performance.now()
                 const dropDuration = 800
