@@ -88,8 +88,10 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
             }
         }
 
-        const totalPayout = bets.reduce((sum, bet) => {
-            const { type, amount } = bet
+        let totalWin = 0
+        let totalLoss = 0
+
+        bets.forEach(({type, amount}) => {
             const multiplier = getMultiplier(type)
 
             let isWin = false
@@ -138,20 +140,19 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
             }
 
             if (isWin) {
-                return sum + amount * multiplier
+                totalWin += amount * multiplier
             } else {
-                return sum
+                totalLoss = amount
             }
         }, 0)
 
-        const totalBet = bets.reduce((sum, bet) => sum + bet.amount, 0)
-        const net = totalPayout - totalBet
+        const net = totalWin - totalLoss
 
         if (net > 0) setWin(2)
         else if (net === 0) setWin(1)
         else setWin(0)
 
-        setBet(totalPayout)
+        setBet(net)
     }
 
     const handleCardTilt = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -485,7 +486,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                 <>
                     <h1 className={`text-[75px] ${yesteryear.className}`}>Chō-Han</h1>
                     <div className={"flex flex-col justify-center items-center gap-5"}>
-                        <div className={"flex flex-row justify-center items-center h-140 gap-5"}>
+                        <div className={"flex flex-row justify-center items-center h-160 gap-5"}>
                             <GlassWater fill={"white"} size={400} className={"-rotate-180"}/>
                             <div className={"flex flex-row justify-center items-center gap-5"}>
                                 {array.map((item, i) => (
@@ -497,28 +498,16 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                                     </div>
                                 ))}
                             </div>
-
                         </div>
-                        <h1 className={`${yesteryear.className} text-[30px]`}>Place your bet</h1>
-                        <div className={"flex flex-row justify-center items-center gap-5"}>
+                        <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
                             <button
-                                className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] border-white border-2 rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
+                                className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
                                 onClick={() => {
                                     handleGame("Chohan", "Even")
                                 }}>
-                                <p>Even</p>
+                                <p className={"text-[25px]"}>Even</p>
                                 <CircleSmall fill={"white"}/>
                             </button>
-                            <button
-                                className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] border-white border-2 rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                                onClick={() => {
-                                    handleGame("Chohan", "Odd")
-                                }}>
-                                <p>Odd</p>
-                                <CircleSmall/>
-                            </button>
-                        </div>
-                        <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center"}>
                             <button
                                 className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
                                 onClick={() => {
@@ -526,7 +515,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                                 }}>
                                 <Minus size={30}/>
                             </button>
-                            <p className={"p-2 rounded-[10] w-30 justify-center items-center text-center flex text-nowrap gap-2"}>
+                            <p className={"p-2 rounded-[10] w-25 justify-center items-center text-center flex text-nowrap gap-1"}>
                                 <JapaneseYen size={15}/>{bet}
                             </p>
                             <button
@@ -535,6 +524,14 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                                     handleBet("Chohan", "Add")
                                 }}>
                                 <Plus size={30}/>
+                            </button>
+                            <button
+                                className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
+                                onClick={() => {
+                                    handleGame("Chohan", "Odd")
+                                }}>
+                                <p className={"text-[25px]"}>Odd</p>
+                                <CircleSmall/>
                             </button>
                         </div>
                     </div>
@@ -689,7 +686,8 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                         <div className={`absolute left-1/2 top-5 z-50 flex flex-row justify-center items-center ${yesteryear.className} text-[40px] gap-5`}>
                             <p>Total bet: ¥{bets.reduce((sum, bet) => sum + bet.amount, 0).toLocaleString()}</p>
                             <button
-                                className={`p-1 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
+                                className={`p-1 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
+                                onClick={() => setBets([])}>
                                 Clear bets
                             </button>
                         </div>

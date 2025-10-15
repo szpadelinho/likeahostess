@@ -126,7 +126,7 @@ const CasinoClient = () => {
                                  }
                              }}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>Roulette</h1>
-                            <p className={"text-[20px]"}>A classic game. The dealer places a metal ball inside of the roulette, which is rolling through the number spots. The players have multiple possibilities to bet over - number, color, row, odd/even, interval and many others.</p>
+                            <p className={"text-[20px] h-60"}>A classic game. The dealer places a metal ball inside of the roulette, which is rolling through the number spots. The players have multiple possibilities to bet over - number, color, row, odd/even, interval and many others.</p>
                         </div>
                         <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
                              onClick={() => {
@@ -139,7 +139,7 @@ const CasinoClient = () => {
                                  }
                              }}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>Blackjack</h1>
-                            <p className={"text-[20px]"}>A card game. The dealer gives himself two cards - one visible and one hidden. The players however receive two visible cards. The goal for the players is to have a bigger score than the dealer. However, when the score is bigger than 21 - the game is over. If you score a 21, a "Blackjack" is being called.</p>
+                            <p className={"text-[20px] h-60"}>A card game. The dealer gives himself two cards - one visible and one hidden. The players however receive two visible cards. The goal for the players is to have a bigger score than the dealer. However, when the score is bigger than 21 - the game is over. If you score a 21, a "Blackjack" is being called.</p>
                         </div>
                         <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
                              onClick={() => {
@@ -152,7 +152,7 @@ const CasinoClient = () => {
                                  }
                              }}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>Poker</h1>
-                            <p className={"text-[20px]"}>A card game. The players take one card per round. They either bet or pass on the play. The goal is to have the most fitting 5-card hand with the cards on the table. The winner has the strongest hand.</p>
+                            <p className={"text-[20px] h-60"}>A card game. The players take one card per round. They either bet or pass on the play. The goal is to have the most fitting 5-card hand with the cards on the table. The winner has the strongest hand.</p>
                         </div>
                         <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
                              onClick={() => {
@@ -165,7 +165,7 @@ const CasinoClient = () => {
                                  }
                              }}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>Chō-Han</h1>
-                            <p className={"text-[20px]"}>Even versus Odd. The dealer is shaking a bamboo bowl, in which two dices are being shaken. In this game, the goal is to predict what the sum of two dices will be. You either call it the sum to be even (chō) or odd (han).</p>
+                            <p className={"text-[20px] h-60"}>Even versus Odd. The dealer is shaking a bamboo bowl, in which two dices are being shaken. In this game, the goal is to predict what the sum of two dices will be. You either call it the sum to be even (chō) or odd (han).</p>
                         </div>
                     </div>
                 </>
