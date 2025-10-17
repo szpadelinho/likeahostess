@@ -22,7 +22,7 @@ export const MenuButton = ({title, imageSrc, imageAlt, Icon, onClick}: MenuButto
                 onClick={onClick}>
             <Image className={"absolute right-5 opacity-50"} src={imageSrc} alt={imageAlt} height={260} width={260}/>
             <Icon size={100} className={"absolute left-2 top-2"}/>
-            <h1 className={`${yesteryear.className} text-[75px] z-50`}>{title}</h1>
+            <h1 className={`${yesteryear.className} text-[75px] z-50 absolute bottom-10`}>{title}</h1>
         </button>
     )
 }

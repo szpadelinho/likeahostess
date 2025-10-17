@@ -78,9 +78,9 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, prof
                     </div>
                 </div>
                 <div
-                    className={"bg-pink-500 p-2 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[17] text-white font-[600]"}>
+                    className={"bg-pink-600 p-2 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[24] text-pink-200 font-[600]"}>
                     <button
-                        className={"bg-pink-600 border-white border-2 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[15] text-white font-[600] duration-300 ease-in-out hover:bg-white hover:text-black"}
+                        className={"h-[100px] w-[100px] bg-pink-800 border-pink-200 border-2 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] duration-300 ease-in-out hover:bg-pink-200 hover:text-pink-950"}
                         onClick={() => {
                             setClosing(true)
                             setTimeout(() => {
@@ -88,7 +88,7 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, prof
                                 setClosing(false)
                             }, 0)
                         }}>
-                        <Menu size={50}/>
+                        <Menu size={40}/>
                     </button>
                 </div>
             </div>

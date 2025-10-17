@@ -36,7 +36,7 @@ export const MenuModal = ({
     const menuItems = [
         {
             title: "Management",
-            imageSrc: "/images/shun.png",
+            imageSrc: "/images/akiyama_menu.png",
             imageAlt: "Shun Akiyama photo",
             Icon: Flower,
             cursor: "cursor-zoom-in",
@@ -44,7 +44,7 @@ export const MenuModal = ({
         },
         {
             title: "Activities",
-            imageSrc: "/images/haruka.png",
+            imageSrc: "/images/haruka_menu.png",
             imageAlt: "Haruka Sawamura photo",
             Icon: MicVocal,
             cursor: "cursor-copy",
@@ -52,7 +52,7 @@ export const MenuModal = ({
         },
         {
             title: "Casino",
-            imageSrc: "/images/tanimura.png",
+            imageSrc: "/images/tanimura_menu.png",
             imageAlt: "Masayoshi Tanimura photo",
             Icon: ClubIcon,
             cursor: "cursor-copy",
@@ -60,7 +60,7 @@ export const MenuModal = ({
         },
         {
             title: "Profile",
-            imageSrc: "/images/daigo.png",
+            imageSrc: "/images/daigo_menu.png",
             imageAlt: "Daigo Dojima photo",
             Icon: IdCard,
             cursor: "cursor-copy",
@@ -68,7 +68,7 @@ export const MenuModal = ({
         },
         {
             title: "New Serena",
-            imageSrc: "/images/date.png",
+            imageSrc: "/images/date_menu.png",
             imageAlt: "Makoto Date photo",
             Icon: BottleWine,
             cursor: "cursor-copy",
@@ -76,7 +76,7 @@ export const MenuModal = ({
         },
         {
             title: "Moneylender",
-            imageSrc: "/images/mine.png",
+            imageSrc: "/images/mine_menu.png",
             imageAlt: "Mine Yoshitaka photo",
             Icon: PiggyBank,
             cursor: "cursor-copy",
@@ -84,7 +84,7 @@ export const MenuModal = ({
         },
         {
             title: "Change clubs",
-            imageSrc: "/images/suzuki.png",
+            imageSrc: "/images/suzuki_menu.png",
             imageAlt: "Taichi Suzuki photo",
             Icon: CarTaxiFront,
             cursor: "cursor-wait",
@@ -95,7 +95,7 @@ export const MenuModal = ({
         },
         {
             title: "Log out",
-            imageSrc: "/images/shinada.png",
+            imageSrc: "/images/shinada_menu.png",
             imageAlt: "Tatsuo Shinada photo",
             Icon: LogOut,
             cursor: "cursor-alias",
@@ -110,7 +110,7 @@ export const MenuModal = ({
 
     return (
         <div
-            className={`absolute inset-0 flex justify-center items-center z-50 backdrop-blur-sm transition duration-300 ease-in-out ${menu && !closing ? "opacity-100" : "opacity-0"}`}
+            className={`absolute inset-0 flex justify-center items-center z-50 backdrop-blur-sm transition duration-300 ease-in-out ${menu && !closing ? "opacity-100 scale-100" : "opacity-0 scale-50"}`}
             onClick={handleClick}>
             <div className={"grid grid-cols-3 grid-rows-3 gap-10 text-center justify-items-center text-pink-200"}>
                 {menuItems.map((item) => (
