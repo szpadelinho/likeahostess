@@ -174,9 +174,9 @@ const CasinoClient = () => {
             )}
             {club && game && (
                 <div
-                    className={`backdrop-blur-md absolute left-5 bottom-5 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}>
-                    <div className={"backdrop-blur-xl h-[130%] w-[40%] rounded-[20] flex justify-center relative"}>
-                        {game !== "Blackjack" && (
+                    className={`backdrop-blur-md absolute ${game !== "Blackjack" && game !== "Poker" ? "left-5 w-130" : "left-15"} bottom-5 h-25 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}>
+                    {game !== "Blackjack" && game !== "Poker" && (
+                        <div className={"backdrop-blur-xl h-[130%] w-[30%] rounded-[20] flex justify-center relative"}>
                             <Image
                                 className={"flex absolute bottom-[-80%]"}
                                 src={club.host.image}
@@ -184,12 +184,12 @@ const CasinoClient = () => {
                                 height={500}
                                 width={150}
                             />
-                        )}
-                    </div>
-                    <div className={"flex flex-row text-center justify-center content-center w-[60%] h-[100%] p-5"}>
+                        </div>
+                    )}
+                    <div className={`${yesteryear.className} flex flex-row text-center justify-center content-center ${game !== "Blackjack" && game !== "Poker" ? "w-[70%]" : "gap-10"} h-[100%] p-5`}>
                         <div className={"flex flex-col justify-center w-[60%]"}>
-                            <h1 className={"text-[22px] font-[700]"}>{club.host.name} {club.host.surname}</h1>
-                            <h2 className={"text-[18px] font-[600]"}>{club.name}</h2>
+                            <h1 className={"text-[35px] text-nowrap"}>{club.host.name} {club.host.surname}</h1>
+                            <h2 className={"text-[25px]"}>{club.name}</h2>
                         </div>
                         <div className={"flex flex-col justify-center w-[40%]"}>
                             <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center"}>

@@ -4,6 +4,7 @@ import {CircleSmall, GlassWater, JapaneseYen, Minus, Plus} from "lucide-react";
 import Image from "next/image";
 import RouletteBoard from "@/app/casino/RouletteBoard";
 import Roulette from "@/app/casino/Roulette";
+import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -30,6 +31,10 @@ interface CasinoGameProps {
 
 const CasinoGame = ({game, money, club}: CasinoGameProps) => {
     const rouletteRef = useRef<{ spin: () => void } | null>(null)
+    const pokerRef = useRef<any>(null)
+
+    const [stage, setStage] = useState<"PreFlop"|"Flop"|"Turn"|"River"|"Showdown"|null>(null)
+    const [playerActionPending, setPlayerActionPending] = useState<boolean>(false)
 
     const [score, setScore] = useState<boolean | string | number | null>(null)
     const [value, setValue] = useState<string>("")
@@ -573,7 +578,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                         <div className={"flex flex-col justify-center items-center w-50 h-full"}>
                             <div className={"relative h-50 w-50"}>
                                 {dealerCards.map((dealerCard, i) => (
-                                    <Image key={i} className={"absolute rounded-[10] absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"}
+                                    <Image key={i} className={"absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"}
                                            src={`/cards/${(i === 1 && isPlayerTurn && !gameOver) ? cards.default : dealerCard}.png`}
                                            alt={`Dealer Card ${i}`} height={200} width={125}
                                            style={{
@@ -644,37 +649,6 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                             <p>{win === 0 ? `- ${bet}.` : win === 1 ? `+ ${bet}.` : win === 2 && `+ ${bet * 2} `}</p>
                         </h1>
                     )}
-                    {showCard && (
-                        <div className={`absolute inset-0 backdrop-blur-md z-[99] flex justify-center items-center transition-opacity duration-500 ${cardModal ? "opacity-100" : "opacity-0"}`}
-                            onClick={closeShowCard}>
-                            <div
-                                onClick={(e) => e.stopPropagation()}
-                                onMouseMove={(e) => handleCardTilt(e)}
-                                onMouseOut={resetTilt}
-                            >
-                                <Image
-                                    ref={cardRef}
-                                    src={`/cards/${showCard}.png`}
-                                    alt={"Selected card"}
-                                    height={400}
-                                    width={400}
-                                    className={"z-[100] rounded-[20]"}
-                                    style={{
-                                        transform: `perspective(250px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                                        transition: "all 400ms cubic-bezier(0.1, 0.99, 0.52, 0.99) 0s"
-                                    }}
-                                />
-                            </div>
-                            <div className={`absolute opacity-[.05] fit-content pointer-events-none flex flex-col items-center justify-center ${yesteryear.className} text-center`}>
-                                <h1 style={{ fontSize: "clamp(150px, 50vw, 250px)" }}>
-                                    {getCardPersona(showCard).persona}
-                                </h1>
-                                <h1 style={{ fontSize: "clamp(200px, 90vw, 250px)" }}>
-                                    {getCardPersona(showCard).title}
-                                </h1>
-                            </div>
-                        </div>
-                    )}
                 </div>
             )}
             {game === "Roulette" && (
@@ -706,6 +680,76 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                         </h1>
                     )}
                 </>
+            )}
+            {game === "Poker" && (
+                <>
+                    <h1 className={`absolute top-5 text-[75px] ${yesteryear.className}`}>Poker</h1>
+                    <div className={"relative h-[75vh] w-[75vw] flex justify-center items-center flex-row bg-green-800 rounded-[100] border-20 border-amber-950"}>
+                        <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage} playerActionPending={playerActionPending} setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard} cards={cards} club={club}/>
+                    </div>
+                    {(stage === null || stage === "Showdown") && (
+                        <button
+                            onClick={() => pokerRef?.current.startGame()}
+                            className={`${yesteryear.className} absolute bottom-5 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
+                            Let the game begin
+                        </button>
+                    )}
+                    {playerActionPending && stage && (
+                        <div className={"absolute bottom-5 flex flex-row gap-10"}>
+                            <button
+                                onClick={() => pokerRef?.current.playerAction("Raise")}
+                                className={`${yesteryear.className} text-[40px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
+                                Raise
+                            </button>
+                            <button
+                                onClick={() => pokerRef?.current.playerAction("Call")}
+                                className={`${yesteryear.className} text-[40px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
+                                Call
+                            </button>
+                            <button
+                                onClick={() => pokerRef?.current.playerAction("Fold")}
+                                className={`${yesteryear.className} text-[40px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
+                                Fold
+                            </button>
+                        </div>
+                    )}
+                    {score !== null && (
+                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
+                            <p>{score}</p>
+                        </h1>
+                    )}
+                </>
+            )}
+            {showCard && (
+                <div className={`absolute inset-0 backdrop-blur-md z-[99] flex justify-center items-center transition-opacity duration-500 ${cardModal ? "opacity-100" : "opacity-0"}`}
+                     onClick={closeShowCard}>
+                    <div
+                        onClick={(e) => e.stopPropagation()}
+                        onMouseMove={(e) => handleCardTilt(e)}
+                        onMouseOut={resetTilt}
+                    >
+                        <Image
+                            ref={cardRef}
+                            src={`/cards/${showCard}.png`}
+                            alt={"Selected card"}
+                            height={400}
+                            width={400}
+                            className={"z-[100] rounded-[20]"}
+                            style={{
+                                transform: `perspective(250px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+                                transition: "all 400ms cubic-bezier(0.1, 0.99, 0.52, 0.99) 0s"
+                            }}
+                        />
+                    </div>
+                    <div className={`absolute opacity-[.05] fit-content pointer-events-none flex flex-col items-center justify-center ${yesteryear.className} text-center`}>
+                        <h1 style={{ fontSize: "clamp(150px, 50vw, 250px)" }}>
+                            {getCardPersona(showCard).persona}
+                        </h1>
+                        <h1 style={{ fontSize: "clamp(200px, 90vw, 250px)" }}>
+                            {getCardPersona(showCard).title}
+                        </h1>
+                    </div>
+                </div>
             )}
         </div>
     )
