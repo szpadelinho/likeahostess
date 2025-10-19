@@ -59,7 +59,7 @@ const CasinoClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(true)
 
-    const [game, setGame] = useState<"Roulette" | "Blackjack" | "Poker" | "Chohan" | null>(null)
+    const [game, setGame] = useState<"Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null>(null)
     const [background, setBackground] = useState("casino")
 
     useEffect(() => {
@@ -69,6 +69,34 @@ const CasinoClient = () => {
 
         return () => clearTimeout(timer)
     }, [])
+
+    const panels: {title: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null, description: string, position: string}[] = [
+        {
+            title: "Roulette",
+            description: "A classic game. The dealer places a metal ball inside of the roulette, which is rolling through the number spots. The players have multiple possibilities to bet over - number, color, row, odd/even, interval and many others.",
+            position: "right-70 top-90"
+        },
+        {
+            title: "Blackjack",
+            description: "A card game. The dealer gives himself two cards - one visible and one hidden. The players however receive two visible cards. The goal for the players is to have a bigger score than the dealer. However, when the score is bigger than 21 - the game is over. If you score a 21, a \"Blackjack\" is being called.",
+            position: "left-50 bottom-90"
+        },
+        {
+            title: "Poker",
+            description: "A card game. The players take one card per round. They either bet or pass on the play. The goal is to have the most fitting 5-card hand with the cards on the table. The winner has the strongest hand.",
+            position: "left-150 top-90"
+        },
+        {
+            title: "Chohan",
+            description: "Even versus Odd. The dealer is shaking a bamboo bowl, in which two dices are being shaken. In this game, the goal is to predict what the sum of two dices will be. You either call it the sum to be even (chō) or odd (han).",
+            position: "right-100 bottom-15"
+        },
+        {
+            title: "Pachinko",
+            description: "Classic pachinko slots. Here you can either spend half of your life looking for the grand prize or... simply win it all at once. Choice is yours (actually not).",
+            position: "right-25 top-125"
+        },
+    ]
     return(
         <div className={"flex flex-col h-screen w-screen items-center justify-center text-white z-50 gap-5"}>
             <Image src={`/images/${background}.png`} alt={"Casino interior"} fill={true} className={"absolute inset-0 z-[-1]"}/>
@@ -112,62 +140,23 @@ const CasinoClient = () => {
             />
             {!game ? (
                 <>
-                    <Image className={"absolute left-5 top-75"} src={"/images/tanimura_cover.png"} alt={"Masayoshi Tanimura"} height={0} width={150}/>
-                    <h1 className={`absolute top-20 text-[50px] ${yesteryear.className}`}>What will we play today?</h1>
-                    <div className={"flex flex-row items-center justify-center gap-10"}>
-                        <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
+                    <Image className={"absolute right-1/3 scale-80 top-60"} src={"/images/tanimura_cover.png"} alt={"Masayoshi Tanimura"} height={0} width={150}/>
+                    <h1 className={`absolute top-20 text-[75px] ${yesteryear.className}`}>What will we play today?</h1>
+                    {panels.map((panel, i) => (
+                        <div key={i}
+                             className={`absolute ${panel.position} backdrop-blur-sm flex items-center justify-center rounded-[15] w-50 h-20 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-sm hover:shadow-white`}
                              onClick={() => {
-                                 if(!game) {
-                                     setGame("Roulette")
-                                     setBackground("casino_roulette")
+                                 if(!game && panel.title !== null) {
+                                     setGame(panel.title)
+                                     setBackground(`casino_${panel.title.toLowerCase()}`)
                                  }
                                  else {
                                      setGame(null)
                                  }
                              }}>
-                            <h1 className={`text-[40px] ${yesteryear.className}`}>Roulette</h1>
-                            <p className={"text-[20px] h-60"}>A classic game. The dealer places a metal ball inside of the roulette, which is rolling through the number spots. The players have multiple possibilities to bet over - number, color, row, odd/even, interval and many others.</p>
+                            <h1 className={`text-[50px] ${yesteryear.className}`}>{panel.title}</h1>
                         </div>
-                        <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
-                             onClick={() => {
-                                 if(!game) {
-                                     setGame("Blackjack")
-                                     setBackground("casino_blackjack")
-                                 }
-                                 else {
-                                     setGame(null)
-                                 }
-                             }}>
-                            <h1 className={`text-[40px] ${yesteryear.className}`}>Blackjack</h1>
-                            <p className={"text-[20px] h-60"}>A card game. The dealer gives himself two cards - one visible and one hidden. The players however receive two visible cards. The goal for the players is to have a bigger score than the dealer. However, when the score is bigger than 21 - the game is over. If you score a 21, a "Blackjack" is being called.</p>
-                        </div>
-                        <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
-                             onClick={() => {
-                                 if(!game) {
-                                     setGame("Poker")
-                                     setBackground("casino_poker")
-                                 }
-                                 else {
-                                     setGame(null)
-                                 }
-                             }}>
-                            <h1 className={`text-[40px] ${yesteryear.className}`}>Poker</h1>
-                            <p className={"text-[20px] h-60"}>A card game. The players take one card per round. They either bet or pass on the play. The goal is to have the most fitting 5-card hand with the cards on the table. The winner has the strongest hand.</p>
-                        </div>
-                        <div className={"backdrop-blur-xl gap-10 border-2 border-white flex flex-col items-center justify-center rounded-[15] max-w-[350px] p-5 h-125 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-md hover:shadow-white"}
-                             onClick={() => {
-                                 if(!game) {
-                                     setGame("Chohan")
-                                     setBackground("casino_chohan")
-                                 }
-                                 else {
-                                     setGame(null)
-                                 }
-                             }}>
-                            <h1 className={`text-[40px] ${yesteryear.className}`}>Chō-Han</h1>
-                            <p className={"text-[20px] h-60"}>Even versus Odd. The dealer is shaking a bamboo bowl, in which two dices are being shaken. In this game, the goal is to predict what the sum of two dices will be. You either call it the sum to be even (chō) or odd (han).</p>
-                        </div>
-                    </div>
+                    ))}
                 </>
             ):(
                 club && <CasinoGame game={game} money={club.money} club={club}/>

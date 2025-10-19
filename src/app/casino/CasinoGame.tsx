@@ -5,6 +5,7 @@ import Image from "next/image";
 import RouletteBoard from "@/app/casino/RouletteBoard";
 import Roulette from "@/app/casino/Roulette";
 import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
+import {Pachinko} from "@/app/casino/Pachinko";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -24,7 +25,7 @@ type Club = {
 }
 
 interface CasinoGameProps {
-    game: "Roulette" | "Blackjack" | "Poker" | "Chohan" | null,
+    game: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,
     money: number,
     club: Club
 }
@@ -713,6 +714,16 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                             </button>
                         </div>
                     )}
+                    {score !== null && (
+                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
+                            <p>{score}</p>
+                        </h1>
+                    )}
+                </>
+            )}
+            {game === "Pachinko" && (
+                <>
+                    <Pachinko setScore={setScore}/>
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
                             <p>{score}</p>
