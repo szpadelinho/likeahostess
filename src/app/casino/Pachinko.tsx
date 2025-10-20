@@ -82,17 +82,29 @@ export const Pachinko = ({setScore}: PachinkoProps) => {
         })
     }
 
+    const prevSpinningRef = useRef(spinning)
+
     useEffect(() => {
-        const isAnySpinning = spinning.some((s) => s)
         const loop = loopRef.current
 
-        if (!isAnySpinning) {
+        const prev = prevSpinningRef.current
+        prevSpinningRef.current = spinning
+
+        const wasSpinning = prev.some(s => s)
+        const isSpinning = spinning.some(s => s)
+
+        if (isSpinning && loop && loop.paused) {
+            loop.currentTime = 0
+            loop.play().catch(() => {})
+        }
+
+        if (!isSpinning && wasSpinning) {
             setTimeout(() => {
                 if (loop && !loop.paused) {
                     loop.pause()
                     loop.currentTime = 0
                 }
-            }, 1)
+            }, 100)
 
             const [a, b, c] = slots
             if (a === b && b === c) {
@@ -103,13 +115,36 @@ export const Pachinko = ({setScore}: PachinkoProps) => {
                 setScore("No luck.")
             }
         }
-        else {
-            if (loop && loop.paused) {
-                loop.currentTime = 0
-                loop.play().catch(() => {})
-            }
-        }
     }, [spinning, slots, setScore])
+
+    const getIcon = (Icon: any): {fill: string, color: string} => {
+        switch(Icon){
+            case Apple:
+                return {fill: "#ff1a1a", color: "#bd1212"}
+            case Cherry:
+                return {fill: "#da0000", color: "#b50000"}
+            case Star:
+                return {fill: "#ffc400", color: "#ff8800"}
+            case Heart:
+                return {fill: "#ff0000", color: "#ff00f2"}
+            case Citrus:
+                return {fill: "#f3ff00", color: "#c5c500"}
+            case Strawberry:
+                return {fill: "#ff0000", color: "#ff4b4b"}
+            case Peach:
+                return {fill: "#ff5900", color: "#c63b00"}
+            case Pumpkin:
+                return {fill: "#ff4d00", color: "#bd3700"}
+            case Pear:
+                return {fill: "#ccff34", color: "#819f00"}
+            case Watermelon:
+                return {fill: "#00ff05", color: "#31aa00"}
+            case FlowerTulip:
+                return {fill: "#7400ff", color: "#600098"}
+            default:
+                return {fill: "#ffffff", color: "#000000"}
+        }
+    }
 
     return (
         <>
@@ -119,8 +154,11 @@ export const Pachinko = ({setScore}: PachinkoProps) => {
                 {slots.map((index, i) => {
                     const Icon = elements[index]
                     return (
-                        <div key={i}>
-                            <Icon size={100}/>
+                        <div
+                            key={i}
+                            className={`slot-icon ${spinning[i] ? "spinning" : "stopped"}`}
+                        >
+                            <Icon fill={getIcon(Icon).fill} color={getIcon(Icon).color} size={100}/>
                         </div>
                     )
                 })}

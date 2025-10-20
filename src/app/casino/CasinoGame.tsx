@@ -723,7 +723,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
             )}
             {game === "Pachinko" && (
                 <>
-                    <Pachinko setScore={setScore}/>
+                    <Pachinko score={score} setScore={setScore}/>
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
                             <p>{score}</p>
