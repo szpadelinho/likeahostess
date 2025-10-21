@@ -6,16 +6,23 @@ import {
 import Image from "next/image";
 import {Dispatch, SetStateAction, useState} from "react";
 import {MenuModal} from "@/components/menuModal";
+import {Yesteryear} from "next/font/google";
+
+const yesteryear = Yesteryear({
+    weight: "400",
+    subsets: ['latin'],
+})
 
 type Club = {
-    name: string,
+    name: string
     host: {
-        name: string,
-        surname: string,
+        name: string
+        surname: string
         image: string
     },
-    money: number,
+    money: number
     popularity: number
+    logo: string
 }
 
 interface Hud {
@@ -27,9 +34,9 @@ interface Hud {
     casino: boolean
     setCasino: Dispatch<SetStateAction<boolean>>
     setProfile: Dispatch<SetStateAction<boolean>>
-    setManagement: Dispatch<SetStateAction<boolean>>
     setActivities: Dispatch<SetStateAction<boolean>>
     club: Club
+    setManagement: Dispatch<SetStateAction<boolean>>
 }
 
 
@@ -48,48 +55,51 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, prof
     return (
         <>
             <div
-                className={"flex flex-row max-w-screen justify-between mb-10 ml-5 mr-5 items-end z-10"}>
+                className={`flex flex-row justify-between items-end z-10 p-5 w-screen h-70 relative`}>
+                <button
+                    className={`-translate-y-210 h-[68px] w-[68px] bg-pink-800 border-pink-200 border-2 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[15] text-pink-200 duration-300 ease-in-out hover:bg-pink-200 hover:text-pink-950`}
+                    onClick={() => {
+                        setClosing(true)
+                        setTimeout(() => {
+                            setMenu(!menu)
+                            setClosing(false)
+                        }, 0)
+                    }}>
+                    <Menu size={30}/>
+                </button>
                 <div
-                    className={`bg-pink-500 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white`}>
-                    <div className={"bg-[radial-gradient(circle_at_center,_#be185d_50%,_#9d174d_75%,_#831843_100%)] h-[130%] w-[40%] rounded-[20] flex justify-center relative"}>
+                    className={`text-center items-center flex flex-row text-[20px] rounded-[20] text-pink-200 absolute bottom-5 right-15`}>
+                    <div className={"flex flex-col text-center justify-center"}>
+                        <h1 className={`absolute left-60 -top-35 text-nowrap rotate-90 text-[50px] opacity-50 ${yesteryear.className}`}>
+                            {club.host.name} {club.host.surname}
+                        </h1>
+                        <div className={`flex flex-row justify-center items-center gap-3 opacity-50 relative ${yesteryear.className}`}>
+                            <Image
+                                className={"object-contain absolute left-1/2 -translate-x-[50%] bottom-5 z-9"}
+                                src={club.logo}
+                                alt={"Logo"}
+                                height={100}
+                                width={150}
+                            />
+                            <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center z-10"}>
+                                <JapaneseYen/>
+                                <p>{club.money}</p>
+                            </h2>
+                            <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10"}>
+                                <HeartHandshake/>
+                                <p>{club.popularity}</p>
+                            </h2>
+                        </div>
+                    </div>
+                    <div className={"rounded-[20] flex justify-center w-40"}>
                         <Image
-                            className={"flex absolute bottom-[-80%]"}
+                            className={"flex absolute -bottom-50"}
                             src={club.host.image}
                             alt={"Host"}
                             height={500}
                             width={150}
                         />
                     </div>
-                    <div className={"flex flex-row text-center justify-center content-center w-[60%] h-[100%] p-5"}>
-                        <div className={"flex flex-col justify-center w-[60%]"}>
-                            <h1 className={"text-[22px] font-[700]"}>{club.host.name} {club.host.surname}</h1>
-                            <h2 className={"text-[18px] font-[600]"}>{club.name}</h2>
-                        </div>
-                        <div className={"flex flex-col justify-center w-[40%]"}>
-                            <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center"}>
-                                <JapaneseYen/>
-                                <p>{club.money}</p>
-                            </h2>
-                            <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 content-center text-center items-center w-full"}>
-                                <HeartHandshake/>
-                                <p>{club.popularity}</p>
-                            </h2>
-                        </div>
-                    </div>
-                </div>
-                <div
-                    className={"bg-pink-600 p-2 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[24] text-pink-200 font-[600]"}>
-                    <button
-                        className={"h-[100px] w-[100px] bg-pink-800 border-pink-200 border-2 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] duration-300 ease-in-out hover:bg-pink-200 hover:text-pink-950"}
-                        onClick={() => {
-                            setClosing(true)
-                            setTimeout(() => {
-                                setMenu(!menu)
-                                setClosing(false)
-                            }, 0)
-                        }}>
-                        <Menu size={40}/>
-                    </button>
                 </div>
             </div>
             {(menu || closing) && (

@@ -253,218 +253,218 @@ const Interior = ({
     }
 
     return (
-        <div className="w-screen h-full flex justify-center items-center p-10 text-white">
-            <div className="grid grid-cols-6 grid-rows-2 gap-10 h-full w-full">
-                <div className={"relative flex justify-center items-center row-start-1 col-start-1 mb-10"}>
-                    <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={300} className={"z-0"}/>
-                    <div
-                        onClick={() => {
-                            if (waitingClient) {
-                                setSelectedClient(true)
-                                setWaitingClient(false)
-                            }
-                        }}
-                        className={`absolute flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white z-49 ${waitingClient ? "bg-red-950" : "bg-pink-900"}`}>
-                        {waitingClient ? (
-                            <DoorOpen size={50}/>
-                        ) : (
-                            <DoorClosed size={50}/>
-                        )}
-                    </div>
-                    <div
-                        className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,0)_0%,_rgba(134,16,67,1)_70%,_rgba(134,16,67,1)_100%)] z-48"/>
+        <>
+            <div className={"relative flex justify-center items-center absolute -left-215 top-195 z-50 text-pink-200"}>
+                <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={255} className={"absolute"}/>
+                <div
+                    onClick={() => {
+                        if (waitingClient) {
+                            setSelectedClient(true)
+                            setWaitingClient(false)
+                        }
+                    }}
+                    className={`absolute flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white z-49 ${waitingClient ? "bg-red-950" : "bg-pink-900"}`}>
+                    {waitingClient ? (
+                        <DoorOpen size={50}/>
+                    ) : (
+                        <DoorClosed size={50}/>
+                    )}
                 </div>
-                {items.map((_, i) => {
-                    const hostessAtTable = hostesses[i]
+            </div>
+            <div className="w-screen h-full flex justify-center items-center p-10 text-white">
+                <div className="grid grid-cols-6 grid-rows-2 gap-10 h-full w-full">
+                    {items.map((_, i) => {
+                        const hostessAtTable = hostesses[i]
 
-                    return (
-                        <div key={i}
-                             className={`relative flex justify-center items-center bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)] p-4 rounded-lg ${positioning(i)}`}
-                             onClick={() => {
-                                 if (selectedHostess && !hostesses[i]) {
-                                     let updatedHostesses: (Hostess | null)[]
-                                     setHostesses(prev => {
-                                         updatedHostesses = [...prev]
-                                         updatedHostesses[i] = selectedHostess
-                                         return updatedHostesses
-                                     })
-                                     setHostessesPanel(prev => {
-                                         return prev.map(h => h?.id === selectedHostess.id ? null : h)
-                                     })
-                                     setSelectedHostess(null)
-                                     if (clients[i]) {
-                                         InquiryHandler(i, "Buffet", true)
+                        return (
+                            <div key={i}
+                                 className={`relative flex justify-center items-center bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)] p-4 rounded-lg ${positioning(i)}`}
+                                 onClick={() => {
+                                     if (selectedHostess && !hostesses[i]) {
+                                         let updatedHostesses: (Hostess | null)[]
+                                         setHostesses(prev => {
+                                             updatedHostesses = [...prev]
+                                             updatedHostesses[i] = selectedHostess
+                                             return updatedHostesses
+                                         })
+                                         setHostessesPanel(prev => {
+                                             return prev.map(h => h?.id === selectedHostess.id ? null : h)
+                                         })
+                                         setSelectedHostess(null)
+                                         if (clients[i]) {
+                                             InquiryHandler(i, "Buffet", true)
+                                         }
                                      }
-                                 }
-                             }}>
-                            <Image
-                                src={
-                                    !visit[i] && dinedTables[i] ?
-                                        "/images/position_empty_dined.png"
-                                        : inquiry[i] && dinedTables[i]
-                                            ? "/images/position_call_dined.png"
-                                            : dinedTables[i] && hostesses[i] && clients[i]
-                                                ? "/images/position_dined.png"
-                                                : inquiry[i]
-                                                    ? "/images/position_call.png"
-                                                    : hostesses[i] && clients[i]
-                                                        ? "/images/position_full.png"
-                                                        : hostesses[i]
-                                                            ? "/images/position_hostess.png"
-                                                            : clients[i]
-                                                                ? "/images/position_client.png"
-                                                                : "/images/position_empty.png"
-                                }
-                                alt={"Meeting position"}
-                                height={424}
-                                width={528}
-                                className={"flex justify-center items-center"}
-                            />
-                            {!visit[i] && dinedTables[i] && (
-                                <div
-                                    className={`absolute top-17.5 border-pink-300 hover:border-pink-500 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-pink-300 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
-                                    onClick={() => {
-                                        setDinedTables(prev => {
-                                            const updated = [...prev]
-                                            updated[i] = false
-                                            return updated
-                                        })
-                                    }}>
-                                    <BrushCleaning size={30}/>
-                                </div>
-                            )}
-                            <div
-                                className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
-                                {hostessAtTable ? (
+                                 }}>
+                                <Image
+                                    src={
+                                        !visit[i] && dinedTables[i] ?
+                                            "/images/position_empty_dined.png"
+                                            : inquiry[i] && dinedTables[i]
+                                                ? "/images/position_call_dined.png"
+                                                : dinedTables[i] && hostesses[i] && clients[i]
+                                                    ? "/images/position_dined.png"
+                                                    : inquiry[i]
+                                                        ? "/images/position_call.png"
+                                                        : hostesses[i] && clients[i]
+                                                            ? "/images/position_full.png"
+                                                            : hostesses[i]
+                                                                ? "/images/position_hostess.png"
+                                                                : clients[i]
+                                                                    ? "/images/position_client.png"
+                                                                    : "/images/position_empty.png"
+                                    }
+                                    alt={"Meeting position"}
+                                    height={424}
+                                    width={528}
+                                    className={"flex justify-center items-center"}
+                                />
+                                {!visit[i] && dinedTables[i] && (
                                     <div
+                                        className={`absolute top-17.5 border-pink-300 hover:border-pink-500 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-pink-300 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
                                         onClick={() => {
-                                            if ((selectedClient || selectedHostess) && hostesses[i]) {
-                                                const newWiggle = [...wiggleHostess]
-                                                newWiggle[i] = true
-                                                setWiggleHostess(newWiggle)
-                                                setTimeout(() => {
-                                                    const reset = [...newWiggle]
-                                                    reset[i] = false
-                                                    setWiggleHostess(reset)
-                                                }, 200)
-                                            }
-                                        }}
-                                        className={`relative flex justify-center items-center rounded-[20] border-white border-2 transition-all duration-200 ease-in-out transform active:scale-110 hover:shadow-sm hover:shadow-white ${wiggleHostess[i] ? "scale-120" : "scale-100"}`}>
-                                        <Image
-                                            src={hostessAtTable.image}
-                                            alt={hostessAtTable.name}
-                                            width={100}
-                                            height={100}
-                                            className={`rounded-[18] hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white ${wiggleHostess[i] ? "!bg-red-600" : "bg-pink-800"}`}
-                                        />
-                                        <div
-                                            className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
-                                            <button
-                                                onClick={() => {
-                                                    setHostessesPanel(prev => {
-                                                        const updated = [...prev]
-                                                        const firstEmptyIndex = updated.findIndex(h => h === null)
-                                                        if (firstEmptyIndex !== -1) {
-                                                            updated[firstEmptyIndex] = hostesses[i]
-                                                        } else {
-                                                            updated.push(hostesses[i]!)
-                                                        }
-                                                        return updated
-                                                    })
-                                                    setHostesses(prev => {
-                                                        const updated = [...prev]
-                                                        updated[i] = null
-                                                        return updated
-                                                    })
-                                                    InquiryHandler(i, null, false)
-                                                }}
-                                                className={"flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
-                                                <Wind size={20}/>
-                                            </button>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div
-                                        className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-700 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white"}>
-                                        <VenetianMask size={50}/>
+                                            setDinedTables(prev => {
+                                                const updated = [...prev]
+                                                updated[i] = false
+                                                return updated
+                                            })
+                                        }}>
+                                        <BrushCleaning size={30}/>
                                     </div>
                                 )}
                                 <div
-                                    onClick={() => {
-                                        if (selectedClient && !clients[i]) {
-                                            const updatedClients = [...clients]
-                                            updatedClients[i] = true
-                                            setClients(updatedClients)
-                                            setSelectedClient(false)
-                                            if (hostesses[i]) {
-                                                InquiryHandler(i, "Buffet", true)
-                                            }
-                                        } else if ((selectedClient || selectedHostess) && clients[i]) {
-                                            const newWiggle = [...wiggleClient]
-                                            newWiggle[i] = true
-                                            setWiggleClient(newWiggle)
-                                            setTimeout(() => {
-                                                const reset = [...newWiggle]
-                                                reset[i] = false
-                                                setWiggleClient(reset)
-                                            }, 200)
-                                        }
-                                    }}
-                                    className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white ${clients[i] ? "bg-pink-800 opacity-100" : "bg-pink-700"} ${wiggleClient[i] ? "!bg-red-600 scale-120" : "scale-100"}`}>
-                                    {clients[i] ? (
-                                        <>
-                                            <Meh size={50}/>
+                                    className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
+                                    {hostessAtTable ? (
+                                        <div
+                                            onClick={() => {
+                                                if ((selectedClient || selectedHostess) && hostesses[i]) {
+                                                    const newWiggle = [...wiggleHostess]
+                                                    newWiggle[i] = true
+                                                    setWiggleHostess(newWiggle)
+                                                    setTimeout(() => {
+                                                        const reset = [...newWiggle]
+                                                        reset[i] = false
+                                                        setWiggleHostess(reset)
+                                                    }, 200)
+                                                }
+                                            }}
+                                            className={`relative flex justify-center items-center rounded-[20] border-white border-2 transition-all duration-200 ease-in-out transform active:scale-110 hover:shadow-sm hover:shadow-white ${wiggleHostess[i] ? "scale-120" : "scale-100"}`}>
+                                            <Image
+                                                src={hostessAtTable.image}
+                                                alt={hostessAtTable.name}
+                                                width={100}
+                                                height={100}
+                                                className={`rounded-[18] hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white ${wiggleHostess[i] ? "!bg-red-600" : "bg-pink-800"}`}
+                                            />
                                             <div
                                                 className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
                                                 <button
                                                     onClick={() => {
-                                                        const updatedClients = [...clients]
-                                                        updatedClients[i] = false
-                                                        setClients(updatedClients)
+                                                        setHostessesPanel(prev => {
+                                                            const updated = [...prev]
+                                                            const firstEmptyIndex = updated.findIndex(h => h === null)
+                                                            if (firstEmptyIndex !== -1) {
+                                                                updated[firstEmptyIndex] = hostesses[i]
+                                                            } else {
+                                                                updated.push(hostesses[i]!)
+                                                            }
+                                                            return updated
+                                                        })
+                                                        setHostesses(prev => {
+                                                            const updated = [...prev]
+                                                            updated[i] = null
+                                                            return updated
+                                                        })
                                                         InquiryHandler(i, null, false)
                                                     }}
-                                                    className={"flex justify-center items-center hover:bg-pink-950 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
-                                                    <Gavel size={20}/>
+                                                    className={"flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
+                                                    <Wind size={20}/>
                                                 </button>
                                             </div>
-                                        </>
+                                        </div>
                                     ) : (
-                                        <BookUser size={50}/>
+                                        <div
+                                            className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-700 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white"}>
+                                            <VenetianMask size={50}/>
+                                        </div>
                                     )}
-                                </div>
-                                {visit[i] && (
-                                    <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
-                                        <LoadingBar key={`loading-${i}`} duration={60000}
-                                                    onComplete={() => setTimeout(() => InquiryHandler(i, "End", true), 0)}
-                                                    paused={inquiry[i]}
-                                                    onProgressChange={(progress) => {
-                                                        if (Math.random() < 0.002) {
-                                                            setTimeout(() => InquiryHandler(i, "Service", true), 0)
-                                                        }
-                                                    }}/>
-                                    </div>
-                                )}
-                                {inquiry[i] && (
                                     <div
-                                        className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
                                         onClick={() => {
-                                            setInquiryTableId(i)
-                                            setInquiryWindow(true)
-                                        }}>
-                                        {inquiryType[i] === "Service" && <HandHeart scale={25}/>}
-                                        {inquiryType[i] === "Buffet" && <Martini scale={25}/>}
-                                        {inquiryType[i] === "End" && <BookHeart scale={25}/>}
+                                            if (selectedClient && !clients[i]) {
+                                                const updatedClients = [...clients]
+                                                updatedClients[i] = true
+                                                setClients(updatedClients)
+                                                setSelectedClient(false)
+                                                if (hostesses[i]) {
+                                                    InquiryHandler(i, "Buffet", true)
+                                                }
+                                            } else if ((selectedClient || selectedHostess) && clients[i]) {
+                                                const newWiggle = [...wiggleClient]
+                                                newWiggle[i] = true
+                                                setWiggleClient(newWiggle)
+                                                setTimeout(() => {
+                                                    const reset = [...newWiggle]
+                                                    reset[i] = false
+                                                    setWiggleClient(reset)
+                                                }, 200)
+                                            }
+                                        }}
+                                        className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white ${clients[i] ? "bg-pink-800 opacity-100" : "bg-pink-700"} ${wiggleClient[i] ? "!bg-red-600 scale-120" : "scale-100"}`}>
+                                        {clients[i] ? (
+                                            <>
+                                                <Meh size={50}/>
+                                                <div
+                                                    className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
+                                                    <button
+                                                        onClick={() => {
+                                                            const updatedClients = [...clients]
+                                                            updatedClients[i] = false
+                                                            setClients(updatedClients)
+                                                            InquiryHandler(i, null, false)
+                                                        }}
+                                                        className={"flex justify-center items-center hover:bg-pink-950 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
+                                                        <Gavel size={20}/>
+                                                    </button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <BookUser size={50}/>
+                                        )}
                                     </div>
-                                )}
-                                <div className={`absolute ${ArrowPositioning(i)} left-24 z-50`}>
-                                    <Play size={30}/>
+                                    {visit[i] && (
+                                        <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
+                                            <LoadingBar key={`loading-${i}`} duration={60000}
+                                                        onComplete={() => setTimeout(() => InquiryHandler(i, "End", true), 0)}
+                                                        paused={inquiry[i]}
+                                                        onProgressChange={(progress) => {
+                                                            if (Math.random() < 0.002) {
+                                                                setTimeout(() => InquiryHandler(i, "Service", true), 0)
+                                                            }
+                                                        }}/>
+                                        </div>
+                                    )}
+                                    {inquiry[i] && (
+                                        <div
+                                            className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
+                                            onClick={() => {
+                                                setInquiryTableId(i)
+                                                setInquiryWindow(true)
+                                            }}>
+                                            {inquiryType[i] === "Service" && <HandHeart scale={25}/>}
+                                            {inquiryType[i] === "Buffet" && <Martini scale={25}/>}
+                                            {inquiryType[i] === "End" && <BookHeart scale={25}/>}
+                                        </div>
+                                    )}
+                                    <div className={`absolute ${ArrowPositioning(i)} left-24 z-50`}>
+                                        <Play size={30}/>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    )
-                })}
+                        )
+                    })}
+                </div>
             </div>
-        </div>
+        </>
     )
 }
 

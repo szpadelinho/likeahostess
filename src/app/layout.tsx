@@ -9,10 +9,10 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
-        <body>
-        <BlockRightClick/>
-        {children}
-        </body>
+            <body>
+                <BlockRightClick/>
+                {children}
+            </body>
         </html>
     );
 }

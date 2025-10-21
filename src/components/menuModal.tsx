@@ -110,9 +110,9 @@ export const MenuModal = ({
 
     return (
         <div
-            className={`absolute inset-0 flex justify-center items-center z-50 backdrop-blur-sm transition duration-300 ease-in-out ${menu && !closing ? "opacity-100 scale-100" : "opacity-0 scale-50"}`}
+            className={`absolute inset-0 flex justify-center items-center z-50 backdrop-blur-sm transition duration-300 ease-in-out ${menu && !closing ? "opacity-100" : "opacity-0"}`}
             onClick={handleClick}>
-            <div className={"grid grid-cols-3 grid-rows-3 gap-10 text-center justify-items-center text-pink-200"}>
+            <div className={`grid grid-cols-3 grid-rows-3 gap-10 text-center justify-items-center text-pink-200 transition duration-300 ease-in-out ${menu && !closing ? "scale-100" : "scale-50"}`}>
                 {menuItems.map((item) => (
                     <MenuButton key={item.title}
                                 {...item}

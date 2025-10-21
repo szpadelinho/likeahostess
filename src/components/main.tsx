@@ -90,20 +90,19 @@ const Main = () => {
     const [hostessesPanel, setHostessesPanel] = useState<(Hostess | null)[]>(Array(6).fill(null))
     const [selectedHostess, setSelectedHostess] = useState<Hostess | null>(null)
 
-    const [hostessesWorking, setHostessesWorking] = useState<(Hostess | null)[]>(Array(8).fill(null))
+    const [hostessesWorking, setHostessesWorking] = useState<(Hostess | null)[]>(Array(6).fill(null))
 
     const [loading, setLoading] = useState(true)
-    const [clubLogo, setClubLogo] = useState("")
 
     const [jams, setJams] = useState<Jam[]>([])
     const [isJamPlaying, setIsJamPlaying] = useState(true)
     const [jamToggle, setJamToggle] = useState<boolean | null>(null)
 
-    const [visit, setVisit] = useState<boolean[]>(Array(8).fill(false))
+    const [visit, setVisit] = useState<boolean[]>(Array(6).fill(false))
 
     const [buffet, setBuffet] = useState<Buffet[]>([])
 
-    const [dinedTables, setDinedTables] = useState<boolean[]>(Array(8).fill(false))
+    const [dinedTables, setDinedTables] = useState<boolean[]>(Array(6).fill(false))
     const [inquiryTableId, setInquiryTableId] = useState<number | null>(null)
     const [inquiryWindow, setInquiryWindow] = useState<boolean>(false)
 
@@ -229,7 +228,6 @@ const Main = () => {
                     money: userData.money,
                     popularity: userData.popularity,
                 }
-                setClubLogo(clubData.logo)
                 setClub(mergedClub)
             })
     }, [])
@@ -277,26 +275,28 @@ const Main = () => {
             {!loading && (
                 <MainWrapper>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
-                    <Navbar logo={clubLogo}/>
+                    <Navbar/>
                     <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType}/>
                     {club && (
-                        <Hud
-                            club={club}
-                            logOff={logOff}
-                            setLogOff={setLogOff}
-                            selectionPrompt={selectionPrompt}
-                            setSelectionPrompt={setSelectionPrompt}
-                            profile={profile}
-                            casino={casino}
-                            setCasino={setCasino}
-                            setProfile={setProfile}
-                            setManagement={setManagement}
-                            setActivities={setActivities}
-                        />
+                        <>
+                            <HostessPanel management={management} hostesses={hostessesPanel} setHostesses={setHostessesPanel}
+                                          selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}
+                                          setHostessesManagement={setHostessesManagement} setManagement={setManagement}/>
+                            <Hud
+                                club={club}
+                                logOff={logOff}
+                                setLogOff={setLogOff}
+                                selectionPrompt={selectionPrompt}
+                                setSelectionPrompt={setSelectionPrompt}
+                                profile={profile}
+                                casino={casino}
+                                setCasino={setCasino}
+                                setProfile={setProfile}
+                                setManagement={setManagement}
+                                setActivities={setActivities}
+                            />
+                        </>
                     )}
-                    <HostessPanel management={management} hostesses={hostessesPanel} setHostesses={setHostessesPanel}
-                                  selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}
-                                  setHostessesManagement={setHostessesManagement} setManagement={setManagement}/>
                     {(selectionPrompt || logOff || profile || casino) && (
                         <ModalWrapper onClose={() => {
                             if(selectionPrompt){

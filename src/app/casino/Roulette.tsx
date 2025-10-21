@@ -11,6 +11,16 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult}: RoulettePr
     const [ballRotation, setBallRotation] = useState(0)
     const [ballDrop, setBallDrop] = useState(0)
 
+    const spinSoundRef = useRef<HTMLAudioElement | null>(null)
+    useEffect(() => {
+        spinSoundRef.current = new Audio("/sfx/roulette.m4a")
+        spinSoundRef.current.volume = 1
+
+        return () => {
+            spinSoundRef.current = null
+        }
+    }, [])
+
     const wheelNumbers = [
         0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23,
         10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
@@ -18,7 +28,6 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult}: RoulettePr
     const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
 
     const degToRad = (d: number) => (d * Math.PI) / 180
-    const normalizeDeg = (d: number) => ((d % 360) + 360) % 360
 
     const drawRoulette = (ctx: CanvasRenderingContext2D, angleOffset: number, ballAngle: number) => {
         const size = ctx.canvas.width
@@ -169,6 +178,12 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult}: RoulettePr
         setSpinning(true)
         setBallDrop(0)
 
+        const spinSound = spinSoundRef.current
+        if(spinSound){
+            spinSound.currentTime = 0
+            spinSound.play().catch(() => {})
+        }
+
         const randomIndex = Math.floor(Math.random() * wheelNumbers.length)
         const winningNumber = wheelNumbers[randomIndex]
 
@@ -210,7 +225,7 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult}: RoulettePr
                     const ease = 1 - Math.pow(1 - t, 2)
                     setBallDrop(ease * dropAmount)
                     if (t < 1) requestAnimationFrame(drop)
-                };
+                }
                 requestAnimationFrame(drop)
             }
         }
