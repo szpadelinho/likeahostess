@@ -75,7 +75,7 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, prof
                         </h1>
                         <div className={`flex flex-row justify-center items-center gap-3 opacity-50 relative ${yesteryear.className}`}>
                             <Image
-                                className={"object-contain absolute left-1/2 -translate-x-[50%] bottom-5 z-9"}
+                                className={"object-contain absolute left-1/2 -translate-x-[50%] bottom-7.5 z-9"}
                                 src={club.logo}
                                 alt={"Logo"}
                                 height={100}

@@ -1,4 +1,13 @@
-import {Play, Pause, StepBack, StepForward, Disc3, AudioWaveform, EyeClosed, Eye} from "lucide-react"
+import {
+    Play,
+    Pause,
+    StepBack,
+    StepForward,
+    Disc3,
+    AudioWaveform,
+    PanelRightClose,
+    PanelRightOpen
+} from "lucide-react"
 import {useState} from "react";
 import ReactPlayer from "react-player";
 
@@ -39,9 +48,9 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
     }
 
     return(
-        <div className={`absolute text-white z-49 top-5 right-5 ${hidden && "translate-x-148"} transform flex justify-center items-center flex-row text-[15px] bg-pink-950 p-3 rounded-[20] gap-5 transition-all duration-200 opacity-30 hover:opacity-100`} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+        <div className={`absolute text-white z-49 top-5 right-5 ${hidden && "translate-x-148"} transform flex justify-center items-center flex-row text-[15px] bg-pink-950 p-3 rounded-[20] gap-5 transition-all duration-500 opacity-30 hover:opacity-100`} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
             <button className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:scale-115 scale-100 hover:scale-110"} onClick={() => setHidden(!hidden)}>
-                {!hidden ? <EyeClosed/> : <Eye/>}
+                {!hidden ? <PanelRightClose/> : <PanelRightOpen/>}
             </button>
             <div
                  className={"flex bg-red-950 active:scale-105 active:bg-pink-900 justify-center items-center flex-row border-white border-2 rounded-[15] p-2 transition duration-200 ease-in-out"}

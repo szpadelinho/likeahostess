@@ -1,6 +1,6 @@
 import Image from "next/image"
-import {EyeClosed, HeartPlus} from "lucide-react";
-import {Dispatch, SetStateAction} from "react";
+import {EyeClosed, HeartPlus, PanelBottomClose, PanelBottomOpen} from "lucide-react";
+import {Dispatch, SetStateAction, useState} from "react";
 
 interface Hostess {
     id: string
@@ -32,10 +32,11 @@ const HostessPanel = ({
                           setManagement,
                       }: Props) => {
     const visibilityIndexSetter = management ? "z-[999]" : "z-11"
+    const [hidden, setHidden] = useState<boolean>(false)
 
     return (
         <div
-            className={`${visibilityIndexSetter} bg-pink-700 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[25] text-white font-[600] absolute bottom-5 left-1/2 -translate-x-[50%]`}>
+            className={`${visibilityIndexSetter} ${hidden && "translate-y-35"} duration-500 ease-in-out bg-pink-700 text-center items-center justify-center flex flex-row text-[20px] rounded-[25] text-white font-[600] absolute bottom-5 left-1/2 -translate-x-[50%]`}>
             <div className={"flex justify-center items-center m-2 gap-5"}>
                 {hostesses?.map((hostess, index) => {
                     return (
@@ -101,6 +102,9 @@ const HostessPanel = ({
                         </div>
                     )
                 })}
+                <button className={`absolute ${hidden ? "-translate-y-16" : "translate-y-16"} flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] transform active:scale-110`} onClick={() => setHidden(!hidden)}>
+                    {hidden ? <PanelBottomOpen size={20}/> : <PanelBottomClose size={20}/>}
+                </button>
             </div>
         </div>
     )
