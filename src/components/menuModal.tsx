@@ -1,37 +1,18 @@
 import {BottleWine, CarTaxiFront, ClubIcon, Flower, IdCard, LogOut, MicVocal, PiggyBank} from "lucide-react";
-import {Dispatch, SetStateAction} from "react";
 import {MenuButton} from "@/components/menuButton";
 
 interface MenuModal {
-    logOff: boolean,
-    setLogOff: Dispatch<SetStateAction<boolean>>,
-    selectionPrompt: boolean,
-    setSelectionPrompt: Dispatch<SetStateAction<boolean>>,
-    profile: boolean,
-    casino: boolean,
-    setCasino: Dispatch<SetStateAction<boolean>>,
-    setProfile: Dispatch<SetStateAction<boolean>>,
-    setManagement: Dispatch<SetStateAction<boolean>>,
-    setActivities: Dispatch<SetStateAction<boolean>>,
     menu: boolean,
     closing: boolean,
-    handleClick: () => void
+    handleClick: () => void,
+    setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) => void
 }
 
 export const MenuModal = ({
-                              logOff,
-                              setLogOff,
-                              selectionPrompt,
-                              setSelectionPrompt,
-                              profile,
-                              casino,
-                              setCasino,
-                              setProfile,
-                              setManagement,
-                              setActivities,
                               menu,
                               closing,
-                              handleClick
+                              handleClick,
+                              setWindow
                           }: MenuModal) => {
     const menuItems = [
         {
@@ -40,7 +21,7 @@ export const MenuModal = ({
             imageAlt: "Shun Akiyama photo",
             Icon: Flower,
             cursor: "cursor-zoom-in",
-            onClick: () => setManagement(true),
+            onClick: () => setWindow("Management"),
         },
         {
             title: "Activities",
@@ -48,7 +29,7 @@ export const MenuModal = ({
             imageAlt: "Haruka Sawamura photo",
             Icon: MicVocal,
             cursor: "cursor-copy",
-            onClick: () => setActivities(true),
+            onClick: () => setWindow("Activities"),
         },
         {
             title: "Casino",
@@ -56,7 +37,7 @@ export const MenuModal = ({
             imageAlt: "Masayoshi Tanimura photo",
             Icon: ClubIcon,
             cursor: "cursor-copy",
-            onClick: () => setCasino(!casino),
+            onClick: () => setWindow("Casino"),
         },
         {
             title: "Profile",
@@ -64,7 +45,7 @@ export const MenuModal = ({
             imageAlt: "Daigo Dojima photo",
             Icon: IdCard,
             cursor: "cursor-copy",
-            onClick: () => setProfile(!profile),
+            onClick: () => setWindow("Profile"),
         },
         {
             title: "New Serena",
@@ -72,7 +53,7 @@ export const MenuModal = ({
             imageAlt: "Makoto Date photo",
             Icon: BottleWine,
             cursor: "cursor-copy",
-            onClick: () => console.log("Open New Serena"),
+            onClick: () => setWindow("NewSerena"),
         },
         {
             title: "Moneylender",
@@ -80,7 +61,7 @@ export const MenuModal = ({
             imageAlt: "Mine Yoshitaka photo",
             Icon: PiggyBank,
             cursor: "cursor-copy",
-            onClick: () => console.log("Open Moneylander"),
+            onClick: () => setWindow("Moneylender"),
         },
         {
             title: "Change clubs",
@@ -88,10 +69,7 @@ export const MenuModal = ({
             imageAlt: "Taichi Suzuki photo",
             Icon: CarTaxiFront,
             cursor: "cursor-wait",
-            onClick: () => {
-                if (logOff) setLogOff(false)
-                setSelectionPrompt(!selectionPrompt)
-            },
+            onClick: () => setWindow("Selection")
         },
         {
             title: "Log out",
@@ -99,10 +77,7 @@ export const MenuModal = ({
             imageAlt: "Tatsuo Shinada photo",
             Icon: LogOut,
             cursor: "cursor-alias",
-            onClick: () => {
-                if (selectionPrompt) setSelectionPrompt(false)
-                setLogOff(!logOff)
-            }
+            onClick: () => setWindow("LogOff")
         }
     ]
 
@@ -112,7 +87,8 @@ export const MenuModal = ({
         <div
             className={`absolute inset-0 flex justify-center items-center z-50 backdrop-blur-sm transition duration-300 ease-in-out ${menu && !closing ? "opacity-100" : "opacity-0"}`}
             onClick={handleClick}>
-            <div className={`grid grid-cols-3 grid-rows-3 gap-10 text-center justify-items-center text-pink-200 transition duration-300 ease-in-out ${menu && !closing ? "scale-100" : "scale-50"}`}>
+            <div
+                className={`grid grid-cols-3 grid-rows-3 gap-10 text-center justify-items-center text-pink-200 transition duration-300 ease-in-out ${menu && !closing ? "scale-100" : "scale-50"}`}>
                 {menuItems.map((item) => (
                     <MenuButton key={item.title}
                                 {...item}

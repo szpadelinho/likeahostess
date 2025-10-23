@@ -230,7 +230,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
             "spades_four": "Yukio Terada", "hearts_four": "Lady Yayoi Dojima", "diamonds_four": "Nishida", "clubs_four": "Toranosuke Sengoku",
             "spades_five": "Rikiya Shimabukuro", "hearts_five": "Tsuyoshi Kanda", "diamonds_five": "Yoshitaka Mine", "clubs_five": "Lau Ka Long",
             "spades_six": "Masayoshi Tanimura", "hearts_six": "Hana", "diamonds_six": "Daisaku Minami", "clubs_six": "Go Hamazaki",
-            "spades_seven": "Taco Shinada", "hearts_seven": "Masaru Watase", "diamonds_seven": "Kamon Kanai", "clubs_seven": "Masato Aizawa",
+            "spades_seven": "Tatsuo Shinada", "hearts_seven": "Masaru Watase", "diamonds_seven": "Kamon Kanai", "clubs_seven": "Masato Aizawa",
             "spades_eight": "Joon-Gi Han", "hearts_eight": "Haruto Sawamura", "diamonds_eight": "Heizo Hiwami", "clubs_eight": "Kanji Koshimizu",
             "spades_nine": "Yu Nanba", "hearts_nine": "Masato Arakawa", "diamonds_nine": "Koichi Adachi", "clubs_nine": "Tianyou Zhao",
             "spades_ten": "Jo Amon", "hearts_ten": "Onimichio", "diamonds_ten": "Munancho Suzuki", "clubs_ten": "Pocket Circuit Fighter Fujisawa",

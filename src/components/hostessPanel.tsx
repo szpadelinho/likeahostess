@@ -1,6 +1,6 @@
 import Image from "next/image"
 import {EyeClosed, HeartPlus, PanelBottomClose, PanelBottomOpen} from "lucide-react";
-import {Dispatch, SetStateAction, useState} from "react";
+import {useState} from "react";
 
 interface Hostess {
     id: string
@@ -13,25 +13,25 @@ interface Hostess {
 }
 
 interface Props {
-    management: boolean,
     hostesses: (Hostess | null)[],
     setHostesses: (newState: (Hostess | null)[]) => void,
     selectedHostess: Hostess | null,
     setSelectedHostess: (hostess: Hostess | null) => void,
     setHostessesManagement: (fn: (prev: Hostess[]) => Hostess[]) => void,
-    setManagement: Dispatch<SetStateAction<boolean>>,
+    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null,
+    setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) => void
 }
 
 const HostessPanel = ({
-                          management,
                           hostesses,
                           setHostesses,
                           setHostessesManagement,
                           selectedHostess,
                           setSelectedHostess,
-                          setManagement,
+                          window,
+                          setWindow
                       }: Props) => {
-    const visibilityIndexSetter = management ? "z-[999]" : "z-11"
+    const visibilityIndexSetter = window === "Management" ? "z-[999]" : "z-11"
     const [hidden, setHidden] = useState<boolean>(false)
 
     return (
@@ -93,7 +93,7 @@ const HostessPanel = ({
                                     className={`flex justify-center items-center rounded-[20] transform active:scale-110 w-[100px] h-[100px] flex justify-center items-center text-white ${selectedHostess ? "hover:bg-white hover:text-black" : "hover:bg-pink-900 hover:text-pink-300"} transition duration-200 ease-in-out`}
                                     onClick={() => {
                                         if (!selectedHostess) {
-                                            setManagement(true)
+                                            setWindow("Management")
                                         }
                                     }}>
                                     <HeartPlus/>
@@ -102,7 +102,9 @@ const HostessPanel = ({
                         </div>
                     )
                 })}
-                <button className={`absolute ${hidden ? "-translate-y-16" : "translate-y-16"} flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] transform active:scale-110`} onClick={() => setHidden(!hidden)}>
+                <button
+                    className={`absolute ${hidden ? "-translate-y-18" : "translate-y-16"} flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] transform active:scale-110`}
+                    onClick={() => setHidden(!hidden)}>
                     {hidden ? <PanelBottomOpen size={20}/> : <PanelBottomClose size={20}/>}
                 </button>
             </div>

@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Image from "next/image";
 import {
     BookHeart,
@@ -90,16 +90,20 @@ const Interior = ({
     const [waitingClient, setWaitingClient] = useState<boolean>(false)
     const [selectedClient, setSelectedClient] = useState<boolean>(false)
 
-    const audio = new Audio("/sfx/client_arrived.m4a")
+    const clientRef = useRef<HTMLAudioElement | null>(null)
 
     useEffect(() => {
         if (!waitingClient) {
             const random = Math.floor(Math.random() * 19000) + 1000
             const timer = setTimeout(() => {
                 setWaitingClient(true)
-                audio.play()
+                clientRef.current = new Audio("/sfx/client_arrived.m4a")
+                clientRef.current.play().catch(() => {})
             }, random)
-            return () => clearTimeout(timer)
+            return () => {
+                clearTimeout(timer)
+                clientRef.current = null
+            }
         }
     }, [waitingClient])
 

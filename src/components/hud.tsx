@@ -4,7 +4,7 @@ import {
     Menu,
 } from "lucide-react";
 import Image from "next/image";
-import {Dispatch, SetStateAction, useState} from "react";
+import {useState} from "react";
 import {MenuModal} from "@/components/menuModal";
 import {Yesteryear} from "next/font/google";
 
@@ -26,21 +26,12 @@ type Club = {
 }
 
 interface Hud {
-    logOff: boolean
-    setLogOff: Dispatch<SetStateAction<boolean>>
-    selectionPrompt: boolean
-    setSelectionPrompt: Dispatch<SetStateAction<boolean>>
-    profile: boolean
-    casino: boolean
-    setCasino: Dispatch<SetStateAction<boolean>>
-    setProfile: Dispatch<SetStateAction<boolean>>
-    setActivities: Dispatch<SetStateAction<boolean>>
     club: Club
-    setManagement: Dispatch<SetStateAction<boolean>>
+    setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) => void
 }
 
 
-const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, profile, setProfile, setManagement, setActivities, casino, setCasino}: Hud) => {
+const Hud = ({club, setWindow}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
@@ -103,7 +94,7 @@ const Hud = ({club, logOff, setLogOff, selectionPrompt, setSelectionPrompt, prof
                 </div>
             </div>
             {(menu || closing) && (
-                <MenuModal handleClick={handleClick} menu={menu} closing={closing} logOff={logOff} setLogOff={setLogOff} selectionPrompt={selectionPrompt} setSelectionPrompt={setSelectionPrompt} profile={profile} setProfile={setProfile} setManagement={setManagement} setActivities={setActivities} casino={casino} setCasino={setCasino}/>
+                <MenuModal handleClick={handleClick} menu={menu} closing={closing} setWindow={setWindow}/>
             )}
         </>
     )

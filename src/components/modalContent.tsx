@@ -1,159 +1,177 @@
 import Image from "next/image";
 import {signOut} from "next-auth/react";
 import {useRouter} from "next/navigation";
+import {Yesteryear} from "next/font/google";
+
+const yesteryear = Yesteryear({
+    weight: "400",
+    subsets: ['latin'],
+})
 
 interface ModalContentProps {
     onCloseModal: () => void,
-    selectionPrompt: boolean,
-    logOff: boolean,
-    profile: boolean,
-    casino: boolean
+    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null
 }
 
-export const ModalContent = ({onCloseModal, selectionPrompt, logOff, profile, casino}: ModalContentProps) => {
+export const ModalContent = ({
+                                 onCloseModal,
+                                 window
+                             }: ModalContentProps) => {
     const router = useRouter()
+    const modalConfigs = [
+        {
+            key: "logOff",
+            active: window === "LogOff",
+            image: "/images/shinada.png",
+            alt: "Tatsuo Shinada",
+            title: "Are you sure you want to log off?",
+            buttons: [
+                {
+                    label: "Log me off",
+                    onClick: () => signOut({redirectTo: "/auth"}),
+                    style: "cursor-zoom-in",
+                },
+                {
+                    label: "I will stay",
+                    onClick: onCloseModal,
+                    style: "cursor-zoom-out",
+                },
+            ],
+        },
+        {
+            key: "selectionPrompt",
+            active: window === "Selection",
+            image: "/images/suzuki.png",
+            alt: "Taxi driver",
+            title: "Switch clubs?",
+            buttons: [
+                {
+                    label: "Get in the cab",
+                    onClick: () => router.push("/selection"),
+                    style: "cursor-zoom-in",
+                },
+                {
+                    label: "I will stay",
+                    onClick: onCloseModal,
+                    style: "cursor-zoom-out",
+                },
+            ],
+        },
+        {
+            key: "profile",
+            active: window === "Profile",
+            image: "/images/daigo.png",
+            alt: "Daigo Dojima",
+            title: "Check your profile card?",
+            buttons: [
+                {
+                    label: "Go for it",
+                    onClick: () => router.push("/profile"),
+                    style: "cursor-zoom-in",
+                },
+                {
+                    label: "I will stay",
+                    onClick: onCloseModal,
+                    style: "cursor-zoom-out",
+                },
+            ],
+        },
+        {
+            key: "casino",
+            active: window === "Casino",
+            image: "/images/tanimura.png",
+            alt: "Masayoshi Tanimura",
+            title: "Visit casino?",
+            buttons: [
+                {
+                    label: "Let's go gamble!",
+                    onClick: () => router.push("/casino"),
+                    style: "cursor-zoom-in",
+                },
+                {
+                    label: "I will stay",
+                    onClick: onCloseModal,
+                    style: "cursor-zoom-out",
+                },
+            ],
+        },
+        {
+            key: "newSerena",
+            active: window === "NewSerena",
+            image: "/images/date_menu.png",
+            alt: "Makoto Date",
+            title: "Visit your local bar?",
+            buttons: [
+                {
+                    label: "Go for a drink",
+                    onClick: () => router.push("/newSerena"),
+                    style: "cursor-zoom-in",
+                },
+                {
+                    label: "I will stay",
+                    onClick: onCloseModal,
+                    style: "cursor-zoom-out",
+                },
+            ],
+        },
+        {
+            key: "moneylender",
+            active: window === "Moneylender",
+            image: "/images/mine_menu.png",
+            alt: "Mine Yoshitaka",
+            title: "Ask for a loan?",
+            buttons: [
+                {
+                    label: "Take the risk",
+                    onClick: () => router.push("/moneylender"),
+                    style: "cursor-zoom-in",
+                },
+                {
+                    label: "I will stay",
+                    onClick: onCloseModal,
+                    style: "cursor-zoom-out",
+                },
+            ],
+        },
+    ]
+
+    const activeModal = modalConfigs.find((modal) => modal.active)
+
+    if (!activeModal) return null
+
     return (
         <div
-            className={`max-w-screen h-100 text-center content-center justify-center items-center flex flex-row text-white z-51`}>
-            {logOff && (
+            className={`max-w-screen h-100 text-center content-center justify-center items-center flex flex-row text-pink-200 z-51`}>
+            <div
+                className={"w-200 flex content-center justify-center items-center flex-row"}>
                 <div
-                    className={"w-200 flex content-center justify-center items-center flex-row"}>
-                    <div
-                        className={"w-[250px] h-[250px] flex content-center justify-center items-center flex-row bg-pink-700 rounded-[20]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <Image
-                            className={"rounded-[20] w-[250px] h-[250px]"}
-                            src={"/images/shinada.png"}
-                            alt={"Tatsuo Shinada"}
-                            width={250}
-                            height={250}
-                        />
-                    </div>
-                    <div
-                        className={"h-50 p-10 flex content-center justify-center items-center flex-col gap-5 bg-pink-500 rounded-br-[20] rounded-tr-[20]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <h1 className={"text-[30px]"}>Are you sure you want to log off?</h1>
-                        <div className={"flex content-center justify-center items-center flex-row text-[25px] gap-10"}>
-                            <button onClick={() => {
-                                signOut({redirectTo: "/auth"})
-                            }}
-                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
-                                Log me off
+                    className={"w-[250px] h-[250px] flex content-center justify-center items-center flex-row bg-pink-700 rounded-[20]"}
+                    style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+                    <Image
+                        className={"rounded-[20] w-[250px] h-[250px]"}
+                        src={activeModal.image}
+                        alt={activeModal.alt}
+                        width={250}
+                        height={250}
+                    />
+                </div>
+                <div
+                    className={"h-50 p-10 flex content-center justify-center items-center flex-col gap-5 bg-pink-600 rounded-br-[20] rounded-tr-[20]"}
+                    style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+                    <h1 className={`text-[40px] ${yesteryear.className} text-nowrap`}>
+                        {activeModal.title}
+                    </h1>
+                    <div className={"flex content-center justify-center items-center flex-row text-[25px] gap-10"}>
+                        {activeModal.buttons.map((button, i) => (
+                            <button key={i}
+                                    onClick={button.onClick}
+                                    className={"bg-pink-800 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
+                                {button.label}
                             </button>
-                            <button onClick={onCloseModal}
-                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
-                                I
-                                will stay
-                            </button>
-                        </div>
+                        ))}
                     </div>
                 </div>
-            )}
-            {selectionPrompt && (
-                <div
-                    className={"w-200 flex content-center justify-center items-center flex-row bg-transparent"}>
-                    <div
-                        className={"w-[250px] h-[250px] flex content-center justify-center items-center flex-row bg-pink-700 rounded-[20]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <Image
-                            className={"rounded-[20] w-[250px] h-[250px]"}
-                            src={"/images/suzuki.png"}
-                            alt={"Taxi driver"}
-                            width={250}
-                            height={250}
-                        />
-                    </div>
-                    <div
-                        className={"h-50 p-10 flex content-center justify-center items-center flex-col gap-5 bg-pink-500 rounded-br-[20] rounded-tr-[20]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <h1 className={"text-[30px]"}>Switch clubs?</h1>
-                        <div className={"flex content-center justify-center items-center flex-row text-[25px] gap-10"}>
-                            <button onClick={() => {
-                                router.push("/selection");
-                            }}
-                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
-                                Get
-                                in the cab
-                            </button>
-                            <button onClick={onCloseModal}
-                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
-                                I
-                                will stay
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {profile && (
-                <div
-                    className={"w-200 flex content-center justify-center items-center flex-row bg-transparent"}>
-                    <div
-                        className={"w-[250px] h-[250px] flex content-center justify-center items-center flex-row bg-pink-700 rounded-[20]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <Image
-                            className={"rounded-[20] w-[250px] h-[250px]"}
-                            src={"/images/daigo.png"}
-                            alt={"Daigo Dojima"}
-                            width={250}
-                            height={250}
-                        />
-                    </div>
-                    <div
-                        className={"h-50 p-10 flex content-center justify-center items-center flex-col gap-5 bg-pink-500 rounded-br-[20] rounded-tr-[20]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <h1 className={"text-[30px]"}>
-                            Check your profile card?
-                        </h1>
-                        <div className={"flex content-center justify-center items-center flex-row text-[25px] gap-10"}>
-                            <button onClick={() => {
-                                router.push("/profile");
-                            }}
-                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
-                                Go for it
-                            </button>
-                            <button onClick={onCloseModal}
-                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
-                                I will stay
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-            {casino && (
-                <div
-                    className={"w-200 flex content-center justify-center items-center flex-row bg-transparent"}>
-                    <div
-                        className={"w-[250px] h-[250px] flex content-center justify-center items-center flex-row bg-pink-700 rounded-[20]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <Image
-                            className={"rounded-[20] w-[250px] h-[250px]"}
-                            src={"/images/tanimura.png"}
-                            alt={"Masayoshi Tanimura"}
-                            width={250}
-                            height={250}
-                        />
-                    </div>
-                    <div
-                        className={"h-50 p-10 flex content-center justify-center items-center flex-col gap-5 bg-pink-500 rounded-br-[20] rounded-tr-[20]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <h1 className={"text-[30px]"}>
-                            Visit casino?
-                        </h1>
-                        <div className={"flex content-center justify-center items-center flex-row text-[25px] gap-10"}>
-                            <button onClick={() => {
-                                router.push("/casino");
-                            }}
-                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-in w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
-                                Let's go gamble!
-                            </button>
-                            <button onClick={onCloseModal}
-                                    className={"border-white bg-pink-600 border-2 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
-                                I will stay
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+            </div>
         </div>
     )
 }

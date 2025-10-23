@@ -72,13 +72,17 @@ interface Buffet{
 
 const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
-    const [logOff, setLogOff] = useState<boolean>(false)
-    const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
 
-    const [management, setManagement] = useState<boolean>(false)
-    const [activities, setActivities] = useState<boolean>(false)
-    const [profile, setProfile] = useState<boolean>(false)
-    const [casino, setCasino] = useState<boolean>(false)
+    // const [logOff, setLogOff] = useState<boolean>(false)
+    // const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
+    // const [management, setManagement] = useState<boolean>(false)
+    // const [activities, setActivities] = useState<boolean>(false)
+    // const [profile, setProfile] = useState<boolean>(false)
+    // const [casino, setCasino] = useState<boolean>(false)
+    // const [newSerena, setNewSerena] = useState<boolean>(false)
+    // const [moneylender, setMoneylender] = useState<boolean>(false)
+
+    const [window, setWindow] = useState<"Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null>(null)
 
     const [activity, setActivity] = useState<Activity[]>([])
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
@@ -279,56 +283,36 @@ const Main = () => {
                     <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType}/>
                     {club && (
                         <>
-                            <HostessPanel management={management} hostesses={hostessesPanel} setHostesses={setHostessesPanel}
+                            <HostessPanel hostesses={hostessesPanel} setHostesses={setHostessesPanel}
                                           selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}
-                                          setHostessesManagement={setHostessesManagement} setManagement={setManagement}/>
+                                          setHostessesManagement={setHostessesManagement} window={window} setWindow={setWindow}/>
                             <Hud
                                 club={club}
-                                logOff={logOff}
-                                setLogOff={setLogOff}
-                                selectionPrompt={selectionPrompt}
-                                setSelectionPrompt={setSelectionPrompt}
-                                profile={profile}
-                                casino={casino}
-                                setCasino={setCasino}
-                                setProfile={setProfile}
-                                setManagement={setManagement}
-                                setActivities={setActivities}
+                                setWindow={setWindow}
                             />
                         </>
                     )}
-                    {(selectionPrompt || logOff || profile || casino) && (
+                    {window && (
                         <ModalWrapper onClose={() => {
-                            if(selectionPrompt){
-                                setSelectionPrompt(false)
-                            }
-                            else if(logOff){
-                                setLogOff(false)
-                            }
-                            else if(profile){
-                                setProfile(false)
-                            }
-                            else if(casino){
-                                setCasino(false)
-                            }
+                            setWindow(null)
                         }}>
-                            {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} selectionPrompt={selectionPrompt} logOff={logOff} profile={profile} casino={casino}/>}
+                            {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} window={window}/>}
                         </ModalWrapper>
                     )}
-                    {management && (
+                    {window === "Management" && (
                         <ModalWrapper onClose={() => {
                             setSelectedHostess(null)
-                            setManagement(false)
+                            setWindow(null)
                         }}>
                             {({onCloseModal}) => <Management onCloseModal={onCloseModal} hostesses={hostessesManagement}
                                                              selectedHostess={selectedHostess}
                                                              setSelectedHostess={setSelectedHostess}/>}
                         </ModalWrapper>
                     )}
-                    {activities && (
+                    {window === "Activities" && (
                         <ModalWrapper onClose={() => {
                             setSelectedPerformer(null)
-                            setActivities(false)
+                            setWindow(null)
                         }}>
                             {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
                                                              selectedPerformer={selectedPerformer}
