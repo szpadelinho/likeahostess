@@ -165,7 +165,7 @@ export const ModalContent = ({
                         {activeModal.buttons.map((button, i) => (
                             <button key={i}
                                     onClick={button.onClick}
-                                    className={"bg-pink-800 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}>
+                                    className={"bg-pink-800 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-pink-200 hover:text-pink-950 transition-all duration-200 ease-in-out transform active:scale-110"}>
                                 {button.label}
                             </button>
                         ))}

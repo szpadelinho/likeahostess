@@ -1,8 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Yesteryear&display=swap');
 @import "tailwindcss";
 
-.slot-icon {
-
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    opacity: 0;
+    margin: 0;
 }
 
 @keyframes slot-bounce {

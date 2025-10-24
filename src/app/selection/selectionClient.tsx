@@ -253,6 +253,7 @@ const SelectionClient = () => {
                 controls={false}
                 autoPlay={true}
                 muted={muted}
+                loop={true}
                 className={"flex absolute top-0 left-0 z-[-1]"}
                 style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
             />
