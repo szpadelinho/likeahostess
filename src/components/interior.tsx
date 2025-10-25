@@ -77,7 +77,6 @@ const Interior = ({
                       setInquiryType,
                       visit,
                       setVisit,
-                      serviceType,
                       setServiceType,
                       setDinedTables
                   }: InteriorProps) => {
@@ -258,8 +257,8 @@ const Interior = ({
 
     return (
         <>
-            <div className={"relative flex justify-center items-center absolute -left-215 top-195 z-50 text-pink-200"}>
-                <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={255} className={"absolute"}/>
+            <div className={"absolute flex justify-center items-center left-0 bottom-0 z-50 text-pink-200"}>
+                <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={255} className={""}/>
                 <div
                     onClick={() => {
                         if (waitingClient) {
@@ -440,7 +439,7 @@ const Interior = ({
                                             <LoadingBar key={`loading-${i}`} duration={60000}
                                                         onComplete={() => setTimeout(() => InquiryHandler(i, "End", true), 0)}
                                                         paused={inquiry[i]}
-                                                        onProgressChange={(progress) => {
+                                                        onProgressChange={() => {
                                                             if (Math.random() < 0.002) {
                                                                 setTimeout(() => InquiryHandler(i, "Service", true), 0)
                                                             }

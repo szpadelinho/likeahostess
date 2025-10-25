@@ -7,6 +7,7 @@ import Image from "next/image";
 import {useState} from "react";
 import {MenuModal} from "@/components/menuModal";
 import {Yesteryear} from "next/font/google";
+import {Clock} from "@/components/clock";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -46,9 +47,10 @@ const Hud = ({club, setWindow}: Hud) => {
     return (
         <>
             <div
-                className={`flex flex-row justify-between items-end z-10 p-5 w-screen h-70 relative`}>
+                className={`flex flex-row justify-between items-end z-10 p-5 w-screen h-70`}>
+                <Clock/>
                 <button
-                    className={`-translate-y-210 h-[68px] w-[68px] bg-pink-800 border-pink-200 border-2 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[15] text-pink-200 duration-300 ease-in-out hover:bg-pink-200 hover:text-pink-950`}
+                    className={`absolute top-5 left-5 h-[68px] w-[68px] bg-pink-800 border-pink-200 border-2 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[15] text-pink-200 duration-300 ease-in-out hover:bg-pink-200 hover:text-pink-950`}
                     onClick={() => {
                         setClosing(true)
                         setTimeout(() => {
