@@ -2,7 +2,6 @@
 
 import React, {useEffect, useState} from "react";
 import Hud from "@/components/hud";
-import Navbar from "@/components/navbar"
 import MainWrapper from "@/components/mainWrapper";
 import Interior from "@/components/interior";
 import ModalWrapper from "@/components/modalWrapper";
@@ -279,7 +278,6 @@ const Main = () => {
             {!loading && (
                 <MainWrapper>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
-                    <Navbar/>
                     <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType}/>
                     {club && (
                         <>

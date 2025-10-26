@@ -1,7 +1,7 @@
 'use client'
 
 import {useSession, signIn} from "next-auth/react"
-import {Github, MailQuestionMark, Scale, Volume2, VolumeOff} from "lucide-react";
+import {Github, MailQuestionMark, Scale} from "lucide-react";
 import Link from "next/link";
 import React, {useEffect, useState} from "react";
 import {redirect, useRouter} from "next/navigation"
@@ -9,6 +9,7 @@ import {Yesteryear} from "next/font/google"
 import IntroBanner from "@/components/introBanner";
 import Image from "next/image";
 import ReactPlayer from "react-player";
+import Navbar from "@/components/navbar";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -23,7 +24,7 @@ export default function AuthClient() {
     const [bannerVisible, setBannerVisible] = useState(true)
 
     const [isPlaying, setIsPlaying] = useState(false)
-    const [muted, setMuted] = useState(true)
+    const [muted, setMuted] = useState(false)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -58,25 +59,13 @@ export default function AuthClient() {
     if (!session) {
         return (
             <>
-                <Image src={"/icon.png"} alt={"App icon"} height={200} width={100} className={"absolute top-5 left-5 z-40"}/>
-                <button onClick={() => {
-                    if(isPlaying){
-                        setIsPlaying(false)
-                    }
-                    else{
-                        setIsPlaying(true)
-                    }
-                }}
-                        className={"absolute top-10 right-10 z-49 border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                    {
-                        isPlaying ? <Volume2/> : <VolumeOff/>
-                    }
-                </button>
-                <Image src={"/images/business_card_hands.png"} alt={"Hands handing over a business card"} fill={true} className={"absolute inset-0 z-39"}/>
+                <Image src={"/icon.png"} alt={"App icon"} height={200} width={100} className={"absolute top-5 left-5 z-2"}/>
+                <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Auth"}/>
+                <Image src={"/images/business_card_hands.png"} alt={"Hands handing over a business card"} fill={true} className={"absolute inset-0 z-1"}/>
                 {showBanner && (
                     <IntroBanner bannerVisible={bannerVisible} />
                 )}
-                <div className={"absolute w-screen h-screen flex content-center items-center justify-center mask-center z-40 perspective-dramatic"}>
+                <div className={"absolute w-screen h-screen flex content-center items-center justify-center mask-center z-2 perspective-dramatic"}>
                     <h1 className={`flex absolute bottom-3 right-3 text-white text-[15px] ${yesteryear.className}`}>{new Date().getFullYear()}</h1>
                     <h4 className={"absolute bottom-4 left-4"}><Link
                         className={"text-white font-bold text-shadow-xl text-[13px] transition duration-200 ease-in-out hover:text-teal-500 hover:shadow-xl hover:text-shadow-teal-700"}
@@ -101,7 +90,7 @@ export default function AuthClient() {
                         <h2 className={`text-5xl border-t-2 pt-6 border-b-2 pb-6 w-80 text-center opacity-70 ${yesteryear.className}`}>
                             Like a Hostess
                         </h2>
-                        <Image src={"/images/dragon2.png"} alt={"Dragon2 icon"} height={200} width={128} className={"absolute top-5 right-5 z-40 mix-blend-color-burn invert"}/>
+                        <Image src={"/images/dragon2.png"} alt={"Dragon2 icon"} height={200} width={128} className={"absolute top-5 right-5 mix-blend-color-burn invert"}/>
                         <div className={"absolute bottom-4 right-4 flex flex-row gap-2 items-center"}>
                             <button
                                 className={"border-black border-2 rounded-sm w-[105px] opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}

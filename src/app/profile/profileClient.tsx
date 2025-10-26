@@ -1,13 +1,14 @@
 'use client'
 
 import Image from "next/image";
-import {DatabaseBackup, Trash2, Undo2, Volume2, VolumeOff} from "lucide-react";
+import {DatabaseBackup, Trash2} from "lucide-react";
 import {useRouter} from "next/navigation";
 import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
 import {Yesteryear} from "next/font/google";
 import {Session} from "next-auth";
 import type {Prisma} from "@prisma/client";
+import Navbar from "@/components/navbar";
 
 type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -35,7 +36,7 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
     const router = useRouter();
 
     const [isPlaying, setIsPlaying] = useState(true)
-    const [muted, setMuted] = useState(true)
+    const [muted, setMuted] = useState(false)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -83,25 +84,7 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
             <Image src={"/images/paper_card.png"} alt={"Paper card being held"} fill={true}
                    className={"absolute inset-0"}/>
             <div className={"h-screen w-screen flex items-center justify-center z-50 text-black"}>
-                <button
-                    className={"absolute top-5 left-5 border-pink-500 hover:border-pink-300 border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-pink-500 bg-pink-300 text-pink-500 hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-110 z-50"}
-                    onClick={() => {
-                        router.push("/")
-                    }}>
-                    <Undo2/>
-                </button>
-                <button onClick={() => {
-                    if (isPlaying) {
-                        setIsPlaying(false)
-                    } else {
-                        setIsPlaying(true)
-                    }
-                }}
-                        className={"absolute top-5 right-5 border-pink-500 hover:border-pink-300 border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-pink-500 bg-pink-300 text-pink-500 hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-110 z-50"}>
-                    {
-                        isPlaying ? <Volume2/> : <VolumeOff/>
-                    }
-                </button>
+                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Profile"}/>
                 <div className={"absolute top-35 flex items-center justify-center z-50 flex-row gap-10"}>
                     <Image src={session?.user?.image ?? "/images/dragon.png"} alt={"Profile picture"} height={50} width={50} className={"rounded-full border-2 border-black"}/>
                     <h1 className={`z-50 text-[50px] ${yesteryear.className}`}>

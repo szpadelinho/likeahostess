@@ -1,11 +1,11 @@
 'use client'
 
-import {LogOut, Volume2, VolumeOff} from "lucide-react";
 import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import {Yesteryear} from "next/font/google";
+import Navbar from "@/components/navbar";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -13,8 +13,8 @@ const yesteryear = Yesteryear({
 })
 
 export const MoneylenderClient = () => {
-    const [isPlaying, setIsPlaying] = useState(false)
-    const [muted, setMuted] = useState(true)
+    const [isPlaying, setIsPlaying] = useState(true)
+    const [muted, setMuted] = useState(false)
     const [value, setValue] = useState(100000)
 
     const router = useRouter()
@@ -30,20 +30,7 @@ export const MoneylenderClient = () => {
     return(
         <>
             <Image src={"/images/moneylender.png"} alt={"Mine's office"} fill={true} className={"object-cover"}/>
-            <div className={"absolute top-10 right-10 flex items-center justify-center flex-row gap-5 z-50"}>
-                <button onClick={() => {setIsPlaying(!isPlaying)}}
-                        className={"border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                    {
-                        isPlaying ? <Volume2/> : <VolumeOff/>
-                    }
-                </button>
-                <button onClick={() => {
-                    router.push("/")
-                }}
-                        className={"border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                    <LogOut/>
-                </button>
-            </div>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Moneylender"}/>
             <div className={"absolute flex justify-center items-center w-screen h-screen"}>
                 <div className={`${yesteryear.className} text-[25px] flex flex-col justify-center items-center bg-cover bg-[url(/images/paper_texture.png)] h-160 w-120`}>
                     <h1 className={"text-[75px]"}>Take out a loan</h1>

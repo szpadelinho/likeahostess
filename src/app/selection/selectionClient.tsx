@@ -1,13 +1,12 @@
 'use client'
 
 import React, {useEffect, useState} from "react";
-import {LogOut, Volume2, VolumeOff} from "lucide-react";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
 import LoadingBanner from "@/components/loadingBanner";
-import {signOut} from "next-auth/react";
 import ReactPlayer from "react-player";
 import clsx from "clsx";
+import Navbar from "@/components/navbar";
 
 type Club = {
     id: string;
@@ -135,25 +134,7 @@ const SelectionClient = () => {
     return (
         <>
             <LoadingBanner show={loading}/>
-            <button onClick={() => {
-                signOut({redirectTo: "/auth"})
-            }}
-                    className={"absolute top-10 right-10 border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                <LogOut/>
-            </button>
-            <button onClick={() => {
-                if(isPlaying){
-                    setIsPlaying(false)
-                }
-                else{
-                    setIsPlaying(true)
-                }
-            }}
-                    className={"absolute top-10 right-25 border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                {
-                    isPlaying ? <Volume2/> : <VolumeOff/>
-                }
-            </button>
+            <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Selection"}/>
             {!loading && (
                 <div className={`flex justify-center content-center w-screen h-screen overflow-hidden ${fadeOut ? "opacity-0 transition-all duration-500" : "opacity-100 transition-all"}`}>
                     <div className={"flex content-center items-center justify-center flex-col gap-10"}>

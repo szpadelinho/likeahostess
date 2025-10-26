@@ -2,11 +2,12 @@
 
 import ReactPlayer from "react-player";
 import React, {useEffect, useState} from "react";
-import {BookCopy, JapaneseYen, LogOut, Volume2, VolumeOff} from "lucide-react";
+import {JapaneseYen} from "lucide-react";
 import {useRouter} from "next/navigation";
 import {Yesteryear} from "next/font/google";
 import Image from "next/image";
 import CasinoGame from "@/app/casino/CasinoGame";
+import Navbar from "@/components/navbar";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -100,34 +101,7 @@ const CasinoClient = () => {
     return(
         <div className={"flex flex-col h-screen w-screen items-center justify-center text-white z-50 gap-5"}>
             <Image src={`/images/${background}.png`} alt={"Casino interior"} fill={true} className={"absolute inset-0 z-[-1]"}/>
-            <button onClick={() => {
-                router.push("/")
-            }}
-                    className={"backdrop-blur-xl z-50 absolute top-10 right-10 border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                <LogOut/>
-            </button>
-            <button onClick={() => {
-                if(isPlaying){
-                    setIsPlaying(false)
-                }
-                else{
-                    setIsPlaying(true)
-                }
-            }}
-                    className={"backdrop-blur-xl z-50 absolute top-10 right-25 border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                {
-                    isPlaying ? <Volume2/> : <VolumeOff/>
-                }
-            </button>
-            {game && (
-                <button onClick={() => {
-                    setGame(null)
-                    setBackground("casino")
-                }}
-                        className={"backdrop-blur-xl z-50 absolute top-10 left-10  border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                    <BookCopy/>
-                </button>
-            )}
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} page={"Casino"}/>
             <ReactPlayer
                 src={"https://youtube.com/embed/8mqRTo74g-0?autoplay=1"}
                 playing={isPlaying}

@@ -2,16 +2,18 @@
 
 import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
-import {signOut} from "next-auth/react";
-import {LogOut, Volume2, VolumeOff} from "lucide-react";
 import Image from "next/image";
 import TutorialItem from "@/app/tutorial/TutorialItem";
+import Navbar from "@/components/navbar";
+import {useRouter} from "next/navigation";
 
 const Tutorial = () => {
     const [isPlaying, setIsPlaying] = useState(true)
-    const [muted, setMuted] = useState(true)
+    const [muted, setMuted] = useState(false)
 
     const [active, setActive] = useState<string | null>(null)
+
+    const router = useRouter()
 
     function handleClick(label: string) {
         setActive(label)
@@ -40,26 +42,8 @@ const Tutorial = () => {
     return(
         <>
             <div className={"flex h-screen w-screen justify-center items-center text-[30px]"}>
-                <Image src={"/images/books.png"} alt={"Bookshelf"} fill={true} className="z-49"/>
-                <button onClick={() => {
-                    signOut({redirectTo: "/auth"})
-                }}
-                        className={"z-50 absolute top-10 right-10 border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                    <LogOut/>
-                </button>
-                <button onClick={() => {
-                    if(isPlaying){
-                        setIsPlaying(false)
-                    }
-                    else{
-                        setIsPlaying(true)
-                    }
-                }}
-                        className={"z-50 absolute top-10 right-25 border-white border-2 rounded-[10] p-2 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                    {
-                        isPlaying ? <Volume2/> : <VolumeOff/>
-                    }
-                </button>
+                <Image src={"/images/books.png"} alt={"Bookshelf"} fill={true} className="z-1"/>
+                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Tutorial"}/>
                 <div className={"relative grid grid-cols-9 items-center w-300 gap-4 p-2 whitespace-nowrap z-50 mix-blend-mode-burn mt-3"}>
                     <ReactPlayer
                         src={"https://youtube.com/embed/OR9Xls1S0s4?autoplay=1"}
