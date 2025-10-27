@@ -1,12 +1,22 @@
-import {BottleWine, CarTaxiFront, ClubIcon, Flower, IdCard, LogOut, MicVocal, PiggyBank} from "lucide-react";
+import {
+    BottleWine,
+    CarTaxiFront,
+    ClubIcon,
+    createLucideIcon,
+    Flower,
+    IdCard,
+    LogOut,
+    MicVocal,
+    PiggyBank
+} from "lucide-react";
+import {candlestickBigLit} from "@lucide/lab";
 import {MenuButton} from "@/components/menuButton";
 
 interface MenuModal {
     menu: boolean,
     closing: boolean,
     handleClick: () => void,
-    setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null)) => void
-}
+    setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => void}
 
 export const MenuModal = ({
                               menu,
@@ -14,6 +24,8 @@ export const MenuModal = ({
                               handleClick,
                               setWindow
                           }: MenuModal) => {
+    const CandleStickBigLit = createLucideIcon("CandleStickBigLit", candlestickBigLit)
+
     const menuItems = [
         {
             title: "Management",
@@ -40,12 +52,12 @@ export const MenuModal = ({
             onClick: () => setWindow("Casino"),
         },
         {
-            title: "Profile",
-            imageSrc: "/images/daigo_menu.png",
-            imageAlt: "Daigo Dojima photo",
-            Icon: IdCard,
+            title: "Love in Heart",
+            imageSrc: "/images/saejima_menu.png",
+            imageAlt: "Taiga Saejima photo",
+            Icon: CandleStickBigLit,
             cursor: "cursor-copy",
-            onClick: () => setWindow("Profile"),
+            onClick: () => setWindow("LoveInHeart"),
         },
         {
             title: "New Serena",
@@ -62,6 +74,14 @@ export const MenuModal = ({
             Icon: PiggyBank,
             cursor: "cursor-copy",
             onClick: () => setWindow("Moneylender"),
+        },
+        {
+            title: "Profile",
+            imageSrc: "/images/daigo_menu.png",
+            imageAlt: "Daigo Dojima photo",
+            Icon: IdCard,
+            cursor: "cursor-copy",
+            onClick: () => setWindow("Profile"),
         },
         {
             title: "Change clubs",

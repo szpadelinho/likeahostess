@@ -1,7 +1,7 @@
 'use client'
 
 import {useSession, signIn} from "next-auth/react"
-import {Github, MailQuestionMark, Scale} from "lucide-react";
+import {Github, LibraryBig, Scale} from "lucide-react";
 import Link from "next/link";
 import React, {useEffect, useState} from "react";
 import {redirect, useRouter} from "next/navigation"
@@ -83,7 +83,7 @@ export default function AuthClient() {
                             <button
                                 className={`border-black border-2 rounded-sm w-[105px] gap-2 opacity-70 p-2 flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 flex items-center justify-center ${yesteryear.className}`}
                                 onClick={() => redirect("/tutorial")}>
-                                <MailQuestionMark/>
+                                <LibraryBig/>
                                 <p>Tutorial</p>
                             </button>
                         </div>

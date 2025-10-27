@@ -10,7 +10,7 @@ const yesteryear = Yesteryear({
 
 interface ModalContentProps {
     onCloseModal: () => void,
-    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null
+    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null
 }
 
 export const ModalContent = ({
@@ -124,6 +124,25 @@ export const ModalContent = ({
                 {
                     label: "Take the risk",
                     onClick: () => router.push("/moneylender"),
+                    style: "cursor-zoom-in",
+                },
+                {
+                    label: "I will stay",
+                    onClick: onCloseModal,
+                    style: "cursor-zoom-out",
+                },
+            ],
+        },
+        {
+            key: "loveInHeart",
+            active: window === "LoveInHeart",
+            image: "/images/saejima_menu.png",
+            alt: "Taiga Saejima",
+            title: "Go for a massage?",
+            buttons: [
+                {
+                    label: "Take no time",
+                    onClick: () => router.push("/loveInHeart"),
                     style: "cursor-zoom-in",
                 },
                 {

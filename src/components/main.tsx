@@ -72,16 +72,7 @@ interface Buffet{
 const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
 
-    // const [logOff, setLogOff] = useState<boolean>(false)
-    // const [selectionPrompt, setSelectionPrompt] = useState<boolean>(false)
-    // const [management, setManagement] = useState<boolean>(false)
-    // const [activities, setActivities] = useState<boolean>(false)
-    // const [profile, setProfile] = useState<boolean>(false)
-    // const [casino, setCasino] = useState<boolean>(false)
-    // const [newSerena, setNewSerena] = useState<boolean>(false)
-    // const [moneylender, setMoneylender] = useState<boolean>(false)
-
-    const [window, setWindow] = useState<"Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | null>(null)
+    const [window, setWindow] = useState<"Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null>(null)
 
     const [activity, setActivity] = useState<Activity[]>([])
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
