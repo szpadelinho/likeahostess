@@ -10,7 +10,7 @@ interface NavbarProps {
     game?: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,
     setGame?: (value: (((prevState: ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) | "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => void
     setBackground?: (value: (((prevState: string) => string) | string)) => void
-    page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection"  | "Tutorial"
+    page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection"  | "Tutorial" | "LoveInHeart"
 }
 
 const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, page}: NavbarProps) => {
