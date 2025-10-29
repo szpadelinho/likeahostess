@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {HandHeart, JapaneseYen, PiggyBank, SkipBack, SkipForward, X} from "lucide-react";
+import {HandHeart, JapaneseYen, PiggyBank, SkipBack, SkipForward} from "lucide-react";
 import {useState} from "react";
 
 interface Props {
@@ -46,7 +46,6 @@ interface Activity {
 }
 
 const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPerformer, activities, setSelectedActivity, club, isJamPlaying, setIsJamPlaying, setJamToggle}: Props) => {
-    const [hover, setHover] = useState(false)
     const [activityIndex, setActivityIndex] = useState(0)
     const isOnSale = club?.host?.surname === selectedPerformer?.surname
     const saleValue = isOnSale ? "text-pink-300 font-[700] text-shadow text-shadow-sm text-shadow-pink-600" : ""
@@ -72,19 +71,9 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
 
     return (
         <div
-            className={`w-screen h-180 text-center content-center justify-center items-start flex flex-row text-white z-51 gap-20`}>
-            <button onClick={() => {
-                setSelectedPerformer(null)
-                onCloseModal()
-            }}
-                    className={"absolute top-[-75] left-5 hover:cursor-pointer border-white border-2 rounded-[10] p-1 text-white hover:bg-white hover:text-black transition duration-200 ease-in-out"}
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
-            >
-                <X size={35} color={hover ? "black" : "white"} strokeWidth={3}/>
-            </button>
+            className={`w-screen h-180 text-center content-center justify-center items-start flex flex-row text-pink-200 z-51 gap-20`}>
             <div
-                className={"gap-5 bg-pink-700 w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}
+                className={"gap-5 bg-pink-700 w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                 <div className={"w-full grid m-5 grid-cols-[repeat(3,auto)] gap-5"}>
                     {performers.map((performer) => {
@@ -100,7 +89,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                         setSelectedPerformer(performer)
                                     }
                                 }}
-                                className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
+                                className={`flex justify-center items-center rounded-[20] border-pink-200 border-2 hover:bg-pink-950 hover:scale-105 active:scale-110 hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 scale-105 shadow-white shadow-sm" : "bg-pink-900"}`}>
                                 <Image src={performer.image} alt={`${performer.name} ${performer.surname} head shot`}
                                        height={100}
                                        width={100}
@@ -112,7 +101,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
             </div>
             {selectedPerformer ? (
                 <div
-                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition-all duration-200 ease-in-out"}
+                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600] mr-35 transition-all duration-200 ease-in-out"}
                     style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                     <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
                         <div className={"flex justify-center items-center flex-col"}>
@@ -132,7 +121,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                             setIsJamPlaying(false)
                                             setSelectedActivity(performerActivities[activityIndex])
                                         }}
-                                             className={"flex justify-center items-center flex-row border-white border-2 rounded-[15] p-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-pink-200 transition-all duration-200 ease-in-out active:scale-105"}>
+                                             className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-105 active:scale-110 hover:text-pink-200 transition-all duration-200 ease-in-out active:scale-105"}>
                                             <p className={"w-100 flex flex-row justify-center items-center gap-2"}>{performerActivities[activityIndex].name}</p>
                                             <p className={`w-20 flex flex-row justify-center items-center ${saleValue}`}>
                                                 <JapaneseYen size={15}/>
@@ -157,7 +146,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                 </div>
             ) : (
                 <div
-                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition-all duration-200 ease-in-out transform active:scale-110"}>
+                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600] mr-35 transition-all duration-200 ease-in-out transform active:scale-110"}>
                     <button
                         className={"flex justify-center items-center w-full h-full rounded-[20] transition-all duration-200 ease-in-out transform active:scale-110"}
                         onClick={() => {

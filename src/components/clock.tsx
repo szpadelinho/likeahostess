@@ -62,10 +62,10 @@ export const Clock = () => {
     const hoursDeg = hours * 30 + minutes * 0.5
 
     return(
-        <div className={`absolute ${type ? "top-5" : "top-7.5"} left-1/2 -translate-x-[50%] flex items-center justify-center text-pink-200 transition duration-200 ease-in-out`} onClick={() => setType(!type)}>
+        <div className={`absolute ${type ? "top-5" : "top-7.5"} active:scale-110 hover:scale-105 left-1/2 -translate-x-[50%] flex items-center justify-center text-pink-200 transition duration-200 ease-in-out`} onClick={() => setType(!type)}>
             {type ? (
                     <div
-                        className={"relative h-20 w-20 rounded-[15] flex bg-pink-950 gap-5 active:scale-105 active:bg-pink-900 justify-center items-center flex-row border-pink-200 border-2 p-2 transition duration-200 ease-in-out"}>
+                        className={"relative h-20 w-20 rounded-[15] flex bg-pink-950 gap-5 active:bg-pink-900 hover:bg-pink-800 justify-center items-center flex-row border-pink-200 border-2 p-2 transition duration-200 ease-in-out"}>
                         <div className={"relative flex items-center justify-center absolute -top-7.5"}>
                             <div
                                 className={"absolute w-[4px] -top-0.5 h-8 bg-pink-300 origin-bottom rounded-full z-1"}
@@ -108,7 +108,7 @@ export const Clock = () => {
                         <div className={"absolute bottom-3 left-1.5 rotate-60 w-[2px] h-4 bg-pink-200 rounded-full"}/>
                     </div>
             ) : (
-                <div className={`${bitcountGridSingle.className} flex bg-pink-950 gap-5 active:scale-105 active:bg-pink-900 justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 transition duration-200 ease-in-out`}>
+                <div className={`${bitcountGridSingle.className} flex bg-pink-950 gap-5 active:bg-pink-900 hover:bg-pink-800 justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 transition duration-200 ease-in-out`}>
                     <p className={"text-[20px] flex justify-center items-center"}>
                         {digital}
                     </p>

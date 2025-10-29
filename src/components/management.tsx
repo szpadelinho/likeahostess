@@ -1,6 +1,5 @@
 import Image from "next/image";
-import {Candy, X} from "lucide-react";
-import {useState} from "react";
+import {Candy} from "lucide-react";
 
 interface Props {
     onCloseModal: () => void
@@ -20,23 +19,11 @@ interface Hostess {
 }
 
 const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostess}: Props) => {
-    const [hover, setHover] = useState(false)
-
     return (
         <div
-            className={`w-screen h-180 text-center content-center justify-center items-start flex flex-row text-white z-51 gap-20`}>
-            <button onClick={() => {
-                setSelectedHostess(null)
-                onCloseModal()
-            }}
-                    className={"absolute top-[-75] left-5 hover:cursor-pointer border-white border-2 rounded-[10] p-1 text-white hover:bg-white hover:text-black transition duration-200 ease-in-out hover:"}
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
-            >
-                <X size={35} color={hover ? "black" : "white"} strokeWidth={3}/>
-            </button>
+            className={`w-screen h-180 text-center content-center justify-center items-start flex flex-row text-pink-200 z-51 gap-20`}>
             <div
-                className={"gap-5 bg-pink-700 w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}
+                className={"gap-5 bg-pink-700 w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                 <div className={"w-full grid m-5 grid-cols-[repeat(3,auto)] gap-5"}>
                     {hostesses.map((hostess) => {
@@ -52,7 +39,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                                         setSelectedHostess(hostess)
                                     }
                                 }}
-                                className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950  hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 shadow-white shadow-sm" : "bg-pink-900"}`}>
+                                className={`flex justify-center items-center rounded-[20] border-pink-200 border-2 hover:bg-pink-950 hover:scale-105 active:scale-110 hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 scale-105 shadow-white shadow-sm" : "bg-pink-900"}`}>
                                 <Image src={hostess.image} alt={`${hostess.name} ${hostess.surname} head shot`}
                                        height={100}
                                        width={100}
@@ -64,7 +51,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
             </div>
             {selectedHostess ? (
                 <div
-                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition-all duration-200 ease-in-out"}
+                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600] mr-35 transition-all duration-200 ease-in-out"}
                     style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                     <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
                         <div className={"flex justify-center items-center flex-col max-w-150 gap-5"}>
@@ -83,7 +70,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                 </div>
             ) : (
                 <div
-                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600] mr-35 transition-all duration-200 ease-in-out transform active:scale-110"}>
+                    className={"gap-5 bg-transparent w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600] mr-35 transition-all duration-200 ease-in-out transform active:scale-110"}>
                     <button
                         className={"flex justify-center items-center w-full h-full rounded-[20] transition-all duration-200 ease-in-out transform active:scale-110"}
                         onClick={() => {

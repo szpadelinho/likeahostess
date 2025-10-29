@@ -50,7 +50,7 @@ const Hud = ({club, setWindow}: Hud) => {
                 className={`flex flex-row justify-between items-end z-10 p-5 w-screen h-70`}>
                 <Clock/>
                 <button
-                    className={`absolute top-5 left-5 h-[68px] w-[68px] bg-pink-800 border-pink-200 border-2 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[15] text-pink-200 duration-300 ease-in-out hover:bg-pink-200 hover:text-pink-950`}
+                    className={`absolute top-5 left-5 h-[50px] w-[50px] bg-pink-950 border-pink-200 border-2 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[12] text-pink-200 duration-300 ease-in-out hover:bg-pink-200 hover:text-pink-950`}
                     onClick={() => {
                         setClosing(true)
                         setTimeout(() => {

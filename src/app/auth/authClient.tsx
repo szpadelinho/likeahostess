@@ -26,6 +26,29 @@ export default function AuthClient() {
     const [isPlaying, setIsPlaying] = useState(false)
     const [muted, setMuted] = useState(false)
 
+    const [source, setSource] = useState<string | null>(null)
+
+    const intros = [
+        "9qNuScKbYuc",
+        "SbNYIduyg-U",
+        "AcUjoThA53Y",
+        "Ut37SOojuaE",
+        "Fn91JE4jYWk",
+        "CHE5PWK_ZOE",
+        "ATH0ej8Thc4",
+        "73c7cjH8NE0",
+        "sD-UJEQHXZc",
+        "GhKDpI9T1Hg",
+        "tmR_H5NZVVI",
+        "M4JEwZeTKtI",
+        "LiSSAV1xpYo"
+    ]
+
+    useEffect(() => {
+        const random = intros[Math.floor(Math.random() * intros.length)]
+        setSource(random)
+    }, [])
+
     useEffect(() => {
         const timer = setTimeout(() => {
             setMuted(false)
@@ -111,10 +134,11 @@ export default function AuthClient() {
                     </div>
                 </div>
                 <ReactPlayer
-                    src={"https://youtube.com/embed/CHE5PWK_ZOE?autoplay=1"}
+                    src={`https://youtube.com/embed/${source}?autoplay=1`}
                     playing={isPlaying}
                     controls={false}
                     autoPlay={true}
+                    loop={true}
                     muted={muted}
                     style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
                 />

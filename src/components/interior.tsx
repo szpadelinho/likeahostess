@@ -164,21 +164,21 @@ const Interior = ({
     const tableUIPositioning = (i: number) => {
         switch (i) {
             case 0:
-                return "-top-30"
+                return "-top-35"
             case 1:
-                return "-bottom-30"
+                return "-bottom-35"
             case 2:
-                return "-top-30"
+                return "-top-35"
             case 3:
-                return "-bottom-30"
+                return "-bottom-35"
             case 4:
-                return "-top-30"
+                return "-top-35"
             case 5:
-                return "-bottom-30"
+                return "-bottom-35"
             case 6:
-                return "-top-30"
+                return "-top-35"
             case 7:
-                return "-bottom-30"
+                return "-bottom-35"
             default:
                 return ""
         }
@@ -210,7 +210,7 @@ const Interior = ({
     const TimePositioning = (i: number) => {
         switch (i) {
             case 0:
-                return "bottom-27.5"
+                return "bottom-30"
             case 1:
                 return "top-30"
             case 2:
@@ -274,14 +274,14 @@ const Interior = ({
                     )}
                 </div>
             </div>
-            <div className="w-screen h-full flex justify-center items-center p-10 text-white">
+            <div className="w-screen absolute top-[45%] -translate-y-1/2 flex justify-center items-center p-10 text-white">
                 <div className="grid grid-cols-6 grid-rows-2 gap-10 h-full w-full">
                     {items.map((_, i) => {
                         const hostessAtTable = hostesses[i]
 
                         return (
                             <div key={i}
-                                 className={`relative flex justify-center items-center bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)] p-4 rounded-lg ${positioning(i)}`}
+                                 className={`relative flex justify-center items-center p-4 ${positioning(i)}`}
                                  onClick={() => {
                                      if (selectedHostess && !hostesses[i]) {
                                          let updatedHostesses: (Hostess | null)[]
@@ -299,6 +299,7 @@ const Interior = ({
                                          }
                                      }
                                  }}>
+                                <div className={"absolute h-75 w-75 -z-1 flex bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)]"}/>
                                 <Image
                                     src={
                                         !visit[i] && dinedTables[i] ?
@@ -323,7 +324,7 @@ const Interior = ({
                                     className={"flex justify-center items-center"}
                                 />
                                 {!visit[i] && dinedTables[i] && (
-                                    <div
+                                    <button
                                         className={`absolute top-17.5 border-pink-300 hover:border-pink-500 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-pink-300 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
                                         onClick={() => {
                                             setDinedTables(prev => {
@@ -333,7 +334,7 @@ const Interior = ({
                                             })
                                         }}>
                                         <BrushCleaning size={30}/>
-                                    </div>
+                                    </button>
                                 )}
                                 <div
                                     className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
