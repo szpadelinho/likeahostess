@@ -257,7 +257,7 @@ const Interior = ({
 
     return (
         <>
-            <div className={"absolute flex justify-center items-center left-0 bottom-0 z-50 text-pink-200"}>
+            <div className={"absolute flex justify-center items-center left-0 bottom-0 z-3 text-pink-200"}>
                 <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={255} className={""}/>
                 <div
                     onClick={() => {

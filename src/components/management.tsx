@@ -23,7 +23,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
         <div
             className={`w-screen h-180 text-center content-center justify-center items-start flex flex-row text-pink-200 z-51 gap-20`}>
             <div
-                className={"gap-5 bg-pink-700 w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600]"}
+                className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(150,50,100,1)_100%)] w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                 <div className={"w-full grid m-5 grid-cols-[repeat(3,auto)] gap-5"}>
                     {hostesses.map((hostess) => {
@@ -51,7 +51,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
             </div>
             {selectedHostess ? (
                 <div
-                    className={"gap-5 bg-pink-700 w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600] mr-35 transition-all duration-200 ease-in-out"}
+                    className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(140,0,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(110,0,60,1)_100%)] w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600] mr-35 transition-all duration-200 ease-in-out"}
                     style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                     <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
                         <div className={"flex justify-center items-center flex-col max-w-150 gap-5"}>

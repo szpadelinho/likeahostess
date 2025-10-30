@@ -5,7 +5,7 @@ import {DatabaseBackup, Trash2} from "lucide-react";
 import {useRouter} from "next/navigation";
 import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
-import {Yesteryear} from "next/font/google";
+import {Cookie} from "next/font/google";
 import {Session} from "next-auth";
 import type {Prisma} from "@prisma/client";
 import Navbar from "@/components/navbar";
@@ -27,7 +27,7 @@ interface ProfileClientProps {
     favClub: FavClub,
 }
 
-const yesteryear = Yesteryear({
+const cookie = Cookie({
     weight: "400",
     subsets: ['latin'],
 })
@@ -87,19 +87,19 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
                 <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Profile"}/>
                 <div className={"absolute top-35 flex items-center justify-center z-50 flex-row gap-10"}>
                     <Image src={session?.user?.image ?? "/images/dragon.png"} alt={"Profile picture"} height={50} width={50} className={"rounded-full border-2 border-black"}/>
-                    <h1 className={`z-50 text-[50px] ${yesteryear.className}`}>
+                    <h1 className={`z-50 text-[50px] ${cookie.className}`}>
                         {session?.user?.name}'s card
                     </h1>
                     <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={50} width={50}/>
                 </div>
-                <h2 className={`absolute top-70 z-50 text-[25px] ${yesteryear.className}`}>
+                <h2 className={`absolute top-70 z-50 text-[25px] ${cookie.className}`}>
                     Summed money: {totals?.money}
                 </h2>
-                <h2 className={`absolute top-80 z-50 text-[25px] ${yesteryear.className}`}>
+                <h2 className={`absolute top-80 z-50 text-[25px] ${cookie.className}`}>
                     Summed up popularity: {totals?.popularity}
                 </h2>
                 <div className={"absolute top-120 flex justify-center items-center gap-1 flex-col"}>
-                    <h1 className={`z-50 text-[30px] ${yesteryear.className}`}>
+                    <h1 className={`z-50 text-[30px] ${cookie.className}`}>
                         Favourite club
                     </h1>
                     <div className={"relative flex justify-center items-center z-50"}>

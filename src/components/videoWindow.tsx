@@ -1,5 +1,3 @@
-import {X} from "lucide-react";
-import {useState} from "react";
 import ReactPlayer from 'react-player';
 
 interface Activity {
@@ -19,8 +17,6 @@ interface Props {
 }
 
 const VideoWindow = ({selectedActivity, onCloseModal, setIsJamPlaying, jamToggle}: Props) => {
-    const [hover, setHover] = useState(false)
-
     return (
         <>
             <ReactPlayer src={`https://youtube.com/embed/${selectedActivity?.media}?autoplay=1`} height={840}
@@ -31,18 +27,6 @@ const VideoWindow = ({selectedActivity, onCloseModal, setIsJamPlaying, jamToggle
                             setIsJamPlaying(jamToggle)
                         }
                     }}/>
-            <button onClick={() => {
-                onCloseModal()
-                if(jamToggle !== null){
-                    setIsJamPlaying(jamToggle)
-                }
-            }}
-                    className={"absolute top-[0] -right-35 hover:cursor-pointer border-white border-2 rounded-[10] p-1 text-white hover:bg-white hover:text-black transition duration-200 ease-in-out hover:"}
-                    onMouseEnter={() => setHover(true)}
-                    onMouseLeave={() => setHover(false)}
-            >
-                <X size={35} color={hover ? "black" : "white"} strokeWidth={3}/>
-            </button>
         </>
     )
 }
