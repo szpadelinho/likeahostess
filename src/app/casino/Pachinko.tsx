@@ -1,7 +1,7 @@
 import Image from "next/image";
 import {Cherry, Apple, Heart, Star, Citrus, createLucideIcon} from "lucide-react"
 import {strawberry, peach, pumpkin, pear, watermelon, flowerTulip} from "@lucide/lab"
-import {useEffect, useRef, useState} from "react";
+import {useCallback, useEffect, useRef, useState} from "react";
 
 interface PachinkoProps {
     setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void
@@ -48,6 +48,26 @@ export const Pachinko = ({setScore}: PachinkoProps) => {
             loop.play().catch(() => {})
         }
     }
+
+    const handleButton = useCallback((e: KeyboardEvent) => {
+        if (e.code === "Space") {
+            e.preventDefault()
+            if (spinning.every(s => s)) {
+                toggleHold(0)
+            } else if (!spinning[0] && spinning[1] && spinning[2]) {
+                toggleHold(1)
+            } else if (!spinning[0] && !spinning[1] && spinning[2]) {
+                toggleHold(2)
+            } else {
+                startGame()
+            }
+        }
+    }, [spinning, slots, startGame])
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleButton)
+        return () => {window.removeEventListener("keydown", handleButton)}
+    }, [handleButton])
 
     useEffect(() => {
         const intervals: NodeJS.Timeout[] = []

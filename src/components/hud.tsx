@@ -4,7 +4,7 @@ import {
     Menu,
 } from "lucide-react";
 import Image from "next/image";
-import {useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {MenuModal} from "@/components/menuModal";
 import {Yesteryear} from "next/font/google";
 import {Clock} from "@/components/clock";
@@ -37,12 +37,32 @@ const Hud = ({club, setWindow}: Hud) => {
     const [closing, setClosing] = useState<boolean>(false)
 
     const handleClick = () => {
-        setClosing(true)
-        setTimeout(() => {
-            setMenu(!menu)
-            setClosing(false)
-        }, 300)
+        if(menu){
+            setClosing(true)
+            setTimeout(() => {
+                setMenu(!menu)
+                setClosing(false)
+            }, 300)
+        }
+        else{
+            setClosing(true)
+            setTimeout(() => {
+                setMenu(!menu)
+                setClosing(false)
+            }, 300)
+        }
     }
+
+    const handleButton = useCallback((e: KeyboardEvent) => {
+        if(e.key === "Escape"){
+            handleClick()
+        }
+    }, [handleClick])
+
+    useEffect(() => {
+        window.addEventListener("keydown", handleButton)
+        return () => window.removeEventListener("keydown", handleButton)
+    }, [handleButton])
 
     return (
         <>

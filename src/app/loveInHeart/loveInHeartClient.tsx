@@ -66,7 +66,7 @@ export const LoveInHeartClient = () => {
             <Image src={"/images/love_in_heart.png"} alt={"Love In Heart massage parlor"} fill={true} className={"object-cover z-1"}/>
             <Image src={"/images/saejima_massage.png"} alt={"Taiga Saejima"} height={300} width={250} className={"absolute left-20 bottom-10 z-1"}/>
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"LoveInHeart"}/>
-            <div className={`gap-10 h-screen w-screen flex flex-col items-center justify-center text-white ${emilysCandy.className}`}>
+            <div className={`gap-10 h-screen w-screen flex flex-col items-center justify-center text-rose-100 ${emilysCandy.className}`}>
                 <h1 className={"z-10 text-[50px]"}>What will be the service for today?</h1>
                 <div className={"flex flex-col items-center justify-center gap-10"}>
                     {massageItems.map((item, i) => (
@@ -79,7 +79,7 @@ export const LoveInHeartClient = () => {
                                 borderImageSlice: 30,
                                 borderImageRepeat: "round"
                             }}
-                            className={"relative bg-[url(/images/wood_texture.png)] flex items-center justify-center flex-col z-1 h-40 w-200 rounded-[5] duration-300 ease-in-out hover:scale-105 active:scale-110"}>
+                            className={"relative bg-[url(/images/wood_texture.png)] hover:text-rose-500 flex items-center justify-center flex-col z-1 h-40 w-200 rounded-[5] duration-300 ease-in-out hover:scale-105 active:scale-110"}>
                             <h1 className={"text-[30px]"}>
                                 {item.title}
                             </h1>

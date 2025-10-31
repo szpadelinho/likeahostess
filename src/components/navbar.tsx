@@ -31,7 +31,7 @@ const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, 
             case "Tutorial":
                 return "rounded-[10] border-white text-white hover:text-black hover:bg-white"
             case "LoveInHeart":
-                return "bg-[url(/images/wood_texture.png)] text-rose-100"
+                return "bg-[url(/images/wood_texture.png)] text-rose-100 hover:text-rose-500"
             default:
                 return ""
         }

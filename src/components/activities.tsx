@@ -89,7 +89,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                         setSelectedPerformer(performer)
                                     }
                                 }}
-                                className={`flex justify-center items-center rounded-[20] border-pink-200 border-2 hover:bg-pink-950 hover:scale-105 active:scale-110 hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-red-950 scale-105 shadow-white shadow-sm" : "bg-pink-900"}`}>
+                                className={`flex justify-center items-center rounded-[20] border-pink-400 border-2 hover:bg-pink-950 hover:border-pink-600 hover:scale-105 active:scale-110 hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-rose-950 scale-105" : "bg-pink-950/50"}`}>
                                 <Image src={performer.image} alt={`${performer.name} ${performer.surname} head shot`}
                                        height={100}
                                        width={100}
