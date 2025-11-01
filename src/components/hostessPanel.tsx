@@ -90,7 +90,7 @@ const HostessPanel = ({
                                 </div>
                             ) : (
                                 <button
-                                    className={`flex justify-center items-center rounded-[20] transform active:scale-110 w-[100px] h-[100px] flex justify-center items-center text-white ${selectedHostess ? "hover:bg-white hover:text-black" : "hover:bg-pink-900 hover:text-pink-300"} transition duration-200 ease-in-out`}
+                                    className={`flex justify-center items-center rounded-[17] transform active:scale-110 w-[100px] h-[100px] flex justify-center items-center text-white ${selectedHostess ? "hover:bg-pink-200 hover:text-pink-950" : "hover:bg-pink-900 hover:text-pink-300"} transition duration-200 ease-in-out`}
                                     onClick={() => {
                                         if (!selectedHostess) {
                                             setWindow("Management")

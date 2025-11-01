@@ -257,8 +257,8 @@ const Interior = ({
 
     return (
         <>
-            <div className={"absolute flex justify-center items-center left-0 bottom-0 z-3 text-pink-200"}>
-                <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={255} className={""}/>
+            <div className={"absolute flex justify-center items-center -left-5 -bottom-5 z-3 text-pink-200"}>
+                <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={255}/>
                 <div
                     onClick={() => {
                         if (waitingClient) {
@@ -266,7 +266,7 @@ const Interior = ({
                             setWaitingClient(false)
                         }
                     }}
-                    className={`absolute flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white z-49 ${waitingClient ? "bg-red-950" : "bg-pink-900"}`}>
+                    className={`absolute flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-pink-400 border-2 opacity-70 hover:opacity-100 transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120 z-49 ${waitingClient ? "bg-red-950 text-pink-500 hover:bg-pink-950 hover:text-pink-700 active:text-pink-500 active:bg-pink-900" : "bg-pink-900 text-pink-400 hover:bg-pink-800 hover:text-pink-500 active:text-pink-300 active:bg-pink-700"}`}>
                     {waitingClient ? (
                         <DoorOpen size={50}/>
                     ) : (

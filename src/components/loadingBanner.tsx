@@ -27,7 +27,7 @@ const LoadingBanner = ({show}: Props) => {
     if(!visible) return null
 
     return (
-        <div className={`absolute inset-0 flex justify-center items-center z-50 transition-opacity duration-1000 text-white ${
+        <div className={`absolute inset-0 flex justify-center items-center z-[999] transition-opacity duration-1000 text-white ${
             show ? "opacity-100" : "opacity-0"}`}>
             <Image src={"/images/Loading3.png"} alt={"Loading banner"} fill={true}
                    className={"flex absolute z-49 justify-center items-center"}/>
