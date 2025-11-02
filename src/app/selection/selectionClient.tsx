@@ -197,6 +197,10 @@ const SelectionClient = () => {
                                                 className={"absolute h-full w-full z-50"}
                                                 onClick={async () => {
                                                     setFadeOut(true)
+                                                    setTimeout(() => {
+                                                        setLoading(true)
+                                                    }, 300)
+
                                                     setTimeout(async () => {
                                                         localStorage.setItem("selectedClub", JSON.stringify(club))
                                                         await fetch("/api/user-club", {
@@ -205,7 +209,7 @@ const SelectionClient = () => {
                                                             body: JSON.stringify({ clubId: club.id })
                                                         })
                                                         router.push("/")
-                                                    })
+                                                    }, 1000)
                                                 }}
                                             />
                                         )}

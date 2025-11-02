@@ -1,7 +1,8 @@
 import {LogOut, University, Volume2, VolumeOff} from "lucide-react";
-import React from "react";
+import React, {useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {signOut} from "next-auth/react";
+import LoadingBanner from "@/components/loadingBanner";
 
 interface NavbarProps {
     router?: AppRouterInstance,
@@ -14,6 +15,8 @@ interface NavbarProps {
 }
 
 const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, page}: NavbarProps) => {
+    const [loading, setLoading] = useState<boolean>(false)
+
     const getPageStyle = (page: string): string => {
         switch(page){
             case "Auth":
@@ -39,6 +42,7 @@ const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, 
 
     return (
         <>
+            <LoadingBanner show={loading}/>
             <div className={"absolute top-10 right-10 flex items-center justify-center flex-row gap-5 z-10"}>
                 <button onClick={() => {
                     setIsPlaying(!isPlaying)
@@ -58,6 +62,7 @@ const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, 
                 </button>
                 {page !== "Auth" && (
                     <button onClick={() => {
+                        setLoading(true)
                         {page !== "Selection" ? (
                             router?.push("/")
                         ) : (

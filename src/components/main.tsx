@@ -87,6 +87,7 @@ const Main = () => {
     const [hostessesWorking, setHostessesWorking] = useState<(Hostess | null)[]>(Array(6).fill(null))
 
     const [loading, setLoading] = useState(true)
+    const [fetched, setFetching] = useState<boolean>(true)
 
     const [jams, setJams] = useState<Jam[]>([])
     const [isJamPlaying, setIsJamPlaying] = useState(true)
@@ -179,8 +180,10 @@ const Main = () => {
     useEffect(() => {
         if (!club || jams.length === 0 || performers.length === 0 || activity.length === 0) {
             setLoading(true)
+            setFetching(true)
         } else {
             setLoading(false)
+            setFetching(false)
         }
     }, [club, jams, performers, activity])
 
@@ -266,7 +269,7 @@ const Main = () => {
                     )}
                 </ModalWrapper>
             )}
-            {!loading && (
+            {!fetched && (
                 <MainWrapper>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
                     <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType}/>
@@ -285,7 +288,7 @@ const Main = () => {
                         <ModalWrapper onClose={() => {
                             setWindow(null)
                         }}>
-                            {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} window={window}/>}
+                            {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} window={window} setLoading={setLoading}/>}
                         </ModalWrapper>
                     )}
                     {window === "Management" && (

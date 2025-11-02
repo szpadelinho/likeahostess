@@ -10,14 +10,17 @@ const yesteryear = Yesteryear({
 
 interface ModalContentProps {
     onCloseModal: () => void,
-    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null
+    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null,
+    setLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void
 }
 
 export const ModalContent = ({
                                  onCloseModal,
-                                 window
+                                 window,
+                                 setLoading
                              }: ModalContentProps) => {
     const router = useRouter()
+
     const modalConfigs = [
         {
             key: "logOff",
@@ -182,9 +185,17 @@ export const ModalContent = ({
                     </h1>
                     <div className={"flex content-center justify-center items-center flex-row text-[25px] gap-10"}>
                         {activeModal.buttons.map((button, i) => (
-                            <button key={i}
-                                    onClick={button.onClick}
-                                    className={"bg-pink-800 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-pink-200 hover:text-pink-950 transition-all duration-200 ease-in-out transform active:scale-110"}>
+                            <button
+                                key={i}
+                                onClick={async () => {
+                                    if (button.onClick === onCloseModal) {
+                                        button.onClick()
+                                    } else {
+                                        setLoading(true)
+                                        setTimeout(() => button.onClick(), 1000)
+                                    }
+                                }}
+                                className={"bg-pink-800 rounded-[12] p-1 cursor-zoom-out w-50 hover:bg-pink-200 hover:text-pink-950 transition-all duration-200 ease-in-out transform active:scale-110"}>
                                 {button.label}
                             </button>
                         ))}
