@@ -1,4 +1,4 @@
-import {LogOut, University, Volume2, VolumeOff} from "lucide-react";
+import {ConciergeBell, LogOut, University, Volume2, VolumeOff} from "lucide-react";
 import React, {useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {signOut} from "next-auth/react";
@@ -9,16 +9,18 @@ interface NavbarProps {
     isPlaying: boolean,
     setIsPlaying: (value: (((prevState: boolean) => boolean) | boolean)) => void,
     game?: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,
-    setGame?: (value: (((prevState: ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) | "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => void
-    setBackground?: (value: (((prevState: string) => string) | string)) => void
-    page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection"  | "Tutorial" | "LoveInHeart"
+    setGame?: (value: (((prevState: ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) | "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => void,
+    setBackground?: (value: (((prevState: string) => string) | string)) => void,
+    page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection" | "Tutorial" | "LoveInHeart",
+    setMode?: (value: (((prevState: ("Selection" | "Acceptance")) => ("Selection" | "Acceptance")) | "Selection" | "Acceptance")) => void,
+    mode?: "Selection" | "Acceptance"
 }
 
-const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, page}: NavbarProps) => {
+const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, page, setMode, mode}: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
 
     const getPageStyle = (page: string): string => {
-        switch(page){
+        switch (page) {
             case "Auth":
                 return "border-1 border-white text-white rounded-[10] hover:bg-white hover:text-black"
             case "Casino":
@@ -43,7 +45,7 @@ const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, 
     return (
         <>
             <LoadingBanner show={loading}/>
-            <div className={"absolute top-10 right-10 flex items-center justify-center flex-row gap-5 z-10"}>
+            <div className={"absolute top-10 right-10 flex items-center justify-center flex-row gap-5 z-[100]"}>
                 <button onClick={() => {
                     setIsPlaying(!isPlaying)
                 }}
@@ -63,12 +65,14 @@ const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, 
                 {page !== "Auth" && (
                     <button onClick={() => {
                         setLoading(true)
-                        {page !== "Selection" ? (
-                            router?.push("/")
-                        ) : (
-                            signOut({redirectTo: "/auth"})
-                        )
-                    }}}
+                        {
+                            page !== "Selection" ? (
+                                router?.push("/")
+                            ) : (
+                                signOut({redirectTo: "/auth"})
+                            )
+                        }
+                    }}
                             className={`${page === "Profile" && "fixed left-10 top-10"} ${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                             style={page === "LoveInHeart" ? {
                                 borderWidth: "8px",
@@ -89,6 +93,22 @@ const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, 
                 }}
                         className={`${getPageStyle(page)} absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                     <University size={25}/>
+                </button>
+            )}
+            {mode === "Acceptance" && (
+                <button onClick={() => {
+                    setMode?.("Selection")
+                }}
+                        className={`${getPageStyle(page)} z-1 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                        style={page === "LoveInHeart" ? {
+                            borderWidth: "8px",
+                            borderStyle: "solid",
+                            borderImageSource: "url('/images/wood_texture2.png')",
+                            borderImageSlice: 30,
+                            borderImageRepeat: "round"
+                        } : {}}
+                >
+                    <ConciergeBell size={25}/>
                 </button>
             )}
         </>
