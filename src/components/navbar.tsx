@@ -12,11 +12,21 @@ interface NavbarProps {
     setGame?: (value: (((prevState: ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) | "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => void,
     setBackground?: (value: (((prevState: string) => string) | string)) => void,
     page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection" | "Tutorial" | "LoveInHeart",
-    setMode?: (value: (((prevState: ("Selection" | "Acceptance")) => ("Selection" | "Acceptance")) | "Selection" | "Acceptance")) => void,
-    mode?: "Selection" | "Acceptance"
+    mode?: "Selection" | "Acceptance",
+    changeMode?: () => void
 }
 
-const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, page, setMode, mode}: NavbarProps) => {
+const Navbar = ({
+                    router,
+                    isPlaying,
+                    setIsPlaying,
+                    game,
+                    setGame,
+                    setBackground,
+                    page,
+                    mode,
+                    changeMode
+                }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
 
     const getPageStyle = (page: string): string => {
@@ -97,9 +107,9 @@ const Navbar = ({router, isPlaying, setIsPlaying, game, setGame, setBackground, 
             )}
             {mode === "Acceptance" && (
                 <button onClick={() => {
-                    setMode?.("Selection")
+                    changeMode?.()
                 }}
-                        className={`${getPageStyle(page)} z-1 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                        className={`${getPageStyle(page)} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                         style={page === "LoveInHeart" ? {
                             borderWidth: "8px",
                             borderStyle: "solid",
