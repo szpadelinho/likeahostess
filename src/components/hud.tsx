@@ -49,7 +49,7 @@ const Hud = ({club, setWindow}: Hud) => {
             setTimeout(() => {
                 setMenu(!menu)
                 setClosing(false)
-            }, 300)
+            }, 0)
         }
     }
 

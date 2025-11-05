@@ -12,8 +12,9 @@ interface NavbarProps {
     setGame?: (value: (((prevState: ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) | "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => void,
     setBackground?: (value: (((prevState: string) => string) | string)) => void,
     page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection" | "Tutorial" | "LoveInHeart",
-    mode?: "Selection" | "Acceptance",
-    changeMode?: () => void
+    mode?: "Selection" | "Acceptance" | "Drinks" | "Supplies",
+    changeMode?: () => void,
+    switchMode?: (mode: ("Selection" | "Drinks" | "Supplies")) => void
 }
 
 const Navbar = ({
@@ -25,7 +26,8 @@ const Navbar = ({
                     setBackground,
                     page,
                     mode,
-                    changeMode
+                    changeMode,
+                    switchMode
                 }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -117,6 +119,15 @@ const Navbar = ({
                             borderImageSlice: 30,
                             borderImageRepeat: "round"
                         } : {}}
+                >
+                    <ConciergeBell size={25}/>
+                </button>
+            )}
+            {(mode === "Drinks" || mode === "Supplies") && (
+                <button onClick={() => {
+                    switchMode?.("Selection")
+                }}
+                        className={`${getPageStyle(page)} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                 >
                     <ConciergeBell size={25}/>
                 </button>

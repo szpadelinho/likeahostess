@@ -6,15 +6,87 @@ import {useRouter} from "next/navigation";
 import ReactPlayer from "react-player";
 import {Molle} from "next/font/google";
 import Navbar from "@/components/navbar";
+import {NotebookTabs, Play} from "lucide-react";
 
 const molle = Molle({
     weight: "400",
     subsets: ['latin'],
 })
 
+interface Drink{
+    title: string
+    description: string
+    price: number
+    color: string
+    tattoo: string
+}
+
 const NewSerenaClient = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(true)
     const [muted, setMuted] = useState(false)
+    const [mode, setMode] = useState<"Selection" | "Drinks" | "Supplies">("Selection")
+    const [fade, setFade] = useState<boolean>(false)
+    const [fadeDetail, setFadeDetail] = useState<boolean>(false)
+    const [drink, setDrink] = useState<Drink | null>(null)
+
+    const drinks: Drink[] = [
+        {title: "Essence of the Dragon of Dojima", description: "Apparently really pricey. However, only one person managed to demolish this booze.", price: 1000000, color: "red", tattoo: "oryu"},
+        {title: "Essence of the Lifeline of Kamurocho", description: "From what is known, this alcohol boosts your luck to gain more money... Huge if true.", price: 200000, color: "purple", tattoo: "phoenix"},
+        {title: "Essence of the Dragon of Kansai", description: "Supposedly cools off the atmosphere of your club.", price: 300000, color: "pink", tattoo: "yellow_dragon"},
+        {title: "Essence of the Safekeeper of the Tojo CLan", description: "The purpose of this drink is to freshen your mind to manage your resources more carefully and rationally.", price: 400000, color: "yellow", tattoo: "kirin"},
+        {title: "Essence of the Fighting Viper", description: "A drink with no known benefit... apparently gives you a random boost.", price: 500000, color: "green", tattoo: "viper"}
+    ]
+
+    const drinkPosition = (id: number) : string => {
+        switch(id){
+            case 0:
+                return "left-17 bottom-40"
+            case 1:
+                return "left-140 top-50"
+            case 2:
+                return "left-60 bottom-42"
+            case 3:
+                return "left-210 top-50"
+            case 4:
+                return "right-100 top-50"
+            default:
+                return ""
+        }
+    }
+
+    const pointerPosition = (id: number) : string => {
+        switch(id){
+            case 0:
+                return "left-23 bottom-70 rotate-90"
+            case 1:
+                return "left-146 top-80 -rotate-90"
+            case 2:
+                return "left-66.5 bottom-70 rotate-90"
+            case 3:
+                return "left-216 top-80 -rotate-90"
+            case 4:
+                return "right-106 top-80 -rotate-90"
+            default:
+                return ""
+        }
+    }
+
+    const textPosition = (id: number) : string => {
+        switch(id){
+            case 0:
+                return "left-16 bottom-85"
+            case 1:
+                return "left-139.5 top-95"
+            case 2:
+                return "left-60 bottom-85"
+            case 3:
+                return "left-209 top-95"
+            case 4:
+                return "right-100 top-95"
+            default:
+                return ""
+        }
+    }
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -24,23 +96,87 @@ const NewSerenaClient = () => {
         return () => clearTimeout(timer)
     }, [])
 
+    const switchMode = (mode: "Selection" | "Drinks" | "Supplies") => {
+        setFade(true)
+        setTimeout(() => {
+            setMode(mode)
+            setFade(false)
+        }, 300)
+    }
+
+    const switchDrink = (drink: Drink | null) => {
+        if (drink) {
+            setDrink(drink)
+            setFadeDetail(true)
+            setTimeout(() => {
+                setFadeDetail(false)
+            }, 50)
+        } else {
+            setFadeDetail(true)
+            setTimeout(() => {
+                setDrink(null)
+                setFadeDetail(false)
+            }, 300)
+        }
+    }
+
     const router = useRouter()
     return(
         <>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"}/>
-            <Image src={"/images/new_serena.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
-            <div className={`${molle.className} w-screen h-screen flex flex-col items-center justify-center text-[30px]`}>
-                <div className={"absolute bottom-5 gap-10 flex flex-col items-center justify-center bg-black/60 border-2 border-white rounded-[5] z-1 p-15"}>
-                    <h1 className={"text-white text-[50px]"}>What's the matter, big guy?</h1>
-                    <div className={"gap-20 flex flex-row items-center justify-center"}>
-                        <button className={"border-white border-2 rounded-[5] w-120 h-15 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white z-1"}>
-                            Give me a drink, bartender!
-                        </button>
-                        <button className={"border-white border-2 rounded-[5] w-120 h-15 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white z-1"}>
-                            Buy supply for your club
-                        </button>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"} mode={mode} switchMode={switchMode}/>
+            <Image src={mode === "Selection" ? "/images/new_serena.png" : "/images/new_serena_2.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
+            <div className={`${molle.className} ${fade ? "opacity-0" : "opacity-100"} duration-300 ease-in-out w-screen h-screen flex flex-col items-center justify-center text-[30px]`}>
+                {mode === "Selection" && (
+                    <div className={"absolute bottom-5 gap-10 flex flex-col items-center justify-center bg-black/60 border-2 border-white rounded-[5] p-15"}>
+                        <h1 className={"text-white text-[50px]"}>What's the matter, big guy?</h1>
+                        <div className={"gap-20 flex flex-row items-center justify-center"}>
+                            <button
+                                onClick={() => {switchMode("Drinks")}}
+                                className={"border-white border-2 rounded-[5] w-120 h-15 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white z-1"}>
+                                Give me a drink, bartender!
+                            </button>
+                            <button
+                                onClick={() => {switchMode("Supplies")}}
+                                className={"border-white border-2 rounded-[5] w-120 h-15 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white z-1"}>
+                                Buy supply for your club
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
+                {mode === "Drinks" && (
+                    <>
+                        {drinks.map((drink, i) => (
+                            <div key={i}>
+                                <button
+                                    className={`absolute h-25 w-25 ${drinkPosition(i)} flex text-white flex-col items-center justify-center hover:backdrop-blur-sm duration-300 ease-in-out rounded-full p-2`}
+                                    onClick={() => {switchDrink(drink)}}>
+                                </button>
+                                <Play size={50} color={drink.color} fill={drink.color} className={`z-1 absolute ${pointerPosition(i)}`}/>
+                                <p className={`z-1 absolute ${textPosition(i)} text-white text-[20px] max-w-[100px] text-center`}>{drink.title}</p>
+                            </div>
+                        ))}
+                        {drink && (
+                            <div className={`absolute ${fadeDetail ? "opacity-0" : "opacity-100"} duration-300 ease-in-out z-10 border-2 border-white gap-10 flex flex-col items-center justify-center h-150 w-300 text-white bg-black/90`}>
+                                <button
+                                    onClick={() => {switchDrink(null)}}
+                                    className={"absolute -left-5 -top-5 flex text-white flex-col items-center justify-center hover:bg-white hover:text-black duration-300 ease-in-out border-2 border-white rounded-[5] p-2 bg-black/90"}>
+                                    <NotebookTabs size={25}/>
+                                </button>
+                                <div className={"flex flex-row gap-5 items-center justify-center text-center m-5"}>
+                                    <div className={"flex flex-col gap-5 items-center justify-center"}>
+                                        <h1 className={"text-[55px] z-1"}>{drink.title}</h1>
+                                        <h2 className={"z-1 text-[30px]"}>{drink.description}</h2>
+                                        <h3 className={"z-1 text-[70px] absolute -right-10 -bottom-15 border-white border-2 rounded-[5] bg-black/90"}>¥{drink.price}</h3>
+                                        <button className={"flex text-white flex-col items-center justify-center hover:bg-white hover:text-black duration-300 ease-in-out border-2 border-white rounded-[5] p-2"}>
+                                            Buy the drink
+                                        </button>
+                                    </div>
+                                    <Image src={`/tattoos/${drink.tattoo}.png`} alt={"Tattoo of a respective drink owner"} className={"m-5 opacity-30"} height={250} width={250}/>
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
             </div>
             <ReactPlayer
                 src={"https://youtube.com/embed/-hlRhz4FHkg?autoplay=1"}

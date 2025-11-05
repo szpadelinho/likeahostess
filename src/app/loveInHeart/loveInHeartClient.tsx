@@ -71,7 +71,7 @@ export const LoveInHeartClient = () => {
             setMode(prev => (prev === "Selection" ? "Acceptance" : "Selection"))
             setFade(false)
         }, 500)
-    };
+    }
 
 
     const massageItems = [
