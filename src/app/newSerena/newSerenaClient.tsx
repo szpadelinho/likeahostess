@@ -29,6 +29,8 @@ const NewSerenaClient = () => {
     const [fadeDetail, setFadeDetail] = useState<boolean>(false)
     const [drink, setDrink] = useState<Drink | null>(null)
 
+    const supplies = 70
+
     const drinks: Drink[] = [
         {title: "Essence of the Dragon of Dojima", description: "Apparently really pricey. However, only one person managed to demolish this booze.", price: 1000000, color: "red", tattoo: "oryu"},
         {title: "Essence of the Lifeline of Kamurocho", description: "From what is known, this alcohol boosts your luck to gain more money... Huge if true.", price: 200000, color: "purple", tattoo: "phoenix"},
@@ -124,7 +126,7 @@ const NewSerenaClient = () => {
     return(
         <>
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"} mode={mode} switchMode={switchMode}/>
-            <Image src={mode === "Selection" ? "/images/new_serena.png" : "/images/new_serena_2.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
+            <Image src={mode === "Selection" ? "/images/new_serena.png" : mode === "Drinks" ? "/images/new_serena_2.png" : "/images/new_serena_3.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
             <div className={`${molle.className} ${fade ? "opacity-0" : "opacity-100"} duration-300 ease-in-out w-screen h-screen flex flex-col items-center justify-center text-[30px]`}>
                 {mode === "Selection" && (
                     <div className={"absolute bottom-5 gap-10 flex flex-col items-center justify-center bg-black/60 border-2 border-white rounded-[5] p-15"}>
@@ -175,6 +177,22 @@ const NewSerenaClient = () => {
                                 </div>
                             </div>
                         )}
+                    </>
+                )}
+                {mode === "Supplies" && (
+                    <>
+                        <div className={"z-1 text-center right-199 absolute bottom-44"}>
+                            <div className={"flex flex-col justify-center items-center gap-5"}>
+                                <h1 className={"text-[20px]"}>Supply payment</h1>
+                                <h2 className={"text-[12px] max-w-50"}>I am obliged to pay the full price of the product mentioned earlier. I fully understand all the rules and necessities which I must follow. The supplies are automatically my property after signing this contract and paying the price of:</h2>
+                                <h1>¥{(100 - supplies) * 1000}</h1>
+                                <button className={"border-b-2 border-black text-[20px] opacity-50 hover:opacity-100 duration-300 ease-in-out"}>Sign here...</button>
+                            </div>
+                        </div>
+                        <div className={"absolute left-110 bottom-55 text-center rotate-y-[35deg]"}>
+                            <h1 className={"text-[65px]"}>Supplies</h1>
+                            <h2>{100 - supplies}/100</h2>
+                        </div>
                     </>
                 )}
             </div>
