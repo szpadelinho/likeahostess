@@ -1,5 +1,5 @@
-import {ConciergeBell, LogOut, University, Volume2, VolumeOff} from "lucide-react";
-import React, {useState} from "react";
+import {ConciergeBell, LampDesk, LogOut, University, Volume2, VolumeOff} from "lucide-react";
+import React, {useEffect, useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {signOut} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
@@ -14,7 +14,9 @@ interface NavbarProps {
     page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection" | "Tutorial" | "LoveInHeart",
     mode?: "Selection" | "Acceptance" | "Drinks" | "Supplies",
     changeMode?: () => void,
-    switchMode?: (mode: ("Selection" | "Drinks" | "Supplies")) => void
+    switchMode?: (mode: ("Selection" | "Drinks" | "Supplies")) => void,
+    setContract?: (show: boolean) => void,
+    paper?: boolean
 }
 
 const Navbar = ({
@@ -27,9 +29,24 @@ const Navbar = ({
                     page,
                     mode,
                     changeMode,
-                    switchMode
+                    switchMode,
+                    setContract,
+                    paper
                 }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
+
+    const [showLamp, setShowLamp] = useState(false)
+    const [fadeLamp, setFadeLamp] = useState(false)
+
+    useEffect(() => {
+        if (paper) {
+            setShowLamp(true)
+            setTimeout(() => setFadeLamp(false), 50)
+        } else {
+            setFadeLamp(true)
+            setTimeout(() => setShowLamp(false), 50)
+        }
+    }, [paper])
 
     const getPageStyle = (page: string): string => {
         switch (page) {
@@ -130,6 +147,15 @@ const Navbar = ({
                         className={`${getPageStyle(page)} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                 >
                     <ConciergeBell size={25}/>
+                </button>
+            )}
+            {showLamp && (
+                <button onClick={() => {
+                    setContract?.(false)
+                }}
+                        className={`${getPageStyle(page)} ${fadeLamp ? "opacity-0 scale-0" : "opacity-100 scale-100"} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                >
+                    <LampDesk size={25}/>
                 </button>
             )}
         </>

@@ -17,6 +17,9 @@ export const MoneylenderClient = () => {
     const [muted, setMuted] = useState(false)
     const [value, setValue] = useState(100000)
 
+    const [show, setShow] = useState(false)
+    const [fade, setFade] = useState(false)
+
     const router = useRouter()
 
     useEffect(() => {
@@ -27,42 +30,63 @@ export const MoneylenderClient = () => {
         return () => clearTimeout(timer)
     }, [])
 
+    const setContract = (show: boolean) => {
+        if (show) {
+            setShow(true)
+            setFade(true)
+            setTimeout(() => {
+                setFade(false)
+            }, 50)
+        } else {
+            setFade(true)
+            setTimeout(() => {
+                setShow(false)
+                setFade(false)
+            }, 300)
+        }
+    }
+
+
     return(
         <>
             <Image src={"/images/moneylender.png"} alt={"Mine's office"} fill={true} className={"object-cover"}/>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Moneylender"}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Moneylender"} setContract={setContract} paper={show}/>
             <div className={"absolute flex justify-center items-center w-screen h-screen"}>
-                <div className={`${yesteryear.className} text-[25px] flex flex-col justify-center items-center bg-cover bg-[url(/images/paper_texture.png)] h-160 w-120`}>
-                    <h1 className={"text-[75px]"}>Take out a loan</h1>
-                    <p>You are willing to loan out an amount of:</p>
-                    <div className={"relative flex flex-row justify-center items-center border-b-2 border-black m-10"}>
-                        <p className={"text-[40px]"}>
-                            ¥
-                        </p>
-                        <input required={true} type={"number"} value={value} min={100000} max={999999999} className={"text-[40px] text-center flex justify-center items-center"} onChange={e => {
-                            const num = parseInt(e.target.value)
-                            if(isNaN(num)) {
-                                setValue(100000)
-                                return
-                            }
-
-                            if(num <= 100000) {
-                                setValue(100000)
-                            }
-                            else if(num >= 999999999){
-                                setValue(999999999)
-                            }
-                            else {
-                                setValue(num)
-                            }
-                        }}/>
+                <button
+                    onClick={() => {setContract(!show)}}
+                    className={"absolute h-25 w-25 top-120 flex text-white flex-col items-center justify-center hover:backdrop-blur-sm duration-300 ease-in-out rounded-full p-2"}/>
+                {show && (
+                    <div className={`${yesteryear.className} ${fade ? "opacity-0 scale-0" : "opacity-100 scale-100"} transform perspective-[1000px] translate-all origin-center z-1 text-[25px] flex flex-col justify-center items-center bg-cover bg-[url(/images/paper_texture.png)] h-160 w-120 duration-300 ease-in-out`}>
+                        <h1 className={"text-[75px]"}>Take out a loan</h1>
+                        <p>You are willing to loan out an amount of:</p>
+                        <div className={"relative flex flex-row justify-center items-center border-b-2 border-black m-10"}>
+                            <p className={"text-[40px]"}>
+                                ¥
+                            </p>
+                            <input required={true} type={"number"} value={value} min={100000} max={999999999} className={"text-[40px] text-center flex justify-center items-center"} onChange={e => {
+                                const num = parseInt(e.target.value)
+                                if(isNaN(num)) {
+                                    setValue(100000)
+                                    return
+                                }
+                                if(num <= 100000) {
+                                    setValue(100000)
+                                }
+                                else if(num >= 999999999){
+                                    setValue(999999999)
+                                }
+                                else {
+                                    setValue(num)
+                                }
+                            }}/>
+                        </div>
+                        <p className={"w-95"}>By agreeing to this deal, you understand the importance of fair play rules. You must pay off your debt in time, or else... </p>
+                        <p className={"w-95"}>You have seven days to pay off your debt. The count starts by the moment this paper is signed by you.</p>
+                        <button className={"border-b-2 border-black w-75 opacity-50 hover:opacity-100 duration-300 ease-in-out"}>
+                            Your sign here...
+                        </button>
                     </div>
-                    <p className={"w-95"}>By agreeing to this deal, you understand the importance of fair play rules. You must pay off your debt in time, or else... </p>
-                    <p className={"w-95"}>You have seven days to pay off your debt. The count starts by the moment this paper is signed by you.</p>
-                    <button className={"border-b-2 border-black w-75 opacity-50"}>
-                        Your sign here...
-                    </button>
-                </div>
+                )}
             </div>
             <ReactPlayer
                 src={"https://youtube.com/embed/FxPDNViVcow?autoplay=1"}
