@@ -5,10 +5,20 @@ import {
     ChevronUp,
     JapaneseYen,
     UtensilsCrossed,
-    Wine
+    Wine,
+    Boxes,
+    Cigarette,
+    ScrollText,
+    createLucideIcon,
+    LucideIcon,
+    DoorOpen, TimerReset, Gift, BanknoteX
 } from "lucide-react";
 import React, {Dispatch, useEffect, useState} from "react";
 import {BuffetType} from "@prisma/client";
+import {towelFolded, goblet,} from "@lucide/lab";
+
+const TowelFolded = createLucideIcon("TowelFolded", towelFolded)
+const Goblet = createLucideIcon("Goblet", goblet)
 
 const SERVICE_TYPES = [
     "ashtray",
@@ -29,7 +39,7 @@ interface Hostess {
     bio: string
 }
 
-interface Buffet{
+interface Buffet {
     id: string
     name: string
     price: number
@@ -52,7 +62,8 @@ interface Props {
     setInquiry: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
     serviceType: (ServiceType | null)[],
     setServiceType: (value: (((prevState: (ServiceType | null)[]) => (ServiceType | null)[]) | (ServiceType | null)[])) => void,
-    hostesses: (Hostess | null)[]
+    hostesses: (Hostess | null)[],
+    setBarKeys: (value: (((prevState: number[]) => number[]) | number[])) => void
 }
 
 export const Inquiry = ({
@@ -68,7 +79,8 @@ export const Inquiry = ({
                             setInquiry,
                             serviceType,
                             setServiceType,
-                            hostesses
+                            hostesses,
+                            setBarKeys
                         }: Props) => {
     const [beverageIndex, setBeverageIndex] = useState(0)
     const [mealIndex, setMealIndex] = useState(0)
@@ -110,6 +122,52 @@ export const Inquiry = ({
         orderSentence = "Actually... never mind... I am so sorry."
     }
 
+    const serviceActions: { title: ServiceType, Icon: LucideIcon }[] = [
+        {
+            title: "towel",
+            Icon: TowelFolded
+        },
+        {
+            title: "ice",
+            Icon: Boxes
+        },
+        {
+            title: "ashtray",
+            Icon: Cigarette
+        },
+        {
+            title: "lady_glass",
+            Icon: Wine
+        },
+        {
+            title: "guest_glass",
+            Icon: Goblet
+        },
+        {
+            title: "menu",
+            Icon: ScrollText
+        },
+    ]
+
+    const endActions: { fun: () => void, Icon: LucideIcon }[] = [
+        {
+            fun: () => InquiryEndHandler("End", false, true),
+            Icon: DoorOpen
+        },
+        {
+            fun: () => InquiryEndHandler("End", false, false),
+            Icon: BanknoteX
+        },
+        {
+            fun: () => InquiryEndHandler("End", true, true),
+            Icon: Gift
+        },
+        {
+            fun: () => InquiryEndHandler("Extend", false, true),
+            Icon: TimerReset
+        },
+    ]
+
     const next = (setFn: Dispatch<React.SetStateAction<number>>, length: number) => {
         setFn((prev) => (prev + 1) % length)
     }
@@ -147,50 +205,61 @@ export const Inquiry = ({
 
     const InquiryEndHandler = (type: "End" | "Extend", present: boolean, payment: boolean) => {
         if (inquiryTableId !== null) {
-            setVisit(prev => {
-                const updated = [...prev]
-                updated[inquiryTableId] = false
-                return updated
-            })
-            setInquiry(prev => {
-                const updated = [...prev]
-                updated[inquiryTableId] = false
-                return updated
-            })
-            setInquiryType(prev => {
-                const updated = [...prev]
-                updated[inquiryTableId] = null
-                return updated
-            })
-            onCloseModal()
+            if (type === "End") {
+                setVisit(prev => {
+                    const updated = [...prev]
+                    updated[inquiryTableId] = false
+                    return updated
+                })
+                inquiryClose(inquiryTableId)
+            } else {
+                const extensionChance = Math.random()
+                if (extensionChance < 0.5) {
+                    setVisit(prev => {
+                        const updated = [...prev]
+                        updated[inquiryTableId] = true
+                        return updated
+                    })
+                    setBarKeys(prev => {
+                        const updated = [...prev]
+                        updated[inquiryTableId] += 1
+                        return updated
+                    })
+                } else {
+                    setVisit(prev => {
+                        const updated = [...prev]
+                        updated[inquiryTableId] = false
+                        return updated
+                    })
+                }
+                inquiryClose(inquiryTableId)
+            }
         }
     }
 
-    const InquiryServiceHandler = (type: ServiceType)=> {
-        if(inquiryTableId !== null && type === serviceType[inquiryTableId]){
-            setInquiry(prev => {
-                const updated = [...prev]
-                updated[inquiryTableId] = false
-                return updated
-            })
-            setInquiryType(prev => {
-                const updated = [...prev]
-                updated[inquiryTableId] = null
-                return updated
-            })
-            setInquiryType(prev => {
-                const updated = [...prev]
-                updated[inquiryTableId] = null
-                return updated
-            })
-            onCloseModal()
-        }
-        else{
+    const InquiryServiceHandler = (type: ServiceType) => {
+        if (inquiryTableId !== null && type === serviceType[inquiryTableId]) {
+            inquiryClose(inquiryTableId)
+        } else {
             setWiggle(type)
             setTimeout(() => {
                 setWiggle(null)
-            }, 200);
+            }, 200)
         }
+    }
+
+    const inquiryClose = (id: number) => {
+        setInquiry(prev => {
+            const updated = [...prev]
+            updated[id] = false
+            return updated
+        })
+        setInquiryType(prev => {
+            const updated = [...prev]
+            updated[id] = null
+            return updated
+        })
+        onCloseModal()
     }
 
     const dealButtonText =
@@ -200,7 +269,7 @@ export const Inquiry = ({
 
     return (
         <div
-            className={"relative w-[1400px] h-[800px] gap-5 bg-pink-700 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}
+            className={"relative w-[1400px] h-[800px] gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(150,50,100,1)_100%)] text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}
             style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
             {inquiryTableId !== null && inquiryType[inquiryTableId] === "Buffet" && (
                 <>
@@ -247,7 +316,7 @@ export const Inquiry = ({
                             width={700}/>
                     </div>
                     <div
-                        className={"gap-5 bg-pink-800 w-150 h-150 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}
+                        className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(175,50,100,1)_100%)] w-150 h-150 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-white font-[600]"}
                         style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                         <div className={"flex flex-col h-full"}>
                             <div className={"flex flex-col h-[50%] justify-center items-center gap-10"}>
@@ -359,7 +428,7 @@ export const Inquiry = ({
                                         return updated
                                     })
                                 }
-                                onCloseModal()
+                                inquiryClose(inquiryTableId)
                             }}>
                             {dealButtonText}
                         </button>
@@ -367,112 +436,70 @@ export const Inquiry = ({
                 </>
             )}
             {inquiryTableId !== null && inquiryType[inquiryTableId] === "Service" && (
-                <>
-                    <div
-                        className={"absolute top-20 left-30 flex w-120 h-15 justify-center items-center flex-row bg-pink-800 rounded-[15] p-2 text-[16px]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        {`${hostesses[inquiryTableId]?.name} ${hostesses[inquiryTableId]?.surname} is calling you for a service assistance`}
+                <div className={"flex flex-row items-center justify-center gap-30"}>
+                    <div className={"flex flex-col items-center justify-center"}>
+                        <div
+                            className={"flex w-140 h-15 justify-center items-center flex-row bg-transparent rounded-[15] p-2 text-[16px]"}
+                            style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
+                            {`Looks like ${hostesses[inquiryTableId]?.name} ${hostesses[inquiryTableId]?.surname} is calling you for a service assistance`}
+                        </div>
+                        <Image
+                            src={`/images/hostess_service_${serviceType[inquiryTableId]}.png`}
+                            alt={"Hostess is calling for a service"}
+                            height={200}
+                            width={700}
+                        />
                     </div>
-                    <Image
-                        src={`/images/hostess_service_${serviceType[inquiryTableId]}.png`}
-                        alt={"Hostess is calling for a service"}
-                        height={200}
-                        width={700}
-                        className={"mt-25"}/>
                     <div
-                        className={"bg-pink-800 w-150 h-175 text-center content-center items-center justify-center flex flex-col text-[20px] rounded-[20] text-white font-[600] gap-10"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <button
-                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "towel" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
-                            onClick={() => {
-                                InquiryServiceHandler("towel")
-                            }}>
-                            Give her a towel
-                        </button>
-                        <button
-                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "ice" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
-                            onClick={() => {
-                                InquiryServiceHandler("ice")
-                            }}>
-                            Refill ice
-                        </button>
-                        <button
-                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "lady_glass" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
-                            onClick={() => {
-                                InquiryServiceHandler("lady_glass")
-                            }}>
-                            Give a lady's glass
-                        </button>
-                        <button
-                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "guest_glass" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
-                            onClick={() => {
-                                InquiryServiceHandler("guest_glass")
-                            }}>
-                            Give a guests glass
-                        </button>
-                        <button
-                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "menu" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
-                            onClick={() => {
-                                InquiryServiceHandler("menu")
-                            }}>
-                            Hand over the menu
-                        </button>
-                        <button
-                            className={`border-white border-2 rounded-[20] p-5 w-125 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === "ashtray" ? "bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
-                            onClick={() => {
-                                InquiryServiceHandler("ashtray")
-                            }}>
-                            Clean the ashtray
-                        </button>
+                        className={"flex flex-col justify-center items-center rounded-[20] text-white font-[600]"}
+                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
+                        <div className={"grid grid-cols-3 grid-rows-2 gap-10 p-3"}>
+                            {serviceActions.map((action, i) => (
+                                <button
+                                    key={i}
+                                    className={`flex justify-center items-center border-white border-2 rounded-[20] p-5 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === action.title ? "!bg-red-600 !hover:bg-red-600 !active:bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
+                                    onClick={() => {
+                                        InquiryServiceHandler(action.title)
+                                    }}>
+                                    <action.Icon size={50}/>
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </>
+                </div>
             )}
             {inquiryTableId !== null && inquiryType[inquiryTableId] === "End" && (
-                <>
-                    <div
-                        className={"absolute top-20 left-30 flex w-120 h-15 justify-center items-center flex-row bg-pink-800 rounded-[15] p-2 text-[16px]"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        The visit is over. Please choose an option:
+                <div className={"flex flex-row gap-50 justify-center items-center"}>
+                    <div className={"flex flex-col gap-20 bg-transparent justify-center items-center"}>
+                        <div
+                            className={"flex w-120 h-15 justify-center items-center flex-row rounded-[15] p-2 text-[16px]"}
+                            style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
+                            The visit is over. Please choose an option:
+                        </div>
+                        <Image
+                            src={dinedTables[inquiryTableId] ? "/images/hostess_end.png" : "/images/hostess_end_dined.png"}
+                            alt={"Hostess is ordering"}
+                            height={200}
+                            width={700}
+                        />
                     </div>
-                    <Image
-                        src={dinedTables[inquiryTableId] ? "/images/hostess_end.png" : "/images/hostess_end_dined.png"}
-                        alt={"Hostess is ordering"}
-                        height={200}
-                        width={700}
-                        className={"mt-25"}/>
                     <div
-                        className={"bg-pink-800 w-150 h-150 text-center content-center items-center justify-center flex flex-col text-[20px] rounded-[20] text-white font-[600] gap-10"}
-                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                        <button
-                            className={"border-white bg-pink-900 border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
-                            onClick={() => {
-                                InquiryEndHandler("End", false, true)
-                            }}>
-                            Thank the client and let him leave
-                        </button>
-                        <button
-                            className={"border-white bg-pink-900 border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
-                            onClick={() => {
-                                InquiryEndHandler("End", false, false)
-                            }}>
-                            Pay his tab
-                        </button>
-                        <button
-                            className={"border-white bg-pink-900 border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
-                            onClick={() => {
-                                InquiryEndHandler("End", true, true)
-                            }}>
-                            Give him a present
-                        </button>
-                        <button
-                            className={"border-white bg-pink-900 border-2 rounded-[20] p-5 w-125 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
-                            onClick={() => {
-                                InquiryEndHandler("Extend", false, true)
-                            }}>
-                            Offer another session
-                        </button>
+                        className={"flex bg-transparent text-center items-center justify-center rounded-[20] text-white font-[600]"}
+                        style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
+                        <div className={"grid grid-cols-2 grid-rows-2 gap-10 p-3"}>
+                            {endActions.map((action, i) => (
+                                <button
+                                    key={i}
+                                    className={"border-white bg-pink-900 border-2 rounded-[20] p-5 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
+                                    onClick={() => {
+                                        action.fun()
+                                    }}>
+                                    <action.Icon size={50}/>
+                                </button>
+                            ))}
+                        </div>
                     </div>
-                </>
+                </div>
             )}
         </div>
     )

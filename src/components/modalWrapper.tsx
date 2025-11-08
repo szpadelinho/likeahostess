@@ -28,8 +28,8 @@ const ModalWrapper = ({children, onClose}: ModalProps) => {
             onClick={handleClose}
         >
             <div
-                className={`transition-transform duration-300 ${
-                    visible ? "scale-100" : "scale-95"
+                className={`transition-transform ease-in-out duration-300 ${
+                    visible ? "scale-100" : "scale-50"
                 }`}
                 onClick={(e) => e.stopPropagation()}
             >

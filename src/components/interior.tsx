@@ -49,7 +49,8 @@ interface InteriorProps {
             | ((prevState: (ServiceType | null)[]) => (ServiceType | null)[])
             | (ServiceType | null)[]
     ) => void,
-    setDinedTables: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void
+    setDinedTables: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
+    barKeys: number[]
 }
 
 interface Hostess {
@@ -78,7 +79,8 @@ const Interior = ({
                       visit,
                       setVisit,
                       setServiceType,
-                      setDinedTables
+                      setDinedTables,
+                      barKeys
                   }: InteriorProps) => {
     const items = Array(8).fill(null)
     const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
@@ -97,7 +99,8 @@ const Interior = ({
             const timer = setTimeout(() => {
                 setWaitingClient(true)
                 clientRef.current = new Audio("/sfx/client_arrived.m4a")
-                clientRef.current.play().catch(() => {})
+                clientRef.current.play().catch(() => {
+                })
             }, random)
             return () => {
                 clearTimeout(timer)
@@ -274,7 +277,8 @@ const Interior = ({
                     )}
                 </div>
             </div>
-            <div className="w-screen absolute top-[45%] -translate-y-1/2 flex justify-center items-center p-10 text-white">
+            <div
+                className="w-screen absolute top-[45%] -translate-y-1/2 flex justify-center items-center p-10 text-white">
                 <div className="grid grid-cols-6 grid-rows-2 gap-10 h-full w-full">
                     {items.map((_, i) => {
                         const hostessAtTable = hostesses[i]
@@ -299,7 +303,8 @@ const Interior = ({
                                          }
                                      }
                                  }}>
-                                <div className={"absolute h-75 w-75 -z-1 flex bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)]"}/>
+                                <div
+                                    className={"absolute h-75 w-75 -z-1 flex bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)]"}/>
                                 <Image
                                     src={
                                         !visit[i] && dinedTables[i] ?
@@ -437,7 +442,7 @@ const Interior = ({
                                     </div>
                                     {visit[i] && (
                                         <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
-                                            <LoadingBar key={`loading-${i}`} duration={60000}
+                                            <LoadingBar key={`loading-${i}-${barKeys}`} duration={60000}
                                                         onComplete={() => setTimeout(() => InquiryHandler(i, "End", true), 0)}
                                                         paused={inquiry[i]}
                                                         onProgressChange={() => {

@@ -104,6 +104,8 @@ const Main = () => {
     const [inquiry, setInquiry] = useState<boolean[]>(Array(8).fill(false))
     const [inquiryType, setInquiryType] = useState<("Service" | "Buffet" | "End" | null)[]>(Array(8).fill(null))
 
+    const [barKeys, setBarKeys] = useState<number[]>(Array(8).fill(0))
+
     const SERVICE_TYPES = [
         "ashtray",
         "lady_glass",
@@ -235,22 +237,12 @@ const Main = () => {
                 <ModalWrapper
                     onClose={() => {
                         if (inquiryTableId !== null) {
-                            setInquiry(prev => {
-                                const updated = [...prev]
-                                updated[inquiryTableId] = false
-                                return updated
-                            })
-                            setInquiryType(prev => {
-                                const updated = [...prev]
-                                updated[inquiryTableId] = null
-                                return updated
-                            })
                             setInquiryWindow(false)
                         }
                     }}
                 >
                     {({onCloseModal}) => (
-                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking}/>
+                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking} setBarKeys={setBarKeys}/>
                     )}
                 </ModalWrapper>
             )}
@@ -272,7 +264,7 @@ const Main = () => {
             {!fetched && (
                 <MainWrapper>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
-                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType}/>
+                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType} barKeys={barKeys}/>
                     {club && (
                         <>
                             <HostessPanel hostesses={hostessesPanel} setHostesses={setHostessesPanel}
