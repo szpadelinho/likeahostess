@@ -109,6 +109,7 @@ model Hostess {
   attractiveness  Int               @default(1)
   cover           String
   bio             String            @default("Nothing is actually known about this hostess...")
+  fatigue         Int     @default(0)
   userClubHostess UserClubHostess[]
 }
 
@@ -144,6 +145,7 @@ model Buffet {
   price       Int        @default(5000)
   description String     @default("Nothing is really known about this type of... uh... thing? I guess...")
   type        BuffetType
+  icon String @default("UtensilsCrossed")
 }
 
 enum BuffetType {
