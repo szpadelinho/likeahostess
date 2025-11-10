@@ -14,6 +14,8 @@ import JamPlayer from "@/components/jamPlayer";
 import {Inquiry} from "@/components/inquiry";
 import {BuffetType} from "@prisma/client";
 import {ModalContent} from "@/components/modalContent";
+import {DndProvider} from "react-dnd";
+import {HTML5Backend} from "react-dnd-html5-backend";
 
 type Club = {
     name: string
@@ -67,6 +69,7 @@ interface Buffet{
     price: number
     description: string
     type: BuffetType
+    icon: string
 }
 
 const Main = () => {
@@ -232,7 +235,7 @@ const Main = () => {
     }, [])
 
     return (
-        <>
+        <DndProvider backend={HTML5Backend}>
             {inquiryWindow && (
                 <ModalWrapper
                     onClose={() => {
@@ -272,6 +275,7 @@ const Main = () => {
                                           setHostessesManagement={setHostessesManagement} window={window} setWindow={setWindow}/>
                             <Hud
                                 club={club}
+                                windowType={window}
                                 setWindow={setWindow}
                             />
                         </>
@@ -305,7 +309,7 @@ const Main = () => {
                     )}
                 </MainWrapper>
             )}
-        </>
+        </DndProvider>
     )
 }
 

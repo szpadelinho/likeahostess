@@ -1,5 +1,6 @@
 import Image from "next/image";
 import {Candy} from "lucide-react";
+import {DraggableHostess} from "@/scripts/DNDItems";
 
 interface Props {
     onCloseModal: () => void
@@ -26,27 +27,9 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                 className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(150,50,100,1)_100%)] w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                 <div className={"w-full grid m-5 grid-cols-[repeat(3,auto)] gap-5"}>
-                    {hostesses.map((hostess) => {
-                        const isSelected = selectedHostess?.id === hostess.id
-
-                        return (
-                            <div
-                                key={hostess.id}
-                                onClick={() => {
-                                    if (isSelected) {
-                                        setSelectedHostess(null)
-                                    } else {
-                                        setSelectedHostess(hostess)
-                                    }
-                                }}
-                                className={`flex justify-center items-center rounded-[20] border-pink-400 border-2 hover:bg-pink-950 hover:border-pink-600 hover:scale-105 active:scale-110 hover:text-black transition duration-200 ease-in-out transform active:scale-105 ${isSelected ? "bg-rose-950 scale-105" : "bg-pink-950/50"}`}>
-                                <Image src={hostess.image} alt={`${hostess.name} ${hostess.surname} head shot`}
-                                       height={100}
-                                       width={100}
-                                       className={"rounded-[20]"}/>
-                            </div>
-                        )
-                    })}
+                    {hostesses.map((hostess) => (
+                        <DraggableHostess key={hostess.id} hostess={hostess} source={"management"} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}/>
+                    ))}
                 </div>
             </div>
             {selectedHostess ? (

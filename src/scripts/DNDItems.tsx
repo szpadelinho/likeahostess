@@ -2,7 +2,20 @@ import {useDrag, useDrop} from 'react-dnd';
 import {iconConverter} from "@/scripts/iconConverter";
 import {BuffetType} from "@prisma/client";
 import {Dispatch, ReactNode, SetStateAction, useRef, useState} from "react";
-import {BookUser, DoorClosed, DoorOpen, Meh} from "lucide-react";
+import {BookUser, DoorClosed, DoorOpen, EyeClosed, HeartPlus, Meh, VenetianMask} from "lucide-react";
+import Image from "next/image";
+
+type WindowType =
+    | "Management"
+    | "Activities"
+    | "Profile"
+    | "Casino"
+    | "NewSerena"
+    | "Moneylender"
+    | "Selection"
+    | "LogOff"
+    | "LoveInHeart"
+    | null
 
 interface Buffet {
     id: string
@@ -23,40 +36,69 @@ interface Hostess {
     bio: string
 }
 
-interface DroppableSlotsProps{
+interface DroppableSlotsProps {
     type: 'beverage' | 'meal'
     onDrop: (id: string, correct: boolean) => void
     children: ReactNode
     expectedId: string
 }
 
-interface DraggableDoorProps{
+interface DraggableDoorProps {
     waitingClient: boolean
 }
 
 interface DroppableClientProps {
+    index: number,
+    clients: boolean[],
+    setClients: Dispatch<SetStateAction<boolean[]>>,
+    hostesses: (Hostess | null)[],
+    setSelectedClient: Dispatch<SetStateAction<boolean>>,
+    InquiryHandler: (i: number, type: "Service" | "Buffet" | "End" | null, status: boolean) => void,
+    wiggleClient: boolean[],
+    setWaitingClient: Dispatch<SetStateAction<boolean>>,
+    inquiryType: ("Service" | "Buffet" | "End" | null)[]
+}
+
+interface DraggableHostessProps {
+    hostess: Hostess
+    source: "management" | "panel"
+    selectedHostess?: Hostess | null
+    setSelectedHostess?: (hostess: Hostess | null) => void
+}
+
+interface DroppableHostessSlotProps {
     index: number
-    clients: boolean[]
-    setClients: Dispatch<SetStateAction<boolean[]>>
     hostesses: (Hostess | null)[]
-    setSelectedClient: Dispatch<SetStateAction<boolean>>
-    InquiryHandler: (i: number, type: "Service" | "Buffet" | "End" | null, status: boolean) => void
-    wiggleClient: boolean[]
-    setWaitingClient: Dispatch<SetStateAction<boolean>>
+    setHostesses: (value: (Hostess | null)[]) => void
+    setHostessesManagement: (fn: (prev: Hostess[]) => Hostess[]) => void
+    selectedHostess: Hostess | null
+    setSelectedHostess: (h: Hostess | null) => void
+    setWindow: (
+        value:
+            | WindowType
+            | ((prevState: WindowType) => WindowType)
+    ) => void
 }
 
-interface DragItem {
-    id: number
-    type: 'client'
+interface DroppableHostessTableSlotProps {
+    index: number,
+    hostessAtTable: Hostess | null,
+    setHostesses: (value: (Hostess | null)[]) => void,
+    hostesses: (Hostess | null)[],
+    setHostessesPanel: Dispatch<SetStateAction<(Hostess | null)[]>>,
+    wiggleHostess: boolean[],
+    setWiggleHostess: (value: boolean[]) => void,
+    clients: boolean[],
+    inquiryType: ("Service" | "Buffet" | "End" | null)[],
+    InquiryHandler: (i: number, type: ("Service" | "Buffet" | "End" | null), status: boolean) => void
 }
 
-
-export const DraggableItem = ({ item, type }: { item: Buffet; type: 'beverage' | 'meal' }) => {
+export const DraggableItem = ({item, type}: { item: Buffet; type: 'beverage' | 'meal' }) => {
     const Icon = iconConverter(item.icon)
 
-    const [{ isDragging }, drag] = useDrag(() => ({
+    const [{isDragging}, drag] = useDrag(() => ({
         type,
-        item: { id: item.id, icon: <Icon size={50}/> },
+        item: {id: item.id, icon: <Icon size={50}/>},
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
@@ -72,7 +114,7 @@ export const DraggableItem = ({ item, type }: { item: Buffet; type: 'beverage' |
                 isDragging ? 'opacity-50' : 'opacity-100'
             }`}
         >
-            <Icon size={30} />
+            <Icon size={30}/>
         </button>
     )
 }
@@ -81,15 +123,14 @@ export const DroppableSlot = ({type, onDrop, children, expectedId}: DroppableSlo
     const [status, setStatus] = useState<'idle' | 'correct' | 'wrong'>('idle')
     const [droppedChild, setDroppedChild] = useState<ReactNode | null>(null)
 
-    const [{ isOver }, drop] = useDrop(() => ({
+    const [{isOver}, drop] = useDrop(() => ({
         accept: type,
         drop: (item: { id: string, icon: ReactNode }) => {
             const correct = item.id === expectedId
-            if(correct){
+            if (correct) {
                 setStatus('correct')
                 setDroppedChild(item.icon)
-            }
-            else{
+            } else {
                 setStatus('wrong')
                 setTimeout(() => setStatus('idle'), 500)
             }
@@ -109,7 +150,7 @@ export const DroppableSlot = ({type, onDrop, children, expectedId}: DroppableSlo
             ? 'bg-red-600'
             : isOver
                 ? 'bg-pink-900 scale-110'
-                : 'bg-pink-950'
+                : 'bg-pink-950/70'
 
     return (
         <button
@@ -120,14 +161,15 @@ export const DroppableSlot = ({type, onDrop, children, expectedId}: DroppableSlo
     )
 }
 
-export const DraggableDoor = ({waitingClient} : DraggableDoorProps) => {
-    const [{ isDragging }, drag] = useDrag(() => ({
+export const DraggableDoor = ({waitingClient}: DraggableDoorProps) => {
+    const [{isDragging}, drag] = useDrag(() => ({
         type: 'client',
-        item: { id: -1, type: 'client' },
+        item: {id: -1, type: 'client'},
+        canDrag: waitingClient,
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
-    }))
+    }), [waitingClient])
 
     const buttonRef = useRef<HTMLButtonElement>(null)
     drag(buttonRef)
@@ -136,7 +178,7 @@ export const DraggableDoor = ({waitingClient} : DraggableDoorProps) => {
         <button
             ref={buttonRef}
             className={`absolute flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-pink-400 border-2 opacity-70 hover:opacity-100 transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120 z-49 ${
-                waitingClient ? 'bg-red-950 text-pink-500 hover:bg-pink-950 hover:text-pink-700 active:text-pink-500 active:bg-pink-900' : 'bg-pink-900 text-pink-400 hover:bg-pink-800 hover:text-pink-500 active:text-pink-300 active:bg-pink-700'
+                waitingClient ? 'bg-red-950 text-pink-500 hover:bg-pink-950/70 hover:text-pink-700 active:text-pink-500 active:bg-pink-900' : 'bg-pink-900 text-pink-400 hover:bg-pink-800 hover:text-pink-500 active:text-pink-300 active:bg-pink-700'
             } ${isDragging ? 'opacity-50' : 'opacity-100'}`}
         >
             {waitingClient ? <DoorOpen size={50}/> : <DoorClosed size={50}/>}
@@ -152,18 +194,22 @@ export const DroppableClient = ({
                                     setSelectedClient,
                                     InquiryHandler,
                                     wiggleClient,
-                                    setWaitingClient
+                                    setWaitingClient,
+                                    inquiryType
                                 }: DroppableClientProps) => {
-    const [{ isOver, canDrop }, drop] = useDrop<{id: number, type: "client"}, void, { isOver: boolean; canDrop: boolean }>({
+    const [{isOver, canDrop}, drop] = useDrop<{ id: number, type: "client" }, void, {
+        isOver: boolean;
+        canDrop: boolean
+    }>({
         accept: 'client',
-        drop: (item) => {
+        drop: () => {
             if (!clients[index]) {
                 const updatedClients = [...clients]
                 updatedClients[index] = true
                 setClients(updatedClients)
                 setSelectedClient(false)
                 setWaitingClient(false)
-                if (hostesses[index]) {
+                if (hostesses[index] !== null && inquiryType[index] !== "Buffet") {
                     InquiryHandler(index, 'Buffet', true)
                 }
             }
@@ -178,17 +224,231 @@ export const DroppableClient = ({
     drop(buttonRef)
 
     return (
-        <>
-            <button
-                ref={buttonRef}
-                className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white ${
-                    clients[index] ? 'bg-pink-800 opacity-100' : 'bg-pink-700'
-                } ${wiggleClient[index] ? '!bg-red-600 scale-120' : 'scale-100'} ${
-                    isOver && canDrop ? 'scale-110 bg-pink-900' : ''
-                }`}
-            >
-                {clients[index] ? <Meh size={50} /> : <BookUser size={50} />}
-            </button>
-        </>
+        <button
+            ref={buttonRef}
+            className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950/70 transition-all duration-200 ease-in-out transform active:scale-90 ${
+                clients[index] ? 'bg-pink-800 opacity-100' : 'bg-pink-700'
+            } ${wiggleClient[index] ? '!bg-red-600 scale-120' : 'scale-100'} ${
+                isOver && canDrop ? 'scale-110 bg-pink-900' : ''
+            }`}
+        >
+            {clients[index] ? <Meh size={50}/> : <BookUser size={50}/>}
+        </button>
+    )
+}
+
+export const DraggableHostess = ({hostess, source, selectedHostess, setSelectedHostess}: DraggableHostessProps) => {
+    const [{isDragging}, drag] = useDrag(() => ({
+        type: "hostess",
+        item: {hostess, source},
+        collect: (monitor) => ({
+            isDragging: monitor.isDragging(),
+        })
+    }))
+
+    const buttonRef = useRef<HTMLButtonElement>(null)
+    drag(buttonRef)
+
+    return (
+        <button
+            ref={buttonRef}
+            onClick={() => {
+                if (!setSelectedHostess) return
+                if (selectedHostess?.id === hostess.id) {
+                    setSelectedHostess(null)
+                } else {
+                    setSelectedHostess(hostess)
+                }
+            }}
+            className={`flex justify-center items-center rounded-[20] cursor-pointer transition-all transform duration-300 hover:scale-105 ${
+                selectedHostess?.id === hostess.id && "!bg-violet-950"
+            }${
+                isDragging ? "opacity-50 !scale-90" : "opacity-100"
+            } ${
+                source === "management"
+                    ? "border-pink-400 bg-pink-950/70/50 hover:bg-pink-900 border-2"
+                    : "bg-pink-800 hover:bg-pink-900"
+            }`}
+        >
+            <Image
+                src={hostess.image}
+                alt={hostess.name}
+                width={100}
+                height={100}
+                className="rounded-[18]"
+            />
+        </button>
+    )
+}
+
+export const DroppableHostessSlot = ({
+                                         index,
+                                         hostesses,
+                                         setHostesses,
+                                         setHostessesManagement,
+                                         selectedHostess,
+                                         setSelectedHostess,
+                                         setWindow,
+                                     }: DroppableHostessSlotProps) => {
+    const hostess = hostesses[index]
+
+    const [{isOver, canDrop}, drop] = useDrop<
+        { hostess: Hostess; source: "management" | "panel" },
+        void,
+        { isOver: boolean; canDrop: boolean }
+    >({
+        accept: "hostess",
+        drop: (item) => {
+            const updated = [...hostesses]
+            const target = hostesses[index]
+
+            if (target) {
+                setHostessesManagement((prev) => {
+                    if (!prev.find((h) => h.id === target.id)) return [...prev, target]
+                    return prev
+                })
+            }
+
+            updated[index] = item.hostess
+            setHostesses(updated)
+
+            if (item.source === "panel") {
+                const oldIndex = hostesses.findIndex((h) => h?.id === item.hostess.id)
+                if (oldIndex !== -1 && oldIndex !== index) {
+                    updated[oldIndex] = null
+                    setHostesses(updated)
+                }
+            }
+
+            if (item.source === "management") {
+                setHostessesManagement((prev) => prev.filter((h) => h.id !== item.hostess.id))
+            }
+        },
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+            canDrop: monitor.canDrop(),
+        }),
+    })
+
+    const handleRemove = (e: React.MouseEvent) => {
+        e.stopPropagation()
+        if (!hostess) return
+        const updated = [...hostesses]
+        updated[index] = null
+        setHostesses(updated)
+        setHostessesManagement((prev) =>
+            [...prev, hostess].sort((a, b) => Number(a.id) - Number(b.id))
+        )
+    }
+
+    const divRef = useRef<HTMLDivElement>(null)
+    drop(divRef)
+
+    return (
+        <div
+            ref={divRef}
+            className={`relative flex justify-center items-center bg-pink-800 rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 text-pink-200 border-2 transition duration-200 ease-in-out transform active:scale-105 ${
+                isOver && canDrop ? "bg-pink-900 scale-105" : ""
+            }`}
+        >
+            {hostess ? (
+                <div className="flex justify-center items-center flex-col">
+                    <DraggableHostess hostess={hostess} source="panel"/>
+                    <div className="absolute bottom-[-20]">
+                        <button
+                            onClick={handleRemove}
+                            className="flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] transform active:scale-110"
+                        >
+                            <EyeClosed size={20}/>
+                        </button>
+                    </div>
+                </div>
+            ) : (
+                <button
+                    className={`flex justify-center items-center rounded-[17] transform active:scale-105 w-[100px] h-[100px] ${
+                        selectedHostess
+                            ? "hover:bg-pink-200 hover:text-pink-950"
+                            : "hover:bg-pink-900 hover:text-pink-300"
+                    } transition duration-300 ease-in-out`}
+                    onClick={() => {
+                        if (!selectedHostess) setWindow("Management")
+                    }}
+                >
+                    <HeartPlus/>
+                </button>
+            )}
+        </div>
+    )
+}
+
+export const DroppableHostessTableSlot = ({
+                                              hostessAtTable,
+                                              setHostesses,
+                                              hostesses,
+                                              setHostessesPanel,
+                                              index,
+                                              wiggleHostess,
+                                              setWiggleHostess,
+                                              clients,
+                                              inquiryType,
+                                              InquiryHandler
+                                          }: DroppableHostessTableSlotProps) => {
+    const [{isOver, canDrop}, drop] = useDrop<
+        { hostess: Hostess, source: "panel" | "management" }, void, { isOver: boolean, canDrop: boolean }>({
+        accept: "hostess",
+        drop: (item) => {
+            if (!hostessAtTable) {
+                const updated = [...hostesses]
+                updated[index] = item.hostess
+                setHostesses(updated)
+
+                if (clients[index] && inquiryType[index] !== "Buffet") {
+                    InquiryHandler(index, "Buffet", true)
+                }
+
+                if (item.source === "panel") {
+                    setHostessesPanel((prev) =>
+                        prev.map((h) => (h?.id === item.hostess.id ? null : h))
+                    )
+                }
+            } else {
+                const newWiggle = [...wiggleHostess];
+                newWiggle[index] = true
+                setWiggleHostess(newWiggle)
+                setTimeout(() => {
+                    const reset = [...newWiggle]
+                    reset[index] = false
+                    setWiggleHostess(reset)
+                }, 200)
+            }
+        },
+        collect: (monitor) => ({
+            isOver: monitor.isOver(),
+            canDrop: monitor.canDrop(),
+        }),
+    })
+
+    const divRef = useRef<HTMLDivElement>(null)
+    drop(divRef)
+
+    return (
+        <div
+            ref={divRef}
+            className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950/70 transition-all duration-200 ease-in-out transform active:scale-90 ${
+                hostesses[index] ? 'bg-pink-800 opacity-100' : 'bg-pink-700'
+            } ${wiggleHostess[index] ? '!bg-red-600 scale-120' : 'scale-100'} ${
+                isOver && canDrop ? 'scale-110 bg-pink-900' : ''
+            }`}
+        >
+            {hostessAtTable ? (
+                <Image
+                    src={hostessAtTable.image}
+                    alt={hostessAtTable.name}
+                    width={100}
+                    height={100}
+                    className={`rounded-[18]`}
+                />
+            ) : <VenetianMask size={50}/>}
+        </div>
     )
 }

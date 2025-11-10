@@ -4,21 +4,15 @@ import React, {useEffect, useRef, useState} from "react";
 import Image from "next/image";
 import {
     BookHeart,
-    BookUser, BrushCleaning,
-    DoorClosed,
-    DoorOpen,
+    BrushCleaning,
     Gavel,
     HandHeart,
     Martini,
-    Meh,
     Play,
-    VenetianMask,
     Wind
 } from "lucide-react";
 import LoadingBar from "@/components/loadingBar";
-import {DraggableDoor, DroppableClient} from "@/scripts/DNDItems";
-import {HTML5Backend} from "react-dnd-html5-backend";
-import {DndProvider} from "react-dnd";
+import {DraggableDoor, DroppableClient, DroppableHostessTableSlot} from "@/scripts/DNDItems";
 
 const SERVICE_TYPES = [
     "ashtray",
@@ -114,15 +108,14 @@ const Interior = ({
 
     useEffect(() => {
         visit.forEach((v, i) => {
-            if (!v && !inquiry[i]) {
+            if (!v && !inquiry[i] && clients[i] && dinedTables[i]) {
                 if (clients[i] && hostesses[i]) {
                     setClients(prev => {
                         const updated = [...prev]
                         updated[i] = false
                         return updated
                     })
-                    const hostess = hostesses[i]
-                    if (hostess) {
+                    if (hostesses[i]) {
                         setHostesses(prev => {
                             const updated = [...prev]
                             updated[i] = null
@@ -132,9 +125,9 @@ const Interior = ({
                             const updated = [...prev]
                             const firstEmpty = updated.findIndex(h => h === null)
                             if (firstEmpty !== -1) {
-                                updated[firstEmpty] = hostess
+                                updated[firstEmpty] = hostesses[i]
                             } else {
-                                updated.push(hostess)
+                                updated.push(hostesses[i])
                             }
                             return updated
                         })
@@ -142,7 +135,7 @@ const Interior = ({
                 }
             }
         })
-    }, [visit, inquiry, clients, hostesses, setClients, setHostesses, setHostessesPanel])
+    }, [visit, inquiry, clients, hostesses, setClients, setHostesses, setHostessesPanel, dinedTables])
 
     const positioning = (i: number) => {
         switch (i) {
@@ -262,180 +255,141 @@ const Interior = ({
     }
 
     return (
-        <DndProvider backend={HTML5Backend}>
-            <>
-                <div className={"absolute flex justify-center items-center -left-5 -bottom-5 z-3 text-pink-200"}>
-                    <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={255}/>
-                    <DraggableDoor waitingClient={waitingClient}/>
-                </div>
-                <div
-                    className="w-screen absolute top-[45%] -translate-y-1/2 flex justify-center items-center p-10 text-white">
-                    <div className="grid grid-cols-6 grid-rows-2 gap-10 h-full w-full">
-                        {items.map((_, i) => {
-                            const hostessAtTable = hostesses[i]
-
-                            return (
-                                <div key={i}
-                                     className={`relative flex justify-center items-center p-4 ${positioning(i)}`}
-                                     onClick={() => {
-                                         if (selectedHostess && !hostesses[i]) {
-                                             let updatedHostesses: (Hostess | null)[]
-                                             setHostesses(prev => {
-                                                 updatedHostesses = [...prev]
-                                                 updatedHostesses[i] = selectedHostess
-                                                 return updatedHostesses
-                                             })
-                                             setHostessesPanel(prev => {
-                                                 return prev.map(h => h?.id === selectedHostess.id ? null : h)
-                                             })
-                                             setSelectedHostess(null)
-                                             if (clients[i]) {
-                                                 InquiryHandler(i, "Buffet", true)
-                                             }
-                                         }
-                                     }}>
-                                    <div
-                                        className={"absolute h-75 w-75 -z-1 flex bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)]"}/>
-                                    <Image
-                                        src={
-                                            !visit[i] && dinedTables[i] ?
-                                                "/images/position_empty_dined.png"
-                                                : inquiry[i] && dinedTables[i]
-                                                    ? "/images/position_call_dined.png"
-                                                    : dinedTables[i] && hostesses[i] && clients[i]
-                                                        ? "/images/position_dined.png"
-                                                        : inquiry[i]
-                                                            ? "/images/position_call.png"
-                                                            : hostesses[i] && clients[i]
-                                                                ? "/images/position_full.png"
-                                                                : hostesses[i]
-                                                                    ? "/images/position_hostess.png"
-                                                                    : clients[i]
-                                                                        ? "/images/position_client.png"
-                                                                        : "/images/position_empty.png"
-                                        }
-                                        alt={"Meeting position"}
-                                        height={424}
-                                        width={528}
-                                        className={"flex justify-center items-center"}
+        <>
+            <div className={"absolute flex justify-center items-center -left-5 -bottom-5 z-3 text-pink-200"}>
+                <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={255}/>
+                <DraggableDoor waitingClient={waitingClient}/>
+            </div>
+            <div
+                className="w-screen absolute top-[45%] -translate-y-1/2 flex justify-center items-center p-10 text-pink-200">
+                <div className="grid grid-cols-6 grid-rows-2 gap-10 h-full w-full">
+                    {items.map((_, i) => (
+                        <div key={i}
+                             className={`relative flex justify-center items-center p-4 ${positioning(i)}`}>
+                            <div
+                                className={"absolute h-75 w-75 -z-1 flex bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)]"}/>
+                            <Image
+                                src={
+                                    !visit[i] && dinedTables[i] ?
+                                        "/images/position_empty_dined.png"
+                                        : inquiry[i] && dinedTables[i]
+                                            ? "/images/position_call_dined.png"
+                                            : dinedTables[i] && hostesses[i] && clients[i]
+                                                ? "/images/position_dined.png"
+                                                : inquiry[i]
+                                                    ? "/images/position_call.png"
+                                                    : hostesses[i] && clients[i]
+                                                        ? "/images/position_full.png"
+                                                        : hostesses[i]
+                                                            ? "/images/position_hostess.png"
+                                                            : clients[i]
+                                                                ? "/images/position_client.png"
+                                                                : "/images/position_empty.png"
+                                }
+                                alt={"Meeting position"}
+                                height={424}
+                                width={528}
+                                className={"flex justify-center items-center"}
+                            />
+                            {!visit[i] && dinedTables[i] && (
+                                <button
+                                    className={`absolute top-17.5 border-pink-300 hover:border-pink-500 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950/70 hover:bg-pink-300 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
+                                    onClick={() => {
+                                        setDinedTables(prev => {
+                                            const updated = [...prev]
+                                            updated[i] = false
+                                            return updated
+                                        })
+                                    }}>
+                                    <BrushCleaning size={30}/>
+                                </button>
+                            )}
+                            <div
+                                className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
+                                <>
+                                    <DroppableHostessTableSlot
+                                        index={i}
+                                        hostessAtTable={hostesses[i]}
+                                        hostesses={hostesses}
+                                        setHostesses={setHostesses}
+                                        setHostessesPanel={setHostessesPanel}
+                                        wiggleHostess={wiggleHostess}
+                                        setWiggleHostess={setWiggleHostess}
+                                        clients={clients}
+                                        inquiryType={inquiryType}
+                                        InquiryHandler={InquiryHandler}
                                     />
-                                    {!visit[i] && dinedTables[i] && (
+                                    {hostesses[i] && (
                                         <button
-                                            className={`absolute top-17.5 border-pink-300 hover:border-pink-500 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-pink-300 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
                                             onClick={() => {
-                                                setDinedTables(prev => {
+                                                setHostessesPanel(prev => {
                                                     const updated = [...prev]
-                                                    updated[i] = false
+                                                    const firstEmptyIndex = updated.findIndex(h => h === null)
+                                                    if (firstEmptyIndex !== -1) {
+                                                        updated[firstEmptyIndex] = hostesses[i]
+                                                    } else {
+                                                        updated.push(hostesses[i]!)
+                                                    }
                                                     return updated
                                                 })
-                                            }}>
-                                            <BrushCleaning size={30}/>
-                                        </button>
-                                    )}
-                                    <div
-                                        className={`absolute w-55 flex flex-row justify-between items-center z-49 ${tableUIPositioning(i)}`}>
-                                        {hostessAtTable ? (
-                                            <div
-                                                onClick={() => {
-                                                    if ((selectedClient || selectedHostess) && hostesses[i]) {
-                                                        const newWiggle = [...wiggleHostess]
-                                                        newWiggle[i] = true
-                                                        setWiggleHostess(newWiggle)
-                                                        setTimeout(() => {
-                                                            const reset = [...newWiggle]
-                                                            reset[i] = false
-                                                            setWiggleHostess(reset)
-                                                        }, 200)
-                                                    }
-                                                }}
-                                                className={`relative flex justify-center items-center rounded-[20] border-white border-2 transition-all duration-200 ease-in-out transform active:scale-110 hover:shadow-sm hover:shadow-white ${wiggleHostess[i] ? "scale-120" : "scale-100"}`}>
-                                                <Image
-                                                    src={hostessAtTable.image}
-                                                    alt={hostessAtTable.name}
-                                                    width={100}
-                                                    height={100}
-                                                    className={`rounded-[18] hover:bg-pink-950 hover:text-black transition duration-200 ease-in-out hover:shadow-sm hover:shadow-white ${wiggleHostess[i] ? "!bg-red-600" : "bg-pink-800"}`}
-                                                />
-                                                <div
-                                                    className={"absolute bottom-[-20] z-50 transition-all duration-200 ease-in-out transform active:scale-90"}>
-                                                    <button
-                                                        onClick={() => {
-                                                            setHostessesPanel(prev => {
-                                                                const updated = [...prev]
-                                                                const firstEmptyIndex = updated.findIndex(h => h === null)
-                                                                if (firstEmptyIndex !== -1) {
-                                                                    updated[firstEmptyIndex] = hostesses[i]
-                                                                } else {
-                                                                    updated.push(hostesses[i]!)
-                                                                }
-                                                                return updated
-                                                            })
-                                                            setHostesses(prev => {
-                                                                const updated = [...prev]
-                                                                updated[i] = null
-                                                                return updated
-                                                            })
-                                                            InquiryHandler(i, null, false)
-                                                        }}
-                                                        className={"flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
-                                                        <Wind size={20}/>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <div
-                                                className={"flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-700 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white"}>
-                                                <VenetianMask size={50}/>
-                                            </div>
-                                        )}
-                                        <DroppableClient index={i} clients={clients} setClients={setClients} hostesses={hostesses} setSelectedClient={setSelectedClient} InquiryHandler={InquiryHandler} wiggleClient={wiggleClient} setWaitingClient={setWaitingClient}/>
-                                        {clients[i] && (
-                                            <button onClick={() => {
-                                                const updatedClients =
-                                                    [...clients]
-                                                updatedClients[i] = false
-                                                setClients(updatedClients)
+                                                setHostesses(prev => {
+                                                    const updated = [...prev]
+                                                    updated[i] = null
+                                                    return updated
+                                                })
                                                 InquiryHandler(i, null, false)
                                             }}
-                                                    className={"absolute left-35.5 -bottom-5 flex justify-center items-center hover:bg-pink-950 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
-                                                <Gavel size={20}/>
-                                            </button>
-                                        )}
-                                        {visit[i] && (
-                                            <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
-                                                <LoadingBar key={`loading-${i}-${barKeys}`} duration={60000}
-                                                            onComplete={() => setTimeout(() => InquiryHandler(i, "End", true), 0)}
-                                                            paused={inquiry[i]}
-                                                            onProgressChange={() => {
-                                                                if (Math.random() < 0.002) {
-                                                                    setTimeout(() => InquiryHandler(i, "Service", true), 0)
-                                                                }
-                                                            }}/>
-                                            </div>
-                                        )}
-                                        {inquiry[i] && (
-                                            <div
-                                                className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
-                                                onClick={() => {
-                                                    setInquiryTableId(i)
-                                                    setInquiryWindow(true)
-                                                }}>
-                                                {inquiryType[i] === "Service" && <HandHeart scale={25}/>}
-                                                {inquiryType[i] === "Buffet" && <Martini scale={25}/>}
-                                                {inquiryType[i] === "End" && <BookHeart scale={25}/>}
-                                            </div>
-                                        )}
-                                        <div className={`absolute ${ArrowPositioning(i)} left-24 z-50`}>
-                                            <Play size={30}/>
-                                        </div>
+                                            className={"absolute -bottom-5 left-6.5 flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
+                                            <Wind size={20}/>
+                                        </button>
+                                    )}
+                                </>
+                                <DroppableClient index={i} clients={clients} setClients={setClients} hostesses={hostesses} setSelectedClient={setSelectedClient} InquiryHandler={InquiryHandler} wiggleClient={wiggleClient} setWaitingClient={setWaitingClient} inquiryType={inquiryType}/>
+                                {clients[i] && (
+                                    <button onClick={() => {
+                                        const updatedClients =
+                                            [...clients]
+                                        updatedClients[i] = false
+                                        setClients(updatedClients)
+                                        InquiryHandler(i, null, false)
+                                    }}
+                                            className={"absolute left-35.5 -bottom-5 flex justify-center items-center hover:bg-pink-950/70 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] opacity-40 hover:opacity-100"}>
+                                        <Gavel size={20}/>
+                                    </button>
+                                )}
+                                {visit[i] && (
+                                    <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
+                                        <LoadingBar key={`loading-${i}-${barKeys}`} duration={60000}
+                                                    onComplete={() => setTimeout(() => InquiryHandler(i, "End", true), 0)}
+                                                    paused={inquiry[i]}
+                                                    onProgressChange={() => {
+                                                        if (Math.random() < 0.002) {
+                                                            setTimeout(() => InquiryHandler(i, "Service", true), 0)
+                                                        }
+                                                    }}/>
                                     </div>
+                                )}
+                                {inquiry[i] && (
+                                    <div
+                                        className={`absolute -top-5 -left-5 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950/70 hover:bg-red-950 duration-200 ease-in-out scale-100 active:scale-105 hover:shadow-pink-500`}
+                                        onClick={() => {
+                                            setInquiryTableId(i)
+                                            setInquiryWindow(true)
+                                        }}>
+                                        {inquiryType[i] === "Service" && <HandHeart scale={25}/>}
+                                        {inquiryType[i] === "Buffet" && <Martini scale={25}/>}
+                                        {inquiryType[i] === "End" && <BookHeart scale={25}/>}
+                                    </div>
+                                )}
+                                <div className={`absolute ${ArrowPositioning(i)} left-24 z-50`}>
+                                    <Play size={30}/>
                                 </div>
-                            )
-                        })}
-                    </div>
+                            </div>
+                        </div>
+                    ))}
                 </div>
-            </>
-        </DndProvider>
+            </div>
+        </>
     )
 }
 

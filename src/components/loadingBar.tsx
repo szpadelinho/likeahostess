@@ -34,7 +34,7 @@ const LoadingBar = ({duration, onComplete, paused, onProgressChange}: Props) => 
         <div
             className={`flex border-2 rounded-md h-4 w-[120px] overflow-hidden ${paused ? "border-pink-300" : "border-white"}`}>
             <div
-                className={`h-full transition-all duration-100 ease-linear z-50 ${paused ? "bg-[repeating-linear-gradient(135deg,#fff_0px,#fff_6px,#111_6px,#111_12px)]" : "bg-pink-600"}`}
+                className={`h-full transition-all duration-100 ease-linear z-50 ${paused ? "bg-[repeating-linear-gradient(135deg,#f16076_0px,#f16076_6px,#661043_6px,#661043_12px)]" : "bg-pink-600"}`}
                 style={{width: `${progress}%`}}
             >
                 {paused ? (

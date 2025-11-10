@@ -28,11 +28,12 @@ type Club = {
 
 interface Hud {
     club: Club
+    windowType: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null,
     setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => void
 }
 
 
-const Hud = ({club, setWindow}: Hud) => {
+const Hud = ({club, windowType, setWindow}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
@@ -53,11 +54,22 @@ const Hud = ({club, setWindow}: Hud) => {
         }
     }
 
+    const handleWindow = (window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null) => {
+        if(windowType === window){
+            setWindow(null)
+        } else {
+            setWindow(window)
+        }
+    }
+
     const handleButton = useCallback((e: KeyboardEvent) => {
         if(e.key === "Escape"){
             handleClick()
         }
-    }, [handleClick])
+        if(e.key === "m"){
+            handleWindow("Management")
+        }
+    }, [handleClick, handleWindow])
 
     useEffect(() => {
         window.addEventListener("keydown", handleButton)
