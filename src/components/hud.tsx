@@ -4,7 +4,7 @@ import {
     Menu,
 } from "lucide-react";
 import Image from "next/image";
-import {useCallback, useEffect, useState} from "react";
+import {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
 import {MenuModal} from "@/components/menuModal";
 import {Yesteryear} from "next/font/google";
 import {Clock} from "@/components/clock";
@@ -30,15 +30,24 @@ interface Hud {
     club: Club
     windowType: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null,
     setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => void
+    setFade: Dispatch<SetStateAction<boolean>>
 }
 
 
-const Hud = ({club, windowType, setWindow}: Hud) => {
+const Hud = ({club, windowType, setWindow, setFade}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
-    const handleClick = () => {
-        if(menu){
+    const handleClick = (close?: boolean) => {
+        if(menu || close){
+            if(windowType){
+                setFade(true)
+                setTimeout(() => {
+                    setWindow(null)
+                    setFade(false)
+                }, 300)
+            }
+
             setClosing(true)
             setTimeout(() => {
                 setMenu(!menu)
@@ -46,6 +55,14 @@ const Hud = ({club, windowType, setWindow}: Hud) => {
             }, 300)
         }
         else{
+            if(windowType){
+                setFade(true)
+                setTimeout(() => {
+                    setWindow(null)
+                    setFade(false)
+                }, 300)
+            }
+
             setClosing(true)
             setTimeout(() => {
                 setMenu(!menu)
@@ -55,19 +72,59 @@ const Hud = ({club, windowType, setWindow}: Hud) => {
     }
 
     const handleWindow = (window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null) => {
-        if(windowType === window){
-            setWindow(null)
-        } else {
+        if(menu){
+            setClosing(true)
+            setTimeout(() => {
+                setMenu(false)
+                setClosing(false)
+            }, 300)
+        }
+
+        if (windowType === window || window === null) {
+            setFade(true)
+            setTimeout(() => {
+                setWindow(null)
+                setFade(false)
+            }, 300)
+        }
+        else {
             setWindow(window)
         }
     }
 
     const handleButton = useCallback((e: KeyboardEvent) => {
-        if(e.key === "Escape"){
-            handleClick()
-        }
-        if(e.key === "m"){
-            handleWindow("Management")
+        switch(e.key){
+            case "Escape":
+                handleClick()
+                break
+            case "m":
+                handleWindow("Management")
+                break
+            case "p":
+                handleWindow("Activities")
+                break
+            case "q":
+                handleWindow("LogOff")
+                break
+            case "e":
+                handleWindow("NewSerena")
+                break
+            case "i":
+                handleWindow("Profile")
+                break
+            case "c":
+                handleWindow("Casino")
+                break
+            case "s":
+                handleWindow("Selection")
+                break
+            case "l":
+                handleWindow("LoveInHeart")
+                break
+            case "b":
+                handleWindow("Moneylender")
+                break
+
         }
     }, [handleClick, handleWindow])
 

@@ -76,6 +76,7 @@ const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
 
     const [window, setWindow] = useState<"Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null>(null)
+    const [fade, setFade] = useState<boolean>(false)
 
     const [activity, setActivity] = useState<Activity[]>([])
     const [selectedActivity, setSelectedActivity] = useState<Activity | null>(null)
@@ -238,6 +239,7 @@ const Main = () => {
         <DndProvider backend={HTML5Backend}>
             {inquiryWindow && (
                 <ModalWrapper
+                    fade={fade}
                     onClose={() => {
                         if (inquiryTableId !== null) {
                             setInquiryWindow(false)
@@ -252,6 +254,7 @@ const Main = () => {
             <LoadingBanner show={loading}/>
             {selectedActivity && (
                 <ModalWrapper
+                    fade={fade}
                     onClose={() => {
                         setSelectedActivity(null)
                         if(jamToggle !== null){
@@ -277,18 +280,23 @@ const Main = () => {
                                 club={club}
                                 windowType={window}
                                 setWindow={setWindow}
+                                setFade={setFade}
                             />
                         </>
                     )}
                     {window && (
-                        <ModalWrapper onClose={() => {
+                        <ModalWrapper
+                            fade={fade}
+                            onClose={() => {
                             setWindow(null)
                         }}>
                             {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} window={window} setLoading={setLoading}/>}
                         </ModalWrapper>
                     )}
                     {window === "Management" && (
-                        <ModalWrapper onClose={() => {
+                        <ModalWrapper
+                            fade={fade}
+                            onClose={() => {
                             setSelectedHostess(null)
                             setWindow(null)
                         }}>
@@ -298,7 +306,9 @@ const Main = () => {
                         </ModalWrapper>
                     )}
                     {window === "Activities" && (
-                        <ModalWrapper onClose={() => {
+                        <ModalWrapper
+                            fade={fade}
+                            onClose={() => {
                             setSelectedPerformer(null)
                             setWindow(null)
                         }}>

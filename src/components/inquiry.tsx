@@ -1,25 +1,27 @@
 import Image from "next/image";
 import {
-    BottleWine,
     ChefHat,
-    UtensilsCrossed,
-    Wine,
     Boxes,
     Cigarette,
     ScrollText,
     createLucideIcon,
     LucideIcon,
-    DoorOpen, TimerReset, Gift, BanknoteX, Martini
+    DoorOpen,
+    TimerReset,
+    Gift,
+    BanknoteX,
+    Martini,
+    Beer
 } from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {BuffetType} from "@prisma/client";
-import {towelFolded, goblet} from "@lucide/lab";
+import {towelFolded, cupSaucer} from "@lucide/lab";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
 
 const TowelFolded = createLucideIcon("TowelFolded", towelFolded)
-const Goblet = createLucideIcon("Goblet", goblet)
+const CupSaucer = createLucideIcon("CupSaucer", cupSaucer)
 
 const SERVICE_TYPES = [
     "ashtray",
@@ -143,11 +145,11 @@ export const Inquiry = ({
         },
         {
             title: "lady_glass",
-            Icon: Wine
+            Icon: CupSaucer
         },
         {
             title: "guest_glass",
-            Icon: Goblet
+            Icon: Beer
         },
         {
             title: "menu",

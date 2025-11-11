@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {Bitcount_Grid_Single, Yesteryear} from "next/font/google";
+import {Tiny5, Yesteryear} from "next/font/google";
 import {flowerStem} from "@lucide/lab";
 import {createLucideIcon, Leaf, Snowflake, Sun} from "lucide-react";
 
@@ -8,7 +8,7 @@ const yesteryear = Yesteryear({
     subsets: ['latin'],
 })
 
-const bitcountGridSingle = Bitcount_Grid_Single({
+const tiny5 = Tiny5({
     weight: "400",
     subsets: ['latin'],
 })
@@ -62,11 +62,11 @@ export const Clock = () => {
     const hoursDeg = hours * 30 + minutes * 0.5
 
     return(
-        <div className={`absolute ${type ? "top-5" : "top-7.5"} active:scale-110 hover:scale-105 left-1/2 -translate-x-[50%] flex items-center justify-center text-pink-200 transition duration-200 ease-in-out`} onClick={() => setType(!type)}>
+        <div className={`absolute ${type ? "top-5" : "top-7.5"} opacity-50 hover:opacity-100 active:scale-110 hover:scale-105 left-1/2 -translate-x-[50%] flex items-center justify-center text-pink-200 transition duration-200 ease-in-out`} onClick={() => setType(!type)}>
             {type ? (
                     <div
                         className={"relative h-20 w-20 rounded-[15] flex bg-pink-950 gap-5 active:bg-pink-900 hover:bg-pink-800 justify-center items-center flex-row border-pink-200 border-2 p-2 transition duration-200 ease-in-out"}>
-                        <div className={"relative flex items-center justify-center absolute -top-7.5"}>
+                        <div className={"relative flex items-center justify-center -top-7.5"}>
                             <div
                                 className={"absolute w-[4px] -top-0.5 h-8 bg-pink-300 origin-bottom rounded-full z-1"}
                                 style={{transform: `rotate(${hoursDeg}deg)`}}
@@ -96,7 +96,7 @@ export const Clock = () => {
                         <div className={"absolute top-0 right-5 rotate-30 w-[2px] h-4 bg-pink-200 rounded-full"}/>
 
                         <div className={"absolute top-3 right-1.5 rotate-60 w-[2px] h-4 bg-pink-200 rounded-full"}/>
-                        <div className={"absolute top-0 top-8 right-1.5 rotate-90 w-[2px] h-4 bg-pink-200 rounded-full"}/>
+                        <div className={"absolute top-8 right-1.5 rotate-90 w-[2px] h-4 bg-pink-200 rounded-full"}/>
                         <div className={"absolute bottom-3 right-1.5 -rotate-60 w-[2px] h-4 bg-pink-200 rounded-full"}/>
 
                         <div className={"absolute bottom-0 left-5 rotate-30 w-[2px] h-4 bg-pink-200 rounded-full"}/>
@@ -104,11 +104,11 @@ export const Clock = () => {
                         <div className={"absolute bottom-0 right-5 -rotate-30 w-[2px] h-4 bg-pink-200 rounded-full"}/>
 
                         <div className={"absolute top-3 left-1.5 -rotate-60 w-[2px] h-4 bg-pink-200 rounded-full"}/>
-                        <div className={"absolute top-0 top-8 left-1.5 rotate-90 w-[2px] h-4 bg-pink-200 rounded-full"}/>
+                        <div className={"absolute top-8 left-1.5 rotate-90 w-[2px] h-4 bg-pink-200 rounded-full"}/>
                         <div className={"absolute bottom-3 left-1.5 rotate-60 w-[2px] h-4 bg-pink-200 rounded-full"}/>
                     </div>
             ) : (
-                <div className={`${bitcountGridSingle.className} flex bg-pink-950 gap-5 active:bg-pink-900 hover:bg-pink-800 justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 transition duration-200 ease-in-out`}>
+                <div className={`${tiny5.className} flex bg-pink-950 gap-5 active:bg-pink-900 hover:bg-pink-800 justify-center items-center text-center flex-row border-pink-200 border-2 rounded-[15] p-2 transition duration-200 ease-in-out`}>
                     <p className={"text-[20px] flex justify-center items-center"}>
                         {digital}
                     </p>

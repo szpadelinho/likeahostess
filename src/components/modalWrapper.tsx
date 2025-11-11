@@ -1,17 +1,22 @@
 import React, {useEffect, useState} from "react"
 
 interface ModalProps {
-    children: (props: { onCloseModal: () => void }) => React.ReactElement
-    onClose: () => void
+    children: (props: { onCloseModal: () => void }) => React.ReactElement,
+    onClose: () => void,
+    fade: boolean
 }
 
-const ModalWrapper = ({children, onClose}: ModalProps) => {
+const ModalWrapper = ({children, onClose, fade}: ModalProps) => {
     const [visible, setVisible] = useState(false)
 
     useEffect(() => {
-        const timeout = setTimeout(() => setVisible(true), 10)
-        return () => clearTimeout(timeout)
-    }, [])
+        if(fade){
+            setVisible(false)
+        }
+        else{
+            setVisible(true)
+        }
+    }, [fade])
 
     const handleClose = () => {
         setVisible(false)
