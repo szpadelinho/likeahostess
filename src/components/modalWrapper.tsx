@@ -1,19 +1,20 @@
 import React, {useEffect, useState} from "react"
+import Image from "next/image";
 
 interface ModalProps {
     children: (props: { onCloseModal: () => void }) => React.ReactElement,
     onClose: () => void,
-    fade: boolean
+    fade: boolean,
+    isKaraoke?: boolean
 }
 
-const ModalWrapper = ({children, onClose, fade}: ModalProps) => {
+const ModalWrapper = ({children, onClose, fade, isKaraoke}: ModalProps) => {
     const [visible, setVisible] = useState(false)
 
     useEffect(() => {
-        if(fade){
+        if (fade) {
             setVisible(false)
-        }
-        else{
+        } else {
             setVisible(true)
         }
     }, [fade])
@@ -32,6 +33,9 @@ const ModalWrapper = ({children, onClose, fade}: ModalProps) => {
             }`}
             onClick={handleClose}
         >
+            {isKaraoke && (
+                <Image src={"/images/karaokekkan.png"} alt={"Karaokekkan interior"} fill={true} className={"object-content opacity-70"}/>
+            )}
             <div
                 className={`transition-transform ease-in-out duration-300 ${
                     visible ? "scale-100" : "scale-50"

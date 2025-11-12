@@ -254,6 +254,7 @@ const Main = () => {
             <LoadingBanner show={loading}/>
             {selectedActivity && (
                 <ModalWrapper
+                    isKaraoke={true}
                     fade={fade}
                     onClose={() => {
                         setSelectedActivity(null)

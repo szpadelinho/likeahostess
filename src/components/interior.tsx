@@ -265,7 +265,7 @@ const Interior = ({
                 <div className="grid grid-cols-6 grid-rows-2 gap-10 h-full w-full">
                     {items.map((_, i) => (
                         <div key={i}
-                             className={`relative flex justify-center items-center p-4 ${positioning(i)}`}>
+                             className={`${hostesses[i] || clients[i] ? "opacity-100" : "opacity-75"} duration-300 ease-in-out relative flex justify-center items-center p-4 ${positioning(i)}`}>
                             <div
                                 className={"absolute h-75 w-75 -z-1 flex bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)]"}/>
                             <Image
