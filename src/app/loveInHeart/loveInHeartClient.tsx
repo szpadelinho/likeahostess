@@ -29,6 +29,7 @@ interface Hostess {
 export const LoveInHeartClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
+    const [volume, setVolume] = useState<number>(100)
 
     const [massage, setMassage] = useState<"Standard" | "Deluxe" | "VIP" | "Super VIP" | null>(null)
     const [mode, setMode] = useState<"Selection" | "Acceptance">("Selection")
@@ -108,7 +109,7 @@ export const LoveInHeartClient = () => {
     return(
         <>
             <Image src={"/images/love_in_heart.png"} alt={"Love In Heart massage parlor"} fill={true} className={"object-cover"}/>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"LoveInHeart"} mode={mode} changeMode={changeMode}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"LoveInHeart"} mode={mode} changeMode={changeMode} volume={volume} setVolume={setVolume}/>
             <div
                 className={`duration-500 ease-in-out transition-all transform ${fade ? "opacity-0" : "opacity-100"}`}>
                 <Image src={"/images/saejima_massage.png"} alt={"Taiga Saejima"} height={300} width={250} className={"absolute left-20 bottom-10"}/>
@@ -235,6 +236,7 @@ export const LoveInHeartClient = () => {
                 autoPlay={true}
                 muted={muted}
                 loop={true}
+                volume={volume / 100}
                 className={"flex absolute top-0 left-0 z-[-1]"}
                 style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
             />

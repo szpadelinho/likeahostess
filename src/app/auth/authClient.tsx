@@ -27,6 +27,8 @@ export default function AuthClient() {
     const [isPlaying, setIsPlaying] = useState(false)
     const [muted, setMuted] = useState(false)
 
+    const [volume, setVolume] = useState<number>(100)
+
     const [source, setSource] = useState<string | null>(null)
 
     const [mode, setMode] = useState<"Main" | "Authentication">("Main")
@@ -45,7 +47,9 @@ export default function AuthClient() {
         "GhKDpI9T1Hg",
         "tmR_H5NZVVI",
         "M4JEwZeTKtI",
-        "LiSSAV1xpYo"
+        "LiSSAV1xpYo",
+        "2gCemGx-W18",
+
     ]
 
     useEffect(() => {
@@ -104,9 +108,10 @@ export default function AuthClient() {
             <>
                 <div className={`duration-500 ease-in-out transition ${transition === "Parent" ? "opacity-0" : "opacity-100"}`}>
                     <Image src={"/icon.png"} alt={"App icon"} height={200} width={100} className={"absolute top-5 left-5 z-2"}/>
-                    <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Auth"}/>{showBanner && (
-                    <IntroBanner bannerVisible={bannerVisible} />
-                )}
+                    <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Auth"} volume={volume} setVolume={setVolume}/>
+                    {showBanner && (
+                        <IntroBanner bannerVisible={bannerVisible} />
+                    )}
                     <div className={`duration-500 ease-in-out transition ${transition === "Child" ? "opacity-0" : "opacity-100"}`}>
                         <Image src={mode === "Main" ? "/images/business_card_hands.png" : "/images/business_card_hands_2.png"} alt={mode === "Main" ? "Hands handing over a business card" : "Hands holding a business card"} fill={true} className={"absolute object-cover inset-0 z-1"}/>
                         {mode === "Main" ? (
@@ -188,6 +193,7 @@ export default function AuthClient() {
                         autoPlay={true}
                         loop={true}
                         muted={muted}
+                        volume={volume / 100}
                         style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
                     />
                 </div>

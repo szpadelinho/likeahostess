@@ -24,6 +24,8 @@ interface Drink{
 const NewSerenaClient = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(true)
     const [muted, setMuted] = useState(false)
+    const [volume, setVolume] = useState<number>(100)
+
     const [mode, setMode] = useState<"Selection" | "Drinks" | "Supplies">("Selection")
     const [fade, setFade] = useState<boolean>(false)
     const [fadeDetail, setFadeDetail] = useState<boolean>(false)
@@ -125,7 +127,7 @@ const NewSerenaClient = () => {
     const router = useRouter()
     return(
         <>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"} mode={mode} switchMode={switchMode}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"} mode={mode} switchMode={switchMode} volume={volume} setVolume={setVolume}/>
             <Image src={mode === "Selection" ? "/images/new_serena.png" : mode === "Drinks" ? "/images/new_serena_2.png" : "/images/new_serena_3.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
             <div className={`${molle.className} ${fade ? "opacity-0" : "opacity-100"} duration-300 ease-in-out w-screen h-screen flex flex-col items-center justify-center text-[30px]`}>
                 {mode === "Selection" && (
@@ -203,6 +205,7 @@ const NewSerenaClient = () => {
                 autoPlay={true}
                 muted={muted}
                 loop={true}
+                volume={volume / 100}
                 className={"flex absolute top-0 left-0 z-[-1]"}
                 style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
             />

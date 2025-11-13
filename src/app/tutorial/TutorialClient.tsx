@@ -10,6 +10,7 @@ import {useRouter} from "next/navigation";
 const Tutorial = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
+    const [volume, setVolume] = useState<number>(100)
 
     const [active, setActive] = useState<string | null>(null)
 
@@ -43,7 +44,7 @@ const Tutorial = () => {
         <>
             <div className={"flex h-screen w-screen justify-center items-center text-[30px]"}>
                 <Image src={"/images/books.png"} alt={"Bookshelf"} fill={true} className="z-1"/>
-                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Tutorial"}/>
+                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Tutorial"} volume={volume} setVolume={setVolume}/>
                 <div className={"relative grid grid-cols-9 items-center w-300 gap-4 p-2 whitespace-nowrap z-50 mix-blend-mode-burn mt-3"}>
                     <ReactPlayer
                         src={"https://youtube.com/embed/OR9Xls1S0s4?autoplay=1"}
@@ -52,6 +53,7 @@ const Tutorial = () => {
                         autoPlay={true}
                         muted={muted}
                         loop={true}
+                        volume={volume / 100}
                         className={"flex absolute top-0 left-0 z-[-1]"}
                         style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
                     />

@@ -1,4 +1,4 @@
-import {ConciergeBell, LampDesk, LogOut, University, Volume2, VolumeOff} from "lucide-react";
+import {ConciergeBell, LampDesk, LogOut, University, Volume, Volume1, Volume2, VolumeOff, VolumeX} from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {signOut} from "next-auth/react";
@@ -16,7 +16,9 @@ interface NavbarProps {
     changeMode?: () => void,
     switchMode?: (mode: ("Selection" | "Drinks" | "Supplies")) => void,
     setContract?: (show: boolean) => void,
-    paper?: boolean
+    paper?: boolean,
+    volume: number,
+    setVolume: (value: (((prevState: number) => number) | number)) => void
 }
 
 const Navbar = ({
@@ -31,7 +33,9 @@ const Navbar = ({
                     changeMode,
                     switchMode,
                     setContract,
-                    paper
+                    paper,
+                    volume,
+                    setVolume
                 }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -75,9 +79,8 @@ const Navbar = ({
         <>
             <LoadingBanner show={loading}/>
             <div className={"absolute top-10 right-10 flex items-center justify-center flex-row gap-5 z-[100]"}>
-                <button onClick={() => {
-                    setIsPlaying(!isPlaying)
-                }}
+                <div className={"flex justify-center items-center group relative"}>
+                    <button
                         className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                         style={page === "LoveInHeart" ? {
                             borderWidth: "8px",
@@ -86,11 +89,35 @@ const Navbar = ({
                             borderImageSlice: 30,
                             borderImageRepeat: "round"
                         } : {}}
-                >
-                    {
-                        isPlaying ? <Volume2 size={25}/> : <VolumeOff size={25}/>
-                    }
-                </button>
+                        onClick={() => {
+                            if (volume === 0) {
+                                setVolume(100)
+                            } else {
+                                setVolume(0)
+                            }
+                        }}>
+                        {volume === 0 && <VolumeX/>}
+                        {volume > 0 && volume < 34 && <Volume/>}
+                        {volume > 33 && volume < 67 && <Volume1/>}
+                        {volume > 66 && <Volume2/>}
+                    </button>
+                    <div
+                        className={`absolute ${getPageStyle(page)} p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120 pt-2 flex justify-center items-center h-5 -bottom-6 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none z-50`}
+                        style={page === "LoveInHeart" ? {
+                            borderWidth: "8px",
+                            borderStyle: "solid",
+                            borderImageSource: "url('/images/wood_texture2.png')",
+                            borderImageSlice: 30,
+                            borderImageRepeat: "round",
+                            bottom: -35
+                        } : {}}
+                    >
+                        <input className={"accent-pink-600"} type={"range"} value={volume} min={0} max={100}
+                               onChange={(e) => {
+                                   setVolume(parseInt(e.target.value))
+                               }}/>
+                    </div>
+                </div>
                 {page !== "Auth" && (
                     <button onClick={() => {
                         setLoading(true)

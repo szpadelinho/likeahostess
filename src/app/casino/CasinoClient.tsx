@@ -29,6 +29,8 @@ type Club = {
 const CasinoClient = () => {
     const router = useRouter()
 
+    const [volume, setVolume] = useState<number>(100)
+
     const [club, setClub] = useState<Club>()
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
@@ -101,7 +103,7 @@ const CasinoClient = () => {
     return(
         <div className={"flex flex-col h-screen w-screen items-center justify-center text-white z-50 gap-5"}>
             <Image src={`/images/${background}.png`} alt={"Casino interior"} fill={true} className={"absolute inset-0 z-[-1]"}/>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} page={"Casino"}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} page={"Casino"} volume={volume} setVolume={setVolume}/>
             <ReactPlayer
                 src={"https://youtube.com/embed/8mqRTo74g-0?autoplay=1"}
                 playing={isPlaying}
@@ -109,6 +111,7 @@ const CasinoClient = () => {
                 autoPlay={true}
                 muted={muted}
                 loop={true}
+                volume={volume / 100}
                 className={"flex absolute top-0 left-0 z-[-1]"}
                 style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
             />

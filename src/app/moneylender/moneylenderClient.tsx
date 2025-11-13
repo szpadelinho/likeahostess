@@ -15,6 +15,7 @@ const yesteryear = Yesteryear({
 export const MoneylenderClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
+    const [volume, setVolume] = useState<number>(100)
     const [value, setValue] = useState(100000)
 
     const [show, setShow] = useState(false)
@@ -50,7 +51,7 @@ export const MoneylenderClient = () => {
     return(
         <>
             <Image src={"/images/moneylender.png"} alt={"Mine's office"} fill={true} className={"object-cover"}/>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Moneylender"} setContract={setContract} paper={show}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Moneylender"} setContract={setContract} paper={show} volume={volume} setVolume={setVolume}/>
             <div className={"absolute flex justify-center items-center w-screen h-screen"}>
                 <button
                     onClick={() => {setContract(!show)}}
@@ -94,6 +95,7 @@ export const MoneylenderClient = () => {
                 controls={false}
                 autoPlay={true}
                 muted={muted}
+                volume={volume / 100}
                 loop={true}
                 className={"flex absolute top-0 left-0 z-[-1]"}
                 style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}

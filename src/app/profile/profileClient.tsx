@@ -37,6 +37,7 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
 
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
+    const [volume, setVolume] = useState<number>(100)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -77,6 +78,7 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
                 controls={false}
                 autoPlay={true}
                 muted={muted}
+                volume={volume / 100}
                 className={"flex absolute top-0 left-0 z-[-1]"}
                 loop={true}
                 style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
@@ -84,7 +86,7 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
             <Image src={"/images/paper_card.png"} alt={"Paper card being held"} fill={true}
                    className={"absolute inset-0"}/>
             <div className={"h-screen w-screen flex items-center justify-center z-50 text-black"}>
-                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Profile"}/>
+                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Profile"} volume={volume} setVolume={setVolume}/>
                 <div className={"absolute top-35 flex items-center justify-center z-50 flex-row gap-10"}>
                     <Image src={session?.user?.image ?? "/images/dragon.png"} alt={"Profile picture"} height={50} width={50} className={"rounded-full border-2 border-black"}/>
                     <h1 className={`z-50 text-[50px] ${cookie.className}`}>

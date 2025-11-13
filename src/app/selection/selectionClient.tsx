@@ -39,6 +39,7 @@ const SelectionClient = () => {
 
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(true)
+    const [volume, setVolume] = useState<number>(100)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -140,7 +141,7 @@ const SelectionClient = () => {
     return (
         <>
             <LoadingBanner show={loading}/>
-            <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Selection"}/>
+            <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Selection"} volume={volume} setVolume={setVolume}/>
             {!loading && (
                 <div className={`${texturina.className} flex justify-center content-center w-screen h-screen overflow-hidden ${fadeOut ? "opacity-0 transition-all duration-500" : "opacity-100 transition-all"}`}>
                     <div className={"flex content-center items-center justify-center flex-col gap-10"}>
@@ -245,6 +246,7 @@ const SelectionClient = () => {
                 controls={false}
                 autoPlay={true}
                 muted={muted}
+                volume={volume / 100}
                 loop={true}
                 className={"flex absolute top-0 left-0 z-[-1]"}
                 style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}

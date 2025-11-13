@@ -72,7 +72,7 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
                 {!hidden ? <PanelRightClose/> : <PanelRightOpen/>}
             </button>
             <div
-                className={"flex bg-rose-950 hover:bg-red-950 active:bg-pink-700 hover:scale-105 active:scale-95 duration-300 ease-in-out hover:bg-pink justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 transition duration-200 ease-in-out"}
+                className={"flex bg-rose-950 hover:bg-red-950 active:bg-pink-700 hover:scale-105 active:scale-95 hover:bg-pink justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 transition duration-200 ease-in-out"}
                 onClick={() => {
                     navigator.clipboard.writeText(`https://youtube.com/watch/${jams[currentTrack].media}?autoplay=1`)
                         .then(() => console.log("Successfully copied the URL"))
