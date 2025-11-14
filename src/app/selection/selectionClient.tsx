@@ -209,6 +209,7 @@ const SelectionClient = () => {
                                                             headers: { "Content-Type": "application/json" },
                                                             body: JSON.stringify({ clubId: club.id })
                                                         })
+                                                        sessionStorage.setItem("firstEnter", "true")
                                                         router.push("/")
                                                     }, 1000)
                                                 }}

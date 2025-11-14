@@ -16,6 +16,7 @@ import {BuffetType} from "@prisma/client";
 import {ModalContent} from "@/components/modalContent";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
+import InteriorBanner from "@/components/interiorBanner";
 
 type Club = {
     name: string
@@ -109,6 +110,9 @@ const Main = () => {
     const [inquiryType, setInquiryType] = useState<("Service" | "Buffet" | "End" | null)[]>(Array(8).fill(null))
 
     const [barKeys, setBarKeys] = useState<number[]>(Array(8).fill(0))
+
+    const [showInteriorBanner, setShowInteriorBanner] = useState<boolean>(false)
+    const [animateInteriorBanner, setAnimateInteriorBanner] = useState<boolean>(false)
 
     const SERVICE_TYPES = [
         "ashtray",
@@ -235,6 +239,23 @@ const Main = () => {
             })
     }, [])
 
+    useEffect(() => {
+        //const isFromAuth = sessionStorage.getItem("firstEnter")
+        const isFromAuth = "true"
+
+        if(isFromAuth == "true"){
+            setTimeout(() => {
+                //sessionStorage.removeItem("firstEnter")
+                setShowInteriorBanner(true)
+                setTimeout(() => setAnimateInteriorBanner(true), 500)
+                setTimeout(() => {
+                    setAnimateInteriorBanner(false)
+                }, 3000)
+                setTimeout(() => setShowInteriorBanner(false), 3500)
+            }, 2500)
+        }
+    }, [])
+
     return (
         <DndProvider backend={HTML5Backend}>
             {inquiryWindow && (
@@ -252,6 +273,9 @@ const Main = () => {
                 </ModalWrapper>
             )}
             <LoadingBanner show={loading}/>
+            {(!loading && showInteriorBanner) && (
+                <InteriorBanner show={animateInteriorBanner} club={club}/>
+            )}
             {selectedActivity && (
                 <ModalWrapper
                     isKaraoke={true}
