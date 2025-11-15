@@ -1,13 +1,5 @@
 import ReactPlayer from 'react-player';
-
-interface Activity {
-    id: string
-    name: string
-    popularityGain: number
-    cost: number
-    media: string
-    performerId: string
-}
+import {Activity} from "@/app/types";
 
 interface Props {
     selectedActivity: Activity | null

@@ -1,22 +1,13 @@
 import Image from "next/image";
 import {Candy} from "lucide-react";
 import {DraggableHostess} from "@/scripts/DNDItems";
+import { Hostess } from "@/app/types";
 
 interface Props {
     onCloseModal: () => void
     hostesses: Hostess[]
     selectedHostess: Hostess | null
     setSelectedHostess: (hostess: Hostess | null) => void
-}
-
-interface Hostess {
-    id: string
-    name: string
-    surname?: string
-    image: string
-    cover: string
-    attractiveness: number
-    bio: string
 }
 
 const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostess}: Props) => {

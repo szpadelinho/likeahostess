@@ -1,10 +1,5 @@
 import Image from "next/image";
-import {Yesteryear} from "next/font/google";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
+import {yesteryear} from "@/app/types";
 
 interface Props {
     bannerVisible: boolean

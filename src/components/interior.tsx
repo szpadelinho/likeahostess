@@ -13,17 +13,7 @@ import {
 } from "lucide-react";
 import LoadingBar from "@/components/loadingBar";
 import {DraggableDoor, DroppableClient, DroppableHostessTableSlot} from "@/scripts/DNDItems";
-
-const SERVICE_TYPES = [
-    "ashtray",
-    "lady_glass",
-    "guest_glass",
-    "towel",
-    "menu",
-    "ice"
-] as const
-
-type ServiceType = typeof SERVICE_TYPES[number]
+import {ServiceType, SERVICE_TYPES, Hostess} from "@/app/types";
 
 interface InteriorProps {
     hostesses: (Hostess | null)[],
@@ -48,16 +38,6 @@ interface InteriorProps {
     ) => void,
     setDinedTables: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
     barKeys: number[]
-}
-
-interface Hostess {
-    id: string
-    name: string
-    surname?: string
-    image: string
-    cover: string
-    attractiveness: number
-    bio: string
 }
 
 const Interior = ({

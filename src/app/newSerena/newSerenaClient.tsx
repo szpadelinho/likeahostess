@@ -4,22 +4,9 @@ import Image from "next/image";
 import React, {useEffect, useState} from "react";
 import {useRouter} from "next/navigation";
 import ReactPlayer from "react-player";
-import {Molle} from "next/font/google";
 import Navbar from "@/components/navbar";
 import {NotebookTabs, Play} from "lucide-react";
-
-const molle = Molle({
-    weight: "400",
-    subsets: ['latin'],
-})
-
-interface Drink{
-    title: string
-    description: string
-    price: number
-    color: string
-    tattoo: string
-}
+import {Drink, molle} from "@/app/types";
 
 const NewSerenaClient = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(true)

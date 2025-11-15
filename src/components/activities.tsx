@@ -1,6 +1,7 @@
 import Image from "next/image";
 import {HandHeart, JapaneseYen, PiggyBank, SkipBack, SkipForward} from "lucide-react";
 import {useState} from "react";
+import {Activity, Club, Performer} from "@/app/types";
 
 interface Props {
     onCloseModal: () => void
@@ -13,36 +14,6 @@ interface Props {
     isJamPlaying: boolean
     setIsJamPlaying: (isJamPlaying: boolean) => void;
     setJamToggle: (jamToggle: boolean) => void;
-}
-
-type Club = {
-    name: string,
-    host: {
-        name: string,
-        surname: string,
-        image: string
-    },
-    money: number,
-    popularity: number
-    logo: string
-}
-
-interface Performer {
-    id: string
-    name: string
-    surname?: string
-    image: string
-    cover: string
-    bio: string
-}
-
-interface Activity {
-    id: string
-    name: string
-    popularityGain: number
-    cost: number
-    media: string
-    performerId: string
 }
 
 const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPerformer, activities, setSelectedActivity, club, isJamPlaying, setIsJamPlaying, setJamToggle}: Props) => {

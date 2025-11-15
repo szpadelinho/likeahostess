@@ -1,16 +1,7 @@
 import {PanelBottomClose, PanelBottomOpen} from "lucide-react";
 import {useState} from "react";
 import {DroppableHostessSlot} from "@/scripts/DNDItems";
-
-interface Hostess {
-    id: string
-    name: string
-    surname?: string
-    image: string
-    cover: string
-    attractiveness: number
-    bio: string
-}
+import { Hostess } from "@/app/types";
 
 interface Props {
     hostesses: (Hostess | null)[],
@@ -36,7 +27,7 @@ const HostessPanel = ({
 
     return (
         <div
-            className={`${visibilityIndexSetter} ${hidden && "translate-y-35"} duration-500 ease-in-out bg-pink-700 text-center items-center justify-center flex flex-row text-[20px] rounded-[25] text-white font-[600] absolute bottom-5 left-1/2 -translate-x-[50%]`}>
+            className={`${visibilityIndexSetter} ${hidden && "translate-y-35"} duration-500 ease-in-out bg-pink-700 text-center items-center justify-center flex flex-row text-[20px] rounded-[25] text-pink-200 font-[600] absolute bottom-5 left-1/2 -translate-x-[50%]`} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
             <div className={"flex justify-center items-center m-2 gap-5"}>
                 {hostesses?.map((_, index) => (
                     <DroppableHostessSlot
@@ -51,7 +42,7 @@ const HostessPanel = ({
                     />
                 ))}
                 <button
-                    className={`absolute ${hidden ? "-translate-y-18" : "translate-y-16"} flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] transform active:scale-110`}
+                    className={`absolute ${hidden ? "-translate-y-18" : "translate-y-16"} flex justify-center items-center bg-pink-900 hover:bg-pink-950 text-pink-200 hover:text-pink-400 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] transform active:scale-110`}
                     onClick={() => setHidden(!hidden)}>
                     {hidden ? <PanelBottomOpen size={20}/> : <PanelBottomClose size={20}/>}
                 </button>

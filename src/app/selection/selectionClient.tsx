@@ -7,27 +7,10 @@ import LoadingBanner from "@/components/loadingBanner";
 import ReactPlayer from "react-player";
 import clsx from "clsx";
 import Navbar from "@/components/navbar";
-import {Texturina} from "next/font/google";
-
-const texturina = Texturina({
-    weight: "400",
-    subsets: ['latin'],
-})
-
-type Club = {
-    id: string;
-    name: string
-    description: string
-    cost: number
-    exterior: string
-    logo: string
-    host: {
-        image: string
-    }
-}
+import {ClubSelection, texturina} from "@/app/types";
 
 const SelectionClient = () => {
-    const [clubs, setClubs] = useState<Club[]>([])
+    const [clubs, setClubs] = useState<ClubSelection[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
 
     const [fadeOut, setFadeOut] = useState(false)

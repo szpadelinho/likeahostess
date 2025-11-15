@@ -1,12 +1,7 @@
 import Image from "next/image";
 import {signOut} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import {Yesteryear} from "next/font/google";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
+import {yesteryear} from "@/app/types";
 
 interface ModalContentProps {
     onCloseModal: () => void,

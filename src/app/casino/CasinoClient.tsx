@@ -4,27 +4,10 @@ import ReactPlayer from "react-player";
 import React, {useEffect, useState} from "react";
 import {JapaneseYen} from "lucide-react";
 import {useRouter} from "next/navigation";
-import {Yesteryear} from "next/font/google";
 import Image from "next/image";
 import CasinoGame from "@/app/casino/CasinoGame";
 import Navbar from "@/components/navbar";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
-
-type Club = {
-    name: string
-    host: {
-        name: string
-        surname: string
-        image: string
-    },
-    money: number
-    popularity: number
-    logo: string
-}
+import {Club, yesteryear} from "../types";
 
 const CasinoClient = () => {
     const router = useRouter()

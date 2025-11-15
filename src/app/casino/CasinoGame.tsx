@@ -6,23 +6,12 @@ import RouletteBoard from "@/app/casino/RouletteBoard";
 import Roulette from "@/app/casino/Roulette";
 import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
 import {Pachinko} from "@/app/casino/Pachinko";
+import {Club} from "@/app/types";
 
 const yesteryear = Yesteryear({
     weight: "400",
     subsets: ['latin'],
 })
-
-type Club = {
-    name: string
-    host: {
-        name: string
-        surname: string
-        image: string
-    },
-    money: number
-    popularity: number
-    logo: string
-}
 
 interface CasinoGameProps {
     game: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,

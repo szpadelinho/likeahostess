@@ -1,4 +1,4 @@
-import {ConciergeBell, LampDesk, LogOut, University, Volume, Volume1, Volume2, VolumeOff, VolumeX} from "lucide-react";
+import {ConciergeBell, LampDesk, LogOut, University, Volume, Volume1, Volume2, VolumeX} from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {signOut} from "next-auth/react";
@@ -102,7 +102,7 @@ const Navbar = ({
                         {volume > 66 && <Volume2/>}
                     </button>
                     <div
-                        className={`absolute ${getPageStyle(page)} p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120 pt-2 flex justify-center items-center h-5 -bottom-6 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none z-50`}
+                        className={`absolute ${getPageStyle(page)} hover:opacity-100 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120 pt-2 flex justify-center items-center h-5 -bottom-6 opacity-0 group-hover:opacity-50 group-hover:pointer-events-auto pointer-events-none z-50`}
                         style={page === "LoveInHeart" ? {
                             borderWidth: "8px",
                             borderStyle: "solid",

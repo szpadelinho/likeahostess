@@ -1,22 +1,5 @@
 import Image from "next/image";
-import {Fascinate_Inline} from "next/font/google";
-
-const fascinateInline = Fascinate_Inline({
-    weight: "400",
-    subsets: ['latin'],
-})
-
-type Club = {
-    name: string
-    host: {
-        name: string
-        surname: string
-        image: string
-    },
-    money: number
-    popularity: number
-    logo: string
-}
+import {Club, fascinateInline} from "@/app/types";
 
 interface Props {
     show: boolean,

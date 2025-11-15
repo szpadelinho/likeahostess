@@ -5,18 +5,9 @@ import {DatabaseBackup, Trash2} from "lucide-react";
 import {useRouter} from "next/navigation";
 import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
-import {Cookie} from "next/font/google";
 import {Session} from "next-auth";
-import type {Prisma} from "@prisma/client";
 import Navbar from "@/components/navbar";
-
-type FavClub = Prisma.UserClubGetPayload<{
-    include: {
-        club: {
-            include: { host: true }
-        }
-    }
-}>
+import {cookie, FavClub} from "@/app/types";
 
 interface ProfileClientProps {
     session?: Session | null,
@@ -26,11 +17,6 @@ interface ProfileClientProps {
     } | undefined,
     favClub: FavClub,
 }
-
-const cookie = Cookie({
-    weight: "400",
-    subsets: ['latin'],
-})
 
 const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
     const router = useRouter();

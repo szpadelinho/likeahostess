@@ -5,15 +5,13 @@ import {useEffect} from "react";
 export const BlockRightClick = () => {
     useEffect(() => {
         const handleContextMenu = (e: MouseEvent) => {
-            e.preventDefault();
-        };
+            e.preventDefault()
+        }
 
-        document.addEventListener("contextmenu", handleContextMenu);
+        document.addEventListener("contextmenu", handleContextMenu)
 
         return () => {
-            document.removeEventListener("contextmenu", handleContextMenu);
-        };
-    }, []);
-
-    return <></>
+            document.removeEventListener("contextmenu", handleContextMenu)
+        }
+    }, [])
 }

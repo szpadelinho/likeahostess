@@ -12,66 +12,11 @@ import LoadingBanner from "@/components/loadingBanner";
 import VideoWindow from "@/components/videoWindow";
 import JamPlayer from "@/components/jamPlayer";
 import {Inquiry} from "@/components/inquiry";
-import {BuffetType} from "@prisma/client";
 import {ModalContent} from "@/components/modalContent";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import InteriorBanner from "@/components/interiorBanner";
-
-type Club = {
-    name: string
-    host: {
-        name: string
-        surname: string
-        image: string
-    },
-    money: number
-    popularity: number
-    logo: string
-}
-
-interface Hostess {
-    id: string
-    name: string
-    surname?: string
-    image: string
-    cover: string
-    attractiveness: number
-    bio: string
-}
-
-interface Performer {
-    id: string
-    name: string
-    surname?: string
-    image: string
-    cover: string
-    bio: string
-}
-
-interface Activity {
-    id: string
-    name: string
-    popularityGain: number
-    cost: number
-    media: string
-    performerId: string
-}
-
-interface Jam {
-    id: string
-    title: string
-    media: string
-}
-
-interface Buffet{
-    id: string
-    name: string
-    price: number
-    description: string
-    type: BuffetType
-    icon: string
-}
+import {Club, Activity, Jam, Performer, Hostess, Buffet, ServiceType} from "@/app/types";
 
 const Main = () => {
     const [club, setClub] = useState<Club | null>(null)
@@ -113,17 +58,6 @@ const Main = () => {
 
     const [showInteriorBanner, setShowInteriorBanner] = useState<boolean>(false)
     const [animateInteriorBanner, setAnimateInteriorBanner] = useState<boolean>(false)
-
-    const SERVICE_TYPES = [
-        "ashtray",
-        "lady_glass",
-        "guest_glass",
-        "towel",
-        "menu",
-        "ice"
-    ] as const
-
-    type ServiceType = typeof SERVICE_TYPES[number]
 
     const [serviceType, setServiceType] = useState<(ServiceType | null)[]>(Array(8).fill(null))
 
@@ -240,12 +174,11 @@ const Main = () => {
     }, [])
 
     useEffect(() => {
-        //const isFromAuth = sessionStorage.getItem("firstEnter")
-        const isFromAuth = "true"
+        const isFromAuth = sessionStorage.getItem("firstEnter")
 
         if(isFromAuth == "true"){
             setTimeout(() => {
-                //sessionStorage.removeItem("firstEnter")
+                sessionStorage.removeItem("firstEnter")
                 setShowInteriorBanner(true)
                 setTimeout(() => setAnimateInteriorBanner(true), 500)
                 setTimeout(() => {

@@ -1,3 +1,4 @@
+import { Jam } from "@/app/types";
 import {
     Play,
     Pause,
@@ -10,12 +11,6 @@ import {
 } from "lucide-react"
 import {useState} from "react";
 import ReactPlayer from "react-player";
-
-interface Jam {
-    id: string
-    title: string
-    media: string
-}
 
 interface Props {
     jams: Jam[]

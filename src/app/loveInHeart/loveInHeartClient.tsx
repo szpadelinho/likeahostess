@@ -4,27 +4,15 @@ import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
-import {Emilys_Candy} from "next/font/google";
 import Navbar from "@/components/navbar";
 import {flowerLotus, flowerRose, flowerTulip, flowerStem} from "@lucide/lab";
 import {createLucideIcon} from "lucide-react";
+import {emilysCandy, HostessMassage} from "../types";
 
 const FlowerLotus = createLucideIcon("FlowerLotus", flowerLotus)
 const FlowerRose = createLucideIcon("FlowerRose", flowerRose)
 const FlowerTulip = createLucideIcon("FlowerTulip", flowerTulip)
 const FlowerStem = createLucideIcon("FlowerStem", flowerStem)
-
-const emilysCandy = Emilys_Candy({
-    weight: "400",
-    subsets: ['latin'],
-})
-
-interface Hostess {
-    id: string
-    name: string
-    surname?: string
-    image: string
-}
 
 export const LoveInHeartClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
@@ -34,7 +22,7 @@ export const LoveInHeartClient = () => {
     const [massage, setMassage] = useState<"Standard" | "Deluxe" | "VIP" | "Super VIP" | null>(null)
     const [mode, setMode] = useState<"Selection" | "Acceptance">("Selection")
     const [fade, setFade] = useState<boolean>(false)
-    const [hostesses, setHostesses] = useState<Hostess[]>([])
+    const [hostesses, setHostesses] = useState<HostessMassage[]>([])
     const [fatigueLevels, setFatigueLevels] = useState<{ [id: string]: number }>({})
 
     const router = useRouter()
@@ -52,11 +40,11 @@ export const LoveInHeartClient = () => {
             try {
                 const res = await fetch("/api/hostess")
                 const data = await res.json()
-                const sortedData = data.sort((a: Hostess, b: Hostess) => Number(a.id) - Number(b.id))
+                const sortedData = data.sort((a: HostessMassage, b: HostessMassage) => Number(a.id) - Number(b.id))
                 setHostesses(sortedData)
 
                 const fatigueInit: { [id: string]: number } = {}
-                sortedData.forEach((h: Hostess) => fatigueInit[h.id] = 70)
+                sortedData.forEach((h: HostessMassage) => fatigueInit[h.id] = 70)
                 setFatigueLevels(fatigueInit)
             } catch (err) {
                 console.log("Failed to fetch hostesses", err)

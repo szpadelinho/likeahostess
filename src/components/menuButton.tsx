@@ -1,12 +1,7 @@
 import {LucideIcon} from "lucide-react";
-import {Yesteryear} from "next/font/google";
 import Image from "next/image";
 import React from "react";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
+import {yesteryear} from "@/app/types";
 
 interface MenuButton {
     title: string

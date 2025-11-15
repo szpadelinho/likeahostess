@@ -16,13 +16,8 @@ import {
     Trash2, UtensilsCrossed, VenetianMask,
     Volume2
 } from "lucide-react";
-import {Yesteryear} from "next/font/google";
 import clsx from "clsx";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
+import {yesteryear} from "@/app/types";
 
 interface TutorialItemProps {
     label: string,

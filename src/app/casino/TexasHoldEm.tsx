@@ -1,23 +1,9 @@
-import {Yesteryear} from "next/font/google"
 import React, {useState, useEffect, forwardRef, useImperativeHandle} from "react"
 import Image from "next/image"
 import {Coins, JapaneseYen} from "lucide-react"
+import {Club, yesteryear} from "@/app/types";
 
 const Hand: any = require("pokersolver").Hand
-
-const yesteryear = Yesteryear({weight: "400", subsets: ["latin"]})
-
-type Club = {
-    name: string
-    host: {
-        name: string
-        surname: string
-        image: string
-    },
-    money: number
-    popularity: number
-    logo: string
-}
 
 const rankMap: Record<string, string> = {
     ace: "A", two: "2", three: "3", four: "4", five: "5",

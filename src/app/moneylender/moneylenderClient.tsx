@@ -4,13 +4,8 @@ import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
 import Image from "next/image";
 import {useRouter} from "next/navigation";
-import {Yesteryear} from "next/font/google";
 import Navbar from "@/components/navbar";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
+import {yesteryear} from "@/app/types";
 
 export const MoneylenderClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)

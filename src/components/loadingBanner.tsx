@@ -1,13 +1,8 @@
 'use client'
 
 import Image from "next/image";
-import {Yesteryear} from "next/font/google";
 import {useEffect, useState} from "react";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
+import {yesteryear} from "@/app/types";
 
 interface Props {
     show: boolean

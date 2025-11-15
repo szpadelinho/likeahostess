@@ -1,40 +1,9 @@
 import {useDrag, useDrop} from 'react-dnd';
 import {iconConverter} from "@/scripts/iconConverter";
-import {BuffetType} from "@prisma/client";
 import {Dispatch, ReactNode, SetStateAction, useRef, useState} from "react";
 import {BookUser, DoorClosed, DoorOpen, EyeClosed, HeartPlus, Meh, VenetianMask} from "lucide-react";
 import Image from "next/image";
-
-type WindowType =
-    | "Management"
-    | "Activities"
-    | "Profile"
-    | "Casino"
-    | "NewSerena"
-    | "Moneylender"
-    | "Selection"
-    | "LogOff"
-    | "LoveInHeart"
-    | null
-
-interface Buffet {
-    id: string
-    name: string
-    price: number
-    description: string
-    type: BuffetType
-    icon: string
-}
-
-interface Hostess {
-    id: string
-    name: string
-    surname?: string
-    image: string
-    cover: string
-    attractiveness: number
-    bio: string
-}
+import { Hostess, WindowType, Buffet } from "@/app/types";
 
 interface DroppableSlotsProps {
     type: 'beverage' | 'meal'

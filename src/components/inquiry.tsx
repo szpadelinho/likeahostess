@@ -14,44 +14,14 @@ import {
     Beer
 } from "lucide-react";
 import React, {useEffect, useState} from "react";
-import {BuffetType} from "@prisma/client";
 import {towelFolded, cupSaucer} from "@lucide/lab";
 import { DndProvider } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
 import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
+import { Buffet, ServiceType, Hostess } from "@/app/types";
 
 const TowelFolded = createLucideIcon("TowelFolded", towelFolded)
 const CupSaucer = createLucideIcon("CupSaucer", cupSaucer)
-
-const SERVICE_TYPES = [
-    "ashtray",
-    "lady_glass",
-    "guest_glass",
-    "towel",
-    "menu",
-    "ice"
-] as const
-
-interface Hostess {
-    id: string
-    name: string
-    surname?: string
-    image: string
-    cover: string
-    attractiveness: number
-    bio: string
-}
-
-interface Buffet {
-    id: string
-    name: string
-    price: number
-    description: string
-    type: BuffetType
-    icon: string
-}
-
-type ServiceType = typeof SERVICE_TYPES[number]
 
 interface Props {
     buffet: Buffet[],

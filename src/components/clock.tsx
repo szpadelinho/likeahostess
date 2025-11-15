@@ -1,17 +1,7 @@
 import {useEffect, useState} from "react";
-import {Tiny5, Yesteryear} from "next/font/google";
 import {flowerStem} from "@lucide/lab";
 import {createLucideIcon, Leaf, Snowflake, Sun} from "lucide-react";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
-
-const tiny5 = Tiny5({
-    weight: "400",
-    subsets: ['latin'],
-})
+import {tiny5, yesteryear} from "@/app/types";
 
 export const Clock = () => {
     const [analog, setAnalog] = useState(new Date())
@@ -62,7 +52,7 @@ export const Clock = () => {
     const hoursDeg = hours * 30 + minutes * 0.5
 
     return(
-        <div className={`absolute ${type ? "top-5" : "top-7.5"} opacity-50 hover:opacity-100 active:scale-110 hover:scale-105 left-1/2 -translate-x-[50%] flex items-center justify-center text-pink-200 transition duration-200 ease-in-out`} onClick={() => setType(!type)}>
+        <div className={`absolute ${type ? "top-5" : "top-7.5"} opacity-50 hover:opacity-100 active:scale-110 hover:scale-105 left-1/2 -translate-x-[50%] flex items-center justify-center text-pink-200 transition duration-200 ease-in-out`} onClick={() => setType(!type)} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
             {type ? (
                     <div
                         className={"relative h-20 w-20 rounded-[15] flex bg-pink-950 gap-5 active:bg-pink-900 hover:bg-pink-800 justify-center items-center flex-row border-pink-200 border-2 p-2 transition duration-200 ease-in-out"}>

@@ -1,30 +1,13 @@
 import {
     HeartHandshake,
     JapaneseYen,
-    Menu,
+    Menu, Package,
 } from "lucide-react";
 import Image from "next/image";
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
 import {MenuModal} from "@/components/menuModal";
-import {Yesteryear} from "next/font/google";
 import {Clock} from "@/components/clock";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
-
-type Club = {
-    name: string
-    host: {
-        name: string
-        surname: string
-        image: string
-    },
-    money: number
-    popularity: number
-    logo: string
-}
+import {Club, yesteryear} from "@/app/types";
 
 interface Hud {
     club: Club
@@ -140,6 +123,7 @@ const Hud = ({club, windowType, setWindow, setFade}: Hud) => {
                 <Clock/>
                 <button
                     className={`absolute top-5 left-5 h-[50px] w-[50px] bg-pink-950 border-pink-200 border-2 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[12] text-pink-200 duration-300 ease-in-out hover:bg-pink-200 hover:text-pink-950 hover:scale-110 active:scale-120`}
+                    style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}
                     onClick={() => {
                         setClosing(true)
                         setTimeout(() => {
@@ -152,7 +136,7 @@ const Hud = ({club, windowType, setWindow, setFade}: Hud) => {
                 <div
                     className={`text-center items-center flex flex-row text-[20px] rounded-[20] text-pink-200 absolute bottom-5 right-15`}>
                     <div className={"flex flex-col text-center justify-center"}>
-                        <h1 className={`absolute left-60 -top-35 text-nowrap rotate-90 text-[50px] opacity-50 ${yesteryear.className}`}>
+                        <h1 className={`absolute left-78 -top-35 text-nowrap rotate-90 text-[50px] opacity-50 ${yesteryear.className}`}>
                             {club.host.name} {club.host.surname}
                         </h1>
                         <div className={`flex flex-row justify-center items-center gap-3 opacity-50 relative ${yesteryear.className}`}>
@@ -170,6 +154,10 @@ const Hud = ({club, windowType, setWindow, setFade}: Hud) => {
                             <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10"}>
                                 <HeartHandshake/>
                                 <p>{club.popularity}</p>
+                            </h2>
+                            <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10"}>
+                                <Package/>
+                                <p>70%</p>
                             </h2>
                         </div>
                     </div>

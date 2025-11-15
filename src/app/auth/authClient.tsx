@@ -5,17 +5,12 @@ import {Github, Key, LibraryBig, Undo2} from "lucide-react";
 import Link from "next/link";
 import React, {useEffect, useState} from "react";
 import {redirect, useRouter} from "next/navigation"
-import {Yesteryear} from "next/font/google"
 import IntroBanner from "@/components/introBanner";
 import Image from "next/image";
 import ReactPlayer from "react-player";
 import Navbar from "@/components/navbar";
 import LoadingBanner from "@/components/loadingBanner";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
+import {yesteryear} from "@/app/types";
 
 export default function AuthClient() {
     const {data: session} = useSession()

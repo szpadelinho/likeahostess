@@ -1,13 +1,8 @@
-import {Yesteryear} from "next/font/google";
 import {Diamond, JapaneseYen, Minus, Plus} from "lucide-react";
 import {useState} from "react";
 import clsx from "clsx";
 import Image from "next/image";
-
-const yesteryear = Yesteryear({
-    weight: "400",
-    subsets: ['latin'],
-})
+import {yesteryear} from "@/app/types";
 
 interface RouletteBoardProps {
     bets: { type: string; amount: number }[],
