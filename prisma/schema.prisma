@@ -78,19 +78,8 @@ model UserClub {
   popularity      Int               @default(100)
   club            Club              @relation(fields: [clubId], references: [id], onDelete: Cascade)
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userClubHostess UserClubHostess[]
 
   @@unique([userId, clubId], name: "userId_clubId")
-}
-
-model UserClubHostess {
-  id         String   @id @default(cuid())
-  userClubId String
-  hostessId  String
-  hostess    Hostess  @relation(fields: [hostessId], references: [id], onDelete: Cascade)
-  userClub   UserClub @relation(fields: [userClubId], references: [id], onDelete: Cascade)
-
-  @@unique([userClubId, hostessId])
 }
 
 model Host {
@@ -110,7 +99,6 @@ model Hostess {
   cover           String
   bio             String            @default("Nothing is actually known about this hostess...")
   fatigue         Int     @default(0)
-  userClubHostess UserClubHostess[]
 }
 
 model Activity {

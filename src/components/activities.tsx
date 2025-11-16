@@ -1,7 +1,7 @@
 import Image from "next/image";
 import {HandHeart, JapaneseYen, PiggyBank, SkipBack, SkipForward} from "lucide-react";
 import {useState} from "react";
-import {Activity, Club, Performer} from "@/app/types";
+import {Activity, Club, coustard, Performer} from "@/app/types";
 
 interface Props {
     onCloseModal: () => void
@@ -46,7 +46,7 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
             <div
                 className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(150,50,100,1)_100%)] w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                <div className={"w-full grid m-5 grid-cols-[repeat(3,auto)] gap-5"}>
+                <div className={"w-full grid m-5 grid-cols-3 gap-5"}>
                     {performers.map((performer) => {
                         const isSelected = selectedPerformer?.id === performer.id
 
@@ -74,10 +74,10 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                 <div
                     className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(140,0,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(110,0,60,1)_100%)] w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600] mr-35 transition-all duration-200 ease-in-out"}
                     style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                    <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
+                    <div className={"text-center content-center items-center justify-center flex flex-row gap-25"}>
                         <div className={"flex justify-center items-center flex-col"}>
-                            <div className={"flex justify-center items-center flex-col max-w-150 gap-5"}>
-                                <h1 className={"text-[50px]"}>{selectedPerformer.name} {selectedPerformer.surname}</h1>
+                            <div className={"flex justify-center items-center flex-col max-w-175 gap-5"}>
+                                <h1 className={`text-[75px] ${coustard.className}`}>{selectedPerformer.name} {selectedPerformer.surname}</h1>
                                 <h1>{selectedPerformer.bio}</h1>
                             </div>
                             <div className={"flex justify-center items-center flex-row absolute -bottom-15 left-190 text-[15px] bg-pink-900 p-5 rounded-[20] gap-5"} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>

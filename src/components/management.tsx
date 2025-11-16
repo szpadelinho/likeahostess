@@ -1,7 +1,7 @@
 import Image from "next/image";
-import {Candy} from "lucide-react";
+import {Battery, BatteryLow, BatteryMedium, BatteryWarning, BatteryFull, Candy} from "lucide-react";
 import {DraggableHostess} from "@/scripts/DNDItems";
-import { Hostess } from "@/app/types";
+import {Hostess, marckScript} from "@/app/types";
 
 interface Props {
     onCloseModal: () => void
@@ -17,7 +17,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
             <div
                 className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(150,50,100,1)_100%)] w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                <div className={"w-full grid m-5 grid-cols-[repeat(3,auto)] gap-5"}>
+                <div className={"w-full grid m-5 grid-cols-3 gap-5"}>
                     {hostesses.map((hostess) => (
                         <DraggableHostess key={hostess.id} hostess={hostess} source={"management"} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}/>
                     ))}
@@ -27,12 +27,22 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                 <div
                     className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(140,0,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(110,0,60,1)_100%)] w-300 h-160 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600] mr-35 transition-all duration-200 ease-in-out"}
                     style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                    <div className={"text-center content-center items-center justify-center flex flex-row gap-50"}>
-                        <div className={"flex justify-center items-center flex-col max-w-150 gap-5"}>
-                            <h1 className={"text-[50px]"}>{selectedHostess.name} {selectedHostess.surname}</h1>
-                            <h1 className={"flex flex-row justify-center items-center gap-2"}>
-                                <Candy/>{selectedHostess.attractiveness}/5
-                            </h1>
+                    <div className={"text-center content-center items-center justify-center flex flex-row gap-25"}>
+                        <div className={"flex justify-center items-center flex-col max-w-175 gap-5"}>
+                            <h1 className={`text-[100px] ${marckScript.className}`}>{selectedHostess.name} {selectedHostess.surname}</h1>
+                            <div className={"flex justify-center items-center flex-row gap-10"}>
+                                <h1 className={"flex flex-row justify-center items-center gap-2"}>
+                                    <Candy/>{selectedHostess.attractiveness}/5
+                                </h1>
+                                <h1 className={"flex flex-row justify-center items-center gap-2"}>
+                                    {selectedHostess.fatigue < 10 ? <Battery/>
+                                        : selectedHostess.fatigue >= 11 && selectedHostess.fatigue < 25 ? <BatteryWarning/>
+                                            : selectedHostess.fatigue >= 26 && selectedHostess.fatigue < 50 ? <BatteryLow/>
+                                                : selectedHostess.fatigue >= 50 && selectedHostess.fatigue < 75 ? <BatteryMedium/>
+                                                    : selectedHostess.fatigue && <BatteryFull/>}
+                                    {selectedHostess.fatigue}/100
+                                </h1>
+                            </div>
                             <h1>{selectedHostess.bio}</h1>
                         </div>
                         <div className={"flex justify-center items-center"}>

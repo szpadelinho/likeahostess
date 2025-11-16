@@ -24,9 +24,7 @@ const LoadingBanner = ({show}: Props) => {
             visible ? "opacity-100" : "opacity-0"}`}>
             <Image src={"/images/Loading3.png"} alt={"Loading banner object-content"} fill={true}
                    className={"flex absolute z-49 justify-center items-center"}/>
-            <div className={"flex h-screen w-screen absolute z-50 justify-center items-center"}>
-                <h1 className={`text-[75px] ${yesteryear.className}`}>Loading...</h1>
-            </div>
+            <h1 className={`text-[150px] z-50 ${yesteryear.className}`}>Loading...</h1>
         </div>
     )
 }

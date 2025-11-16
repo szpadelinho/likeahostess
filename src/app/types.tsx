@@ -1,5 +1,13 @@
 import {BuffetType, type Prisma} from "@prisma/client";
-import {Cookie, Emilys_Candy, Fascinate_Inline, Molle, Texturina, Tiny5, Yesteryear} from "next/font/google";
+import {
+    Cookie, Coustard,
+    Emilys_Candy,
+    Fascinate_Inline, Marck_Script,
+    Molle,
+    Texturina,
+    Tiny5,
+    Yesteryear
+} from "next/font/google";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -41,6 +49,7 @@ export interface Hostess {
     cover: string
     attractiveness: number
     bio: string
+    fatigue: number
 }
 
 export interface HostessMassage {
@@ -147,6 +156,16 @@ export const molle = Molle({
 })
 
 export const emilysCandy = Emilys_Candy({
+    weight: "400",
+    subsets: ['latin'],
+})
+
+export const marckScript = Marck_Script({
+    weight: "400",
+    subsets: ['latin'],
+})
+
+export const coustard = Coustard({
     weight: "400",
     subsets: ['latin'],
 })
