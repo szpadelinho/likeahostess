@@ -1,4 +1,5 @@
 import {
+    Badge,
     HeartHandshake,
     JapaneseYen,
     Menu, Package,
@@ -135,8 +136,8 @@ const Hud = ({club, windowType, setWindow, setFade}: Hud) => {
                 </button>
                 <div
                     className={`text-center items-center flex flex-row text-[20px] rounded-[20] text-pink-200 absolute bottom-5 right-15`}>
-                    <div className={"flex flex-col text-center justify-center"}>
-                        <h1 className={`absolute left-78 -top-35 text-nowrap rotate-90 text-[50px] opacity-50 ${yesteryear.className}`}>
+                    <div className={"flex flex-col text-center justify-center gap-3"}>
+                        <h1 className={`absolute left-78 -top-25 text-nowrap rotate-90 text-[50px] opacity-50 ${yesteryear.className}`}>
                             {club.host.name} {club.host.surname}
                         </h1>
                         <div className={`flex flex-row justify-center items-center gap-3 opacity-50 relative ${yesteryear.className}`}>
@@ -159,6 +160,23 @@ const Hud = ({club, windowType, setWindow, setFade}: Hud) => {
                                 <Package/>
                                 <p>70%</p>
                             </h2>
+                        </div>
+                        <div className={`flex flex-row justify-center group ${yesteryear.className}`}>
+                            <div className={`flex flex-row justify-center items-center gap-10 opacity-50`}>
+                                <p className={"ease-in-out duration-300 text-pink-200 hover:text-pink-100"}>Some rank title</p>
+                            </div>
+                            <div className={"relative flex justify-center items-center opacity-0 pointer-events-none group-hover:opacity-100 ease-in-out duration-300"}>
+                                <div
+                                    className={`absolute left-1/2 -translate-x-[75%] h-full transition-all duration-100 ease-linear bg-pink-600 rounded-xl text-[15px] justify-center items-center flex`}
+                                    style={{width: 200}}
+                                >
+                                    1000/1000
+                                </div>
+                                <div className={"absolute -right-20 flex flex-col justify-center items-center text-center opacity-50"}>
+                                    <p className={"text-[15px]"}>1</p>
+                                    <Badge size={40} className={"absolute"}/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div className={"rounded-[20] flex justify-center w-40"}>
