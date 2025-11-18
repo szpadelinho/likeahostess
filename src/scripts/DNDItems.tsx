@@ -267,6 +267,15 @@ export const DroppableHostessSlot = ({
         { isOver: boolean; canDrop: boolean }
     >({
         accept: "hostess",
+        canDrop: (item) => {
+            return (
+                item != null &&
+                typeof item === "object" &&
+                "hostess" in item &&
+                item.hostess != null &&
+                typeof item.hostess.id !== "undefined"
+            )
+        },
         drop: (item) => {
             const updated = [...hostesses]
             const target = hostesses[index]
@@ -323,14 +332,12 @@ export const DroppableHostessSlot = ({
             {hostess ? (
                 <div className="flex justify-center items-center flex-col">
                     <DraggableHostess hostess={hostess} source="panel"/>
-                    <div className="absolute bottom-[-20]">
-                        <button
-                            onClick={handleRemove}
-                            className="flex justify-center items-center bg-pink-900 hover:bg-pink-700 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] transform active:scale-110"
-                        >
-                            <EyeClosed size={20}/>
-                        </button>
-                    </div>
+                    <button
+                        onClick={handleRemove}
+                        className="absolute bottom-[-20] flex justify-center items-center bg-pink-900 hover:bg-pink-950 transition duration-200 ease-in-out rounded-[7] h-[25px] w-[50px] transform active:scale-110"
+                    >
+                        <EyeClosed size={20}/>
+                    </button>
                 </div>
             ) : (
                 <button
@@ -365,6 +372,15 @@ export const DroppableHostessTableSlot = ({
     const [{isOver, canDrop}, drop] = useDrop<
         { hostess: Hostess, source: "panel" | "management" }, void, { isOver: boolean, canDrop: boolean }>({
         accept: "hostess",
+        canDrop: (item) => {
+            return (
+                item != null &&
+                typeof item === "object" &&
+                "hostess" in item &&
+                item.hostess != null &&
+                typeof item.hostess.id !== "undefined"
+            )
+        },
         drop: (item) => {
             if (!hostessAtTable) {
                 const updated = [...hostesses]
