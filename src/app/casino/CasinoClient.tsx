@@ -8,11 +8,13 @@ import Image from "next/image";
 import CasinoGame from "@/app/casino/CasinoGame";
 import Navbar from "@/components/navbar";
 import {Club, yesteryear} from "../types";
+import LoadingBanner from "@/components/loadingBanner";
 
 const CasinoClient = () => {
     const router = useRouter()
 
     const [volume, setVolume] = useState<number>(100)
+    const [loading, setLoading] = useState<boolean>(true)
 
     const [club, setClub] = useState<Club>()
     useEffect(() => {
@@ -39,6 +41,7 @@ const CasinoClient = () => {
                     popularity: userData.popularity,
                 }
                 setClub(mergedClub)
+                setLoading(false)
             })
     }, [])
 
@@ -85,6 +88,7 @@ const CasinoClient = () => {
     ]
     return(
         <div className={"flex flex-col h-screen w-screen items-center justify-center text-white z-50 gap-5"}>
+            <LoadingBanner show={loading}/>
             <Image src={`/images/${background}.png`} alt={"Casino interior"} fill={true} className={"absolute inset-0 z-[-1]"}/>
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} page={"Casino"} volume={volume} setVolume={setVolume}/>
             <ReactPlayer

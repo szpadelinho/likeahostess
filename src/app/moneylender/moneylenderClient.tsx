@@ -6,17 +6,22 @@ import Image from "next/image";
 import {useRouter} from "next/navigation";
 import Navbar from "@/components/navbar";
 import {yesteryear} from "@/app/types";
+import LoadingBanner from "@/components/loadingBanner";
 
 export const MoneylenderClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
     const [volume, setVolume] = useState<number>(100)
     const [value, setValue] = useState(100000)
-
+    const [loading, setLoading] = useState<boolean>(true)
     const [show, setShow] = useState(false)
     const [fade, setFade] = useState(false)
 
     const router = useRouter()
+
+    useEffect(() => {
+        setLoading(false)
+    }, [])
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -45,6 +50,7 @@ export const MoneylenderClient = () => {
 
     return(
         <>
+            <LoadingBanner show={loading}/>
             <Image src={"/images/moneylender.png"} alt={"Mine's office"} fill={true} className={"object-cover"}/>
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Moneylender"} setContract={setContract} paper={show} volume={volume} setVolume={setVolume}/>
             <div className={"absolute flex justify-center items-center w-screen h-screen"}>

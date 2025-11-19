@@ -7,12 +7,13 @@ import ReactPlayer from "react-player";
 import Navbar from "@/components/navbar";
 import {NotebookTabs, Play} from "lucide-react";
 import {Drink, molle} from "@/app/types";
+import LoadingBanner from "@/components/loadingBanner";
 
 const NewSerenaClient = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(true)
     const [muted, setMuted] = useState(false)
     const [volume, setVolume] = useState<number>(100)
-
+    const [loading, setLoading] = useState<boolean>(true)
     const [mode, setMode] = useState<"Selection" | "Drinks" | "Supplies">("Selection")
     const [fade, setFade] = useState<boolean>(false)
     const [fadeDetail, setFadeDetail] = useState<boolean>(false)
@@ -80,6 +81,10 @@ const NewSerenaClient = () => {
     }
 
     useEffect(() => {
+        setLoading(false)
+    }, [])
+
+    useEffect(() => {
         const timer = setTimeout(() => {
             setMuted(false)
         }, 1)
@@ -114,6 +119,7 @@ const NewSerenaClient = () => {
     const router = useRouter()
     return(
         <>
+            <LoadingBanner show={loading}/>
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"} mode={mode} switchMode={switchMode} volume={volume} setVolume={setVolume}/>
             <Image src={mode === "Selection" ? "/images/new_serena.png" : mode === "Drinks" ? "/images/new_serena_2.png" : "/images/new_serena_3.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
             <div className={`${molle.className} ${fade ? "opacity-0" : "opacity-100"} duration-300 ease-in-out w-screen h-screen flex flex-col items-center justify-center text-[30px]`}>

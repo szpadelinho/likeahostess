@@ -8,6 +8,7 @@ import Navbar from "@/components/navbar";
 import {flowerLotus, flowerRose, flowerTulip, flowerStem} from "@lucide/lab";
 import {createLucideIcon} from "lucide-react";
 import {emilysCandy, HostessMassage} from "../types";
+import LoadingBanner from "@/components/loadingBanner";
 
 const FlowerLotus = createLucideIcon("FlowerLotus", flowerLotus)
 const FlowerRose = createLucideIcon("FlowerRose", flowerRose)
@@ -18,7 +19,7 @@ export const LoveInHeartClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
     const [volume, setVolume] = useState<number>(100)
-
+    const [loading, setLoading] = useState<boolean>(true)
     const [massage, setMassage] = useState<"Standard" | "Deluxe" | "VIP" | "Super VIP" | null>(null)
     const [mode, setMode] = useState<"Selection" | "Acceptance">("Selection")
     const [fade, setFade] = useState<boolean>(false)
@@ -42,10 +43,10 @@ export const LoveInHeartClient = () => {
                 const data = await res.json()
                 const sortedData = data.sort((a: HostessMassage, b: HostessMassage) => Number(a.id) - Number(b.id))
                 setHostesses(sortedData)
-
                 const fatigueInit: { [id: string]: number } = {}
                 sortedData.forEach((h: HostessMassage) => fatigueInit[h.id] = 70)
                 setFatigueLevels(fatigueInit)
+                setLoading(false)
             } catch (err) {
                 console.log("Failed to fetch hostesses", err)
             }
@@ -96,6 +97,7 @@ export const LoveInHeartClient = () => {
 
     return(
         <>
+            <LoadingBanner show={loading}/>
             <Image src={"/images/love_in_heart.png"} alt={"Love In Heart massage parlor"} fill={true} className={"object-cover"}/>
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"LoveInHeart"} mode={mode} changeMode={changeMode} volume={volume} setVolume={setVolume}/>
             <div
