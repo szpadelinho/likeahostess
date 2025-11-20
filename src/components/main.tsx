@@ -61,6 +61,8 @@ const Main = () => {
 
     const [serviceType, setServiceType] = useState<(ServiceType | null)[]>(Array(8).fill(null))
 
+    const [quit, setQuit] = useState<boolean>(false)
+
     useEffect(() => {
         const fetchHostesses = async () => {
             try {
@@ -205,7 +207,8 @@ const Main = () => {
                     )}
                 </ModalWrapper>
             )}
-            <LoadingBanner show={loading}/>
+            <div className={`z-[1000] fixed h-screen w-screen bg-black duration-1000 ease-in-out pointer-events-none ${quit ? "opacity-100" : "opacity-0"}`}/>
+            <LoadingBanner show={loading && !quit}/>
             {(!loading && showInteriorBanner) && (
                 <InteriorBanner show={animateInteriorBanner} club={club}/>
             )}
@@ -248,7 +251,7 @@ const Main = () => {
                             onClose={() => {
                             setWindow(null)
                         }}>
-                            {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} window={window} setLoading={setLoading}/>}
+                            {({onCloseModal}) => <ModalContent onCloseModal={onCloseModal} window={window} setLoading={setLoading} setQuit={setQuit}/>}
                         </ModalWrapper>
                     )}
                     {window === "Management" && (

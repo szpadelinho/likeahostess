@@ -6,13 +6,15 @@ import {yesteryear} from "@/app/types";
 interface ModalContentProps {
     onCloseModal: () => void,
     window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null,
-    setLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void
+    setLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void,
+    setQuit: (value: (((prevState: boolean) => boolean) | boolean)) => void
 }
 
 export const ModalContent = ({
                                  onCloseModal,
                                  window,
-                                 setLoading
+                                 setLoading,
+                                 setQuit
                              }: ModalContentProps) => {
     const router = useRouter()
 
@@ -26,7 +28,12 @@ export const ModalContent = ({
             buttons: [
                 {
                     label: "Log me off",
-                    onClick: () => signOut({redirectTo: "/auth"}),
+                    onClick: () => {
+                        setQuit(true)
+                        setTimeout(() => {
+                            signOut({redirectTo: "/auth"})
+                        }, 1000)
+                    },
                     style: "cursor-zoom-in",
                 },
                 {
@@ -183,9 +190,10 @@ export const ModalContent = ({
                             <button
                                 key={i}
                                 onClick={async () => {
-                                    if (button.onClick === onCloseModal) {
+                                    if (button.onClick === onCloseModal || (button.label === "Log me off")) {
                                         button.onClick()
-                                    } else {
+                                    }
+                                    else {
                                         setLoading(true)
                                         setTimeout(() => button.onClick(), 1000)
                                     }
