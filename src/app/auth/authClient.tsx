@@ -147,10 +147,10 @@ export default function AuthClient() {
                                 </div>
                             </>
                         ) : (
-                            <div className={"absolute w-screen h-screen flex content-center items-center justify-center mask-center z-2"}>
+                            <div className={"absolute w-screen h-screen flex content-center items-center justify-center mask-center z-2 perspective-dramatic"}>
                                 <div
-                                    className="relative flex items-center justify-center flex-col h-80 w-130 mb-44">
-                                    <div className={"absolute top-4 left-0 flex items-center justify-center flex-row gap-2"}>
+                                    className="relative flex items-center justify-center flex-col h-80 w-160 mb-22 shadow-lg shadow-gray-500 -rotate-x-[.4deg] bg-[url(/images/paper_texture.png)]">
+                                    <div className={"absolute top-4 left-4 flex items-center justify-center flex-row gap-2"}>
                                         <button
                                             className={`border-black border-2 rounded-sm w-[105px] gap-2 opacity-70 p-2 flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 flex items-center justify-center ${yesteryear.className}`}
                                             onClick={() => changeMode("Main")}>
@@ -166,6 +166,7 @@ export default function AuthClient() {
                                             <Github/>
                                             <p>Github</p>
                                         </button>
+                                        <div className={"flex h-[2px] w-60 rounded-[2] bg-black/70"}/>
                                         <button
                                             className={"border-black border-2 rounded-sm w-[150px] opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
                                             onClick={() => logIn("discord")}>

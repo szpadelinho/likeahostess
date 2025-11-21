@@ -12,7 +12,7 @@ const IntroBanner = ({bannerVisible}: Props) => {
             <div
                 className={`z-[999] flex h-screen w-screen items-center justify-center absolute transition duration-1000 transform ease-in-out ${bannerVisible ? "opacity-100" : "opacity-0"}`}>
                 <div className={"flex flex-col h-175 justify-between items-center"}>
-                    <Image src={"/images/gamepad.png"} alt={"Gamepad"} height={424} width={676} className={"flex"}/>
+                    <Image src={"/images/gamepad.png"} alt={"Gamepad"} height={424} width={700} className={"flex"}/>
                     <h1 className={`${yesteryear.className} text-[80px] text-white`}>Real hosts use a gamepad</h1>
                 </div>
             </div>

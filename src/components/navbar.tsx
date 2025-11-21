@@ -18,7 +18,8 @@ interface NavbarProps {
     setContract?: (show: boolean) => void,
     paper?: boolean,
     volume: number,
-    setVolume: (value: (((prevState: number) => number) | number)) => void
+    setVolume: (value: (((prevState: number) => number) | number)) => void,
+    setQuit?: (value: (((prevState: boolean) => boolean) | boolean)) => void
 }
 
 const Navbar = ({
@@ -35,7 +36,8 @@ const Navbar = ({
                     setContract,
                     paper,
                     volume,
-                    setVolume
+                    setVolume,
+                    setQuit
                 }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
 
@@ -79,7 +81,7 @@ const Navbar = ({
         <>
             <LoadingBanner show={loading}/>
             <div className={"absolute top-10 right-10 flex items-center justify-center flex-row gap-5 z-[100]"}>
-                <div className={"flex justify-center items-center group relative"}>
+                <div className={`${page === "Auth" && "right-5"} flex justify-center items-center group relative`}>
                     <button
                         className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                         style={page === "LoveInHeart" ? {
@@ -112,7 +114,7 @@ const Navbar = ({
                             bottom: -35
                         } : {}}
                     >
-                        <input className={"accent-pink-600"} type={"range"} value={volume} min={0} max={100}
+                        <input className={"accent-white"} type={"range"} value={volume} min={0} max={100}
                                onChange={(e) => {
                                    setVolume(parseInt(e.target.value))
                                }}/>
@@ -120,7 +122,12 @@ const Navbar = ({
                 </div>
                 {page !== "Auth" && (
                     <button onClick={() => {
-                        setLoading(true)
+                        if(page !== "Tutorial"){
+                            setLoading(true)
+                        }
+                        else{
+                            setQuit?.(true)
+                        }
                         {
                             page !== "Selection" ? (
                                 router?.push("/")
