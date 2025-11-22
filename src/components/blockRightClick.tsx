@@ -14,4 +14,6 @@ export const BlockRightClick = () => {
             document.removeEventListener("contextmenu", handleContextMenu)
         }
     }, [])
+
+    return null
 }

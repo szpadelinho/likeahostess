@@ -10,7 +10,7 @@ export async function generateMetadata(): Promise<Metadata> {
         return { title: "Unauthorized" };
     }
 
-    const cookieHeader = cookies().toString();
+    const cookieHeader = (await cookies()).toString();
 
     const res = await fetch(`${process.env.NEXTAUTH_URL}/api/current-club`, {
         cache: "no-store",

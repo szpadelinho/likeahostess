@@ -1,5 +1,6 @@
 import "./globals.css";
 import {BlockRightClick} from "@/components/blockRightClick";
+import {SessionProvider} from "next-auth/react";
 
 
 export default function RootLayout({
@@ -10,8 +11,10 @@ export default function RootLayout({
     return (
         <html lang="en">
             <body>
-                <BlockRightClick/>
-                {children}
+                <SessionProvider>
+                    <BlockRightClick/>
+                    {children}
+                </SessionProvider>
             </body>
         </html>
     );

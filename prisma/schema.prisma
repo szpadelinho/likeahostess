@@ -20,6 +20,8 @@ model User {
   accounts      Account[]
   sessions      Session[]
   userClub      UserClub[]
+
+  UserHostess UserHostess[]
 }
 
 model Account {
@@ -62,7 +64,6 @@ model Club {
   id          String     @id @default(cuid())
   name        String
   description String
-  cost        Float      @default(100000)
   hostId      String
   exterior    String
   logo        String     @default("/images/dragon2.png")
@@ -98,7 +99,20 @@ model Hostess {
   attractiveness  Int               @default(1)
   cover           String
   bio             String            @default("Nothing is actually known about this hostess...")
-  fatigue         Int     @default(0)
+
+  UserHostess UserHostess[]
+}
+
+model UserHostess{
+  id              String            @id @default(cuid())
+  userId String
+  hostessId String
+  fatigue Int @default(0)
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  hostess    Hostess  @relation(fields: [hostessId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, hostessId])
 }
 
 model Activity {

@@ -17,8 +17,11 @@ import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import InteriorBanner from "@/components/interiorBanner";
 import {Club, Activity, Jam, Performer, Hostess, Buffet, ServiceType} from "@/app/types";
+import {useSession} from "next-auth/react";
 
 const Main = () => {
+    const {data: session, status} = useSession()
+
     const [club, setClub] = useState<Club | null>(null)
 
     const [window, setWindow] = useState<"Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null>(null)
@@ -77,6 +80,28 @@ const Main = () => {
 
         fetchHostesses()
     }, [])
+
+    useEffect(() => {
+        if(status !== "authenticated" || hostessesManagement.length === 0) return
+
+        const fetchFatigue = async () => {
+            try{
+                await fetch("/api/user-hostess", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({userId: session?.user?.id})
+                })
+                console.log("Fatigue fetch succedeed")
+            }
+            catch(err){
+                console.error("Failed to fetch fatigue", err)
+            }
+        }
+
+        fetchFatigue()
+    }, [status, session?.user?.id, hostessesManagement])
 
     useEffect(() => {
         const fetchActivities = async () => {
