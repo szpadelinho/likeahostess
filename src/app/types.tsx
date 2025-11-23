@@ -57,6 +57,7 @@ export interface HostessMassage {
     name: string
     surname?: string
     image: string
+    fatigue: number
 }
 
 export interface Performer {

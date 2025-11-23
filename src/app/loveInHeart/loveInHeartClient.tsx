@@ -9,6 +9,7 @@ import {flowerLotus, flowerRose, flowerTulip, flowerStem} from "@lucide/lab";
 import {createLucideIcon} from "lucide-react";
 import {emilysCandy, HostessMassage} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
+import {useSession} from "next-auth/react";
 
 const FlowerLotus = createLucideIcon("FlowerLotus", flowerLotus)
 const FlowerRose = createLucideIcon("FlowerRose", flowerRose)
@@ -24,7 +25,8 @@ export const LoveInHeartClient = () => {
     const [mode, setMode] = useState<"Selection" | "Acceptance">("Selection")
     const [fade, setFade] = useState<boolean>(false)
     const [hostesses, setHostesses] = useState<HostessMassage[]>([])
-    const [fatigueLevels, setFatigueLevels] = useState<{ [id: string]: number }>({})
+
+    const { data: session } = useSession()
 
     const router = useRouter()
 
@@ -39,21 +41,30 @@ export const LoveInHeartClient = () => {
     useEffect(() => {
         const fetchHostesses = async () => {
             try {
-                const res = await fetch("/api/hostess")
-                const data = await res.json()
-                const sortedData = data.sort((a: HostessMassage, b: HostessMassage) => Number(a.id) - Number(b.id))
-                setHostesses(sortedData)
-                const fatigueInit: { [id: string]: number } = {}
-                sortedData.forEach((h: HostessMassage) => fatigueInit[h.id] = 70)
-                setFatigueLevels(fatigueInit)
+                const resHostess = await fetch("/api/hostess")
+                const hostessData: HostessMassage[] = await resHostess.json()
+                const sortedHostess = hostessData.sort((a: HostessMassage, b: HostessMassage) => Number(a.id) - Number(b.id))
+
+                const resFatigue = await fetch(`/api/user-hostess?userId=${session?.user?.id}`)
+                const fatigueData: { hostessId: string, fatigue: number }[] = await resFatigue.json()
+
+                const dataMap: Record<string, number> = {}
+                fatigueData.forEach(f => dataMap[f.hostessId] = f.fatigue)
+
+                const merged = sortedHostess.map(h => ({
+                    ...h,
+                    fatigue: dataMap[h.id]
+                }))
+                setHostesses(merged)
+
                 setLoading(false)
             } catch (err) {
-                console.log("Failed to fetch hostesses", err)
+                console.log(err)
             }
         }
-
-        fetchHostesses()
-    }, [])
+        if (session?.user?.id)
+            fetchHostesses()
+    }, [session?.user?.id])
 
     const changeMode = () => {
         setFade(true)
@@ -152,7 +163,7 @@ export const LoveInHeartClient = () => {
                             className={"relative bg-[url(/images/wood_texture.png)] flex items-center justify-center flex-col z-1 p-2 rounded-[5] duration-300 ease-in-out"}>
                             <div className={"grid grid-cols-5 gap-10"}>
                                 {hostesses.map((hostess) => {
-                                    const current = fatigueLevels[hostess.id] ?? 100
+                                    const current = hostess.fatigue
                                     const reduction = massage
                                         ? {
                                             Standard: 25,

@@ -90,7 +90,7 @@ export default function AuthClient() {
         }, 500)
     }
 
-    const logIn = (provider: "github" | "discord") => {
+    const logIn = (provider: "github" | "discord" | "spotify") => {
         setTransition("Parent")
         setTimeout(() => {
             signIn(provider, {redirectTo: "/selection"})
