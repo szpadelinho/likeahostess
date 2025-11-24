@@ -1,8 +1,20 @@
-import {ConciergeBell, LampDesk, LogOut, University, Volume, Volume1, Volume2, VolumeX} from "lucide-react";
+import {
+    ConciergeBell,
+    Key,
+    LampDesk,
+    LogOut,
+    PenTool,
+    University,
+    Volume,
+    Volume1,
+    Volume2,
+    VolumeX
+} from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {signOut} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
+import {useRouter} from "next/navigation";
 
 interface NavbarProps {
     router?: AppRouterInstance,
@@ -11,7 +23,7 @@ interface NavbarProps {
     game?: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,
     setGame?: (value: (((prevState: ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) | "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => void,
     setBackground?: (value: (((prevState: string) => string) | string)) => void,
-    page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection" | "Tutorial" | "LoveInHeart",
+    page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection" | "Tutorial" | "LoveInHeart" | "Register" | "Login",
     mode?: "Selection" | "Acceptance" | "Drinks" | "Supplies",
     changeMode?: () => void,
     switchMode?: (mode: ("Selection" | "Drinks" | "Supplies")) => void,
@@ -24,8 +36,6 @@ interface NavbarProps {
 
 const Navbar = ({
                     router,
-                    isPlaying,
-                    setIsPlaying,
                     game,
                     setGame,
                     setBackground,
@@ -40,7 +50,6 @@ const Navbar = ({
                     setQuit
                 }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
-
     const [showLamp, setShowLamp] = useState(false)
     const [fadeLamp, setFadeLamp] = useState(false)
 
@@ -72,6 +81,10 @@ const Navbar = ({
                 return "rounded-[10] border-white text-white hover:text-black hover:bg-white"
             case "LoveInHeart":
                 return "bg-[url(/images/wood_texture.png)] text-rose-100 hover:text-rose-500"
+            case "Register":
+                return "border-1 border-white text-white rounded-[5] hover:bg-white hover:text-black"
+            case "Login":
+                return "border-1 border-white text-white rounded-[5] hover:bg-white hover:text-black"
             default:
                 return ""
         }
@@ -190,6 +203,19 @@ const Navbar = ({
                         className={`${getPageStyle(page)} ${fadeLamp ? "opacity-0 scale-0" : "opacity-100 scale-100"} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                 >
                     <LampDesk size={25}/>
+                </button>
+            )}
+            {(page === "Register" || page === "Login") && (
+                <button onClick={() => {
+                    page === "Register" ? (
+                        router?.push("/login")
+                    ) : (
+                        router?.push("/register")
+                    )
+                }}
+                        className={`${getPageStyle(page)} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                >
+                    {page === "Register" ? <Key size={25}/> : <PenTool size={25}/>}
                 </button>
             )}
         </>

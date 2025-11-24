@@ -1,6 +1,6 @@
 import {BuffetType, type Prisma} from "@prisma/client";
 import {
-    Cookie, Coustard,
+    Cookie, Courier_Prime, Coustard,
     Emilys_Candy,
     Fascinate_Inline, Marck_Script,
     Molle,
@@ -167,6 +167,11 @@ export const marckScript = Marck_Script({
 })
 
 export const coustard = Coustard({
+    weight: "400",
+    subsets: ['latin'],
+})
+
+export const courierPrime = Courier_Prime({
     weight: "400",
     subsets: ['latin'],
 })
