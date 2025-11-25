@@ -90,11 +90,16 @@ export default function AuthClient() {
         }, 500)
     }
 
-    const logIn = (provider: "github" | "discord" | "spotify") => {
+    const logIn = (provider: "github" | "discord" | "spotify" | "login" | "register") => {
         setTransition("Parent")
         setTimeout(() => {
-            signIn(provider, {redirectTo: "/selection"})
-                .then(() => {})
+            if(provider === "login" || "register"){
+                router.push(`/${provider}`)
+            }
+            else{
+                signIn(provider, {redirectTo: "/selection"})
+                    .then(() => {})
+            }
         }, 500)
     }
 
@@ -181,12 +186,12 @@ export default function AuthClient() {
                                         <div className={"flex flex-row gap-[5px]"}>
                                             <button
                                                 className={"border-black text-center border-2 rounded-sm w-[70px] opacity-70 p-2 flex justify-center items-center flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
-                                                onClick={() => router.push("/login")}>
+                                                onClick={() => logIn("login")}>
                                                 <p>Login</p>
                                             </button>
                                             <button
                                                 className={"border-black text-center border-2 rounded-sm w-[70px] opacity-70 p-2 flex justify-center items-center flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
-                                                onClick={() => router.push("/register")}>
+                                                onClick={() => logIn("register")}>
                                                 <p>Register</p>
                                             </button>
                                         </div>

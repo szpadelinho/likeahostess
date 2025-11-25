@@ -14,7 +14,6 @@ import React, {useEffect, useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {signOut} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
-import {useRouter} from "next/navigation";
 
 interface NavbarProps {
     router?: AppRouterInstance,
@@ -135,11 +134,11 @@ const Navbar = ({
                 </div>
                 {page !== "Auth" && (
                     <button onClick={() => {
-                        if(page !== "Tutorial"){
-                            setLoading(true)
+                        if(page === "Tutorial" || page === "Register" || page === "Login"){
+                            setQuit?.(true)
                         }
                         else{
-                            setQuit?.(true)
+                            setLoading(true)
                         }
                         {
                             page !== "Selection" ? (
@@ -207,11 +206,14 @@ const Navbar = ({
             )}
             {(page === "Register" || page === "Login") && (
                 <button onClick={() => {
-                    page === "Register" ? (
-                        router?.push("/login")
-                    ) : (
-                        router?.push("/register")
-                    )
+                    setLoading?.(true)
+                    setTimeout(() => {
+                        page === "Register" ? (
+                            router?.push("/login")
+                        ) : (
+                            router?.push("/register")
+                        )
+                    }, 500)
                 }}
                         className={`${getPageStyle(page)} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                 >
