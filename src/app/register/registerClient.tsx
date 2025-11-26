@@ -56,10 +56,10 @@ const RegisterClient = () => {
             <Image src={"/images/paper_card.png"} alt={"A person holding paper card"} fill={true} className={"object-cover"}/>
             <div className={`${courierPrime.className} absolute inset-0 flex flex-col justify-center items-center text-center gap-5 opacity-70`}>
                 <h1 className={"text-[20px] absolute top-30"}>Register for the club management program</h1>
-                <input className={"border-1 border-black p-1 w-75 ease-in-out duration-300 hover:bg-black/20"} type={"email"} placeholder={"Your Email address"} onChange={(e) => setEmail(e.target.value)}/>
-                <input className={"border-1 border-black p-1 w-75 ease-in-out duration-300 hover:bg-black/20"} type={"text"} placeholder={"Your username"} onChange={(e) => setUsername(e.target.value)}/>
-                <input className={"border-1 border-black p-1 w-75 ease-in-out duration-300 hover:bg-black/20"} type={"password"} placeholder={"Your sincerely secret password"} onChange={(e) => setPassword(e.target.value)}/>
-                <button onClick={handleRegister} className={"border-1 border-black p-1 ease-in-out duration-300 hover:bg-black/20"}>
+                <input className={"border-1 border-black p-1 w-75 ease-in-out duration-300 hover:opacity-100 opacity-70"} type={"email"} placeholder={"Your Email address"} onChange={(e) => setEmail(e.target.value)}/>
+                <input className={"border-1 border-black p-1 w-75 ease-in-out duration-300 hover:opacity-100 opacity-70"} type={"text"} placeholder={"Your username"} onChange={(e) => setUsername(e.target.value)}/>
+                <input className={"border-1 border-black p-1 w-75 ease-in-out duration-300 hover:opacity-100 opacity-70"} type={"password"} placeholder={"Your sincerely secret password"} onChange={(e) => setPassword(e.target.value)}/>
+                <button onClick={handleRegister} className={"border-1 border-black p-1 ease-in-out duration-300 hover:opacity-100 opacity-70"}>
                     Register
                 </button>
                 {error && <p className={"absolute bottom-50 text-[25px] text-red-500"}>{error}</p>}

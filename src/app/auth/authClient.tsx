@@ -93,7 +93,7 @@ export default function AuthClient() {
     const logIn = (provider: "github" | "discord" | "spotify" | "login" | "register") => {
         setTransition("Parent")
         setTimeout(() => {
-            if(provider === "login" || "register"){
+            if(provider === "login" || provider === "register"){
                 router.push(`/${provider}`)
             }
             else{
