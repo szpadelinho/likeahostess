@@ -78,6 +78,7 @@ model UserClub {
   clubId          String
   money           Int               @default(100000)
   popularity      Int               @default(100)
+  supplies Int @default(100)
   club            Club              @relation(fields: [clubId], references: [id], onDelete: Cascade)
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 

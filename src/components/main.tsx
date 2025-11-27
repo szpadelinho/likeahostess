@@ -195,6 +195,7 @@ const Main = () => {
                     logo: clubData.logo,
                     money: userData.money,
                     popularity: userData.popularity,
+                    supplies: userData.supplies
                 }
                 setClub(mergedClub)
             })

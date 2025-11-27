@@ -158,7 +158,7 @@ const Hud = ({club, windowType, setWindow, setFade}: Hud) => {
                             </h2>
                             <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10"}>
                                 <Package/>
-                                <p>70%</p>
+                                <p>{club.supplies}%</p>
                             </h2>
                         </div>
                         <div className={`flex flex-row justify-center group ${yesteryear.className}`}>

@@ -26,6 +26,7 @@ export type Club = {
     },
     money: number
     popularity: number
+    supplies: number
     logo: string
 }
 
