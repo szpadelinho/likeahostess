@@ -89,6 +89,7 @@ export async function GET(req: Request) {
 
     return NextResponse.json({
         money: club.money,
-        popularity: club.popularity
+        popularity: club.popularity,
+        supplies: club.supplies
     })
 }

@@ -7,6 +7,7 @@ import {courierPrime} from "@/app/types";
 import Navbar from "@/components/navbar";
 import ReactPlayer from "react-player";
 import LoadingBanner from "@/components/loadingBanner";
+import {useVolume} from "@/app/context/volumeContext";
 
 const RegisterClient = () => {
     const router = useRouter()
@@ -16,7 +17,7 @@ const RegisterClient = () => {
     const [error, setError] = useState("")
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
-    const [volume, setVolume] = useState<number>(100)
+    const {volume, setVolume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
     const [quit, setQuit] = useState<boolean>(false)
 
@@ -52,7 +53,7 @@ const RegisterClient = () => {
         <>
             <div className={`z-[1000] fixed h-screen w-screen bg-black duration-500 ease-in-out pointer-events-none ${quit ? "opacity-100" : "opacity-0"}`}/>
             <LoadingBanner show={loading}/>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Register"} volume={volume} setVolume={setVolume} setQuit={setQuit}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Register"} setQuit={setQuit}/>
             <Image src={"/images/paper_card.png"} alt={"A person holding paper card"} fill={true} className={"object-cover"}/>
             <div className={`${courierPrime.className} absolute inset-0 flex flex-col justify-center items-center text-center gap-5 opacity-70`}>
                 <h1 className={"text-[20px] absolute top-30"}>Register for the club management program</h1>

@@ -9,11 +9,12 @@ import CasinoGame from "@/app/casino/CasinoGame";
 import Navbar from "@/components/navbar";
 import {Club, yesteryear} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
+import {useVolume} from "@/app/context/volumeContext";
 
 const CasinoClient = () => {
     const router = useRouter()
 
-    const [volume, setVolume] = useState<number>(100)
+    const {volume, setVolume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
 
     const [club, setClub] = useState<Club>()
@@ -39,6 +40,7 @@ const CasinoClient = () => {
                     logo: clubData.logo,
                     money: userData.money,
                     popularity: userData.popularity,
+                    supplies: userData.supplies
                 }
                 setClub(mergedClub)
                 setLoading(false)
@@ -90,7 +92,7 @@ const CasinoClient = () => {
         <div className={"flex flex-col h-screen w-screen items-center justify-center text-white z-50 gap-5"}>
             <LoadingBanner show={loading}/>
             <Image src={`/images/${background}.png`} alt={"Casino interior"} fill={true} className={"absolute inset-0 z-[-1]"}/>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} page={"Casino"} volume={volume} setVolume={setVolume}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} page={"Casino"}/>
             <ReactPlayer
                 src={"https://youtube.com/embed/8mqRTo74g-0?autoplay=1"}
                 playing={isPlaying}

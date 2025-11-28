@@ -14,6 +14,7 @@ import React, {useEffect, useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
 import {signOut} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
+import {useVolume} from "@/app/context/volumeContext";
 
 interface NavbarProps {
     router?: AppRouterInstance,
@@ -28,8 +29,6 @@ interface NavbarProps {
     switchMode?: (mode: ("Selection" | "Drinks" | "Supplies")) => void,
     setContract?: (show: boolean) => void,
     paper?: boolean,
-    volume: number,
-    setVolume: (value: (((prevState: number) => number) | number)) => void,
     setQuit?: (value: (((prevState: boolean) => boolean) | boolean)) => void
 }
 
@@ -44,13 +43,12 @@ const Navbar = ({
                     switchMode,
                     setContract,
                     paper,
-                    volume,
-                    setVolume,
                     setQuit
                 }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
     const [showLamp, setShowLamp] = useState(false)
     const [fadeLamp, setFadeLamp] = useState(false)
+    const {volume, setVolume} = useVolume()
 
     useEffect(() => {
         if (paper) {
@@ -134,7 +132,7 @@ const Navbar = ({
                 </div>
                 {page !== "Auth" && (
                     <button onClick={() => {
-                        if(page === "Tutorial" || page === "Register" || page === "Login"){
+                        if(page === "Tutorial" || page === "Register" || page === "Login" || page === "Selection"){
                             setQuit?.(true)
                         }
                         else{

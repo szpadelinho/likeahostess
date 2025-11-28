@@ -11,21 +11,17 @@ import ReactPlayer from "react-player";
 import Navbar from "@/components/navbar";
 import LoadingBanner from "@/components/loadingBanner";
 import {yesteryear} from "@/app/types";
+import {useVolume} from "@/app/context/volumeContext";
 
 export default function AuthClient() {
     const {data: session} = useSession()
     const router = useRouter()
-
     const [showBanner, setShowBanner] = useState(true)
     const [bannerVisible, setBannerVisible] = useState(true)
-
     const [isPlaying, setIsPlaying] = useState(false)
     const [muted, setMuted] = useState(false)
-
-    const [volume, setVolume] = useState<number>(100)
-
+    const {volume, setVolume} = useVolume()
     const [source, setSource] = useState<string | null>(null)
-
     const [mode, setMode] = useState<"Main" | "Authentication">("Main")
     const [transition, setTransition] = useState<"Child" | "Parent" | null>(null)
 
@@ -108,7 +104,7 @@ export default function AuthClient() {
             <>
                 <div className={`duration-500 ease-in-out transition ${transition === "Parent" ? "opacity-0" : "opacity-100"}`}>
                     <Image src={"/icon.png"} alt={"App icon"} height={200} width={100} className={"absolute top-5 left-5 z-2"}/>
-                    <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Auth"} volume={volume} setVolume={setVolume}/>
+                    <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Auth"}/>
                     {showBanner && (
                         <IntroBanner bannerVisible={bannerVisible} />
                     )}

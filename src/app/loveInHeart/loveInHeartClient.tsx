@@ -10,6 +10,7 @@ import {createLucideIcon} from "lucide-react";
 import {emilysCandy, HostessMassage} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useSession} from "next-auth/react";
+import {useVolume} from "@/app/context/volumeContext";
 
 const FlowerLotus = createLucideIcon("FlowerLotus", flowerLotus)
 const FlowerRose = createLucideIcon("FlowerRose", flowerRose)
@@ -19,7 +20,7 @@ const FlowerStem = createLucideIcon("FlowerStem", flowerStem)
 export const LoveInHeartClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
-    const [volume, setVolume] = useState<number>(100)
+    const {volume, setVolume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
     const [massage, setMassage] = useState<"Standard" | "Deluxe" | "VIP" | "Super VIP" | null>(null)
     const [mode, setMode] = useState<"Selection" | "Acceptance">("Selection")
@@ -110,7 +111,7 @@ export const LoveInHeartClient = () => {
         <>
             <LoadingBanner show={loading}/>
             <Image src={"/images/love_in_heart.png"} alt={"Love In Heart massage parlor"} fill={true} className={"object-cover"}/>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"LoveInHeart"} mode={mode} changeMode={changeMode} volume={volume} setVolume={setVolume}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"LoveInHeart"} mode={mode} changeMode={changeMode}/>
             <div
                 className={`duration-500 ease-in-out transition-all transform ${fade ? "opacity-0" : "opacity-100"}`}>
                 <Image src={"/images/saejima_massage.png"} alt={"Taiga Saejima"} height={300} width={250} className={"absolute left-20 bottom-10"}/>

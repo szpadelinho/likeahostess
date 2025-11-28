@@ -7,11 +7,12 @@ import TutorialItem from "@/app/tutorial/TutorialItem";
 import Navbar from "@/components/navbar";
 import {useRouter} from "next/navigation";
 import LoadingBanner from "@/components/loadingBanner";
+import {useVolume} from "@/app/context/volumeContext";
 
 const Tutorial = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
-    const [volume, setVolume] = useState<number>(100)
+    const {volume, setVolume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
     const [quit, setQuit] = useState<boolean>(false)
     const [active, setActive] = useState<string | null>(null)
@@ -52,7 +53,7 @@ const Tutorial = () => {
             <LoadingBanner show={loading}/>
             <div className={"flex h-screen w-screen justify-center items-center text-[30px]"}>
                 <Image src={"/images/books.png"} alt={"Bookshelf"} fill={true} className="z-1"/>
-                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Tutorial"} volume={volume} setVolume={setVolume} setQuit={setQuit}/>
+                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Tutorial"} setQuit={setQuit}/>
                 <div className={"relative grid grid-cols-9 items-center w-300 gap-4 p-2 whitespace-nowrap z-50 mix-blend-mode-burn mt-3"}>
                     <ReactPlayer
                         src={"https://youtube.com/embed/OR9Xls1S0s4?autoplay=1"}

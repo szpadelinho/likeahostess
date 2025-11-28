@@ -8,21 +8,19 @@ import ReactPlayer from "react-player";
 import clsx from "clsx";
 import Navbar from "@/components/navbar";
 import {ClubSelection, texturina} from "@/app/types";
+import {useVolume} from "@/app/context/volumeContext";
 
 const SelectionClient = () => {
+    const router = useRouter()
     const [clubs, setClubs] = useState<ClubSelection[]>([])
     const [currentIndex, setCurrentIndex] = useState(0)
-
     const [fadeOut, setFadeOut] = useState(false)
     const [direction, setDirection] = useState<"prev" | null | "next">(null)
-
     const [loading, setLoading] = useState(true)
-
-    const router = useRouter();
-
+    const [quit, setQuit] = useState<boolean>(false)
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(true)
-    const [volume, setVolume] = useState<number>(100)
+    const {volume, setVolume} = useVolume()
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -124,7 +122,8 @@ const SelectionClient = () => {
     return (
         <>
             <LoadingBanner show={loading}/>
-            <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Selection"} volume={volume} setVolume={setVolume}/>
+            <div className={`z-[1000] fixed h-screen w-screen bg-black duration-500 ease-in-out pointer-events-none ${quit ? "opacity-100" : "opacity-0"}`}/>
+            <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Selection"} setQuit={setQuit}/>
             {!loading && (
                 <>
                     <Image src={"/images/selection.png"} alt={"Selection background"} fill={true} className={"object-cover -z-1 opacity-10"}/>

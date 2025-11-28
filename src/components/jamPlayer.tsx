@@ -11,6 +11,7 @@ import {
 } from "lucide-react"
 import {useState} from "react";
 import ReactPlayer from "react-player";
+import {useVolume} from "@/app/context/volumeContext";
 
 interface Props {
     jams: Jam[]
@@ -26,7 +27,7 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
     const [currentTime, setCurrentTime] = useState(0)
     const [duration, setDuration] = useState(0)
 
-    const [volume, setVolume] = useState<number>(100)
+    const {volume, setVolume} = useVolume()
     const [loop, setLoop] = useState<boolean>(false)
     const [shuffle, setShuffle] = useState<boolean>(false)
 

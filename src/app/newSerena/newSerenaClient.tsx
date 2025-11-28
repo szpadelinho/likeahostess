@@ -8,18 +8,19 @@ import Navbar from "@/components/navbar";
 import {NotebookTabs, Play} from "lucide-react";
 import {Drink, molle} from "@/app/types";
 import LoadingBanner from "@/components/loadingBanner";
+import {useVolume} from "@/app/context/volumeContext";
 
 const NewSerenaClient = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(true)
     const [muted, setMuted] = useState(false)
-    const [volume, setVolume] = useState<number>(100)
+    const {volume, setVolume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
     const [mode, setMode] = useState<"Selection" | "Drinks" | "Supplies">("Selection")
     const [fade, setFade] = useState<boolean>(false)
     const [fadeDetail, setFadeDetail] = useState<boolean>(false)
     const [drink, setDrink] = useState<Drink | null>(null)
 
-    const supplies = 70
+    const [supplies, setSupplies] = useState<number | null>(null)
 
     const drinks: Drink[] = [
         {title: "Essence of the Dragon of Dojima", description: "Apparently really pricey. However, only one person managed to demolish this booze.", price: 1000000, color: "red", tattoo: "oryu"},
@@ -81,6 +82,18 @@ const NewSerenaClient = () => {
     }
 
     useEffect(() => {
+        const fetchSupplies = async () => {
+            const stored = localStorage.getItem("selectedClub")
+            if(!stored) return console.error("LocalStorage error: cannot find current club")
+            const clubData = JSON.parse(stored)
+
+            const res = await fetch(`/api/user-club?clubId=${clubData.id}`)
+            if(!res.ok) return console.error("Cannot fetch userClub")
+
+            const data = await res.json()
+            setSupplies(data.supplies)
+        }
+        fetchSupplies()
         setLoading(false)
     }, [])
 
@@ -120,8 +133,8 @@ const NewSerenaClient = () => {
     return(
         <>
             <LoadingBanner show={loading}/>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"} mode={mode} switchMode={switchMode} volume={volume} setVolume={setVolume}/>
-            <Image src={mode === "Selection" ? "/images/new_serena.png" : mode === "Drinks" ? "/images/new_serena_2.png" : "/images/new_serena_3.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"} mode={mode} switchMode={switchMode}/>
+            <Image src={mode === "Selection" ? "/images/new_serena.png" : mode === "Drinks" ? "/images/new_serena_2.png" : supplies && supplies >= 100 ? "/images/new_serena.png" : "/images/new_serena_3.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
             <div className={`${molle.className} ${fade ? "opacity-0" : "opacity-100"} duration-300 ease-in-out w-screen h-screen flex flex-col items-center justify-center text-[30px]`}>
                 {mode === "Selection" && (
                     <div className={"absolute bottom-5 gap-10 flex flex-col items-center justify-center bg-black/60 border-2 border-white rounded-[5] p-15"}>
@@ -153,41 +166,58 @@ const NewSerenaClient = () => {
                             </div>
                         ))}
                         {drink && (
-                            <div className={`absolute ${fadeDetail ? "opacity-0" : "opacity-100"} duration-300 ease-in-out z-10 border-2 border-white gap-10 flex flex-col items-center justify-center h-150 w-300 text-white bg-black/90`}>
-                                <button
-                                    onClick={() => {switchDrink(null)}}
-                                    className={"absolute -left-5 -top-5 flex text-white flex-col items-center justify-center hover:bg-white hover:text-black duration-300 ease-in-out border-2 border-white rounded-[5] p-2 bg-black/90"}>
-                                    <NotebookTabs size={25}/>
-                                </button>
-                                <div className={"flex flex-row gap-5 items-center justify-center text-center m-5"}>
-                                    <div className={"flex flex-col gap-5 items-center justify-center"}>
-                                        <h1 className={"text-[55px] z-1"}>{drink.title}</h1>
-                                        <h2 className={"z-1 text-[30px]"}>{drink.description}</h2>
-                                        <h3 className={"z-1 text-[70px] absolute -right-10 -bottom-15 border-white border-2 rounded-[5] bg-black/90"}>¥{drink.price}</h3>
-                                        <button className={"flex text-white flex-col items-center justify-center hover:bg-white hover:text-black duration-300 ease-in-out border-2 border-white rounded-[5] p-2"}>
-                                            Buy the drink
-                                        </button>
+                            <div className={"absolute inset-0 flex justify-center items-center"} onClick={() => switchDrink(null)}>
+                                <div className={`absolute ${fadeDetail ? "opacity-0" : "opacity-100"} duration-300 ease-in-out z-10 border-2 border-white gap-10 flex flex-col items-center justify-center h-150 w-300 text-white bg-black/90`}>
+                                    <button
+                                        onClick={() => {switchDrink(null)}}
+                                        className={"absolute -left-5 -top-5 flex text-white flex-col items-center justify-center hover:bg-white hover:text-black duration-300 ease-in-out border-2 border-white rounded-[5] p-2 bg-black/90"}>
+                                        <NotebookTabs size={25}/>
+                                    </button>
+                                    <div className={"flex flex-row gap-5 items-center justify-center text-center m-5"}>
+                                        <div className={"flex flex-col gap-5 items-center justify-center"}>
+                                            <h1 className={"text-[55px] z-1"}>{drink.title}</h1>
+                                            <h2 className={"z-1 text-[30px]"}>{drink.description}</h2>
+                                            <h3 className={"z-1 text-[70px] absolute -right-10 -bottom-15 border-white border-2 rounded-[5] bg-black/90"}>¥{drink.price}</h3>
+                                            <button className={"flex text-white flex-col items-center justify-center hover:bg-white hover:text-black duration-300 ease-in-out border-2 border-white rounded-[5] p-2"}>
+                                                Buy the drink
+                                            </button>
+                                        </div>
+                                        <Image src={`/tattoos/${drink.tattoo}.png`} alt={"Tattoo of a respective drink owner"} className={"m-5 opacity-30"} height={250} width={250}/>
                                     </div>
-                                    <Image src={`/tattoos/${drink.tattoo}.png`} alt={"Tattoo of a respective drink owner"} className={"m-5 opacity-30"} height={250} width={250}/>
                                 </div>
                             </div>
                         )}
                     </>
                 )}
-                {mode === "Supplies" && (
+                {mode === "Supplies" && supplies && (
                     <>
-                        <div className={"z-1 text-center right-199 absolute bottom-44"}>
-                            <div className={"flex flex-col justify-center items-center gap-5"}>
-                                <h1 className={"text-[20px]"}>Supply payment</h1>
-                                <h2 className={"text-[12px] max-w-50"}>I am obliged to pay the full price of the product mentioned earlier. I fully understand all the rules and necessities which I must follow. The supplies are automatically my property after signing this contract and paying the price of:</h2>
-                                <h1>¥{(100 - supplies) * 1000}</h1>
-                                <button className={"border-b-2 border-black text-[20px] opacity-50 hover:opacity-100 duration-300 ease-in-out"}>Sign here...</button>
+                        {supplies >= 100 ? (
+                            <div className={"absolute bottom-5 gap-10 flex flex-col items-center justify-center bg-black/60 border-2 border-white rounded-[5] p-15"}>
+                                <h1 className={"text-white text-[50px]"}>Hey, you are already fully supplied!</h1>
+                                <div className={"gap-20 flex flex-row items-center justify-center"}>
+                                    <button
+                                        onClick={() => {switchMode("Selection")}}
+                                        className={"border-white border-2 rounded-[5] w-120 h-15 cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white z-1"}>
+                                        Oh, did not notice that...
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                        <div className={"absolute left-110 bottom-55 text-center rotate-y-[35deg]"}>
-                            <h1 className={"text-[65px]"}>Supplies</h1>
-                            <h2>{100 - supplies}/100</h2>
-                        </div>
+                        ) : (
+                            <>
+                                <div className={"z-1 text-center right-199 absolute bottom-44"}>
+                                    <div className={"flex flex-col justify-center items-center gap-5"}>
+                                        <h1 className={"text-[20px]"}>Supply payment</h1>
+                                        <h2 className={"text-[12px] max-w-50"}>I am obliged to pay the full price of the product mentioned earlier. I fully understand all the rules and necessities which I must follow. The supplies are automatically my property after signing this contract and paying the price of:</h2>
+                                        <h1>¥{(100 - supplies) * 1000}</h1>
+                                        <button className={"border-b-2 border-black text-[20px] opacity-50 hover:opacity-100 duration-300 ease-in-out"}>Sign here...</button>
+                                    </div>
+                                </div>
+                                <div className={"absolute left-110 bottom-55 text-center rotate-y-[35deg]"}>
+                                    <h1 className={"text-[65px]"}>Supplies</h1>
+                                    <h2>{100 - supplies}/100</h2>
+                                </div>
+                            </>
+                        )}
                     </>
                 )}
             </div>
