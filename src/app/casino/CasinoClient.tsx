@@ -7,24 +7,39 @@ import {useRouter} from "next/navigation";
 import Image from "next/image";
 import CasinoGame from "@/app/casino/CasinoGame";
 import Navbar from "@/components/navbar";
-import {Club, yesteryear} from "../types";
+import {Club, StoredClub, yesteryear} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
+import {useSession} from "next-auth/react";
 
 const CasinoClient = () => {
     const router = useRouter()
-
-    const {volume, setVolume} = useVolume()
+    const {data: session} = useSession()
+    const [clubData, setClubData] = useState<StoredClub | null>(null)
+    const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
-
     const [club, setClub] = useState<Club>()
+    const [isPlaying, setIsPlaying] = useState(true)
+    const [muted, setMuted] = useState(true)
+    const [game, setGame] = useState<"Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null>(null)
+    const [background, setBackground] = useState("casino")
+    const [money, setMoney] = useState<number>(0)
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            setMuted(false)
+        }, 1)
+
+        return () => clearTimeout(timer)
+    }, [])
+
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
-        if (!stored) return
+        if (!stored) return console.error("Could not find stored club")
+        const parsedClub: StoredClub = JSON.parse(stored)
+        setClubData(parsedClub)
 
-        const clubData = JSON.parse(stored)
-
-        fetch(`/api/user-club?clubId=${clubData.id}`, {method: "POST"})
+        fetch(`/api/user-club?clubId=${parsedClub.id}`, {method: "POST"})
             .then(async (res) => {
                 const data = await res.text()
                 if (!res.ok) {
@@ -35,31 +50,45 @@ const CasinoClient = () => {
             })
             .then((userData) => {
                 const mergedClub: Club = {
-                    name: clubData.name,
-                    host: clubData.host,
-                    logo: clubData.logo,
+                    name: parsedClub.name,
+                    host: parsedClub.host,
+                    logo: parsedClub.logo,
                     money: userData.money,
                     popularity: userData.popularity,
                     supplies: userData.supplies
                 }
                 setClub(mergedClub)
+                setMoney(mergedClub.money)
                 setLoading(false)
             })
     }, [])
 
-    const [isPlaying, setIsPlaying] = useState(true)
-    const [muted, setMuted] = useState(true)
+    const updateMoney = async (change: number) => {
+        if (!session?.user?.id || !clubData?.id) {
+            return console.error("Missing userId or clubId")
+        }
+        if(!clubData) return console.error("ClubData is undefined")
+        setMoney(prev => prev + change)
+        setClub(prev => prev ? {...prev, money: prev.money + change} : prev)
+        try {
+            const res = await fetch('/api/clubs/update-money', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: session?.user?.id,
+                    clubId: clubData.id,
+                    amount: change
+                }),
+            })
 
-    const [game, setGame] = useState<"Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null>(null)
-    const [background, setBackground] = useState("casino")
-
-    useEffect(() => {
-        const timer = setTimeout(() => {
-            setMuted(false)
-        }, 1)
-
-        return () => clearTimeout(timer)
-    }, [])
+            if (!res.ok) console.error('updateMoney on CasinoClient failed')
+        }
+        catch (error) {
+            console.error(error)
+            setMoney(prev => prev - change)
+            setClub(prev => prev ? {...prev, money: prev.money - change} : prev)
+        }
+    }
 
     const panels: {title: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null, description: string, position: string}[] = [
         {
@@ -125,7 +154,7 @@ const CasinoClient = () => {
                     ))}
                 </>
             ):(
-                club && <CasinoGame game={game} money={club.money} club={club}/>
+                club && <CasinoGame game={game} money={club.money} club={club} updateMoney={updateMoney}/>
             )}
             {club && game && (
                 <div
@@ -149,7 +178,7 @@ const CasinoClient = () => {
                         <div className={"flex flex-col justify-center w-[40%]"}>
                             <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center"}>
                                 <JapaneseYen/>
-                                <p>{club.money}</p>
+                                <p>{money}</p>
                             </h2>
                         </div>
                     </div>

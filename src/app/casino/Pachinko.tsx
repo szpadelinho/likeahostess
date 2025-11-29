@@ -4,10 +4,11 @@ import {strawberry, peach, pumpkin, pear, watermelon, flowerTulip} from "@lucide
 import {useCallback, useEffect, useRef, useState} from "react";
 
 interface PachinkoProps {
-    setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void
+    setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,
+    onTransaction: (type: "jackpot" | "pair" | "lose" | "start") => Promise<void>
 }
 
-export const Pachinko = ({setScore}: PachinkoProps) => {
+export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
     const Strawberry = createLucideIcon("Strawberry", strawberry)
     const Peach = createLucideIcon("Peach", peach)
     const Pumpkin = createLucideIcon("Pumpkin", pumpkin)
@@ -39,13 +40,15 @@ export const Pachinko = ({setScore}: PachinkoProps) => {
     }, [])
 
     const startGame = () => {
+        onTransaction("start").then()
         setScore(null)
         setSpinning([true, true, true])
 
         const loop = loopRef.current
-        if(loop && loop.paused){
+        if (loop && loop.paused) {
             loop.currentTime = 0
-            loop.play().catch(() => {})
+            loop.play().catch(() => {
+            })
         }
     }
 
@@ -66,7 +69,9 @@ export const Pachinko = ({setScore}: PachinkoProps) => {
 
     useEffect(() => {
         window.addEventListener("keydown", handleButton)
-        return () => {window.removeEventListener("keydown", handleButton)}
+        return () => {
+            window.removeEventListener("keydown", handleButton)
+        }
     }, [handleButton])
 
     useEffect(() => {
@@ -90,11 +95,12 @@ export const Pachinko = ({setScore}: PachinkoProps) => {
     }, [spinning])
 
     const toggleHold = (index: number) => {
-        if(spinning[index]){
+        if (spinning[index]) {
             const stop = stopRef.current
-            if(stop){
+            if (stop) {
                 stop.currentTime = 0
-                stop.play().catch(() => {})
+                stop.play().catch(() => {
+                })
             }
         }
         setSpinning(prev => {
@@ -115,7 +121,8 @@ export const Pachinko = ({setScore}: PachinkoProps) => {
 
         if (isSpinning && loop && loop.paused) {
             loop.currentTime = 0
-            loop.play().catch(() => {})
+            loop.play().catch(() => {
+            })
         }
 
         if (!isSpinning && wasSpinning) {
@@ -128,17 +135,20 @@ export const Pachinko = ({setScore}: PachinkoProps) => {
 
             const [a, b, c] = slots
             if (a === b && b === c) {
-                setScore("JACKPOT!!! +1000")
+                setScore("JACKPOT!!! +10000")
+                onTransaction("jackpot").then()
             } else if (a === b || b === c || a === c) {
-                setScore("Two of a kind! +500")
+                setScore("Two of a kind! +1000")
+                onTransaction("pair").then()
             } else {
                 setScore("No luck.")
+                onTransaction("lose").then()
             }
         }
     }, [spinning, slots, setScore])
 
-    const getIcon = (Icon: any): {fill: string, color: string} => {
-        switch(Icon){
+    const getIcon = (Icon: any): { fill: string, color: string } => {
+        switch (Icon) {
             case Apple:
                 return {fill: "#ff1a1a", color: "#bd1212"}
             case Cherry:

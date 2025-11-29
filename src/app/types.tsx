@@ -30,6 +30,20 @@ export type Club = {
     logo: string
 }
 
+export type StoredClub = {
+    id: string
+    name: string
+    host: {
+        name: string
+        surname: string
+        image: string
+    },
+    money: number
+    popularity: number
+    supplies: number
+    logo: string
+}
+
 export type ClubSelection = {
     id: string;
     name: string

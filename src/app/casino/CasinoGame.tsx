@@ -16,14 +16,15 @@ const yesteryear = Yesteryear({
 interface CasinoGameProps {
     game: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,
     money: number,
-    club: Club
+    club: Club,
+    updateMoney: (change: number) => Promise<void>
 }
 
-const CasinoGame = ({game, money, club}: CasinoGameProps) => {
+const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
     const rouletteRef = useRef<{ spin: () => void } | null>(null)
     const pokerRef = useRef<any>(null)
 
-    const [stage, setStage] = useState<"PreFlop"|"Flop"|"Turn"|"River"|"Showdown"|null>(null)
+    const [stage, setStage] = useState<"PreFlop" | "Flop" | "Turn" | "River" | "Showdown" | null>(null)
     const [playerActionPending, setPlayerActionPending] = useState<boolean>(false)
 
     const [score, setScore] = useState<boolean | string | number | null>(null)
@@ -47,14 +48,14 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
     const cardRef = useRef<HTMLImageElement | null>(null)
     const [rotation, setRotation] = useState({x: 0, y: 0})
 
-    const [bets, setBets] = useState<{type: string, amount: number}[]>([])
+    const [bets, setBets] = useState<{ type: string, amount: number }[]>([])
 
     const audio = new Audio("/sfx/name_introduction.m4a")
 
     const [selectedBet, setSelectedBet] = useState<string | null>(null)
 
     const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-    const blackNumbers = Array.from({ length: 36 }, (_, i) => i + 1).filter(n => !redNumbers.includes(n))
+    const blackNumbers = Array.from({length: 36}, (_, i) => i + 1).filter(n => !redNumbers.includes(n))
 
     const handleRouletteResult = (winningNumber: number) => {
         setScore(winningNumber)
@@ -119,13 +120,13 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                     isWin = winningNumber >= 25 && winningNumber <= 36
                     break
                 case "Column 1":
-                    isWin = [1,4,7,10,13,16,19,22,25,28,31,34].includes(winningNumber)
+                    isWin = [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34].includes(winningNumber)
                     break
                 case "Column 2":
-                    isWin = [2,5,8,11,14,17,20,23,26,29,32,35].includes(winningNumber)
+                    isWin = [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35].includes(winningNumber)
                     break
                 case "Column 3":
-                    isWin = [3,6,9,12,15,18,21,24,27,30,33,36].includes(winningNumber)
+                    isWin = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36].includes(winningNumber)
                     break
                 default:
                     if (!isNaN(Number(type))) {
@@ -174,7 +175,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
     }
 
     useEffect(() => {
-        if(showCard){
+        if (showCard) {
             setCardModal(false)
             requestAnimationFrame(() => {
                 setCardModal(true)
@@ -213,19 +214,58 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
 
     const getCardPersona = (card: string): { title: string; persona: string } => {
         const personaMap: Record<string, string> = {
-            "spades_ace": "Shintaro Kazama", "hearts_ace": "Sohei Dojima", "diamonds_ace": "Futoshi Shimano", "clubs_ace": "Jin Goda",
-            "spades_two": "Jun Oda", "hearts_two": "Makoto Makimura", "diamonds_two": "Homare Nishitani", "clubs_two": "Lao Gui",
-            "spades_three": "Makoto Date", "hearts_three": "Yumi Sawamura", "diamonds_three": "The Florist of Sai", "clubs_three": "Osamu Kashiwagi",
-            "spades_four": "Yukio Terada", "hearts_four": "Lady Yayoi Dojima", "diamonds_four": "Nishida", "clubs_four": "Toranosuke Sengoku",
-            "spades_five": "Rikiya Shimabukuro", "hearts_five": "Tsuyoshi Kanda", "diamonds_five": "Yoshitaka Mine", "clubs_five": "Lau Ka Long",
-            "spades_six": "Masayoshi Tanimura", "hearts_six": "Hana", "diamonds_six": "Daisaku Minami", "clubs_six": "Go Hamazaki",
-            "spades_seven": "Tatsuo Shinada", "hearts_seven": "Masaru Watase", "diamonds_seven": "Kamon Kanai", "clubs_seven": "Masato Aizawa",
-            "spades_eight": "Joon-Gi Han", "hearts_eight": "Haruto Sawamura", "diamonds_eight": "Heizo Hiwami", "clubs_eight": "Kanji Koshimizu",
-            "spades_nine": "Yu Nanba", "hearts_nine": "Masato Arakawa", "diamonds_nine": "Koichi Adachi", "clubs_nine": "Tianyou Zhao",
-            "spades_ten": "Jo Amon", "hearts_ten": "Onimichio", "diamonds_ten": "Munancho Suzuki", "clubs_ten": "Pocket Circuit Fighter Fujisawa",
-            "spades_jack": "Shun Akiyama", "hearts_jack": "Akira Nishikiyama", "diamonds_jack": "Daigo Dojima", "clubs_jack": "Ryuji Goda",
-            "spades_queen": "Saeko Mukoda", "hearts_queen": "Haruka Sawamura", "diamonds_queen": "Seonhee", "clubs_queen": "Kaoru Sayama",
-            "spades_king": "Kiryu Kazuma", "hearts_king": "Ichiban Kasuga", "diamonds_king": "Goro Majima", "clubs_king": "Taiga Saejima",
+            "spades_ace": "Shintaro Kazama",
+            "hearts_ace": "Sohei Dojima",
+            "diamonds_ace": "Futoshi Shimano",
+            "clubs_ace": "Jin Goda",
+            "spades_two": "Jun Oda",
+            "hearts_two": "Makoto Makimura",
+            "diamonds_two": "Homare Nishitani",
+            "clubs_two": "Lao Gui",
+            "spades_three": "Makoto Date",
+            "hearts_three": "Yumi Sawamura",
+            "diamonds_three": "The Florist of Sai",
+            "clubs_three": "Osamu Kashiwagi",
+            "spades_four": "Yukio Terada",
+            "hearts_four": "Lady Yayoi Dojima",
+            "diamonds_four": "Nishida",
+            "clubs_four": "Toranosuke Sengoku",
+            "spades_five": "Rikiya Shimabukuro",
+            "hearts_five": "Tsuyoshi Kanda",
+            "diamonds_five": "Yoshitaka Mine",
+            "clubs_five": "Lau Ka Long",
+            "spades_six": "Masayoshi Tanimura",
+            "hearts_six": "Hana",
+            "diamonds_six": "Daisaku Minami",
+            "clubs_six": "Go Hamazaki",
+            "spades_seven": "Tatsuo Shinada",
+            "hearts_seven": "Masaru Watase",
+            "diamonds_seven": "Kamon Kanai",
+            "clubs_seven": "Masato Aizawa",
+            "spades_eight": "Joon-Gi Han",
+            "hearts_eight": "Haruto Sawamura",
+            "diamonds_eight": "Heizo Hiwami",
+            "clubs_eight": "Kanji Koshimizu",
+            "spades_nine": "Yu Nanba",
+            "hearts_nine": "Masato Arakawa",
+            "diamonds_nine": "Koichi Adachi",
+            "clubs_nine": "Tianyou Zhao",
+            "spades_ten": "Jo Amon",
+            "hearts_ten": "Onimichio",
+            "diamonds_ten": "Munancho Suzuki",
+            "clubs_ten": "Pocket Circuit Fighter Fujisawa",
+            "spades_jack": "Shun Akiyama",
+            "hearts_jack": "Akira Nishikiyama",
+            "diamonds_jack": "Daigo Dojima",
+            "clubs_jack": "Ryuji Goda",
+            "spades_queen": "Saeko Mukoda",
+            "hearts_queen": "Haruka Sawamura",
+            "diamonds_queen": "Seonhee",
+            "clubs_queen": "Kaoru Sayama",
+            "spades_king": "Kiryu Kazuma",
+            "hearts_king": "Ichiban Kasuga",
+            "diamonds_king": "Goro Majima",
+            "clubs_king": "Taiga Saejima",
         }
 
         const [suitKey, rankKey] = card.split("_")
@@ -259,7 +299,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
 
         const persona = personaMap[card] || ""
 
-        return { title, persona }
+        return {title, persona}
     }
 
     const calculateHandValue = (hand: string[]): number => {
@@ -317,8 +357,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                     handleScore("Chohan", "odd", total, sum, false)
                 }
             }
-        }
-        else if (type === "Blackjack") {
+        } else if (type === "Blackjack") {
             let freshDeck = handleDeckShuffle(handleDeckBuild())
             const userHand = freshDeck.slice(0, 2)
             const dealerHand = freshDeck.slice(2, 4)
@@ -420,8 +459,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                     return Math.max(prev - 1000, 1000)
                 }
             })
-        }
-        else if (game === "Blackjack") {
+        } else if (game === "Blackjack") {
             setBet(prev => {
                 if (action === "Add") {
                     return Math.min(prev + 1000, 50000, money)
@@ -429,23 +467,21 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                     return Math.max(prev - 1000, 1000)
                 }
             })
-        }
-        else if (game === "Roulette"){
+        } else if (game === "Roulette") {
             setBets(prev => {
                 const existing = prev.find(b => b.type === type)
                 const change = action === "Add" ? 1000 : -1000
                 const newAmount = Math.min(10000, Math.max(0, (existing?.amount || 0) + change))
 
-                if(newAmount === 0){
+                if (newAmount === 0) {
                     return prev.filter(b => b.type !== type)
                 }
 
-                if(existing){
+                if (existing) {
                     return prev.map(b =>
                         b.type === type ? {...b, amount: newAmount} : b
                     )
-                }
-                else{
+                } else {
                     return [...prev, {type, amount: newAmount}]
                 }
             })
@@ -494,7 +530,8 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                                 ))}
                             </div>
                         </div>
-                        <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
+                        <div
+                            className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
                             <button
                                 className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
                                 onClick={() => {
@@ -551,7 +588,9 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                         <div className={"relative flex flex-col justify-center items-center w-50 h-full"}>
                             <div className={"relative h-50 w-50"}>
                                 {userCards.map((userCard, i) => (
-                                    <Image key={i} className={"absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"} src={`/cards/${userCard}.png`}
+                                    <Image key={i}
+                                           className={"absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"}
+                                           src={`/cards/${userCard}.png`}
                                            alt={`User Card ${i}`} height={200} width={125}
                                            style={{
                                                top: `${i * 25}px`,
@@ -568,7 +607,8 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                         <div className={"flex flex-col justify-center items-center w-50 h-full"}>
                             <div className={"relative h-50 w-50"}>
                                 {dealerCards.map((dealerCard, i) => (
-                                    <Image key={i} className={"absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"}
+                                    <Image key={i}
+                                           className={"absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"}
                                            src={`/cards/${(i === 1 && isPlayerTurn && !gameOver) ? cards.default : dealerCard}.png`}
                                            alt={`Dealer Card ${i}`} height={200} width={125}
                                            style={{
@@ -577,10 +617,9 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                                                zIndex: i,
                                            }}
                                            onClick={() => {
-                                               if(i === 1 && isPlayerTurn && !gameOver){
+                                               if (i === 1 && isPlayerTurn && !gameOver) {
                                                    setShowCard(cards.default)
-                                               }
-                                               else{
+                                               } else {
                                                    setShowCard(dealerCard)
                                                }
                                            }}
@@ -588,14 +627,16 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                                 ))}
                             </div>
                         </div>
-                        <h1 className={"z-50 text-white text-[30px] w-25 flex justify-center items-center"}>Dealer Tanimura</h1>
+                        <h1 className={"z-50 text-white text-[30px] w-25 flex justify-center items-center"}>Dealer
+                            Tanimura</h1>
                         <div className="w-60 h-screen flex justify-center items-center">
                             <Image src={`/images/tanimura_cover.png`} alt={"Dealer"} height={250} width={150}/>
                         </div>
                     </div>
                     <div className={"flex flex-col justify-center items-center gap-5"}>
                         {isPlayerTurn && !gameOver ? (
-                            <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
+                            <div
+                                className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
                                 <button
                                     className={`${yesteryear.className} text-[20px] p-2 w-25 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
                                     onClick={playerHit}>
@@ -607,7 +648,7 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                                     Stand
                                 </button>
                             </div>
-                        ): (
+                        ) : (
                             <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center"}>
                                 <button
                                     className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
@@ -644,10 +685,13 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
             {game === "Roulette" && (
                 <>
                     <h1 className={`absolute top-15 text-[75px] ${yesteryear.className}`}>Roulette</h1>
-                    <div className={"relative p-10 gap-20 flex justify-center items-center flex-row bg-green-800 rounded-[50] border-20 border-amber-950"}>
+                    <div
+                        className={"relative p-10 gap-20 flex justify-center items-center flex-row bg-green-800 rounded-[50] border-20 border-amber-950"}>
                         <Roulette ref={rouletteRef} handleRouletteResult={handleRouletteResult}/>
-                        <RouletteBoard handleBet={handleBet} bets={bets} selectedBet={selectedBet} setSelectedBet={setSelectedBet}/>
-                        <div className={`absolute left-1/2 top-5 z-50 flex flex-row justify-center items-center ${yesteryear.className} text-[40px] gap-5`}>
+                        <RouletteBoard handleBet={handleBet} bets={bets} selectedBet={selectedBet}
+                                       setSelectedBet={setSelectedBet}/>
+                        <div
+                            className={`absolute left-1/2 top-5 z-50 flex flex-row justify-center items-center ${yesteryear.className} text-[40px] gap-5`}>
                             <p>Total bet: ¥{bets.reduce((sum, bet) => sum + bet.amount, 0).toLocaleString()}</p>
                             <button
                                 className={`p-1 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
@@ -674,8 +718,12 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
             {game === "Poker" && (
                 <>
                     <h1 className={`absolute top-5 text-[75px] ${yesteryear.className}`}>Poker</h1>
-                    <div className={"relative h-[75vh] w-[75vw] flex justify-center items-center flex-row bg-green-800 rounded-[100] border-20 border-amber-950"}>
-                        <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage} playerActionPending={playerActionPending} setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard} cards={cards} club={club}/>
+                    <div
+                        className={"relative h-[75vh] w-[75vw] flex justify-center items-center flex-row bg-green-800 rounded-[100] border-20 border-amber-950"}>
+                        <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
+                                     playerActionPending={playerActionPending}
+                                     setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard}
+                                     cards={cards} club={club}/>
                     </div>
                     {(stage === null || stage === "Showdown") && (
                         <button
@@ -712,7 +760,16 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
             )}
             {game === "Pachinko" && (
                 <>
-                    <Pachinko setScore={setScore}/>
+                    <Pachinko
+                        onTransaction={async (type: "jackpot" | "pair" | "lose" | "start") => {
+                            let change = 0
+                            if (type === "jackpot") change = 10000
+                            else if (type === "pair") change = 1000
+                            else if (type === "start") change = -100
+
+                            await updateMoney(change)
+                        }}
+                        setScore={setScore}/>
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
                             <p>{score}</p>
@@ -721,8 +778,9 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                 </>
             )}
             {showCard && (
-                <div className={`absolute inset-0 backdrop-blur-md z-[99] flex justify-center items-center transition-opacity duration-500 ${cardModal ? "opacity-100" : "opacity-0"}`}
-                     onClick={closeShowCard}>
+                <div
+                    className={`absolute inset-0 backdrop-blur-md z-[99] flex justify-center items-center transition-opacity duration-500 ${cardModal ? "opacity-100" : "opacity-0"}`}
+                    onClick={closeShowCard}>
                     <div
                         onClick={(e) => e.stopPropagation()}
                         onMouseMove={(e) => handleCardTilt(e)}
@@ -741,11 +799,12 @@ const CasinoGame = ({game, money, club}: CasinoGameProps) => {
                             }}
                         />
                     </div>
-                    <div className={`absolute opacity-[.05] fit-content pointer-events-none flex flex-col items-center justify-center ${yesteryear.className} text-center`}>
-                        <h1 style={{ fontSize: "clamp(150px, 50vw, 250px)" }}>
+                    <div
+                        className={`absolute opacity-[.05] fit-content pointer-events-none flex flex-col items-center justify-center ${yesteryear.className} text-center`}>
+                        <h1 style={{fontSize: "clamp(150px, 50vw, 250px)"}}>
                             {getCardPersona(showCard).persona}
                         </h1>
-                        <h1 style={{ fontSize: "clamp(200px, 90vw, 250px)" }}>
+                        <h1 style={{fontSize: "clamp(200px, 90vw, 250px)"}}>
                             {getCardPersona(showCard).title}
                         </h1>
                     </div>
