@@ -61,8 +61,22 @@ interface Player {
     hasActed: boolean
 }
 
+interface TexasHoldEmProps {
+    updateMoney: (change: number) => Promise<void>
+}
+
 export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
-    ({setScore, stage, setStage, playerActionPending, setPlayerActionPending, setShowCard, cards, club}, ref) => {
+    ({
+         setScore,
+         stage,
+         setStage,
+         playerActionPending,
+         setPlayerActionPending,
+         setShowCard,
+         cards,
+         club,
+         updateMoney
+     }, ref) => {
         const [deck, setDeck] = useState<string[]>([])
         const [communityCards, setCommunityCards] = useState<string[]>([])
         const [players, setPlayers] = useState<Player[]>([])
@@ -264,6 +278,8 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
 
             if (activePlayers.length === 1) {
                 setScore(`${activePlayers[0].name} wins the pot!`)
+
+                if (activePlayers[0].name === club.host.surname) updateMoney(pot).then()
                 return
             }
 
@@ -278,8 +294,12 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
 
             if (winnerNames.length === 1) {
                 setScore(`${winnerNames[0]} wins with ${winners[0].name}`)
+
+                if(winnerNames[0] === club.host.surname) updateMoney(pot).then()
             } else {
                 setScore(`It's a tie between ${winnerNames.join(", ")}!`)
+
+                if(winnerNames.includes(club.host.surname)) updateMoney(pot / winnerNames.length).then()
             }
         }
 
@@ -326,8 +346,10 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
                                 <p className={"flex flex-row justify-center items-center gap-2"}>
                                     <JapaneseYen/>{p.currentBet}</p>
                             </div>
-                            <Image className={`${i === 0 ? "-right-50" : i === 3 ? "-left-50" : "-bottom-60"} absolute`} src={`/images/${p.image}.png`} alt={"Poker face :D"} height={150} width={150}/>
-                            {p.folded && <p className={`${yesteryear.className} text-[70px] absolute z-50 text-pink-600`}>FOLDED</p>}
+                            <Image className={`${i === 0 ? "-right-50" : i === 3 ? "-left-50" : "-bottom-60"} absolute`}
+                                   src={`/images/${p.image}.png`} alt={"Poker face :D"} height={150} width={150}/>
+                            {p.folded &&
+                                <p className={`${yesteryear.className} text-[70px] absolute z-50 text-pink-600`}>FOLDED</p>}
                         </div>
                     </div>
                 ))}

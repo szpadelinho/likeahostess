@@ -144,7 +144,10 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
 
         const net = totalWin - totalLoss
 
-        if (net > 0) setWin(2)
+        if (net > 0) {
+            setWin(2)
+            updateMoney(net).then()
+        }
         else if (net === 0) setWin(1)
         else setWin(0)
 
@@ -339,6 +342,7 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
 
     const handleGame = (type: string, value: string | null) => {
         if (type === "Chohan" && value !== null) {
+            updateMoney(-bet).then()
             let sum = Array(2)
             for (let i = 0; i < 2; i++) {
                 sum[i] = Math.floor(Math.random() * (6 - 1)) + 1
@@ -357,7 +361,9 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
                     handleScore("Chohan", "odd", total, sum, false)
                 }
             }
-        } else if (type === "Blackjack") {
+        }
+        else if (type === "Blackjack") {
+            updateMoney(-bet).then()
             let freshDeck = handleDeckShuffle(handleDeckBuild())
             const userHand = freshDeck.slice(0, 2)
             const dealerHand = freshDeck.slice(2, 4)
@@ -393,6 +399,7 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
                 setWin(0)
             } else if (calculateHandValue(userCards) === 21) {
                 setScore("Blackjack! Congatulations, sir!")
+                updateMoney(bet * 2.5).then()
                 setIsPlayerTurn(false)
                 setGameOver(true)
                 setWin(2)
@@ -418,9 +425,11 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
 
         if (dealerValue > 21 || userValue > dealerValue) {
             setScore("You sir have beaten the dealer!")
+            updateMoney(bet * 2).then()
             setWin(2)
         } else if (dealerValue === userValue) {
             setScore("It is a push, sir.")
+            updateMoney(bet).then()
             setWin(1)
         } else {
             setScore("No luck today, sir! Dealer wins!")
@@ -444,6 +453,7 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
             setScore(won)
             if (won) {
                 setPrize(bet * 2)
+                updateMoney(bet * 2).then()
             } else {
                 setPrize(bet)
             }
@@ -703,6 +713,8 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
                     <button
                         className={`${yesteryear.className} absolute bottom-10 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
                         onClick={() => {
+                            const totalBet = bets.reduce((sum, bet) => sum + bet.amount, 0)
+                            updateMoney(-totalBet).then()
                             rouletteRef.current?.spin()
                         }}>
                         Spin the roulette
@@ -723,11 +735,14 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
                         <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
                                      playerActionPending={playerActionPending}
                                      setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard}
-                                     cards={cards} club={club}/>
+                                     cards={cards} club={club} updateMoney={updateMoney}/>
                     </div>
                     {(stage === null || stage === "Showdown") && (
                         <button
-                            onClick={() => pokerRef?.current.startGame()}
+                            onClick={() => {
+                                updateMoney(-5000).then()
+                                pokerRef?.current.startGame()
+                            }}
                             className={`${yesteryear.className} absolute bottom-5 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
                             Let the game begin
                         </button>
