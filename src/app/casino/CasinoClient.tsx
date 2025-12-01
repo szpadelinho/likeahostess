@@ -11,6 +11,7 @@ import {Club, StoredClub, yesteryear} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {useSession} from "next-auth/react";
+import {handleMoneyTransaction} from "@/lib/transactions";
 
 const CasinoClient = () => {
     const router = useRouter()
@@ -64,30 +65,7 @@ const CasinoClient = () => {
     }, [])
 
     const updateMoney = async (change: number) => {
-        if (!session?.user?.id || !clubData?.id) {
-            return console.error("Missing userId or clubId")
-        }
-        if(!clubData) return console.error("ClubData is undefined")
-        setMoney(prev => prev + change)
-        setClub(prev => prev ? {...prev, money: prev.money + change} : prev)
-        try {
-            const res = await fetch('/api/clubs/update-money', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: session?.user?.id,
-                    clubId: clubData.id,
-                    amount: change
-                }),
-            })
-
-            if (!res.ok) console.error('updateMoney on CasinoClient failed')
-        }
-        catch (error) {
-            console.error(error)
-            setMoney(prev => prev - change)
-            setClub(prev => prev ? {...prev, money: prev.money - change} : prev)
-        }
+        handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
     }
 
     const panels: {title: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null, description: string, position: string}[] = [
