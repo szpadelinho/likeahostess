@@ -19,7 +19,7 @@ const CasinoClient = () => {
     const [clubData, setClubData] = useState<StoredClub | null>(null)
     const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
-    const [club, setClub] = useState<Club>()
+    const [club, setClub] = useState<Club | null>(null)
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(true)
     const [game, setGame] = useState<"Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null>(null)

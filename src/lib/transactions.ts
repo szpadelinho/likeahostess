@@ -11,11 +11,14 @@ export const handleMoneyTransaction = async ({
     session: any,
     clubData: any,
     setMoney: (fn: (x: number) => number) => void,
-    setClub: (value: SetStateAction<Club | undefined>) => void
+    setClub: (value: SetStateAction<Club | null>) => void
     change: number
 }) => {
-    if (!session?.user?.id || !clubData?.id) {
-        return console.error("Missing userId or clubId")
+    if (!session?.user?.id) {
+        return console.error("Missing userId")
+    }
+    if(!clubData?.id){
+        return console.error("Missing clubData.id")
     }
     if(!clubData) return console.error("ClubData is undefined")
     setMoney(prev => prev + change)

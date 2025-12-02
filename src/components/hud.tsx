@@ -15,10 +15,11 @@ interface Hud {
     windowType: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null,
     setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => void
     setFade: Dispatch<SetStateAction<boolean>>
+    money: number
 }
 
 
-const Hud = ({club, windowType, setWindow, setFade}: Hud) => {
+const Hud = ({club, windowType, setWindow, setFade, money}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
@@ -150,7 +151,7 @@ const Hud = ({club, windowType, setWindow, setFade}: Hud) => {
                             />
                             <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center z-10"}>
                                 <JapaneseYen/>
-                                <p>{club.money}</p>
+                                <p>{money}</p>
                             </h2>
                             <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10"}>
                                 <HeartHandshake/>

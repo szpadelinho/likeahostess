@@ -15,10 +15,12 @@ import {
 } from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {towelFolded, cupSaucer} from "@lucide/lab";
-import { DndProvider } from 'react-dnd';
-import { HTML5Backend } from 'react-dnd-html5-backend';
+import {DndProvider} from 'react-dnd';
+import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
-import { Buffet, ServiceType, Hostess } from "@/app/types";
+import {Buffet, ServiceType, Hostess, Club} from "@/app/types";
+import {Session} from "next-auth";
+import {handleMoneyTransaction} from "@/lib/transactions";
 
 const TowelFolded = createLucideIcon("TowelFolded", towelFolded)
 const CupSaucer = createLucideIcon("CupSaucer", cupSaucer)
@@ -37,7 +39,11 @@ interface Props {
     serviceType: (ServiceType | null)[],
     setServiceType: (value: (((prevState: (ServiceType | null)[]) => (ServiceType | null)[]) | (ServiceType | null)[])) => void,
     hostesses: (Hostess | null)[],
-    setBarKeys: (value: (((prevState: number[]) => number[]) | number[])) => void
+    setBarKeys: (value: (((prevState: number[]) => number[]) | number[])) => void,
+    session: Session | null,
+    clubData: Club | null,
+    setMoney: (value: (((prevState: number) => number) | number)) => void,
+    setClub: (value: (((prevState: (Club | null)) => (Club | null)) | Club | null)) => void
 }
 
 export const Inquiry = ({
@@ -54,7 +60,11 @@ export const Inquiry = ({
                             serviceType,
                             setServiceType,
                             hostesses,
-                            setBarKeys
+                            setBarKeys,
+                            session,
+                            clubData,
+                            setMoney,
+                            setClub
                         }: Props) => {
     const [wiggle, setWiggle] = useState<"Beverage" | "Meal" | ServiceType | null>(null)
 
@@ -172,6 +182,10 @@ export const Inquiry = ({
     })()
 
     const InquiryEndHandler = (type: "End" | "Extend", present: boolean, payment: boolean) => {
+        let change = Math.floor(Math.random() * (10000 - 100) + 100)
+        if(present){
+            change = Math.floor(change / 2)
+        }
         if (inquiryTableId !== null) {
             if (type === "End") {
                 setVisit(prev => {
@@ -179,8 +193,11 @@ export const Inquiry = ({
                     updated[inquiryTableId] = false
                     return updated
                 })
-                inquiryClose(inquiryTableId)
-            } else {
+                if(payment){
+                    handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
+                }
+            }
+            else {
                 const extensionChance = Math.random()
                 if (extensionChance < 0.5) {
                     setVisit(prev => {
@@ -200,14 +217,18 @@ export const Inquiry = ({
                         return updated
                     })
                 }
-                inquiryClose(inquiryTableId)
+                handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
             }
+            inquiryClose(inquiryTableId)
+
         }
     }
 
     const InquiryServiceHandler = (type: ServiceType) => {
         if (inquiryTableId !== null && type === serviceType[inquiryTableId]) {
+            const change = Math.floor(Math.random() * (1000 - 100) + 100)
             inquiryClose(inquiryTableId)
+            handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
         } else {
             setWiggle(type)
             setTimeout(() => {
@@ -248,9 +269,11 @@ export const Inquiry = ({
                                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
                                 {orderSentence}
                             </div>
-                            <div className={"absolute left-97 bottom-60 flex flex-row gap-5 justify-center items-center"}>
+                            <div
+                                className={"absolute left-97 bottom-60 flex flex-row gap-5 justify-center items-center"}>
                                 {randomBeverage && (
-                                    <DroppableSlot type={"beverage"} onDrop={handleBeverageDrop} expectedId={randomBeverage.id}>
+                                    <DroppableSlot type={"beverage"} onDrop={handleBeverageDrop}
+                                                   expectedId={randomBeverage.id}>
                                         <Martini size={50}/>
                                     </DroppableSlot>
                                 )}
@@ -275,7 +298,7 @@ export const Inquiry = ({
                                         <h1>Beverages</h1>
                                         <div className={"grid grid-cols-5 gap-5"}>
                                             {beverages.map((beverage, i) => (
-                                                <DraggableItem key={i} item={beverage} type="beverage" />
+                                                <DraggableItem key={i} item={beverage} type="beverage"/>
                                             ))}
                                         </div>
                                     </>
@@ -303,7 +326,13 @@ export const Inquiry = ({
                                             return updated
                                         })
                                     }
+                                    let change = 0
+                                    if(randomBeverage !== null) change += randomBeverage.price
+                                    if(randomMeal !== null) change += randomMeal.price
                                     inquiryClose(inquiryTableId)
+                                    if(change !== 0){
+                                        handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
+                                    }
                                 }}>
                                 {dealButtonText}
                             </button>

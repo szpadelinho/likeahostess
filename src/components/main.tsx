@@ -16,11 +16,13 @@ import {ModalContent} from "@/components/modalContent";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import InteriorBanner from "@/components/interiorBanner";
-import {Club, Activity, Jam, Performer, Hostess, Buffet, ServiceType} from "@/app/types";
+import {Club, Activity, Jam, Performer, Hostess, Buffet, ServiceType, StoredClub} from "@/app/types";
 import {useSession} from "next-auth/react";
 
 const Main = () => {
     const {data: session, status} = useSession()
+    const [money, setMoney] = useState<number>(0)
+    const [clubData, setClubData] = useState<Club | null>(null)
 
     const [club, setClub] = useState<Club | null>(null)
 
@@ -175,11 +177,11 @@ const Main = () => {
 
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
-        if (!stored) return
+        if(!stored) return console.error("No such element as localStorage on Main")
+        const parsedClub: StoredClub = JSON.parse(stored)
+        setClubData(parsedClub)
 
-        const clubData = JSON.parse(stored)
-
-        fetch(`/api/user-club?clubId=${clubData.id}`, {method: "POST"})
+        fetch(`/api/user-club?clubId=${parsedClub.id}`, {method: "POST"})
             .then(async (res) => {
                 const data = await res.text()
                 if (!res.ok) {
@@ -190,13 +192,14 @@ const Main = () => {
             })
             .then((userData) => {
                 const mergedClub: Club = {
-                    name: clubData.name,
-                    host: clubData.host,
-                    logo: clubData.logo,
+                    name: parsedClub.name,
+                    host: parsedClub.host,
+                    logo: parsedClub.logo,
                     money: userData.money,
                     popularity: userData.popularity,
                     supplies: userData.supplies
                 }
+                setMoney(userData.money)
                 setClub(mergedClub)
             })
     }, [])
@@ -229,7 +232,7 @@ const Main = () => {
                     }}
                 >
                     {({onCloseModal}) => (
-                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking} setBarKeys={setBarKeys}/>
+                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking} setBarKeys={setBarKeys} session={session} clubData={clubData} setMoney={setMoney} setClub={setClub}/>
                     )}
                 </ModalWrapper>
             )}
@@ -268,6 +271,7 @@ const Main = () => {
                                 windowType={window}
                                 setWindow={setWindow}
                                 setFade={setFade}
+                                money={money}
                             />
                         </>
                     )}
