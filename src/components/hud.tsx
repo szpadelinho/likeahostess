@@ -16,10 +16,11 @@ interface Hud {
     setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => void
     setFade: Dispatch<SetStateAction<boolean>>
     money: number
+    popularity: number
 }
 
 
-const Hud = ({club, windowType, setWindow, setFade, money}: Hud) => {
+const Hud = ({club, windowType, setWindow, setFade, money, popularity}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
@@ -155,7 +156,7 @@ const Hud = ({club, windowType, setWindow, setFade, money}: Hud) => {
                             </h2>
                             <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10"}>
                                 <HeartHandshake/>
-                                <p>{club.popularity}</p>
+                                <p>{popularity}</p>
                             </h2>
                             <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10"}>
                                 <Package/>

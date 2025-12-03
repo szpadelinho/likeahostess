@@ -22,6 +22,7 @@ import {useSession} from "next-auth/react";
 const Main = () => {
     const {data: session, status} = useSession()
     const [money, setMoney] = useState<number>(0)
+    const [popularity, setPopularity] = useState<number>(0)
     const [clubData, setClubData] = useState<Club | null>(null)
 
     const [club, setClub] = useState<Club | null>(null)
@@ -200,6 +201,7 @@ const Main = () => {
                     supplies: userData.supplies
                 }
                 setMoney(userData.money)
+                setPopularity(userData.popularity)
                 setClub(mergedClub)
             })
     }, [])
@@ -232,7 +234,7 @@ const Main = () => {
                     }}
                 >
                     {({onCloseModal}) => (
-                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking} setBarKeys={setBarKeys} session={session} clubData={clubData} setMoney={setMoney} setClub={setClub}/>
+                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking} setBarKeys={setBarKeys} session={session} clubData={clubData} setMoney={setMoney} setClub={setClub} setPopularity={setPopularity}/>
                     )}
                 </ModalWrapper>
             )}
@@ -272,6 +274,7 @@ const Main = () => {
                                 setWindow={setWindow}
                                 setFade={setFade}
                                 money={money}
+                                popularity={popularity}
                             />
                         </>
                     )}
