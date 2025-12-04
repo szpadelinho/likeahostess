@@ -185,7 +185,7 @@ export const Inquiry = ({
 
     const InquiryEndHandler = (type: "End" | "Extend", present: boolean, payment: boolean) => {
         let change = Math.floor(Math.random() * (10000 - 100) + 100)
-        const popularity = Math.floor(Math.random() * (100 - 10) + 10)
+        const popularity = Math.floor(Math.random() * (50 - 10) + 10)
         if (present) {
             change = Math.floor(change / 2)
         }
@@ -229,7 +229,7 @@ export const Inquiry = ({
     const InquiryServiceHandler = (type: ServiceType) => {
         if (inquiryTableId !== null && type === serviceType[inquiryTableId]) {
             const change = Math.floor(Math.random() * (1000 - 100) + 100)
-            const popularity = Math.floor(Math.random() * (100 - 10) + 10)
+            const popularity = Math.floor(Math.random() * (10 - 1) + 1)
             inquiryClose(inquiryTableId)
             handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
             handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
