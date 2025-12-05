@@ -84,3 +84,33 @@ export const handlePopularityTransaction = async ({
         setClub(prev => prev ? {...prev, money: prev.money - change} : prev)
     }
 }
+
+export const handleExperienceTransaction = async ({
+                                                      session,
+                                                      setExperience,
+                                                      change
+                                                  }: {
+    session: any,
+    setExperience: (fn: (x: number) => number) => void,
+    change: number
+}) => {
+    if (!session?.user?.id) {
+        return console.error("Missing userId")
+    }
+    setExperience(prev => prev + change)
+    try {
+        const res = await fetch('/api/user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                amount: change
+            }),
+        })
+
+        if (!res.ok) console.error('updateExperience on transactions failed')
+    }
+    catch (error) {
+        console.error(error)
+        setExperience(prev => prev - change)
+    }
+}

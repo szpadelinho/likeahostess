@@ -20,7 +20,7 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
 import {Buffet, ServiceType, Hostess, Club} from "@/app/types";
 import {Session} from "next-auth";
-import {handleMoneyTransaction, handlePopularityTransaction} from "@/lib/transactions";
+import {handleExperienceTransaction, handleMoneyTransaction, handlePopularityTransaction} from "@/lib/transactions";
 
 const TowelFolded = createLucideIcon("TowelFolded", towelFolded)
 const CupSaucer = createLucideIcon("CupSaucer", cupSaucer)
@@ -44,7 +44,8 @@ interface Props {
     clubData: Club | null,
     setMoney: (value: (((prevState: number) => number) | number)) => void,
     setClub: (value: (((prevState: (Club | null)) => (Club | null)) | Club | null)) => void,
-    setPopularity: (value: (((prevState: number) => number) | number)) => void
+    setPopularity: (value: (((prevState: number) => number) | number)) => void,
+    setExperience: (value: (((prevState: number) => number) | number)) => void
 }
 
 export const Inquiry = ({
@@ -66,7 +67,8 @@ export const Inquiry = ({
                             clubData,
                             setMoney,
                             setClub,
-                            setPopularity
+                            setPopularity,
+                            setExperience
                         }: Props) => {
     const [wiggle, setWiggle] = useState<"Beverage" | "Meal" | ServiceType | null>(null)
 
@@ -184,10 +186,11 @@ export const Inquiry = ({
     })()
 
     const InquiryEndHandler = (type: "End" | "Extend", present: boolean, payment: boolean) => {
-        let change = Math.floor(Math.random() * (10000 - 100) + 100)
+        let money = Math.floor(Math.random() * (10000 - 100) + 100)
         const popularity = Math.floor(Math.random() * (50 - 10) + 10)
+        const experience = Math.floor(Math.random() * (50 - 1) + 1)
         if (present) {
-            change = Math.floor(change / 2)
+            money = Math.floor(change / 2)
         }
         if (inquiryTableId !== null) {
             if (type === "End") {
@@ -197,7 +200,7 @@ export const Inquiry = ({
                     return updated
                 })
                 if (payment) {
-                    handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
+                    handleMoneyTransaction({session, clubData, setMoney, setClub, change: money}).then()
                 }
             } else {
                 const extensionChance = Math.random()
@@ -219,20 +222,23 @@ export const Inquiry = ({
                         return updated
                     })
                 }
-                handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
+                handleMoneyTransaction({session, clubData, setMoney, setClub, change: money}).then()
             }
             handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
+            handleExperienceTransaction({session, setExperience, change: experience}).then()
             inquiryClose(inquiryTableId)
         }
     }
 
     const InquiryServiceHandler = (type: ServiceType) => {
         if (inquiryTableId !== null && type === serviceType[inquiryTableId]) {
-            const change = Math.floor(Math.random() * (1000 - 100) + 100)
+            const money = Math.floor(Math.random() * (1000 - 100) + 100)
             const popularity = Math.floor(Math.random() * (10 - 1) + 1)
-            inquiryClose(inquiryTableId)
-            handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
+            const experience = Math.floor(Math.random() * (10 - 1) + 1)
+            handleMoneyTransaction({session, clubData, setMoney, setClub, change: money}).then()
             handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
+            handleExperienceTransaction({session, setExperience, change: experience}).then()
+            inquiryClose(inquiryTableId)
         } else {
             setWiggle(type)
             setTimeout(() => {
@@ -330,14 +336,22 @@ export const Inquiry = ({
                                             return updated
                                         })
                                     }
-                                    let change = 0
+                                    let money = 0
                                     const popularity = Math.floor(Math.random() * (10 - 1) + 1)
-                                    if (randomBeverage !== null) change += randomBeverage.price
-                                    if (randomMeal !== null) change += randomMeal.price
+                                    const experience = Math.floor(Math.random() * (10 - 1) + 1)
+                                    if (randomBeverage !== null) money += randomBeverage.price
+                                    if (randomMeal !== null) money += randomMeal.price
                                     inquiryClose(inquiryTableId)
-                                    if (change !== 0) {
-                                        handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
-                                        handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
+                                    if (money !== 0) {
+                                        handleMoneyTransaction({session, clubData, setMoney, setClub, change: money}).then()
+                                        handlePopularityTransaction({
+                                            session,
+                                            clubData,
+                                            setPopularity,
+                                            setClub,
+                                            change: popularity
+                                        }).then()
+                                        handleExperienceTransaction({session, setExperience, change: experience}).then()
                                     }
                                 }}>
                                 {dealButtonText}

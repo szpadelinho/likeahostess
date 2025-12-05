@@ -1,5 +1,4 @@
 import {
-    Badge,
     HeartHandshake,
     JapaneseYen,
     Menu, Package,
@@ -9,6 +8,7 @@ import {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react"
 import {MenuModal} from "@/components/menuModal";
 import {Clock} from "@/components/clock";
 import {Club, yesteryear} from "@/app/types";
+import {XPBar} from "@/components/XPBar";
 
 interface Hud {
     club: Club
@@ -17,10 +17,11 @@ interface Hud {
     setFade: Dispatch<SetStateAction<boolean>>
     money: number
     popularity: number
+    experience: number
 }
 
 
-const Hud = ({club, windowType, setWindow, setFade, money, popularity}: Hud) => {
+const Hud = ({club, windowType, setWindow, setFade, money, popularity, experience}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
@@ -168,16 +169,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity}: Hud) => 
                                 <p className={"ease-in-out duration-300 text-pink-200 hover:text-pink-100"}>Some rank title</p>
                             </div>
                             <div className={"relative flex justify-center items-center opacity-0 pointer-events-none group-hover:opacity-100 ease-in-out duration-300"}>
-                                <div
-                                    className={`absolute left-1/2 -translate-x-[75%] h-full transition-all duration-100 ease-linear bg-pink-600 rounded-xl text-[15px] justify-center items-center flex`}
-                                    style={{width: 200}}
-                                >
-                                    1000/1000
-                                </div>
-                                <div className={"absolute -right-20 flex flex-col justify-center items-center text-center opacity-50"}>
-                                    <p className={"text-[15px]"}>1</p>
-                                    <Badge size={40} className={"absolute"}/>
-                                </div>
+                                <XPBar value={experience}/>
                             </div>
                         </div>
                     </div>

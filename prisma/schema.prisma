@@ -15,7 +15,7 @@ model User {
   password String?
   emailVerified DateTime?
   image         String?
-  money         Int        @default(100000)
+  experience Int @default(0)
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
   accounts      Account[]
