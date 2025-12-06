@@ -16,7 +16,18 @@ import {ModalContent} from "@/components/modalContent";
 import {DndProvider} from "react-dnd";
 import {HTML5Backend} from "react-dnd-html5-backend";
 import InteriorBanner from "@/components/interiorBanner";
-import {Club, Activity, Jam, Performer, Hostess, Buffet, ServiceType, StoredClub} from "@/app/types";
+import {
+    Club,
+    Activity,
+    Jam,
+    Performer,
+    Hostess,
+    Buffet,
+    ServiceType,
+    StoredClub,
+    CLUB_RANKS,
+    getLevel, getRank, Rank
+} from "@/app/types";
 import {useSession} from "next-auth/react";
 
 const Main = () => {
@@ -24,6 +35,8 @@ const Main = () => {
     const [money, setMoney] = useState<number>(0)
     const [popularity, setPopularity] = useState<number>(0)
     const [experience, setExperience] = useState<number>(0)
+    const [supplies, setSupplies] = useState<number>(0)
+    const [rank, setRank] = useState<Rank>({lvl: 0, rank: CLUB_RANKS[0]})
     const [clubData, setClubData] = useState<Club | null>(null)
 
     const [club, setClub] = useState<Club | null>(null)
@@ -201,6 +214,7 @@ const Main = () => {
                     popularity: userData.popularity,
                     supplies: userData.supplies
                 }
+                setSupplies(userData.supplies)
                 setMoney(userData.money)
                 setPopularity(userData.popularity)
                 setClub(mergedClub)
@@ -219,6 +233,12 @@ const Main = () => {
         }
         fetchExperience()
     }, [])
+
+    useEffect(() => {
+        const lvl = getLevel(experience)
+        const rank = getRank(lvl)
+        setRank({lvl, rank})
+    }, [experience])
 
     useEffect(() => {
         const isFromAuth = sessionStorage.getItem("firstEnter")
@@ -248,7 +268,7 @@ const Main = () => {
                     }}
                 >
                     {({onCloseModal}) => (
-                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking} setBarKeys={setBarKeys} session={session} clubData={clubData} setMoney={setMoney} setClub={setClub} setPopularity={setPopularity} setExperience={setExperience}/>
+                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking} setBarKeys={setBarKeys} session={session} clubData={clubData} setMoney={setMoney} setClub={setClub} setPopularity={setPopularity} setExperience={setExperience} setSupplies={setSupplies}/>
                     )}
                 </ModalWrapper>
             )}
@@ -290,6 +310,8 @@ const Main = () => {
                                 money={money}
                                 popularity={popularity}
                                 experience={experience}
+                                supplies={supplies}
+                                rank={rank}
                             />
                         </>
                     )}

@@ -7,7 +7,7 @@ import Image from "next/image";
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
 import {MenuModal} from "@/components/menuModal";
 import {Clock} from "@/components/clock";
-import {Club, yesteryear} from "@/app/types";
+import {Club, Rank, yesteryear} from "@/app/types";
 import {XPBar} from "@/components/XPBar";
 
 interface Hud {
@@ -18,10 +18,12 @@ interface Hud {
     money: number
     popularity: number
     experience: number
+    supplies: number
+    rank: Rank
 }
 
 
-const Hud = ({club, windowType, setWindow, setFade, money, popularity, experience}: Hud) => {
+const Hud = ({club, windowType, setWindow, setFade, money, popularity, experience, supplies, rank}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
@@ -159,17 +161,19 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                                 <HeartHandshake/>
                                 <p>{popularity}</p>
                             </h2>
-                            <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10"}>
+                            <h2 className={`${supplies <= 20 && "text-red-600"} flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10`}>
                                 <Package/>
-                                <p>{club.supplies}%</p>
+                                <p>{supplies}%</p>
                             </h2>
                         </div>
                         <div className={`flex flex-row justify-center group ${yesteryear.className}`}>
                             <div className={`flex flex-row justify-center items-center gap-10 opacity-50`}>
-                                <p className={"ease-in-out duration-300 text-pink-200 hover:text-pink-100"}>Some rank title</p>
+                                <p className={"ease-in-out duration-300 text-pink-200 hover:text-pink-100 text-[25px]"}>
+                                    {rank.rank}
+                                </p>
                             </div>
                             <div className={"relative flex justify-center items-center opacity-0 pointer-events-none group-hover:opacity-100 ease-in-out duration-300"}>
-                                <XPBar value={experience}/>
+                                <XPBar value={experience} rank={rank}/>
                             </div>
                         </div>
                     </div>

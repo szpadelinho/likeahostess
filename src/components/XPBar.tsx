@@ -1,6 +1,12 @@
 import {Badge} from "lucide-react";
+import {Rank} from "@/app/types";
 
-export const XPBar = ({value}: {value: number}) => {
+interface XPBarProps{
+    value: number,
+    rank: Rank
+}
+
+export const XPBar = ({value, rank}: XPBarProps) => {
     const level = Math.floor(value / 1000)
     const current = value % 1000
     const percent = Math.min(100, (current / 1000) * 100)

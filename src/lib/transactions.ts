@@ -64,7 +64,7 @@ export const handlePopularityTransaction = async ({
     }
     if(!clubData) return console.error("ClubData is undefined")
     setPopularity(prev => prev + change)
-    setClub(prev => prev ? {...prev, money: prev.money + change} : prev)
+    setClub(prev => prev ? {...prev, popularity: prev.popularity + change} : prev)
     try {
         const res = await fetch('/api/clubs/update-popularity', {
             method: 'POST',
@@ -81,7 +81,49 @@ export const handlePopularityTransaction = async ({
     catch (error) {
         console.error(error)
         setPopularity(prev => prev - change)
-        setClub(prev => prev ? {...prev, money: prev.money - change} : prev)
+        setClub(prev => prev ? {...prev, popularity: prev.popularity - change} : prev)
+    }
+}
+
+export const handleSuppliesTransaction = async ({
+                                                      session,
+                                                      clubData,
+                                                      setSupplies,
+                                                      setClub,
+                                                      change
+                                                  }: {
+    session: any,
+    clubData: any,
+    setSupplies: (fn: (x: number) => number) => void,
+    setClub: (value: SetStateAction<Club | null>) => void
+    change: number
+}) => {
+    if (!session?.user?.id) {
+        return console.error("Missing userId")
+    }
+    if(!clubData?.id){
+        return console.error("Missing clubData.id")
+    }
+    if(!clubData) return console.error("ClubData is undefined")
+    setSupplies(prev => prev + change)
+    setClub(prev => prev ? {...prev, supplies: prev.supplies + change} : prev)
+    try {
+        const res = await fetch('/api/clubs/update-supplies', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                userId: session?.user?.id,
+                clubId: clubData.id,
+                amount: change
+            }),
+        })
+
+        if (!res.ok) console.error('updateSupplies on transactions failed')
+    }
+    catch (error) {
+        console.error(error)
+        setSupplies(prev => prev - change)
+        setClub(prev => prev ? {...prev, supplies: prev.supplies - change} : prev)
     }
 }
 

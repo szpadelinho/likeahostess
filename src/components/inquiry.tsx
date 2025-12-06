@@ -20,7 +20,12 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
 import {Buffet, ServiceType, Hostess, Club} from "@/app/types";
 import {Session} from "next-auth";
-import {handleExperienceTransaction, handleMoneyTransaction, handlePopularityTransaction} from "@/lib/transactions";
+import {
+    handleExperienceTransaction,
+    handleMoneyTransaction,
+    handlePopularityTransaction,
+    handleSuppliesTransaction
+} from "@/lib/transactions";
 
 const TowelFolded = createLucideIcon("TowelFolded", towelFolded)
 const CupSaucer = createLucideIcon("CupSaucer", cupSaucer)
@@ -45,7 +50,8 @@ interface Props {
     setMoney: (value: (((prevState: number) => number) | number)) => void,
     setClub: (value: (((prevState: (Club | null)) => (Club | null)) | Club | null)) => void,
     setPopularity: (value: (((prevState: number) => number) | number)) => void,
-    setExperience: (value: (((prevState: number) => number) | number)) => void
+    setExperience: (value: (((prevState: number) => number) | number)) => void,
+    setSupplies: (value: (((prevState: number) => number) | number)) => void
 }
 
 export const Inquiry = ({
@@ -68,7 +74,8 @@ export const Inquiry = ({
                             setMoney,
                             setClub,
                             setPopularity,
-                            setExperience
+                            setExperience,
+                            setSupplies
                         }: Props) => {
     const [wiggle, setWiggle] = useState<"Beverage" | "Meal" | ServiceType | null>(null)
 
@@ -189,8 +196,10 @@ export const Inquiry = ({
         let money = Math.floor(Math.random() * (10000 - 100) + 100)
         const popularity = Math.floor(Math.random() * (50 - 10) + 10)
         const experience = Math.floor(Math.random() * (50 - 1) + 1)
+        let supplies = 0
         if (present) {
-            money = Math.floor(change / 2)
+            money = Math.floor(money / 2)
+            supplies -= 1
         }
         if (inquiryTableId !== null) {
             if (type === "End") {
@@ -226,6 +235,7 @@ export const Inquiry = ({
             }
             handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
             handleExperienceTransaction({session, setExperience, change: experience}).then()
+            handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: supplies}).then()
             inquiryClose(inquiryTableId)
         }
     }
@@ -238,6 +248,7 @@ export const Inquiry = ({
             handleMoneyTransaction({session, clubData, setMoney, setClub, change: money}).then()
             handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
             handleExperienceTransaction({session, setExperience, change: experience}).then()
+            handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: -1}).then()
             inquiryClose(inquiryTableId)
         } else {
             setWiggle(type)
@@ -337,13 +348,26 @@ export const Inquiry = ({
                                         })
                                     }
                                     let money = 0
+                                    let supplies = 0
                                     const popularity = Math.floor(Math.random() * (10 - 1) + 1)
                                     const experience = Math.floor(Math.random() * (10 - 1) + 1)
-                                    if (randomBeverage !== null) money += randomBeverage.price
-                                    if (randomMeal !== null) money += randomMeal.price
+                                    if (randomBeverage !== null) {
+                                        money += randomBeverage.price
+                                        supplies -= 1
+                                    }
+                                    if (randomMeal !== null) {
+                                        money += randomMeal.price
+                                        supplies -= 1
+                                    }
                                     inquiryClose(inquiryTableId)
-                                    if (money !== 0) {
-                                        handleMoneyTransaction({session, clubData, setMoney, setClub, change: money}).then()
+                                    if (money !== 0 || supplies !== 0) {
+                                        handleMoneyTransaction({
+                                            session,
+                                            clubData,
+                                            setMoney,
+                                            setClub,
+                                            change: money
+                                        }).then()
                                         handlePopularityTransaction({
                                             session,
                                             clubData,
@@ -352,6 +376,7 @@ export const Inquiry = ({
                                             change: popularity
                                         }).then()
                                         handleExperienceTransaction({session, setExperience, change: experience}).then()
+                                        handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: supplies}).then()
                                     }
                                 }}>
                                 {dealButtonText}
