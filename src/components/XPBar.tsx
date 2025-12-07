@@ -14,10 +14,10 @@ export const XPBar = ({value, rank}: XPBarProps) => {
     return(
         <>
             <div
-                className={`absolute left-1/2 -translate-x-[75%] h-full transition-all duration-100 ease-linear bg-pink-600/40 rounded-xl text-[15px] justify-center items-center flex`}
+                className={`absolute left-1/2 -translate-x-[75%] h-full transition-all duration-100 ease-linear bg-pink-600/40 rounded-[20] text-[15px] justify-center items-center flex`}
                 style={{width: 200}}>
                 <div
-                    className={"absolute left-0 h-full bg-pink-600 transition-all duration-300 rounded-xl"}
+                    className={"absolute left-0 h-full bg-pink-600 transition-all duration-300 rounded-[20]"}
                     style={{
                         width: `${percent}%`
                     }}
