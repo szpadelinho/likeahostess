@@ -6,9 +6,11 @@ import {useRouter} from "next/navigation";
 import ReactPlayer from "react-player";
 import Navbar from "@/components/navbar";
 import {NotebookTabs, Play} from "lucide-react";
-import {Drink, molle} from "@/app/types";
+import {Club, Drink, molle, StoredClub} from "@/app/types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
+import {handleMoneyTransaction, handleSuppliesTransaction} from "@/lib/transactions";
+import {useSession} from "next-auth/react";
 
 const NewSerenaClient = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(true)
@@ -19,8 +21,12 @@ const NewSerenaClient = () => {
     const [fade, setFade] = useState<boolean>(false)
     const [fadeDetail, setFadeDetail] = useState<boolean>(false)
     const [drink, setDrink] = useState<Drink | null>(null)
+    const [clubData, setClubData] = useState<Club | null>(null)
+    const [money, setMoney] = useState<number>(0)
+    const [club, setClub] = useState<Club | null>(null)
+    const [supplies, setSupplies] = useState<number>(0)
 
-    const [supplies, setSupplies] = useState<number | null>(null)
+    const { data: session } = useSession()
 
     const drinks: Drink[] = [
         {title: "Essence of the Dragon of Dojima", description: "Apparently really pricey. However, only one person managed to demolish this booze.", price: 1000000, color: "red", tattoo: "oryu"},
@@ -82,18 +88,33 @@ const NewSerenaClient = () => {
     }
 
     useEffect(() => {
-        const fetchSupplies = async () => {
-            const stored = localStorage.getItem("selectedClub")
-            if(!stored) return console.error("LocalStorage error: cannot find current club")
-            const clubData = JSON.parse(stored)
+        const stored = localStorage.getItem("selectedClub")
+        if(!stored) return console.error("No such element as localStorage on Main")
+        const parsedClub: StoredClub = JSON.parse(stored)
+        setClubData(parsedClub)
 
-            const res = await fetch(`/api/user-club?clubId=${clubData.id}`)
-            if(!res.ok) return console.error("Cannot fetch userClub")
-
-            const data = await res.json()
-            setSupplies(data.supplies)
-        }
-        fetchSupplies()
+        fetch(`/api/user-club?clubId=${parsedClub.id}`, {method: "POST"})
+            .then(async (res) => {
+                const data = await res.text()
+                if (!res.ok) {
+                    console.error("API error:", res.status, data)
+                    throw new Error("Failed to fetch club data")
+                }
+                return JSON.parse(data)
+            })
+            .then((userData) => {
+                const mergedClub: Club = {
+                    name: parsedClub.name,
+                    host: parsedClub.host,
+                    logo: parsedClub.logo,
+                    money: userData.money,
+                    popularity: userData.popularity,
+                    supplies: userData.supplies
+                }
+                setMoney(userData.money)
+                setSupplies(userData.supplies)
+                setClub(mergedClub)
+            })
         setLoading(false)
     }, [])
 
@@ -135,10 +156,38 @@ const NewSerenaClient = () => {
             <LoadingBanner show={loading}/>
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"} mode={mode} switchMode={switchMode}/>
             <Image src={mode === "Selection" ? "/images/new_serena.png" : mode === "Drinks" ? "/images/new_serena_2.png" : supplies && supplies >= 100 ? "/images/new_serena.png" : "/images/new_serena_3.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
+            {club !== null && (
+                <div
+                    className={`${molle.className} gap-10 absolute bg-black/60 border-2 border-white rounded-[5] bottom-5 right-5 h-40 p-2 text-center content-center items-center flex flex-row text-[20px] text-white z-50`}>
+                    <Image
+                        className={"flex"}
+                        src={club.host.image}
+                        alt={"Host"}
+                        height={500}
+                        width={100}
+                    />
+                    <div className={"flex flex-col justify-center items-center mr-5"}>
+                        <h1 className={"text-[20px] text-nowrap text-stone-200"}>
+                            {club.host.name} {club.host.surname}
+                        </h1>
+                        <h2 className={"text-[15px] text-stone-300"}>
+                            {club.name}
+                        </h2>
+                        <div className={"flex flex-row gap-5 justify-center items-center"}>
+                            <h2 className={"text-[20px] text-stone-500 font-[600] flex flex-row justify-center items-center"}>
+                                ¥ {money}
+                            </h2>
+                            <h2 className={"text-[15px] text-stone-300"}>
+                                {supplies}/100
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+            )}
             <div className={`${molle.className} ${fade ? "opacity-0" : "opacity-100"} duration-300 ease-in-out w-screen h-screen flex flex-col items-center justify-center text-[30px]`}>
                 {mode === "Selection" && (
                     <div className={"absolute bottom-5 gap-10 flex flex-col items-center justify-center bg-black/60 border-2 border-white rounded-[5] p-15"}>
-                        <h1 className={"text-white text-[50px]"}>What's the matter, big guy?</h1>
+                        <h1 className={"text-white text-[50px]"}>What's the matter, {club?.host?.surname}?</h1>
                         <div className={"gap-20 flex flex-row items-center justify-center"}>
                             <button
                                 onClick={() => {switchMode("Drinks")}}
@@ -209,7 +258,15 @@ const NewSerenaClient = () => {
                                         <h1 className={"text-[20px]"}>Supply payment</h1>
                                         <h2 className={"text-[12px] max-w-50"}>I am obliged to pay the full price of the product mentioned earlier. I fully understand all the rules and necessities which I must follow. The supplies are automatically my property after signing this contract and paying the price of:</h2>
                                         <h1>¥{(100 - supplies) * 1000}</h1>
-                                        <button className={"border-b-2 border-black text-[20px] opacity-50 hover:opacity-100 duration-300 ease-in-out"}>Sign here...</button>
+                                        <button
+                                            onClick={() => {
+                                                handleMoneyTransaction({session, clubData, setMoney, setClub, change: (100 - supplies) * 1000}).then()
+                                                handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: 100 - supplies}).then()
+                                                switchMode("Selection")
+                                            }}
+                                            className={"border-b-2 border-black text-[20px] opacity-50 hover:opacity-100 duration-300 ease-in-out"}>
+                                            Sign here...
+                                        </button>
                                     </div>
                                 </div>
                                 <div className={"absolute left-110 bottom-55 text-center rotate-y-[35deg]"}>

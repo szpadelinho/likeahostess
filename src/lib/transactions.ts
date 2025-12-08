@@ -21,7 +21,7 @@ export const handleMoneyTransaction = async ({
         return console.error("Missing clubData.id")
     }
     if(!clubData) return console.error("ClubData is undefined")
-    setMoney(prev => prev + change)
+    setMoney?.(prev => prev + change)
     setClub(prev => prev ? {...prev, money: prev.money + change} : prev)
     try {
         const res = await fetch('/api/clubs/update-money', {
@@ -38,7 +38,7 @@ export const handleMoneyTransaction = async ({
     }
     catch (error) {
         console.error(error)
-        setMoney(prev => prev - change)
+        setMoney?.(prev => prev - change)
         setClub(prev => prev ? {...prev, money: prev.money - change} : prev)
     }
 }
