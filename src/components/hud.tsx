@@ -7,13 +7,13 @@ import Image from "next/image";
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
 import {MenuModal} from "@/components/menuModal";
 import {Clock} from "@/components/clock";
-import {Club, Rank, yesteryear} from "@/app/types";
+import {Club, Rank, WindowType, yesteryear} from "@/app/types";
 import {XPBar} from "@/components/XPBar";
 
 interface Hud {
     club: Club
-    windowType: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null,
-    setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => void
+    windowType: WindowType | null,
+    setWindow: (value: (((prevState: (WindowType | null)) => (WindowType | null)) | WindowType | null)) => void
     setFade: Dispatch<SetStateAction<boolean>>
     money: number
     popularity: number
@@ -60,7 +60,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
         }
     }
 
-    const handleWindow = (window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null) => {
+    const handleWindow = (window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | "SupplyAlert" | null) => {
         if(menu){
             setClosing(true)
             setTimeout(() => {
@@ -124,6 +124,9 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
 
     return (
         <>
+            {supplies <= 0 && (
+                handleWindow("SupplyAlert")
+            )}
             <div
                 className={`flex flex-row justify-between items-end z-10 p-5 w-screen h-70`}>
                 <Clock/>

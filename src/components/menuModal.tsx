@@ -11,12 +11,13 @@ import {
 } from "lucide-react";
 import {candlestickBigLit} from "@lucide/lab";
 import {MenuButton} from "@/components/menuButton";
+import {WindowType} from "@/app/types";
 
 interface MenuModal {
     menu: boolean,
     closing: boolean,
     handleClick: () => void,
-    setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => void}
+    setWindow: (value: (((prevState: (WindowType | null)) => (WindowType | null)) | WindowType | null)) => void}
 
 export const MenuModal = ({
                               menu,

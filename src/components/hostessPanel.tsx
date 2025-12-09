@@ -1,7 +1,7 @@
 import {PanelBottomClose, PanelBottomOpen} from "lucide-react";
 import {useState} from "react";
 import {DroppableHostessSlot} from "@/scripts/DNDItems";
-import { Hostess } from "@/app/types";
+import {Hostess, WindowType} from "@/app/types";
 
 interface Props {
     hostesses: (Hostess | null)[],
@@ -9,8 +9,8 @@ interface Props {
     selectedHostess: Hostess | null,
     setSelectedHostess: (hostess: Hostess | null) => void,
     setHostessesManagement: (fn: (prev: Hostess[]) => Hostess[]) => void,
-    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null,
-    setWindow: (value: (((prevState: ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => ("Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) | "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null)) => void
+    window: WindowType | null,
+    setWindow: (value: (((prevState: (WindowType | null)) => (WindowType | null)) | WindowType | null)) => void
 }
 
 const HostessPanel = ({

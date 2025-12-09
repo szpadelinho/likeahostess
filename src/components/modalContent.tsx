@@ -5,7 +5,7 @@ import {yesteryear} from "@/app/types";
 
 interface ModalContentProps {
     onCloseModal: () => void,
-    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null,
+    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | "SupplyAlert" | null,
     setLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void,
     setQuit: (value: (((prevState: boolean) => boolean) | boolean)) => void
 }
@@ -154,6 +154,20 @@ export const ModalContent = ({
                     label: "I will stay",
                     onClick: onCloseModal,
                     style: "cursor-zoom-out",
+                },
+            ],
+        },
+        {
+            key: "supplyALert",
+            active: window === "SupplyAlert",
+            image: "/images/takasugi.png",
+            alt: "Koichi Takasugi",
+            title: "You ran out of supplies for your club!",
+            buttons: [
+                {
+                    label: "Rush to the local magazine",
+                    onClick: () => router.push("/newSerena"),
+                    style: "cursor-zoom-in",
                 },
             ],
         },

@@ -41,7 +41,7 @@ const Main = () => {
 
     const [club, setClub] = useState<Club | null>(null)
 
-    const [window, setWindow] = useState<"Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | null>(null)
+    const [window, setWindow] = useState<WindowType | null>(null)
     const [fade, setFade] = useState<boolean>(false)
 
     const [activity, setActivity] = useState<Activity[]>([])
