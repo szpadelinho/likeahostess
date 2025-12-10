@@ -1,11 +1,11 @@
 import Image from "next/image";
 import {signOut} from "next-auth/react";
 import {useRouter} from "next/navigation";
-import {yesteryear} from "@/app/types";
+import {WindowType, yesteryear} from "@/app/types";
 
 interface ModalContentProps {
     onCloseModal: () => void,
-    window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | "SupplyAlert" | null,
+    window: WindowType | null,
     setLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void,
     setQuit: (value: (((prevState: boolean) => boolean) | boolean)) => void
 }
@@ -167,6 +167,20 @@ export const ModalContent = ({
                 {
                     label: "Rush to the local magazine",
                     onClick: () => router.push("/newSerena"),
+                    style: "cursor-zoom-in",
+                },
+            ],
+        },
+        {
+            key: "moneyALert",
+            active: window === "MoneyAlert",
+            image: "/images/ichiban.png",
+            alt: "Ichiban Kasuga",
+            title: "You ran out of money for your club!",
+            buttons: [
+                {
+                    label: "Rush to the local lender",
+                    onClick: () => router.push("/moneylender"),
                     style: "cursor-zoom-in",
                 },
             ],

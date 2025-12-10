@@ -130,6 +130,7 @@ export type WindowType =
     | "LogOff"
     | "LoveInHeart"
     | "SupplyAlert"
+    | "MoneyAlert"
     | null
 
 export interface Drink{

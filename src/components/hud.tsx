@@ -60,7 +60,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
         }
     }
 
-    const handleWindow = (window: "Management" | "Activities" | "Profile" | "Casino" | "NewSerena" | "Moneylender" | "Selection" | "LogOff" | "LoveInHeart" | "SupplyAlert" | null) => {
+    const handleWindow = (window: WindowType | null) => {
         if(menu){
             setClosing(true)
             setTimeout(() => {
@@ -126,6 +126,9 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
         <>
             {supplies <= 0 && (
                 handleWindow("SupplyAlert")
+            )}
+            {money <= 0 && (
+                handleWindow("MoneyAlert")
             )}
             <div
                 className={`flex flex-row justify-between items-end z-10 p-5 w-screen h-70`}>
