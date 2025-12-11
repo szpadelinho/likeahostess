@@ -7,9 +7,10 @@ import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
 import {Session} from "next-auth";
 import Navbar from "@/components/navbar";
-import {cookie, FavClub} from "@/app/types";
+import {cookie, FavClub, StoredClub} from "@/app/types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
+import {signOut} from "next-auth/react";
 
 interface ProfileClientProps {
     session?: Session | null,
@@ -22,7 +23,7 @@ interface ProfileClientProps {
 
 const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
     const router = useRouter()
-
+    const [clubId, setClubId] = useState<number | null>(null)
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
     const {volume, setVolume} = useVolume()
@@ -37,19 +38,27 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
     }, [])
 
     useEffect(() => {
+        const stored = localStorage.getItem("selectedClub")
+        if(!stored) return console.error("No such element as localStorage on Main")
+        const parsedClub: StoredClub = JSON.parse(stored)
+        setClubId(Number(parsedClub.id))
+    }, [])
+
+    useEffect(() => {
         if(session){
             setLoading(false)
         }
     }, [])
 
     const handleReset = async () => {
-        const res = await fetch('/api/resetUserClub', {
+        const res = await fetch(`/api/user-club/reset?clubId=${clubId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: session?.user?.id }),
         })
         if (res.ok) {
             console.log("Successfully reset user data and stats")
+            signOut({redirectTo: "/auth"}).then()
         }
     }
 
