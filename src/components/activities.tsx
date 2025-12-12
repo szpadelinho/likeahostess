@@ -2,21 +2,44 @@ import Image from "next/image";
 import {HandHeart, JapaneseYen, PiggyBank, SkipBack, SkipForward} from "lucide-react";
 import {useState} from "react";
 import {Activity, Club, coustard, Performer} from "@/app/types";
+import {handleMoneyTransaction, handlePopularityTransaction} from "@/lib/transactions";
+import {Session} from "next-auth";
 
 interface Props {
-    onCloseModal: () => void
-    performers: Performer[]
-    selectedPerformer: Performer | null;
-    setSelectedPerformer: (performer: Performer | null) => void;
-    activities: Activity[]
-    setSelectedActivity: (activity: Activity | null) => void;
-    club: Club | null
-    isJamPlaying: boolean
-    setIsJamPlaying: (isJamPlaying: boolean) => void;
-    setJamToggle: (jamToggle: boolean) => void;
+    onCloseModal: () => void,
+    performers: Performer[],
+    selectedPerformer: Performer | null,
+    setSelectedPerformer: (performer: Performer | null) => void,
+    activities: Activity[],
+    setSelectedActivity: (activity: Activity | null) => void,
+    club: Club | null,
+    isJamPlaying: boolean,
+    setIsJamPlaying: (isJamPlaying: boolean) => void,
+    setJamToggle: (jamToggle: boolean) => void,
+    session: Session | null,
+    clubData: Club | null,
+    setPopularity: (value: (((prevState: number) => number) | number)) => void,
+    setMoney: (value: (((prevState: number) => number) | number)) => void,
+    setClub: (value: (((prevState: (Club | null)) => (Club | null)) | Club | null)) => void
 }
 
-const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPerformer, activities, setSelectedActivity, club, isJamPlaying, setIsJamPlaying, setJamToggle}: Props) => {
+const Activities = ({
+                        onCloseModal,
+                        performers,
+                        selectedPerformer,
+                        setSelectedPerformer,
+                        activities,
+                        setSelectedActivity,
+                        club,
+                        isJamPlaying,
+                        setIsJamPlaying,
+                        setJamToggle,
+                        session,
+                        clubData,
+                        setPopularity,
+                        setMoney,
+                        setClub
+                    }: Props) => {
     const [activityIndex, setActivityIndex] = useState(0)
     const isOnSale = club?.host?.surname === selectedPerformer?.surname
     const saleValue = isOnSale ? "text-pink-300 font-[700] text-shadow text-shadow-sm text-shadow-pink-600" : ""
@@ -80,10 +103,13 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                 <h1 className={`text-[75px] ${coustard.className}`}>{selectedPerformer.name} {selectedPerformer.surname}</h1>
                                 <h1>{selectedPerformer.bio}</h1>
                             </div>
-                            <div className={"flex justify-center items-center flex-row absolute -bottom-15 left-190 text-[15px] bg-pink-900 p-5 rounded-[20] gap-5"} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+                            <div
+                                className={"flex justify-center items-center flex-row absolute -bottom-15 left-190 text-[15px] bg-pink-900 p-5 rounded-[20] gap-5"}
+                                style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                                 {performerActivities.length > 0 && activityIndex >= 0 && activityIndex < performerActivities.length && (
                                     <>
-                                        <button onClick={prevActivity} className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
+                                        <button onClick={prevActivity}
+                                                className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
                                             <SkipBack/>
                                         </button>
                                         <div onClick={() => {
@@ -91,17 +117,34 @@ const Activities = ({onCloseModal, performers, selectedPerformer, setSelectedPer
                                             setJamToggle(isJamPlaying)
                                             setIsJamPlaying(false)
                                             setSelectedActivity(performerActivities[activityIndex])
+                                            handlePopularityTransaction({
+                                                session,
+                                                clubData,
+                                                setPopularity,
+                                                setClub,
+                                                change: performerActivities[activityIndex].popularityGain
+                                            }).then()
+                                            handleMoneyTransaction({
+                                                session,
+                                                clubData,
+                                                setMoney,
+                                                setClub,
+                                                change: performerActivities[activityIndex].cost
+                                            }).then()
                                         }}
-                                             className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-105 active:scale-110 hover:text-pink-200 transition-all duration-200 ease-in-out active:scale-105"}>
+                                             className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-105 hover:text-pink-200 transition-all duration-200 ease-in-out active:scale-105"}>
                                             <p className={"w-100 flex flex-row justify-center items-center gap-2"}>{performerActivities[activityIndex].name}</p>
                                             <p className={`w-20 flex flex-row justify-center items-center ${saleValue}`}>
                                                 <JapaneseYen size={15}/>
                                                 {checkOwnership(club?.host?.surname, selectedPerformer?.surname, performerActivities[activityIndex]?.cost)}
                                                 {isOnSale ? <PiggyBank size={15} className={"ml-1"}/> : ""}
                                             </p>
-                                            <p className={"w-20 flex flex-row justify-center items-center gap-1"}><HandHeart size={15}/>{performerActivities[activityIndex].popularityGain}</p>
+                                            <p className={"w-20 flex flex-row justify-center items-center gap-1"}>
+                                                <HandHeart
+                                                    size={15}/>{performerActivities[activityIndex].popularityGain}</p>
                                         </div>
-                                        <button onClick={nextActivity} className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 scale-100 hover:scale-110"}>
+                                        <button onClick={nextActivity}
+                                                className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 scale-100 hover:scale-110"}>
                                             <SkipForward/>
                                         </button>
                                     </>

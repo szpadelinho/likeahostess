@@ -26,7 +26,7 @@ import {
     ServiceType,
     StoredClub,
     CLUB_RANKS,
-    getLevel, getRank, Rank
+    getLevel, getRank, Rank, WindowType
 } from "@/app/types";
 import {useSession} from "next-auth/react";
 
@@ -345,7 +345,7 @@ const Main = () => {
                         }}>
                             {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
                                                              selectedPerformer={selectedPerformer}
-                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity} club={club} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying} setJamToggle={setJamToggle}/>}
+                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity} club={club} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying} setJamToggle={setJamToggle} session={session} clubData={clubData} setPopularity={setPopularity} setMoney={setMoney} setClub={setClub}/>}
                         </ModalWrapper>
                     )}
                 </MainWrapper>
