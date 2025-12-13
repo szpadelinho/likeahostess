@@ -9,6 +9,7 @@ import clsx from "clsx";
 import Navbar from "@/components/navbar";
 import {ClubSelection, texturina} from "@/app/types";
 import {useVolume} from "@/app/context/volumeContext";
+import {HeartHandshake, Package} from "lucide-react";
 
 const SelectionClient = () => {
     const router = useRouter()
@@ -57,7 +58,9 @@ const SelectionClient = () => {
     useEffect(() => {
         fetch('/api/clubs')
             .then(res => res.json())
-            .then(data => setClubs(data))
+            .then((data: ClubSelection[]) => {
+                setClubs(data)
+            })
     }, [])
 
     useEffect(() => {
@@ -119,6 +122,34 @@ const SelectionClient = () => {
         }
     }
 
+    const getStats = (position: string) => {
+        let index: number
+        switch(position){
+            case "left":
+                index = (currentIndex - 1 + clubs.length) % clubs.length
+                break
+            case "right":
+                index = (currentIndex + 1) % clubs.length
+                break
+            case "center":
+            default:
+                index = currentIndex
+        }
+
+        const club = clubs[index]
+        const player = club?.userClub?.[0]
+
+        if (!player) return null
+
+        return(
+            <div className={`${position !== "center" ? "left-15 -bottom-2" : " transform-x-1/2 bottom-0" } absolute flex flex-row text-white gap-10 text-[20px] opacity-50`}>
+                <h1 className={"flex flex-row gap-2 justify-center items-center text-center"}>¥{player?.money ?? 0}</h1>
+                <h1 className={"flex flex-row gap-2 justify-center items-center text-center"}><HeartHandshake/> {player?.popularity ?? 0}</h1>
+                <h1 className={"flex flex-row gap-2 justify-center items-center text-center"}><Package/> {player?.supplies ?? 0}</h1>
+            </div>
+        )
+    }
+
     return (
         <>
             <LoadingBanner show={loading}/>
@@ -150,7 +181,7 @@ const SelectionClient = () => {
                                                 height={club.position === "center" ? 400 : 300}
                                                 className="rounded-md object-cover [mask-image:radial-gradient(ellipse_at_center,_black_0%,_transparent_75%)] [-webkit-mask-image:radial-gradient(ellipse_at_center,_black_0%,_transparent_75%)]"
                                             />
-
+                                            {getStats(club.position)}
                                             <div
                                                 className={`absolute left-5 bottom-[-20px] z-10 ${club.position !== 'center' ? 'scale-75 opacity-80' : ''}`}>
                                                 <Image

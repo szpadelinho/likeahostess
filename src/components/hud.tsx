@@ -148,9 +148,6 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                 <div
                     className={`text-center items-center flex flex-row text-[20px] rounded-[20] text-pink-200 absolute bottom-5 right-15`}>
                     <div className={"flex flex-col text-center justify-center gap-3"}>
-                        <h1 className={`absolute left-78 -top-25 text-nowrap rotate-90 text-[50px] opacity-50 ${yesteryear.className}`}>
-                            {club.host.name} {club.host.surname}
-                        </h1>
                         <div className={`flex flex-row justify-center items-center gap-3 opacity-50 relative ${yesteryear.className}`}>
                             <Image
                                 className={"object-contain absolute left-1/2 -translate-x-[50%] bottom-7.5 z-9"}
@@ -183,7 +180,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                             </div>
                         </div>
                     </div>
-                    <div className={"rounded-[20] flex justify-center w-40"}>
+                    <div className={"relative rounded-[20] flex justify-center w-40"}>
                         <Image
                             className={"flex absolute -bottom-50"}
                             src={club.host.image}
@@ -191,6 +188,9 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                             height={500}
                             width={150}
                         />
+                        <h1 className={`absolute right-3 -bottom-10 origin-bottom-right text-nowrap rotate-90 opacity-50 text-[clamp(24px,4vw,50px)] ${yesteryear.className}`}>
+                            {club.host.name} {club.host.surname}
+                        </h1>
                     </div>
                 </div>
             </div>

@@ -54,6 +54,11 @@ export type ClubSelection = {
     host: {
         image: string
     }
+    userClub: {
+        money: number
+        popularity: number
+        supplies: number
+    }[]
 }
 
 export interface Hostess {
