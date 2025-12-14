@@ -51,12 +51,16 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
     }, [])
 
     const handleReset = async () => {
-        const res = await fetch(`/api/user-club/reset?clubId=${clubId}`, {
+        const resClub = await fetch(`/api/user-club/reset?clubId=${clubId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: session?.user?.id }),
         })
-        if (res.ok) {
+        const resUser = await fetch(`/api/user/reset`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+        })
+        if (resClub.ok && resUser.ok) {
             console.log("Successfully reset user data and stats")
             signOut({redirectTo: "/auth"}).then()
         }
