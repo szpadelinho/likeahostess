@@ -68,7 +68,6 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                 setClosing(false)
             }, 300)
         }
-
         if (windowType === window || window === null) {
             setFade(true)
             setTimeout(() => {
@@ -122,14 +121,13 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
         return () => window.removeEventListener("keydown", handleButton)
     }, [handleButton])
 
+    useEffect(() => {
+        if(supplies <= 0) handleWindow("SupplyAlert")
+        if(money <= 0) handleWindow("MoneyAlert")
+    }, [supplies, money])
+
     return (
         <>
-            {supplies <= 0 && (
-                handleWindow("SupplyAlert")
-            )}
-            {money <= 0 && (
-                handleWindow("MoneyAlert")
-            )}
             <div
                 className={`flex flex-row justify-between items-end z-10 p-5 w-screen h-70`}>
                 <Clock/>
