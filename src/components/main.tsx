@@ -31,7 +31,7 @@ import {
 import {useSession} from "next-auth/react";
 
 const Main = () => {
-    const {data: session, status} = useSession()
+    const {data: session} = useSession()
     const [money, setMoney] = useState<number>(0)
     const [popularity, setPopularity] = useState<number>(0)
     const [experience, setExperience] = useState<number>(0)
@@ -86,39 +86,30 @@ const Main = () => {
     useEffect(() => {
         const fetchHostesses = async () => {
             try {
-                const res = await fetch("/api/hostess")
-                const data = await res.json()
-                const sortedData = data.sort((a: Hostess, b: Hostess) => Number(a.id) - Number(b.id))
-                setHostessesManagement(sortedData)
+                const resHostess = await fetch("/api/hostess")
+                const hostessData: Hostess[] = await resHostess.json()
+                const sortedHostess = hostessData.sort((a: Hostess, b: Hostess) => Number(a.id) - Number(b.id))
+
+                const resFatigue = await fetch(`/api/user-hostess?userId=${session?.user?.id}`)
+                const fatigueData: { hostessId: string, fatigue: number }[] = await resFatigue.json()
+
+                const dataMap: Record<string, number> = {}
+                fatigueData.forEach(f => dataMap[f.hostessId] = f.fatigue)
+
+                const merged = sortedHostess.map(h => ({
+                    ...h,
+                    fatigue: dataMap[h.id]
+                }))
+                setHostessesManagement(merged)
+
+                setLoading(false)
             } catch (err) {
-                console.log("Failed to fetch hostesses", err)
+                console.log(err)
             }
         }
-
-        fetchHostesses()
-    }, [])
-
-    useEffect(() => {
-        if(status !== "authenticated" || hostessesManagement.length === 0) return
-
-        const fetchFatigue = async () => {
-            try{
-                await fetch("/api/user-hostess", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({userId: session?.user?.id})
-                })
-                console.log("Fatigue fetch succedeed")
-            }
-            catch(err){
-                console.error("Failed to fetch fatigue", err)
-            }
-        }
-
-        fetchFatigue()
-    }, [status, session?.user?.id, hostessesManagement])
+        if (session?.user?.id)
+            fetchHostesses()
+    }, [session?.user?.id])
 
     useEffect(() => {
         const fetchActivities = async () => {

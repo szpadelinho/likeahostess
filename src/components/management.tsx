@@ -1,5 +1,10 @@
 import Image from "next/image";
-import {Battery, BatteryLow, BatteryMedium, BatteryWarning, BatteryFull, Candy} from "lucide-react";
+import {
+    Candy,
+    Zap,
+    Flame,
+    Droplet, Snowflake, PlugZap
+} from "lucide-react";
 import {DraggableHostess} from "@/scripts/DNDItems";
 import {Hostess, marckScript} from "@/app/types";
 
@@ -35,11 +40,11 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                                     <Candy/>{selectedHostess.attractiveness}/5
                                 </h1>
                                 <h1 className={"flex flex-row justify-center items-center gap-2"}>
-                                    {selectedHostess.fatigue < 10 ? <Battery/>
-                                        : selectedHostess.fatigue >= 11 && selectedHostess.fatigue < 25 ? <BatteryWarning/>
-                                            : selectedHostess.fatigue >= 26 && selectedHostess.fatigue < 50 ? <BatteryLow/>
-                                                : selectedHostess.fatigue >= 50 && selectedHostess.fatigue < 75 ? <BatteryMedium/>
-                                                    : selectedHostess.fatigue && <BatteryFull/>}
+                                    {selectedHostess.fatigue < 10 ? <Zap/>
+                                        : selectedHostess.fatigue >= 11 && selectedHostess.fatigue < 25 ? <Flame/>
+                                            : selectedHostess.fatigue >= 26 && selectedHostess.fatigue < 50 ? <Droplet/>
+                                                : selectedHostess.fatigue >= 50 && selectedHostess.fatigue < 75 ? <Snowflake/>
+                                                    : selectedHostess.fatigue && <PlugZap/>}
                                     {selectedHostess.fatigue}/100
                                 </h1>
                             </div>

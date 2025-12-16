@@ -21,13 +21,18 @@ const Profile = async () => {
         include: {userClub: true}
     })
 
-    const totals = user?.userClub.reduce((acc, uc) => {
+    let totals = user?.userClub.reduce((acc, uc) => {
         acc.money += uc.money
         acc.popularity += uc.popularity
+        acc.supplies += uc.supplies
         return acc
     },
-        {money: 0, popularity: 0}
+        {money: 0, popularity: 0, supplies: 0}
     )
+
+    if(totals && user?.userClub){
+        totals.supplies /= user?.userClub.length
+    }
 
     const favClub = await prisma.userClub.findFirst({
         where: {userId: session.user.id},

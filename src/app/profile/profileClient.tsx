@@ -17,6 +17,7 @@ interface ProfileClientProps {
     totals: {
         money: number,
         popularity: number
+        supplies: number
     } | undefined,
     favClub: FavClub,
 }
@@ -109,6 +110,9 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
                     </h2>
                     <h2 className={`absolute top-80 z-50 text-[25px] ${cookie.className}`}>
                         Summed up popularity: {totals?.popularity}
+                    </h2>
+                    <h2 className={`absolute top-90 z-50 text-[25px] ${cookie.className}`}>
+                        Average supply level: {totals?.supplies}%
                     </h2>
                     <div className={"absolute top-120 flex justify-center items-center gap-1 flex-col"}>
                         <h1 className={`z-50 text-[30px] ${cookie.className}`}>
