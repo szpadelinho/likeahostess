@@ -36,16 +36,26 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                         <div className={"flex justify-center items-center flex-col max-w-175 gap-5"}>
                             <h1 className={`text-[100px] ${marckScript.className}`}>{selectedHostess.name} {selectedHostess.surname}</h1>
                             <div className={"flex justify-center items-center flex-row gap-10"}>
-                                <h1 className={"flex flex-row justify-center items-center gap-2"}>
-                                    <Candy/>{selectedHostess.attractiveness}/5
+                                <h1 className={"flex flex-col justify-center items-center gap-2"}>
+                                    <p>
+                                        Attractiveness
+                                    </p>
+                                    <p className={"flex flex-row justify-center items-center gap-2"}>
+                                        <Candy/>{selectedHostess.attractiveness}/5
+                                    </p>
                                 </h1>
-                                <h1 className={"flex flex-row justify-center items-center gap-2"}>
-                                    {selectedHostess.fatigue < 10 ? <Zap/>
-                                        : selectedHostess.fatigue >= 11 && selectedHostess.fatigue < 25 ? <Flame/>
-                                            : selectedHostess.fatigue >= 26 && selectedHostess.fatigue < 50 ? <Droplet/>
-                                                : selectedHostess.fatigue >= 50 && selectedHostess.fatigue < 75 ? <Snowflake/>
-                                                    : selectedHostess.fatigue && <PlugZap/>}
-                                    {selectedHostess.fatigue}/100
+                                <h1 className={"flex flex-col justify-center items-center gap-2"}>
+                                    <p>
+                                        Fatigue
+                                    </p>
+                                    <p className={"flex flex-row justify-center items-center gap-2"}>
+                                        {selectedHostess.fatigue < 10 ? <Zap/>
+                                            : selectedHostess.fatigue >= 11 && selectedHostess.fatigue < 25 ? <Flame/>
+                                                : selectedHostess.fatigue >= 26 && selectedHostess.fatigue < 50 ? <Droplet/>
+                                                    : selectedHostess.fatigue >= 50 && selectedHostess.fatigue < 75 ? <Snowflake/>
+                                                        : selectedHostess.fatigue && <PlugZap/>}
+                                        {selectedHostess.fatigue}/100
+                                    </p>
                                 </h1>
                             </div>
                             <h1>{selectedHostess.bio}</h1>
