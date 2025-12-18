@@ -27,7 +27,7 @@ const HostessPanel = ({
 
     return (
         <div
-            className={`${visibilityIndexSetter} ${hidden && "translate-y-35"} duration-500 ease-in-out bg-pink-700 text-center items-center justify-center flex flex-row text-[20px] rounded-[25] text-pink-200 font-[600] absolute bottom-5 left-1/2 -translate-x-[50%]`} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+            className={`${visibilityIndexSetter} ${hidden && "translate-y-35"} opacity-75 hover:opacity-100 duration-500 ease-in-out bg-pink-700 text-center items-center justify-center flex flex-row text-[20px] rounded-[25] text-pink-200 font-[600] absolute bottom-5 left-1/2 -translate-x-[50%]`} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
             <div className={"flex justify-center items-center m-2 gap-5"}>
                 {hostesses?.map((_, index) => (
                     <DroppableHostessSlot
