@@ -1,4 +1,4 @@
-import {Club, HostessMassage} from "@/app/types";
+import {Club, Hostess, HostessMassage} from "@/app/types";
 import {SetStateAction} from "react";
 
 export const handleMoneyTransaction = async ({
@@ -193,6 +193,50 @@ export const handleFatigueTransaction = async ({
                 ...h,
                 fatigue: Math.max((h.fatigue ?? 0) + change, 100)
             }))
+        )
+    }
+}
+
+export const handleHostessFatigueTransaction = async ({
+                                                   session,
+                                                   setHostesses, hostessId,
+                                                   change
+                                               }: {
+    session: any,
+    setHostesses: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>,
+    hostessId: string
+    change: number
+}) => {
+    if (!session?.user?.id) {
+        return console.error("Missing userId")
+    }
+    setHostesses(prev =>
+        prev.map(h =>
+            h
+                ? { ...h, fatigue: Math.max(h.fatigue - change, 0) }
+                : null
+        )
+    )
+    try {
+        const res = await fetch('/api/user-hostess/update-fatigue-hostess', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                hostessId: hostessId,
+                amount: change
+            }),
+        })
+
+        if (!res.ok) console.error('updateHostessFatigue on transactions failed')
+    }
+    catch (error) {
+        console.error(error)
+        setHostesses(prev =>
+            prev.map(h =>
+                h
+                    ? { ...h, fatigue: Math.max(h.fatigue - change, 0) }
+                    : null
+            )
         )
     }
 }

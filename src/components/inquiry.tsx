@@ -13,7 +13,7 @@ import {
     Martini,
     Beer
 } from "lucide-react";
-import React, {useEffect, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {towelFolded, cupSaucer} from "@lucide/lab";
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
@@ -21,7 +21,7 @@ import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
 import {Buffet, ServiceType, Hostess, Club} from "@/app/types";
 import {Session} from "next-auth";
 import {
-    handleExperienceTransaction,
+    handleExperienceTransaction, handleHostessFatigueTransaction,
     handleMoneyTransaction,
     handlePopularityTransaction,
     handleSuppliesTransaction
@@ -51,7 +51,8 @@ interface Props {
     setClub: (value: (((prevState: (Club | null)) => (Club | null)) | Club | null)) => void,
     setPopularity: (value: (((prevState: number) => number) | number)) => void,
     setExperience: (value: (((prevState: number) => number) | number)) => void,
-    setSupplies: (value: (((prevState: number) => number) | number)) => void
+    setSupplies: (value: (((prevState: number) => number) | number)) => void,
+    setHostesses: Dispatch<SetStateAction<(Hostess | null)[]>>
 }
 
 export const Inquiry = ({
@@ -75,7 +76,8 @@ export const Inquiry = ({
                             setClub,
                             setPopularity,
                             setExperience,
-                            setSupplies
+                            setSupplies,
+                            setHostesses
                         }: Props) => {
     const [wiggle, setWiggle] = useState<"Beverage" | "Meal" | ServiceType | null>(null)
 
@@ -236,6 +238,9 @@ export const Inquiry = ({
             handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
             handleExperienceTransaction({session, setExperience, change: experience}).then()
             handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: supplies}).then()
+            if(hostesses[inquiryTableId] !== null){
+                handleHostessFatigueTransaction({session, setHostesses, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
+            }
             inquiryClose(inquiryTableId)
         }
     }
@@ -249,6 +254,9 @@ export const Inquiry = ({
             handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
             handleExperienceTransaction({session, setExperience, change: experience}).then()
             handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: -1}).then()
+            if(hostesses[inquiryTableId] !== null){
+                handleHostessFatigueTransaction({session, setHostesses, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
+            }
             inquiryClose(inquiryTableId)
         } else {
             setWiggle(type)
@@ -376,7 +384,16 @@ export const Inquiry = ({
                                             change: popularity
                                         }).then()
                                         handleExperienceTransaction({session, setExperience, change: experience}).then()
-                                        handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: supplies}).then()
+                                        handleSuppliesTransaction({
+                                            session,
+                                            clubData,
+                                            setSupplies,
+                                            setClub,
+                                            change: supplies
+                                        }).then()
+                                        if(hostesses[inquiryTableId] !== null){
+                                            handleHostessFatigueTransaction({session, setHostesses, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
+                                        }
                                     }
                                 }}>
                                 {dealButtonText}
