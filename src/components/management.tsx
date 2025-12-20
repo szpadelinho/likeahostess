@@ -48,7 +48,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                                     <p>
                                         Fatigue
                                     </p>
-                                    <p className={"flex flex-row justify-center items-center gap-2"}>
+                                    <p className={`${selectedHostess.fatigue >= 100 && "text-pink-400 font-[700]"} flex flex-row justify-center items-center gap-2`}>
                                         {selectedHostess.fatigue < 10 ? <Zap/>
                                             : selectedHostess.fatigue >= 11 && selectedHostess.fatigue < 25 ? <Flame/>
                                                 : selectedHostess.fatigue >= 26 && selectedHostess.fatigue < 50 ? <Droplet/>
@@ -60,7 +60,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                             </div>
                             <h1>{selectedHostess.bio}</h1>
                         </div>
-                        <div className={"flex justify-center items-center"}>
+                        <div className={`flex justify-center items-center ${selectedHostess.fatigue >= 100 && "mix-blend-color-burn"}`}>
                             <Image src={selectedHostess.cover}
                                    alt={`${selectedHostess.name} ${selectedHostess.surname} full body shot`}
                                    height={300} width={300}/>

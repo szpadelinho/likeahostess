@@ -1,6 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Yesteryear&display=swap');
 @import "tailwindcss";
 
+img {
+    -webkit-user-drag: none;
+    user-drag: none;
+    user-select: none;
+}
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
     opacity: 0;

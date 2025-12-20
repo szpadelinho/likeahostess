@@ -210,6 +210,7 @@ export const DraggableHostess = ({hostess, source, selectedHostess, setSelectedH
     const [{isDragging}, drag] = useDrag(() => ({
         type: "hostess",
         item: {hostess, source},
+        canDrag: hostess.fatigue < 100,
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         })
@@ -237,6 +238,9 @@ export const DraggableHostess = ({hostess, source, selectedHostess, setSelectedH
                 source === "management"
                     ? "border-pink-400 bg-pink-950/70/50 hover:bg-pink-900 border-2"
                     : "bg-pink-800 hover:bg-pink-900"
+            }
+            ${
+                hostess.fatigue >= 100 && "opacity-50 mix-blend-color-burn"
             }`}
         >
             <Image
