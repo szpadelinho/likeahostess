@@ -199,11 +199,11 @@ export const Inquiry = ({
         const popularity = Math.floor(Math.random() * (50 - 10) + 10)
         const experience = Math.floor(Math.random() * (50 - 1) + 1)
         let supplies = 0
-        if (present) {
-            money = Math.floor(money / 2)
-            supplies -= 1
-        }
         if (inquiryTableId !== null) {
+            if (present) {
+                money = Math.floor(money / 2)
+                supplies -= 1
+            }
             if (type === "End") {
                 setVisit(prev => {
                     const updated = [...prev]
@@ -407,7 +407,7 @@ export const Inquiry = ({
                             <div
                                 className={"flex w-140 h-15 justify-center items-center flex-row bg-transparent rounded-[15] p-2 text-[16px]"}
                                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
-                                {`Looks like ${hostesses[inquiryTableId]?.name} ${hostesses[inquiryTableId]?.surname} is calling you for a service assistance`}
+                                {`Looks like ${hostesses[inquiryTableId]?.name} ${hostesses[inquiryTableId]?.surname !== null ? hostesses[inquiryTableId]?.surname : ""} is calling you for a service assistance`}
                             </div>
                             <Image
                                 src={`/images/hostess_service_${serviceType[inquiryTableId]}.png`}

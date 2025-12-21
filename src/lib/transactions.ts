@@ -213,7 +213,13 @@ export const handleHostessFatigueTransaction = async ({
     setHostesses(prev =>
         prev.map(h =>
             h
-                ? { ...h, fatigue: Math.max(h.fatigue - change, 0) }
+                ? {
+                    ...h,
+                    fatigue: Math.min(
+                        100,
+                        Math.max((h.fatigue ?? 0) - change, 0)
+                    )
+                }
                 : null
         )
     )
@@ -234,7 +240,13 @@ export const handleHostessFatigueTransaction = async ({
         setHostesses(prev =>
             prev.map(h =>
                 h
-                    ? { ...h, fatigue: Math.max(h.fatigue - change, 0) }
+                    ? {
+                        ...h,
+                        fatigue: Math.min(
+                            100,
+                            Math.max((h.fatigue ?? 0) - change, 0)
+                        )
+                    }
                     : null
             )
         )

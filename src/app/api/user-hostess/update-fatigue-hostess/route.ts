@@ -19,21 +19,38 @@ export async function POST(req: Request) {
     }
 
     try {
-        await prisma.userHostess.update({
+        const hostess = await prisma.userHostess.findUnique({
             where: {
                 userId_hostessId: {
                     userId: session.user.id,
                     hostessId: hostessId
                 }
             },
-            data: {
-                fatigue: {
-                    decrement: amount
-                }
+            select: {
+                fatigue: true
             }
         })
 
-        return NextResponse.json({ success: true })
+        if (!hostess) return NextResponse.json({ error: "Hostess not found", status: 404 })
+
+        const fatigue = Math.min(
+            100,
+            Math.max(hostess.fatigue - amount, 0)
+        )
+
+        await prisma.userHostess.update({
+            where: {
+                userId_hostessId: {
+                    userId: session.user.id,
+                    hostessId,
+                },
+            },
+            data: {
+                fatigue,
+            },
+        })
+
+        return NextResponse.json({ success: true, fatigue })
     } catch (error) {
         console.error(`Failed to update hostess #${hostessId} fatigue:`, error)
         return NextResponse.json({ error: "Server error" }, { status: 500 })
