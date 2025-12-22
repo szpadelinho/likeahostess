@@ -37,7 +37,9 @@ interface InteriorProps {
             | (ServiceType | null)[]
     ) => void,
     setDinedTables: (value: (((prevState: boolean[]) => boolean[]) | boolean[])) => void,
-    barKeys: number[]
+    barKeys: number[],
+    money: number
+    supplies: number
 }
 
 const Interior = ({
@@ -57,7 +59,9 @@ const Interior = ({
                       setVisit,
                       setServiceType,
                       setDinedTables,
-                      barKeys
+                      barKeys,
+                      money,
+                      supplies
                   }: InteriorProps) => {
     const items = Array(8).fill(null)
     const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
@@ -71,17 +75,19 @@ const Interior = ({
     const clientRef = useRef<HTMLAudioElement | null>(null)
 
     useEffect(() => {
-        if (!waitingClient) {
-            const random = Math.floor(Math.random() * 19000) + 1000
-            const timer = setTimeout(() => {
-                setWaitingClient(true)
-                clientRef.current = new Audio("/sfx/client_arrived.m4a")
-                clientRef.current.play().catch(() => {
-                })
-            }, random)
-            return () => {
-                clearTimeout(timer)
-                clientRef.current = null
+        if(supplies > 0 && money > 0){
+            if (!waitingClient) {
+                const random = Math.floor(Math.random() * 19000) + 1000
+                const timer = setTimeout(() => {
+                    setWaitingClient(true)
+                    clientRef.current = new Audio("/sfx/client_arrived.m4a")
+                    clientRef.current.play().catch(() => {
+                    })
+                }, random)
+                return () => {
+                    clearTimeout(timer)
+                    clientRef.current = null
+                }
             }
         }
     }, [waitingClient])
@@ -324,7 +330,10 @@ const Interior = ({
                                         </button>
                                     )}
                                 </>
-                                <DroppableClient index={i} clients={clients} setClients={setClients} hostesses={hostesses} setSelectedClient={setSelectedClient} InquiryHandler={InquiryHandler} wiggleClient={wiggleClient} setWaitingClient={setWaitingClient} inquiryType={inquiryType}/>
+                                <DroppableClient index={i} clients={clients} setClients={setClients}
+                                                 hostesses={hostesses} setSelectedClient={setSelectedClient}
+                                                 InquiryHandler={InquiryHandler} wiggleClient={wiggleClient}
+                                                 setWaitingClient={setWaitingClient} inquiryType={inquiryType}/>
                                 {clients[i] && (
                                     <button onClick={() => {
                                         const updatedClients =

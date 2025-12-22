@@ -4,7 +4,9 @@ import { auth } from "@/lib/auth"
 
 export async function POST(req: Request) {
     const session = await auth()
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const userId = session?.user?.id
+
+    if (!session || !userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
     const { amount } = await req.json()
 
@@ -13,16 +15,27 @@ export async function POST(req: Request) {
     }
 
     try {
-        await prisma.userHostess.updateMany({
-            where: {
-                userId: session?.user?.id
-            },
-            data: {
-                fatigue: {
-                    decrement: amount
-                }
-            }
+        const hostesses = await prisma.userHostess.findMany({
+            where: { userId },
+            select: { hostessId: true, fatigue: true },
         })
+
+        await prisma.$transaction(
+            hostesses.map(h => prisma.userHostess.update({
+                where: {
+                    userId_hostessId: {
+                        userId,
+                        hostessId: h.hostessId,
+                    },
+                },
+                data: {
+                    fatigue: Math.min(
+                        100,
+                        Math.max(h.fatigue - amount, 0)
+                    ),
+                },
+            }))
+        )
 
         return NextResponse.json({ success: true })
     } catch (error) {

@@ -238,7 +238,7 @@ const NewSerenaClient = () => {
                         )}
                     </>
                 )}
-                {mode === "Supplies" && supplies && (
+                {mode === "Supplies" && supplies !== null && (
                     <>
                         {supplies >= 100 ? (
                             <div className={"absolute bottom-5 gap-10 flex flex-col items-center justify-center bg-black/60 border-2 border-white rounded-[5] p-15"}>
@@ -252,7 +252,7 @@ const NewSerenaClient = () => {
                                 </div>
                             </div>
                         ) : (
-                            <>
+                            <div className={"z-1"}>
                                 <div className={"z-1 text-center right-199 absolute bottom-44"}>
                                     <div className={"flex flex-col justify-center items-center gap-5"}>
                                         <h1 className={"text-[20px]"}>Supply payment</h1>
@@ -273,7 +273,7 @@ const NewSerenaClient = () => {
                                     <h1 className={"text-[65px]"}>Supplies</h1>
                                     <h2>{100 - supplies}/100</h2>
                                 </div>
-                            </>
+                            </div>
                         )}
                     </>
                 )}
