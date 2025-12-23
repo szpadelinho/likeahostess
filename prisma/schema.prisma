@@ -23,6 +23,8 @@ model User {
   userClub      UserClub[]
 
   UserHostess UserHostess[]
+
+  Loan Loan[]
 }
 
 model Account {
@@ -150,6 +152,19 @@ model Buffet {
   description String     @default("Nothing is really known about this type of... uh... thing? I guess...")
   type        BuffetType
   icon String @default("UtensilsCrossed")
+}
+
+model Loan {
+  id          String     @id @default(cuid())
+  userId String
+  amount Int
+  interest Float @default(1.2)
+  createdAt DateTime
+  dueAt DateTime
+  paid Boolean
+  paidAt DateTime?
+
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 enum BuffetType {

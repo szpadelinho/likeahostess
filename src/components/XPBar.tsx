@@ -12,9 +12,9 @@ export const XPBar = ({value, rank}: XPBarProps) => {
     const percent = Math.min(100, (current / 1000) * 100)
 
     return(
-        <>
+        <div className={"absolute -top-0.5 h-10 flex flex-row gap-5 justify-center items-center"}>
             <div
-                className={`absolute left-1/2 -translate-x-[75%] h-full transition-all duration-100 ease-linear bg-pink-600/40 rounded-[20] text-[15px] justify-center items-center flex`}
+                className={`h-full transition-all duration-100 ease-linear bg-pink-600/40 rounded-[20] text-[15px] justify-center items-center flex`}
                 style={{width: 200}}>
                 <div
                     className={"absolute left-0 h-full bg-pink-600 transition-all duration-300 rounded-[20]"}
@@ -26,12 +26,12 @@ export const XPBar = ({value, rank}: XPBarProps) => {
                     {value}/1000
                 </p>
             </div>
-            <div className={"absolute -right-20 flex flex-col justify-center items-center text-center opacity-50"}>
+            <div className={"flex flex-col justify-center items-center text-center opacity-50"}>
                 <p className={"text-[15px]"}>
                     {level}
                 </p>
                 <Badge size={40} className={"absolute"}/>
             </div>
-        </>
+        </div>
     )
 }

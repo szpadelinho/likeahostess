@@ -1,4 +1,4 @@
-import {Club, Hostess, HostessMassage} from "@/app/types";
+import {Club, Hostess, HostessMassage, StoredClub} from "@/app/types";
 import {SetStateAction} from "react";
 
 export const handleMoneyTransaction = async ({
@@ -250,5 +250,37 @@ export const handleHostessFatigueTransaction = async ({
                     : null
             )
         )
+    }
+}
+
+export const handleLoanTransaction = async ({session, clubData, amount, type} : {session: any, ClubData: StoredClub, amount: number, type: "Payment" | "Takeout"}) => {
+    if (!session?.user?.id) {
+        return console.error("Missing userId")
+    }
+    try{
+        if(type === "Takeout"){
+            const res = await fetch('/api/loans', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount,
+                    clubId: clubData.id,
+                }),
+            })
+            if (!res.ok) console.error('handleLoanTransaction takeout on transactions failed')
+        }
+        else{
+            const res = await fetch('/api/loans', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    clubId: clubData.id,
+                })
+            })
+            if (!res.ok) console.error('handleLoanTransaction payment on transactions failed')
+        }
+    }
+    catch(err){
+        console.error("handleLoanTransaction failed", err)
     }
 }

@@ -7,7 +7,7 @@ import Image from "next/image";
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
 import {MenuModal} from "@/components/menuModal";
 import {Clock} from "@/components/clock";
-import {Club, Rank, WindowType, yesteryear} from "@/app/types";
+import {Club, Loan, Rank, WindowType, yesteryear} from "@/app/types";
 import {XPBar} from "@/components/XPBar";
 
 interface Hud {
@@ -20,10 +20,11 @@ interface Hud {
     experience: number
     supplies: number
     rank: Rank
+    loan: Loan | null
 }
 
 
-const Hud = ({club, windowType, setWindow, setFade, money, popularity, experience, supplies, rank}: Hud) => {
+const Hud = ({club, windowType, setWindow, setFade, money, popularity, experience, supplies, rank, loan}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
@@ -126,6 +127,35 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
         if(money <= 0) handleWindow("MoneyAlert")
     }, [supplies, money])
 
+    const LoanCountdown = ({ loan }: { loan: Loan }) => {
+        const [now, setNow] = useState<Date>(new Date())
+
+        useEffect(() => {
+            const interval = setInterval(() => {
+                setNow(new Date())
+            }, 1000)
+
+            return () => clearInterval(interval)
+        }, [])
+
+        const dueAt = new Date(loan.dueAt)
+        const diff = dueAt.getTime() - now.getTime()
+
+        const totalSeconds = Math.max(0, Math.floor(diff / 1000))
+
+        const hours = Math.floor(totalSeconds / 3600)
+        const minutes = Math.floor((totalSeconds % 3600) / 60)
+        const seconds = totalSeconds % 60
+
+        const pad = (n: number) => n.toString().padStart(2, "0")
+
+        return (
+            <h1 className={"z-50"}>
+                {pad(hours)}:{pad(minutes)}:{pad(seconds)}
+            </h1>
+        )
+    }
+
     return (
         <>
             <div
@@ -147,6 +177,15 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                     className={`text-center items-center flex flex-row text-[20px] rounded-[20] text-pink-200 absolute bottom-5 right-15`}>
                     <div className={"flex flex-col text-center justify-center gap-3"}>
                         <div className={`flex flex-row justify-center items-center gap-3 opacity-50 relative ${yesteryear.className}`}>
+                            {loan && (
+                                <div className={`absolute -top-30 flex flex-row gap-2 z-50 text-pink-200 ${yesteryear.className}`}>
+                                    <Image src={"/images/mine_photo.png"} alt={"Mine picture"} height={50} width={50} className={"absolute left-15 -top-10 mix-blend-color-burn"}/>
+                                    <LoanCountdown loan={loan}/>
+                                    <p>
+                                        ¥{loan.amount}
+                                    </p>
+                                </div>
+                            )}
                             <Image
                                 className={"object-contain absolute left-1/2 -translate-x-[50%] bottom-7.5 z-9"}
                                 src={club.logo}
@@ -173,7 +212,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                                     {rank.rank}
                                 </p>
                             </div>
-                            <div className={"relative flex justify-center items-center opacity-0 pointer-events-none group-hover:opacity-100 ease-in-out duration-300"}>
+                            <div className={"absolute flex justify-center items-center opacity-0 pointer-events-none group-hover:opacity-100 ease-in-out duration-300"}>
                                 <XPBar value={experience} rank={rank}/>
                             </div>
                         </div>

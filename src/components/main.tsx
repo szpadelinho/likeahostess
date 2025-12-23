@@ -38,6 +38,7 @@ const Main = () => {
     const [supplies, setSupplies] = useState<number>(0)
     const [rank, setRank] = useState<Rank>({lvl: 0, rank: CLUB_RANKS[0]})
     const [clubData, setClubData] = useState<Club | null>(null)
+    const [loan, setLoan] = useState<Loan | null>(null)
 
     const [club, setClub] = useState<Club | null>(null)
 
@@ -247,6 +248,21 @@ const Main = () => {
         }
     }, [])
 
+    useEffect(() => {
+        const fetchLoan = async () => {
+            try{
+                const res = await fetch("/api/loans", {method: "GET"})
+                const data = await res.json()
+                if(data === null) return
+                setLoan(data)
+            }
+            catch(err){
+                console.log("Failed to fetch loans", err)
+            }
+        }
+        fetchLoan()
+    }, [])
+
     return (
         <DndProvider backend={HTML5Backend}>
             {inquiryWindow && (
@@ -303,6 +319,7 @@ const Main = () => {
                                 experience={experience}
                                 supplies={supplies}
                                 rank={rank}
+                                loan={loan}
                             />
                         </>
                     )}

@@ -113,6 +113,17 @@ export interface Buffet{
     icon: string
 }
 
+export interface Loan{
+    id: string
+    userId: string
+    amount: number
+    interest: number
+    createdAt: Date
+    dueAt: Date
+    paid: boolean
+    paidAt: Date
+}
+
 export const SERVICE_TYPES = [
     "ashtray",
     "lady_glass",
@@ -321,3 +332,20 @@ export const getLevel = (xp: number) => {
 }
 
 export const getRank = (lvl: number) => CLUB_RANKS[lvl] ?? "Weirdo"
+
+export function calculateInterest(loan: Loan) {
+    const now = new Date()
+
+    if (now <= loan.dueAt) return loan.interest
+
+    const overdueMs = now.getTime() - loan.dueAt.getTime()
+    const intervals = Math.floor(overdueMs / (1000 * 60 * 10))
+
+    const interestIncreasePerInterval = 0.5
+    return loan.interest + intervals * interestIncreasePerInterval
+}
+
+export function calculateAmount(loan: Loan){
+    const interest = calculateInterest(loan)
+    return Math.floor(loan.amount * interest)
+}
