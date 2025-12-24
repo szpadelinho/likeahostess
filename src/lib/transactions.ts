@@ -253,7 +253,7 @@ export const handleHostessFatigueTransaction = async ({
     }
 }
 
-export const handleLoanTransaction = async ({session, clubData, amount, type} : {session: any, ClubData: StoredClub, amount: number, type: "Payment" | "Takeout"}) => {
+export const handleLoanTransaction = async ({session, clubData, amount, type} : {session: any, clubData: StoredClub, amount: number, type: "Payment" | "Takeout"}) => {
     if (!session?.user?.id) {
         return console.error("Missing userId")
     }

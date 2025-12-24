@@ -121,7 +121,7 @@ export interface Loan{
     createdAt: Date
     dueAt: Date
     paid: boolean
-    paidAt: Date
+    paidAt: Date | null
 }
 
 export const SERVICE_TYPES = [

@@ -150,7 +150,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
         const pad = (n: number) => n.toString().padStart(2, "0")
 
         return (
-            <h1 className={"z-50"}>
+            <h1 className={`${hours === 0 && minutes === 0 && seconds === 0 && "text-pink-400"} z-50`}>
                 {pad(hours)}:{pad(minutes)}:{pad(seconds)}
             </h1>
         )

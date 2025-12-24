@@ -34,7 +34,9 @@ export async function GET() {
 
 export async function POST(req: Request){
     const session = await auth()
-    if (!session || !session.user) {
+    const userId = session?.user?.id
+
+    if (!session || !userId) {
         return NextResponse.json({error: "Unauthorized"}, {status: 401})
     }
 
@@ -47,7 +49,7 @@ export async function POST(req: Request){
     try{
         const existingLoan = await prisma.loan.findFirst({
             where: {
-                userId: session.user.id,
+                userId: userId,
                 paid: false
             }
         })
@@ -65,7 +67,7 @@ export async function POST(req: Request){
         const loan = await prisma.$transaction([
             prisma.loan.create({
                 data: {
-                    userId: session.user.id,
+                    userId: userId,
                     amount,
                     interest: 1.2,
                     createdAt: now,
@@ -93,7 +95,7 @@ export async function DELETE(){
     }
 
     try {
-        const loan = await prisma.loan.delete({
+        const loan = await prisma.loan.deleteMany({
             where: {
                 userId: session.user.id,
             }

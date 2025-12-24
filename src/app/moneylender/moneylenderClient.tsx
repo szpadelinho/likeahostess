@@ -135,13 +135,15 @@ export const MoneylenderClient = () => {
                             <>
                                 <h1 className={"text-[75px]"}>Pay off a loan</h1>
                                 <p>You are willing to pay off an amount of:</p>
-                                <h1 className={"text-[75px]"}>¥{loan.amount * loan.interest}</h1>
+                                <h1 className={"text-[75px]"}>¥{loan.amount}</h1>
                                 <p className={"w-95"}>I fully understand and I am fully obliged to return all of the important money in paper as of the moment of signing this deal.</p>
                                 <button
                                     onClick={() => {
-                                        handleMoneyTransaction({session, clubData, setMoney, setClub, change: loan.amount * loan.interest}).then()
-                                        handleLoanTransaction({session, clubData, amount: loan.amount * loan.interest, type: "Payment"}).then()
-                                        setLoan(null)
+                                        if(clubData){
+                                            handleMoneyTransaction({session, clubData, setMoney, setClub, change: loan.amount}).then()
+                                            handleLoanTransaction({session, clubData, amount: loan.amount, type: "Payment"}).then()
+                                            setLoan(null)
+                                        }
                                     }}
                                     className={"border-b-2 border-black w-75 opacity-50 hover:opacity-100 duration-300 ease-in-out"}>
                                     Your sign here...
@@ -183,12 +185,14 @@ export const MoneylenderClient = () => {
                                             setValue(999999999)
                                         }
                                         else {
-                                            handleMoneyTransaction({session, clubData, setMoney, setClub, change: value}).then()
-                                            handleLoanTransaction({session, clubData, amount: value, type: "Takeout"}).then()
-                                            setLoading(true)
-                                            setTimeout(() => {
-                                                router.push("/")
-                                            }, 500)
+                                            if(clubData){
+                                                handleMoneyTransaction({session, clubData, setMoney, setClub, change: value}).then()
+                                                handleLoanTransaction({session, clubData, amount: value, type: "Takeout"}).then()
+                                                setLoading(true)
+                                                setTimeout(() => {
+                                                    router.push("/")
+                                                }, 500)
+                                            }
                                         }
                                     }}
                                     className={"border-b-2 border-black w-75 opacity-50 hover:opacity-100 duration-300 ease-in-out"}>
