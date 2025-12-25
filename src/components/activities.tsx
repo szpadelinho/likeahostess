@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {HandHeart, JapaneseYen, PiggyBank, SkipBack, SkipForward} from "lucide-react";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Activity, Club, coustard, Performer} from "@/app/types";
 import {handleMoneyTransaction, handlePopularityTransaction} from "@/lib/transactions";
 import {Session} from "next-auth";
@@ -63,6 +63,10 @@ const Activities = ({
         return hostSurname === performerSurname ? activityCost * 0.5 : activityCost
     }
 
+    useEffect(() => {
+        setActivityIndex(0)
+    }, [selectedPerformer])
+
     return (
         <div
             className={`w-screen h-180 text-center content-center justify-center items-start flex flex-row text-pink-200 z-51 gap-20`}>
@@ -101,7 +105,25 @@ const Activities = ({
                         <div className={"flex justify-center items-center flex-col"}>
                             <div className={"flex justify-center items-center flex-col max-w-175 gap-5"}>
                                 <h1 className={`text-[75px] ${coustard.className}`}>{selectedPerformer.name} {selectedPerformer.surname}</h1>
+                                <h1 className={"flex flex-row gap-2 text-rose-200 font-[400]"}>
+                                    {performerActivities.map((a, index) => (
+                                        <p key={index} className={"text-[10px]"}>
+                                            {a.name}
+                                        </p>
+                                    ))}
+                                </h1>
                                 <h1>{selectedPerformer.bio}</h1>
+                                <div className={"flex flex-row gap-20 text-[35px] text-pink-300"}>
+                                    <p className={`flex flex-row justify-center items-center gap-3 ${saleValue}`}>
+                                        <JapaneseYen size={35}/>
+                                        {checkOwnership(club?.host?.surname, selectedPerformer?.surname, performerActivities[activityIndex]?.cost)}
+                                        {isOnSale ? <PiggyBank size={35} className={"ml-1 "}/> : ""}
+                                    </p>
+                                    <p className={"flex flex-row justify-center items-center gap-3"}>
+                                        <HandHeart size={35}/>
+                                        {performerActivities[activityIndex].popularityGain}
+                                    </p>
+                                </div>
                             </div>
                             <div
                                 className={"flex justify-center items-center flex-row absolute -bottom-15 left-190 text-[15px] bg-pink-900 p-5 rounded-[20] gap-5"}
@@ -134,14 +156,6 @@ const Activities = ({
                                         }}
                                              className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-105 hover:text-pink-200 transition-all duration-200 ease-in-out active:scale-105"}>
                                             <p className={"w-100 flex flex-row justify-center items-center gap-2"}>{performerActivities[activityIndex].name}</p>
-                                            <p className={`w-20 flex flex-row justify-center items-center ${saleValue}`}>
-                                                <JapaneseYen size={15}/>
-                                                {checkOwnership(club?.host?.surname, selectedPerformer?.surname, performerActivities[activityIndex]?.cost)}
-                                                {isOnSale ? <PiggyBank size={15} className={"ml-1"}/> : ""}
-                                            </p>
-                                            <p className={"w-20 flex flex-row justify-center items-center gap-1"}>
-                                                <HandHeart
-                                                    size={15}/>{performerActivities[activityIndex].popularityGain}</p>
                                         </div>
                                         <button onClick={nextActivity}
                                                 className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 scale-100 hover:scale-110"}>
