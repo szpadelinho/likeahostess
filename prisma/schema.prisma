@@ -23,8 +23,6 @@ model User {
   userClub      UserClub[]
 
   UserHostess UserHostess[]
-
-  Loan Loan[]
 }
 
 model Account {
@@ -85,6 +83,8 @@ model UserClub {
   user            User              @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, clubId], name: "userId_clubId")
+  Effect Effect[]
+  Loan Loan[]
 }
 
 model Host {
@@ -156,7 +156,7 @@ model Buffet {
 
 model Loan {
   id          String     @id @default(cuid())
-  userId String
+  userClubId String
   amount Int
   interest Float @default(1.2)
   createdAt DateTime
@@ -164,10 +164,29 @@ model Loan {
   paid Boolean
   paidAt DateTime?
 
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userClub UserClub @relation(fields: [userClubId], references: [id], onDelete: Cascade)
+}
+
+model Effect {
+  id          String     @id @default(cuid())
+  userClubId String
+  type EffectType
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  active Boolean @default(true)
+
+  userClub UserClub @relation(fields: [userClubId], references: [id], onDelete: Cascade)
 }
 
 enum BuffetType {
   Beverage
   Meal
+}
+
+enum EffectType{
+  DRAGON_OF_DOJIMA
+  LIFELINE_OF_KAMUROCHO
+  DRAGON_OF_KANSAI
+  SAFEKEEPER_OF_THE_TOJO_CLAN
+  FIGHTING_VIPER
 }

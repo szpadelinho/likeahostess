@@ -29,21 +29,6 @@ export const MoneylenderClient = () => {
     const { data: session } = useSession()
 
     useEffect(() => {
-        const fetchLoan = async () => {
-            try{
-                const res = await fetch("/api/loans", {method: "GET"})
-                const data = await res.json()
-                if(data === null) return
-                setLoan(data)
-            }
-            catch(err){
-                console.log("Failed to fetch loans", err)
-            }
-        }
-        fetchLoan()
-    }, [])
-
-    useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
         if(!stored) return console.error("No such element as localStorage on moneylenderClient")
         const parsedClub: StoredClub = JSON.parse(stored)
@@ -71,6 +56,23 @@ export const MoneylenderClient = () => {
                 setClub(mergedClub)
             })
         setLoading(false)
+    }, [])
+
+    useEffect(() => {
+        if(clubData){
+            const fetchLoan = async () => {
+                try{
+                    const res = await fetch(`/api/loans?clubId=${clubData.id}`, {method: "GET"})
+                    const data = await res.json()
+                    if(data === null) return
+                    setLoan(data)
+                }
+                catch(err){
+                    console.log("Failed to fetch loans", err)
+                }
+            }
+            fetchLoan()
+        }
     }, [])
 
     useEffect(() => {

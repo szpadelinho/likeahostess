@@ -7,7 +7,7 @@ import Image from "next/image";
 import {Dispatch, SetStateAction, useCallback, useEffect, useState} from "react";
 import {MenuModal} from "@/components/menuModal";
 import {Clock} from "@/components/clock";
-import {Club, Loan, Rank, WindowType, yesteryear} from "@/app/types";
+import {Club, Effect, Loan, Rank, WindowType, yesteryear} from "@/app/types";
 import {XPBar} from "@/components/XPBar";
 
 interface Hud {
@@ -21,10 +21,11 @@ interface Hud {
     supplies: number
     rank: Rank
     loan: Loan | null
+    effect: Effect | null
 }
 
 
-const Hud = ({club, windowType, setWindow, setFade, money, popularity, experience, supplies, rank, loan}: Hud) => {
+const Hud = ({club, windowType, setWindow, setFade, money, popularity, experience, supplies, rank, loan, effect}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
@@ -127,7 +128,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
         if(money <= 0) handleWindow("MoneyAlert")
     }, [supplies, money])
 
-    const LoanCountdown = ({ loan }: { loan: Loan }) => {
+    const Countdown = ({ value }: { value: Loan | Effect }) => {
         const [now, setNow] = useState<Date>(new Date())
 
         useEffect(() => {
@@ -138,8 +139,8 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
             return () => clearInterval(interval)
         }, [])
 
-        const dueAt = new Date(loan.dueAt)
-        const diff = dueAt.getTime() - now.getTime()
+        const final = new Date("dueAt" in value ? value.dueAt : value.expiresAt)
+        const diff = final.getTime() - now.getTime()
 
         const totalSeconds = Math.max(0, Math.floor(diff / 1000))
 
@@ -154,6 +155,23 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                 {pad(hours)}:{pad(minutes)}:{pad(seconds)}
             </h1>
         )
+    }
+
+    const effectChecker = (effect: Effect) => {
+        switch (effect.type) {
+            case "DRAGON_OF_DOJIMA":
+                return "oryu"
+            case "LIFELINE_OF_KAMUROCHO":
+                return "phoenix"
+            case "DRAGON_OF_KANSAI":
+                return "yellow_dragon"
+            case "SAFEKEEPER_OF_THE_TOJO_CLAN":
+                return "kirin"
+            case "FIGHTING_VIPER":
+                return "viper"
+            default:
+                return "spoinkbop"
+        }
     }
 
     return (
@@ -180,9 +198,18 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                             {loan && (
                                 <div className={`absolute -top-30 flex flex-row gap-2 z-50 text-pink-200 ${yesteryear.className}`}>
                                     <Image src={"/images/mine_photo.png"} alt={"Mine picture"} height={50} width={50} className={"absolute left-15 -top-10 mix-blend-color-burn"}/>
-                                    <LoanCountdown loan={loan}/>
+                                    <Countdown value={loan}/>
                                     <p>
                                         ¥{loan.amount}
+                                    </p>
+                                </div>
+                            )}
+                            {effect && (
+                                <div className={`absolute -top-30 flex flex-row gap-2 z-50 text-pink-200 ${yesteryear.className}`}>
+                                    <Image src={`/images/${effectChecker(effect)}.png`} alt={"Mine picture"} height={50} width={50} className={"absolute left-15 -top-10 mix-blend-color-burn"}/>
+                                    <Countdown value={effect}/>
+                                    <p>
+                                        ¥{effect.type}
                                     </p>
                                 </div>
                             )}

@@ -1,5 +1,6 @@
 import {Club, Hostess, HostessMassage, StoredClub} from "@/app/types";
 import {SetStateAction} from "react";
+import {EffectType} from "@prisma/client";
 
 export const handleMoneyTransaction = async ({
                                       session,
@@ -282,5 +283,35 @@ export const handleLoanTransaction = async ({session, clubData, amount, type} : 
     }
     catch(err){
         console.error("handleLoanTransaction failed", err)
+    }
+}
+
+export const handleEffectTransaction = async ({session, clubData, type, action} : {session: any, clubData: StoredClub, type: EffectType, action: "CREATE" | "DELETE"}) => {
+    if (!session?.user?.id) return console.error("Missing userId")
+    try{
+        if(action === "CREATE"){
+            const res = await fetch('/api/effect', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    type,
+                    clubId: clubData.id,
+                }),
+            })
+            if (!res.ok) console.error('handleEffectTransaction CREATE on transactions failed')
+        }
+        else{
+            const res = await fetch('/api/effect', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    clubId: clubData.id,
+                })
+            })
+            if (!res.ok) console.error('handleEffectTransaction DELETE on transactions failed')
+        }
+    }
+    catch(err){
+        console.error("handleEffectTransaction failed", err)
     }
 }

@@ -1,4 +1,4 @@
-import {BuffetType, type Prisma} from "@prisma/client";
+import {BuffetType, EffectType, type Prisma} from "@prisma/client";
 import {
     Cookie, Courier_Prime, Coustard,
     Emilys_Candy,
@@ -115,13 +115,31 @@ export interface Buffet{
 
 export interface Loan{
     id: string
-    userId: string
+    userClubId: string
     amount: number
     interest: number
     createdAt: Date
     dueAt: Date
     paid: boolean
     paidAt: Date | null
+}
+
+export interface Drink{
+    id: number
+    title: string
+    description: string
+    price: number
+    color: string
+    tattoo: string
+}
+
+export interface Effect{
+    id: string
+    userClubId: string
+    type: EffectType
+    createdAt: Date
+    expiresAt: Date
+    active: boolean
 }
 
 export const SERVICE_TYPES = [
@@ -148,15 +166,6 @@ export type WindowType =
     | "SupplyAlert"
     | "MoneyAlert"
     | null
-
-export interface Drink{
-    title: string
-    description: string
-    price: number
-    color: string
-    tattoo: string
-}
-
 
 //fonts
 export const yesteryear = Yesteryear({
@@ -326,6 +335,22 @@ export const CLUB_RANKS: Record<number, string> = {
     99: "Supreme Chairman",
     100: "Legendary Club Chairman"
 } as const
+
+export const drinks: Drink[] = [
+    {id: 0, title: "Essence of the Dragon of Dojima", description: "Apparently really pricey. However, only one person managed to demolish this booze.", price: 10000000, color: "red", tattoo: "oryu"},
+    {id: 1, title: "Essence of the Lifeline of Kamurocho", description: "From what is known, this alcohol boosts your luck to gain more money... Huge if true.", price: 2000000, color: "purple", tattoo: "phoenix"},
+    {id: 2, title: "Essence of the Dragon of Kansai", description: "Supposedly cools off the atmosphere of your club.", price: 3000000, color: "pink", tattoo: "yellow_dragon"},
+    {id: 3, title: "Essence of the Safekeeper of the Tojo CLan", description: "The purpose of this drink is to freshen your mind to manage your resources more carefully and rationally.", price: 4000000, color: "yellow", tattoo: "kirin"},
+    {id: 4, title: "Essence of the Fighting Viper", description: "A drink with no known benefit... apparently gives you a random boost.", price: 5000000, color: "green", tattoo: "viper"}
+]
+
+export const DRINKS_MAP: Record<number, EffectType> = {
+    0: EffectType.DRAGON_OF_DOJIMA,
+    1: EffectType.LIFELINE_OF_KAMUROCHO,
+    2: EffectType.DRAGON_OF_KANSAI,
+    3: EffectType.SAFEKEEPER_OF_THE_TOJO_CLAN,
+    4: EffectType.FIGHTING_VIPER,
+}
 
 export const getLevel = (xp: number) => {
     return Math.min(Math.floor(xp / 1000), 100)

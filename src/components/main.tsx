@@ -26,7 +26,7 @@ import {
     ServiceType,
     StoredClub,
     CLUB_RANKS,
-    getLevel, getRank, Rank, WindowType
+    getLevel, getRank, Rank, WindowType, Loan, Effect
 } from "@/app/types";
 import {useSession} from "next-auth/react";
 
@@ -37,8 +37,9 @@ const Main = () => {
     const [experience, setExperience] = useState<number>(0)
     const [supplies, setSupplies] = useState<number>(0)
     const [rank, setRank] = useState<Rank>({lvl: 0, rank: CLUB_RANKS[0]})
-    const [clubData, setClubData] = useState<Club | null>(null)
+    const [clubData, setClubData] = useState<StoredClub | null>(null)
     const [loan, setLoan] = useState<Loan | null>(null)
+    const [effect, setEffect] = useState<Effect | null>(null)
 
     const [club, setClub] = useState<Club | null>(null)
 
@@ -249,18 +250,37 @@ const Main = () => {
     }, [])
 
     useEffect(() => {
-        const fetchLoan = async () => {
-            try{
-                const res = await fetch("/api/loans", {method: "GET"})
-                const data = await res.json()
-                if(data === null) return
-                setLoan(data)
+        if(clubData){
+            const fetchLoan = async () => {
+                try{
+                    const res = await fetch(`/api/loans?clubId=${clubData.id}`, {method: "GET"})
+                    const data = await res.json()
+                    if(data === null) return
+                    setLoan(data)
+                }
+                catch(err){
+                    console.log("Failed to fetch loans", err)
+                }
             }
-            catch(err){
-                console.log("Failed to fetch loans", err)
-            }
+            fetchLoan()
         }
-        fetchLoan()
+    }, [])
+
+    useEffect(() => {
+        if(clubData){
+            const fetchEffect = async () => {
+                try{
+                    const res = await fetch(`/api/effect?clubId=${clubData.id}`, {method: "GET"})
+                    const data = await res.json()
+                    if(data === null) return
+                    setEffect(data)
+                }
+                catch(err){
+                    console.log("Failed to fetch effects", err)
+                }
+            }
+            fetchEffect()
+        }
     }, [])
 
     return (
@@ -320,6 +340,7 @@ const Main = () => {
                                 supplies={supplies}
                                 rank={rank}
                                 loan={loan}
+                                effect={effect}
                             />
                         </>
                     )}

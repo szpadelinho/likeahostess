@@ -1,7 +1,6 @@
 import {prisma} from "../../../../prisma/prisma";
 import {NextResponse} from "next/server";
 import {auth} from "@/lib/auth";
-import {calculateAmount, calculateInterest} from "@/app/types";
 
 export async function GET(req: Request) {
     const session = await auth()
@@ -22,40 +21,30 @@ export async function GET(req: Request) {
     if(!userClub) return NextResponse.json(null)
 
     try {
-        const loan = await prisma.loan.findFirst({
+        const effect = await prisma.effect.findFirst({
             where: {
                 userClubId: userClub.id
             }
         })
 
-        if (!loan) return NextResponse.json(null)
+        if (!effect) return NextResponse.json(null)
 
-        const interest = calculateInterest(loan)
-        const amount = calculateAmount(loan)
-
-        return NextResponse.json({
-            ...loan,
-            currentInterest: interest,
-            amount
-        })
+        return NextResponse.json(effect)
     } catch (err) {
-        console.error("Loan Route.ts", err)
-        return NextResponse.json({error: "Cannot fetch loans"}, {status: 500})
+        console.error("Effect Route.ts", err)
+        return NextResponse.json({error: "Cannot fetch effects"}, {status: 500})
     }
 }
 
 export async function POST(req: Request){
     const session = await auth()
     const userId = session?.user?.id
+    const { type, clubId } = await req.json()
 
-    if (!session || !userId) {
-        return NextResponse.json({error: "Unauthorized"}, {status: 401})
-    }
+    if (!session || !userId) return NextResponse.json({error: "Unauthorized"}, {status: 401})
 
-    const { amount, clubId } = await req.json()
-
-    if (typeof amount !== "number" || clubId === null || amount < 100000 || amount > 999999999) {
-        return NextResponse.json({ error: "Invalid amount" }, { status: 400 })
+    if (!clubId || !type) {
+        return NextResponse.json({ error: "Invalid values" }, { status: 400 })
     }
 
     const userClub = await prisma.userClub.findUnique({
@@ -70,40 +59,38 @@ export async function POST(req: Request){
     if(!userClub) return NextResponse.json({error: "No such userClub found"}, {status: 404})
 
     try{
-        const existingLoan = await prisma.loan.findFirst({
+        const existingEffect = await prisma.effect.findFirst({
             where: {
                 userClubId: userClub.id,
-                paid: false
+                active: true
             }
         })
 
-        if (existingLoan) {
+        if (existingEffect) {
             return NextResponse.json(
-                { error: "You already have an active loan" },
+                { error: "You already have an effect" },
                 { status: 409 }
             )
         }
 
         const now = new Date()
-        const dueAt = new Date(now.getTime() + 24 * 60 * 60 * 1000)
+        const expiresAt = new Date(now.getTime() + 60 * 60 * 1000)
 
-        const loan = await prisma.loan.create({
+        const effect = await prisma.effect.create({
             data: {
                 userClubId: userClub.id,
-                amount,
-                interest: 1.2,
+                type,
                 createdAt: now,
-                dueAt,
-                paid: false
+                expiresAt,
             }
         })
 
-        return NextResponse.json(loan, { status: 201 })
+        return NextResponse.json(effect, { status: 201 })
     }
     catch(err){
-        console.error("Loan POST error:", err)
+        console.error("Effect POST error:", err)
         return NextResponse.json(
-            { error: "Cannot create loan" },
+            { error: "Cannot create effect" },
             { status: 500 }
         )
     }
@@ -129,14 +116,14 @@ export async function DELETE(req: Request){
     if(!userClub) return NextResponse.json({error: "No such userClub found"}, {status: 404})
 
     try {
-        const loan = await prisma.loan.deleteMany({
+        const loan = await prisma.effect.deleteMany({
             where: {
                 userClubId: userClub.id,
             }
         })
         return NextResponse.json(loan)
     } catch (err) {
-        console.error("Loan Route.ts", err)
-        return NextResponse.json({error: "Cannot delete loan"}, {status: 500})
+        console.error("Effect Route.ts", err)
+        return NextResponse.json({error: "Cannot delete effect"}, {status: 500})
     }
 }
