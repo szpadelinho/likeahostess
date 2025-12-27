@@ -10,7 +10,7 @@ import Image from "next/image";
 import ReactPlayer from "react-player";
 import Navbar from "@/components/navbar";
 import LoadingBanner from "@/components/loadingBanner";
-import {yesteryear} from "@/app/types";
+import {intros, INTROS_MAP, monoton, yesteryear} from "@/app/types";
 import {useVolume} from "@/app/context/volumeContext";
 
 export default function AuthClient() {
@@ -22,30 +22,14 @@ export default function AuthClient() {
     const [muted, setMuted] = useState(false)
     const {volume, setVolume} = useVolume()
     const [source, setSource] = useState<string | null>(null)
+    const [title, setTitle] = useState<string | null>(null)
     const [mode, setMode] = useState<"Main" | "Authentication">("Main")
     const [transition, setTransition] = useState<"Child" | "Parent" | null>(null)
 
-    const intros = [
-        "9qNuScKbYuc",
-        "SbNYIduyg-U",
-        "AcUjoThA53Y",
-        "Ut37SOojuaE",
-        "Fn91JE4jYWk",
-        "CHE5PWK_ZOE",
-        "ATH0ej8Thc4",
-        "73c7cjH8NE0",
-        "sD-UJEQHXZc",
-        "GhKDpI9T1Hg",
-        "tmR_H5NZVVI",
-        "M4JEwZeTKtI",
-        "LiSSAV1xpYo",
-        "2gCemGx-W18",
-
-    ]
-
     useEffect(() => {
-        const random = intros[Math.floor(Math.random() * intros.length)]
-        setSource(random)
+        const random = Math.floor(Math.random() * intros.length)
+        setTitle(INTROS_MAP[random])
+        setSource(intros[random])
     }, [])
 
     useEffect(() => {
@@ -196,6 +180,9 @@ export default function AuthClient() {
                             </div>
                         )}
                     </div>
+                    <p className={`${monoton.className} absolute right-2 top-2 opacity-50 text-white text-[15px] z-2`}>
+                        {title}
+                    </p>
                     <ReactPlayer
                         src={`https://youtube.com/embed/${source}?autoplay=1`}
                         playing={isPlaying}

@@ -2,8 +2,8 @@ import {BuffetType, EffectType, type Prisma} from "@prisma/client";
 import {
     Cookie, Courier_Prime, Coustard,
     Emilys_Candy,
-    Fascinate_Inline, Marck_Script,
-    Molle,
+    Fascinate_Inline, Federo, Marck_Script,
+    Molle, Monoton,
     Texturina,
     Tiny5,
     Yesteryear
@@ -218,6 +218,11 @@ export const courierPrime = Courier_Prime({
     subsets: ['latin'],
 })
 
+export const monoton = Federo({
+    weight: "400",
+    subsets: ['latin'],
+})
+
 export type Rank = {
     lvl: number
     rank: string
@@ -350,6 +355,42 @@ export const DRINKS_MAP: Record<number, EffectType> = {
     2: EffectType.DRAGON_OF_KANSAI,
     3: EffectType.SAFEKEEPER_OF_THE_TOJO_CLAN,
     4: EffectType.FIGHTING_VIPER,
+}
+
+export const intros = [
+    "9qNuScKbYuc", // YAKUZA 1
+    "SbNYIduyg-U", // YAKUZA 2
+    "AcUjoThA53Y", // YAKUZA 3
+    "Ut37SOojuaE", // YAKUZA 4
+    "Fn91JE4jYWk", // YAKUZA 5
+    "CHE5PWK_ZOE", // YAKUZA 6
+    "ATH0ej8Thc4", // YAKUZA 7
+    "73c7cjH8NE0", // YAKUZA 8
+    "sD-UJEQHXZc", // YAKUZA 0
+    "GhKDpI9T1Hg", // YAKUZA KIWAMI
+    "tmR_H5NZVVI", // YAKUZA KIWAMI 2
+    "axnVPHo6BgI", // YAKUZA KIWAMI 3
+    "M4JEwZeTKtI", // JUDGMENT
+    "LiSSAV1xpYo", // LOST JUDGMENT
+    "2gCemGx-W18", // KENZAN
+]
+
+export const INTROS_MAP: Record<number, string> = {
+    0: "Howl of the Dragon (Yakuza)",
+    1: "Roar of the Twin Dragons (Yakuza 2)",
+    2: "Howl of the Dragon God (Yakuza 3)",
+    3: "Roarless Dragon (Yakuza 4)",
+    4: "The hearts of theirs (Yakuza 5)",
+    5: "Howl of Yinglong (Yakuza 6)",
+    6: "Darkness in light (Yakuza: Like a Dragon)",
+    7: "Burned Out (Like a Dragon: Infinite Wealth)",
+    8: "Pandora's Place (Yakuza 0)",
+    9: "Howl of the Extreme Dragon (Yakuza Kiwami)",
+    10: "Roar of the Twin Dragons (Yakuza Kiwami 2)",
+    11: "Howl of the Extreme Dragon God (Yakuza Kiwami 3)",
+    12: "DOOR (Judgment)",
+    13: "Lost in the Rain (Lost Judgment)",
+    14: "Howl of the Old Dragon (Ryu Ga Gotoku Kenzan)"
 }
 
 export const getLevel = (xp: number) => {

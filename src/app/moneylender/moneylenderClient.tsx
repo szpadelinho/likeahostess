@@ -73,7 +73,7 @@ export const MoneylenderClient = () => {
             }
             fetchLoan()
         }
-    }, [])
+    }, [clubData])
 
     useEffect(() => {
         const timer = setTimeout(() => {
