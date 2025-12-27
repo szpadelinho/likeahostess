@@ -126,7 +126,7 @@ const NewSerenaClient = () => {
             }
             fetchEffect()
         }
-    }, [])
+    }, [clubData])
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -243,7 +243,7 @@ const NewSerenaClient = () => {
                                                         onClick={() => {
                                                             if(clubData){
                                                                 handleEffectTransaction({session, clubData, type: DRINKS_MAP[drink.id], action: "CREATE"}).then()
-                                                                handleMoneyTransaction({session, clubData, setMoney, setClub, change: drink.price}).then()
+                                                                handleMoneyTransaction({session, clubData, setMoney, setClub, change: -drink.price}).then()
                                                                 switchMode("Selection")
                                                             }
                                                         }}

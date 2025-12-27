@@ -29,6 +29,7 @@ import {
     getLevel, getRank, Rank, WindowType, Loan, Effect
 } from "@/app/types";
 import {useSession} from "next-auth/react";
+import {handleEffectTransaction} from "@/lib/transactions";
 
 const Main = () => {
     const {data: session} = useSession()
@@ -264,7 +265,7 @@ const Main = () => {
             }
             fetchLoan()
         }
-    }, [])
+    }, [clubData])
 
     useEffect(() => {
         if(clubData){
@@ -281,7 +282,7 @@ const Main = () => {
             }
             fetchEffect()
         }
-    }, [])
+    }, [clubData])
 
     return (
         <DndProvider backend={HTML5Backend}>

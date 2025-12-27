@@ -286,7 +286,7 @@ export const handleLoanTransaction = async ({session, clubData, amount, type} : 
     }
 }
 
-export const handleEffectTransaction = async ({session, clubData, type, action} : {session: any, clubData: StoredClub, type: EffectType, action: "CREATE" | "DELETE"}) => {
+export const handleEffectTransaction = async ({session, clubData, type, action} : {session: any, clubData: StoredClub, type?: EffectType, action: "CREATE" | "DELETE"}) => {
     if (!session?.user?.id) return console.error("Missing userId")
     try{
         if(action === "CREATE"){

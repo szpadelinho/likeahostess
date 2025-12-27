@@ -191,6 +191,17 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                     }}>
                     <Menu size={30}/>
                 </button>
+                {effect && (
+                    <div className={`absolute left-90 bottom-5 flex flex-row gap-2 z-50 text-pink-200 opacity-60 ${yesteryear.className}`}>
+                        <Image src={`/tattoos/${effectChecker(effect)}.png`} alt={`${effect.type} picture`} height={75} width={75} className={"mix-blend-color-burn"}/>
+                        <div className={"flex flex-col text-center justify-center"}>
+                            <Countdown value={effect}/>
+                            <p className={"flex text-center items-center justify-center text-[20px]"}>
+                                {effect.type.toLowerCase().replace(/_/g, " ").replace(/\b\w/g, char => char.toUpperCase())}
+                            </p>
+                        </div>
+                    </div>
+                )}
                 <div
                     className={`text-center items-center flex flex-row text-[20px] rounded-[20] text-pink-200 absolute bottom-5 right-15`}>
                     <div className={"flex flex-col text-center justify-center gap-3"}>
@@ -199,17 +210,8 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                                 <div className={`absolute -top-30 flex flex-row gap-2 z-50 text-pink-200 ${yesteryear.className}`}>
                                     <Image src={"/images/mine_photo.png"} alt={"Mine picture"} height={50} width={50} className={"absolute left-15 -top-10 mix-blend-color-burn"}/>
                                     <Countdown value={loan}/>
-                                    <p>
+                                    <p className={"flex text-center items-center justify-center"}>
                                         ¥{loan.amount}
-                                    </p>
-                                </div>
-                            )}
-                            {effect && (
-                                <div className={`absolute -top-30 flex flex-row gap-2 z-50 text-pink-200 ${yesteryear.className}`}>
-                                    <Image src={`/images/${effectChecker(effect)}.png`} alt={"Mine picture"} height={50} width={50} className={"absolute left-15 -top-10 mix-blend-color-burn"}/>
-                                    <Countdown value={effect}/>
-                                    <p>
-                                        ¥{effect.type}
                                     </p>
                                 </div>
                             )}

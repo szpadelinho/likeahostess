@@ -29,6 +29,15 @@ export async function GET(req: Request) {
 
         if (!effect) return NextResponse.json(null)
 
+        const now = new Date()
+
+        if (effect.expiresAt <= now) {
+            await prisma.effect.delete({
+                where: { id: effect.id }
+            })
+            return NextResponse.json(null)
+        }
+
         return NextResponse.json(effect)
     } catch (err) {
         console.error("Effect Route.ts", err)
