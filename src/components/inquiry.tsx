@@ -18,7 +18,7 @@ import {towelFolded, cupSaucer} from "@lucide/lab";
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
-import {Buffet, ServiceType, Hostess, Club} from "@/app/types";
+import {Buffet, ServiceType, Hostess, Club, StoredClub} from "@/app/types";
 import {Session} from "next-auth";
 import {
     handleExperienceTransaction, handleHostessFatigueTransaction,
@@ -46,7 +46,7 @@ interface Props {
     hostesses: (Hostess | null)[],
     setBarKeys: (value: (((prevState: number[]) => number[]) | number[])) => void,
     session: Session | null,
-    clubData: Club | null,
+    clubData: StoredClub | null,
     setMoney: (value: (((prevState: number) => number) | number)) => void,
     setClub: (value: (((prevState: (Club | null)) => (Club | null)) | Club | null)) => void,
     setPopularity: (value: (((prevState: number) => number) | number)) => void,
@@ -238,8 +238,8 @@ export const Inquiry = ({
             handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
             handleExperienceTransaction({session, setExperience, change: experience}).then()
             handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: supplies}).then()
-            if(hostesses[inquiryTableId] !== null){
-                handleHostessFatigueTransaction({session, setHostesses, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
+            if(hostesses[inquiryTableId] !== null && clubData){
+                handleHostessFatigueTransaction({session, setHostesses, clubId: clubData.id, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
             }
             inquiryClose(inquiryTableId)
         }
@@ -254,8 +254,8 @@ export const Inquiry = ({
             handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
             handleExperienceTransaction({session, setExperience, change: experience}).then()
             handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: -1}).then()
-            if(hostesses[inquiryTableId] !== null){
-                handleHostessFatigueTransaction({session, setHostesses, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
+            if(hostesses[inquiryTableId] !== null && clubData){
+                handleHostessFatigueTransaction({session, setHostesses, clubId: clubData.id, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
             }
             inquiryClose(inquiryTableId)
         } else {
@@ -391,8 +391,8 @@ export const Inquiry = ({
                                             setClub,
                                             change: supplies
                                         }).then()
-                                        if(hostesses[inquiryTableId] !== null){
-                                            handleHostessFatigueTransaction({session, setHostesses, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
+                                        if(hostesses[inquiryTableId] !== null && clubData){
+                                            handleHostessFatigueTransaction({session, setHostesses, clubId: clubData.id, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
                                         }
                                     }
                                 }}>

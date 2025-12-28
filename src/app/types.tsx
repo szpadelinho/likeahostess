@@ -3,11 +3,12 @@ import {
     Cookie, Courier_Prime, Coustard,
     Emilys_Candy,
     Fascinate_Inline, Federo, Marck_Script,
-    Molle, Monoton,
+    Molle,
     Texturina,
     Tiny5,
     Yesteryear
 } from "next/font/google";
+import {prisma} from "../../prisma/prisma";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -414,4 +415,12 @@ export function calculateInterest(loan: Loan) {
 export function calculateAmount(loan: Loan){
     const interest = calculateInterest(loan)
     return Math.floor(loan.amount * interest)
+}
+
+export function blocksFatigue(effect: Effect | null) : boolean {
+    return effect?.type === "DRAGON_OF_KANSAI"
+}
+
+export function blocksSupplies(effect: Effect | null): boolean {
+    return effect?.type === "SAFEKEEPER_OF_THE_TOJO_CLAN"
 }

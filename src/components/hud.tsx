@@ -192,7 +192,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                     <Menu size={30}/>
                 </button>
                 {effect && (
-                    <div className={`absolute left-90 bottom-5 flex flex-row gap-2 z-50 text-pink-200 opacity-60 ${yesteryear.className}`}>
+                    <div className={`absolute left-1/2 -translate-x-[255%] bottom-5 flex flex-row gap-2 z-50 text-pink-200 opacity-60 ${yesteryear.className}`}>
                         <Image src={`/tattoos/${effectChecker(effect)}.png`} alt={`${effect.type} picture`} height={75} width={75} className={"mix-blend-color-burn"}/>
                         <div className={"flex flex-col text-center justify-center"}>
                             <Countdown value={effect}/>

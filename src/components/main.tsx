@@ -29,10 +29,12 @@ import {
     getLevel, getRank, Rank, WindowType, Loan, Effect
 } from "@/app/types";
 import {useSession} from "next-auth/react";
-import {handleEffectTransaction} from "@/lib/transactions";
+import {useVolume} from "@/app/context/volumeContext";
 
 const Main = () => {
     const {data: session} = useSession()
+    const {volume} = useVolume()
+
     const [money, setMoney] = useState<number>(0)
     const [popularity, setPopularity] = useState<number>(0)
     const [experience, setExperience] = useState<number>(0)
@@ -63,7 +65,7 @@ const Main = () => {
     const [fetched, setFetching] = useState<boolean>(true)
 
     const [jams, setJams] = useState<Jam[]>([])
-    const [isJamPlaying, setIsJamPlaying] = useState(true)
+    const [isJamPlaying, setIsJamPlaying] = useState(volume > 0)
     const [jamToggle, setJamToggle] = useState<boolean | null>(null)
 
     const [visit, setVisit] = useState<boolean[]>(Array(6).fill(false))

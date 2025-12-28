@@ -1,16 +1,19 @@
 import { NextResponse } from "next/server"
 import { prisma } from "../../../../../prisma/prisma"
 import { auth } from "@/lib/auth"
+import {blocksFatigue} from "@/app/types";
+import {getEffect} from "@/lib/effects";
 
 export async function POST(req: Request) {
     const session = await auth()
-    if (!session || !session.user || !session.user.id) {
+    const userId = session?.user?.id
+    if (!session || !session.user || !userId) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
     }
 
-    const { hostessId, amount } = await req.json()
+    const { hostessId, amount, clubId } = await req.json()
 
-    if(hostessId === null || amount === null){
+    if(hostessId === null || amount === null || clubId === null) {
         return NextResponse.json({ error: "Input is empty" }, { status: 403 })
     }
 
@@ -18,11 +21,17 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Invalid input" }, { status: 400 })
     }
 
+    const effect = await getEffect(userId, clubId)
+
+    if (blocksFatigue(effect)) {
+        return NextResponse.json({ skipped: true })
+    }
+
     try {
         const hostess = await prisma.userHostess.findUnique({
             where: {
                 userId_hostessId: {
-                    userId: session.user.id,
+                    userId,
                     hostessId: hostessId
                 }
             },
@@ -41,7 +50,7 @@ export async function POST(req: Request) {
         await prisma.userHostess.update({
             where: {
                 userId_hostessId: {
-                    userId: session.user.id,
+                    userId,
                     hostessId,
                 },
             },

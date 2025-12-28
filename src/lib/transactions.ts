@@ -29,7 +29,6 @@ export const handleMoneyTransaction = async ({
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userId: session?.user?.id,
                 clubId: clubData.id,
                 amount: change
             }),
@@ -71,7 +70,6 @@ export const handlePopularityTransaction = async ({
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userId: session?.user?.id,
                 clubId: clubData.id,
                 amount: change
             }),
@@ -106,20 +104,23 @@ export const handleSuppliesTransaction = async ({
         return console.error("Missing clubData.id")
     }
     if(!clubData) return console.error("ClubData is undefined")
-    setSupplies(prev => prev + change)
-    setClub(prev => prev ? {...prev, supplies: prev.supplies + change} : prev)
     try {
         const res = await fetch('/api/clubs/update-supplies', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                userId: session?.user?.id,
                 clubId: clubData.id,
                 amount: change
             }),
         })
 
         if (!res.ok) console.error('updateSupplies on transactions failed')
+
+        const data = await res.json()
+        if(data.skipped) return
+
+        setSupplies(prev => prev + change)
+        setClub(prev => prev ? {...prev, supplies: prev.supplies + change} : prev)
     }
     catch (error) {
         console.error(error)
@@ -200,41 +201,46 @@ export const handleFatigueTransaction = async ({
 
 export const handleHostessFatigueTransaction = async ({
                                                    session,
-                                                   setHostesses, hostessId,
+                                                   setHostesses, clubId, hostessId,
                                                    change
                                                }: {
     session: any,
     setHostesses: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>,
+    clubId: string
     hostessId: string
     change: number
 }) => {
     if (!session?.user?.id) {
         return console.error("Missing userId")
     }
-    setHostesses(prev =>
-        prev.map(h =>
-            h
-                ? {
-                    ...h,
-                    fatigue: Math.min(
-                        100,
-                        Math.max((h.fatigue ?? 0) - change, 0)
-                    )
-                }
-                : null
-        )
-    )
     try {
         const res = await fetch('/api/user-hostess/update-fatigue-hostess', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
                 hostessId: hostessId,
-                amount: change
+                amount: change,
+                clubId
             }),
         })
 
         if (!res.ok) console.error('updateHostessFatigue on transactions failed')
+        const data = await res.json()
+        if(data.skipped) return
+
+        setHostesses(prev =>
+            prev.map(h =>
+                h
+                    ? {
+                        ...h,
+                        fatigue: Math.min(
+                            100,
+                            Math.max((h.fatigue ?? 0) - change, 0)
+                        )
+                    }
+                    : null
+            )
+        )
     }
     catch (error) {
         console.error(error)

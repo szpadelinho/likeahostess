@@ -1,15 +1,24 @@
 import { NextResponse } from "next/server"
 import { prisma } from "../../../../../prisma/prisma"
 import { auth } from "@/lib/auth"
+import {blocksSupplies} from "@/app/types";
+import {getEffect} from "@/lib/effects";
 
 export async function POST(req: Request) {
     const session = await auth()
-    if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    const userId = session?.user?.id
+    if (!session || !userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
-    const { userId, clubId, amount } = await req.json()
+    const { clubId, amount } = await req.json()
 
-    if (!userId || !clubId || typeof amount !== "number") {
+    if (!clubId || typeof amount !== "number") {
         return NextResponse.json({ error: "Invalid input" }, { status: 400 })
+    }
+
+    const effect = await getEffect(userId, clubId)
+
+    if(blocksSupplies(effect)){
+        return NextResponse.json({ skipped: true })
     }
 
     try {
