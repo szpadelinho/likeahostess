@@ -180,7 +180,11 @@ export default function AuthClient() {
                             </div>
                         )}
                     </div>
-                    <p className={`${monoton.className} absolute right-2 top-2 opacity-50 text-white text-[15px] z-2`}>
+                    <p className={`${monoton.className} absolute right-4 top-2 opacity-50 text-white text-[15px] z-2 duration-300 hover:opacity-75 hover:text-red-400 hover:scale-110 active:scale-120 active:text-red-600`}
+                       onClick={() => {
+                           navigator.clipboard.writeText(`https://youtube.com/watch/${source}?autoplay=1`)
+                               .then(() => console.log("Successfully copied the URL"))
+                       }}>
                         {title}
                     </p>
                     <ReactPlayer

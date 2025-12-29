@@ -168,7 +168,7 @@ const NewSerenaClient = () => {
             <Image src={mode === "Selection" ? "/images/new_serena.png" : mode === "Drinks" ? "/images/new_serena_2.png" : supplies && supplies >= 100 ? "/images/new_serena.png" : "/images/new_serena_3.png"} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
             {club !== null && (
                 <div
-                    className={`${molle.className} gap-10 absolute bg-black/60 border-2 border-white rounded-[5] bottom-5 right-5 h-40 p-2 text-center content-center items-center flex flex-row text-[20px] text-white z-1`}>
+                    className={`${molle.className} gap-2 absolute bg-black/60 border-2 border-white rounded-[5] bottom-5 right-5 h-40 p-2 text-center content-center items-center flex flex-row text-[20px] text-white z-1`}>
                     <Image
                         className={"flex"}
                         src={club.host.image}

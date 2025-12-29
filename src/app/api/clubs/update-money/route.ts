@@ -16,7 +16,11 @@ export async function POST(req: Request) {
 
     const effect = await getEffect(userId, clubId)
 
-    const finalAmount = applyEffect(amount, effect)
+    let finalAmount = amount
+
+    if(effect?.type == "LIFELINE_OF_KAMUROCHO" || effect?.type == "FIGHTING_VIPER"){
+        finalAmount = applyEffect(amount, effect)
+    }
 
     try {
         const club = await prisma.userClub.update({
