@@ -1,10 +1,9 @@
 import NextAuth from "next-auth"
 import GithubProvider from "next-auth/providers/github"
 import DiscordProvider from "next-auth/providers/discord"
-import Credentials from "next-auth/providers/credentials"
+import GoogleProvider from "next-auth/providers/google"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/../prisma/prisma"
-import bcrypt from "bcrypt"
 
 export const { auth, handlers } = NextAuth({
     adapter: PrismaAdapter(prisma),
@@ -24,37 +23,17 @@ export const { auth, handlers } = NextAuth({
             clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
         }),
 
-        Credentials({
-            name: "Credentials",
-            credentials: {
-                identifier: { label: "Email or Username", type: "text" },
-                password: { label: "Password", type: "password" },
-            },
-
-            async authorize(credentials) {
-                const { identifier, password } = credentials as {
-                    identifier: string
-                    password: string
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID as string,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+            authorization: {
+                params: {
+                    prompt: "consent",
+                    access_type: "offline",
+                    response_type: "code"
                 }
-
-                if (!identifier || !password) return null
-
-                const isEmail = identifier.includes("@")
-
-                const user = await prisma.user.findFirst({
-                    where: isEmail
-                        ? { email: identifier }
-                        : { name: identifier }
-                })
-
-                if (!user || !user.password) return null
-
-                const valid = bcrypt.compare(password, user.password)
-                if (!valid) return null
-
-                return user
-            },
-        }),
+            }
+        })
     ],
 
     callbacks: {
@@ -69,10 +48,6 @@ export const { auth, handlers } = NextAuth({
             }
             return session
         },
-    },
-
-    pages: {
-        signIn: "/auth/login"
     },
 
     secret: process.env.NEXTAUTH_SECRET,
