@@ -126,7 +126,7 @@ const Activities = ({
                                 </div>
                             </div>
                             <div
-                                className={"flex justify-center items-center flex-row absolute -bottom-15 left-190 text-[15px] bg-pink-900 p-5 rounded-[20] gap-5"}
+                                className={"flex justify-center items-center flex-row absolute -bottom-15 left-190 text-[15px] bg-pink-950 p-3 rounded-[20] gap-3"}
                                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                                 {performerActivities.length > 0 && activityIndex >= 0 && activityIndex < performerActivities.length && (
                                     <>
@@ -154,7 +154,7 @@ const Activities = ({
                                                 change: performerActivities[activityIndex].cost
                                             }).then()
                                         }}
-                                             className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-105 hover:text-pink-200 transition-all duration-200 ease-in-out active:scale-105"}>
+                                             className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-102 active:scale-95 hover:text-pink-200 transition-all duration-200 ease-in-out"}>
                                             <p className={"w-100 flex flex-row justify-center items-center gap-2"}>{performerActivities[activityIndex].name}</p>
                                         </div>
                                         <button onClick={nextActivity}

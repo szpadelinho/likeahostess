@@ -2,7 +2,7 @@ import {
     ConciergeBell,
     Key,
     LampDesk,
-    LogOut,
+    LogOut, Medal,
     PenTool,
     University,
     Volume,
@@ -23,7 +23,7 @@ interface NavbarProps {
     game?: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,
     setGame?: (value: (((prevState: ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) | "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => void,
     setBackground?: (value: (((prevState: string) => string) | string)) => void,
-    page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection" | "Tutorial" | "LoveInHeart" | "Register" | "Login",
+    page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection" | "Tutorial" | "LoveInHeart" | "Ranking",
     mode?: "Selection" | "Acceptance" | "Drinks" | "Supplies",
     changeMode?: () => void,
     switchMode?: (mode: ("Selection" | "Drinks" | "Supplies")) => void,
@@ -78,10 +78,8 @@ const Navbar = ({
                 return "rounded-[10] border-white text-white hover:text-black hover:bg-white"
             case "LoveInHeart":
                 return "bg-[url(/images/wood_texture.png)] text-rose-100 hover:text-rose-500"
-            case "Register":
-                return "border-1 border-white text-white rounded-[5] hover:bg-white hover:text-black"
-            case "Login":
-                return "border-1 border-white text-white rounded-[5] hover:bg-white hover:text-black"
+            case "Ranking":
+                return "rounded-[5] border-stone-400 text-stone-200 hover:bg-stone-200 hover:text-stone-950 hover:border-stone-200"
             default:
                 return ""
         }
@@ -132,7 +130,7 @@ const Navbar = ({
                 </div>
                 {page !== "Auth" && (
                     <button onClick={() => {
-                        if(page === "Tutorial" || page === "Register" || page === "Login" || page === "Selection"){
+                        if(page === "Tutorial" || page === "Selection"){
                             setQuit?.(true)
                         }
                         else{
@@ -146,7 +144,7 @@ const Navbar = ({
                             )
                         }
                     }}
-                            className={`${page === "Profile" && "fixed left-10 top-10"} ${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                            className={`${page === "Profile" || page === "Ranking" && "fixed left-10 top-10"} ${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                             style={page === "LoveInHeart" ? {
                                 borderWidth: "8px",
                                 borderStyle: "solid",
@@ -202,20 +200,15 @@ const Navbar = ({
                     <LampDesk size={25}/>
                 </button>
             )}
-            {(page === "Register" || page === "Login") && (
+            {page === "Profile" && (
                 <button onClick={() => {
                     setLoading?.(true)
                     setTimeout(() => {
-                        page === "Register" ? (
-                            router?.push("/login")
-                        ) : (
-                            router?.push("/register")
-                        )
+                        router?.push("/ranking")
                     }, 500)
                 }}
-                        className={`${getPageStyle(page)} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
-                >
-                    {page === "Register" ? <Key size={25}/> : <PenTool size={25}/>}
+                        className={`${getPageStyle(page)} z-10 absolute top-10 right-25 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                    <Medal size={25}/>
                 </button>
             )}
         </>
