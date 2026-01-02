@@ -20,7 +20,7 @@ export default function AuthClient() {
     const [bannerVisible, setBannerVisible] = useState(true)
     const [isPlaying, setIsPlaying] = useState(false)
     const [muted, setMuted] = useState(false)
-    const {volume, setVolume} = useVolume()
+    const {volume} = useVolume()
     const [source, setSource] = useState<string | null>(null)
     const [title, setTitle] = useState<string | null>(null)
     const [mode, setMode] = useState<"Main" | "Authentication">("Main")
@@ -84,6 +84,15 @@ export default function AuthClient() {
                 <div className={`duration-500 ease-in-out transition ${transition === "Parent" ? "opacity-0" : "opacity-100"}`}>
                     <Image src={"/icon.png"} alt={"App icon"} height={200} width={100} className={"absolute top-5 left-5 z-2"}/>
                     <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Auth"}/>
+                    <h1 className={`flex absolute bottom-3 right-3 text-white text-[15px] z-2 ${yesteryear.className}`}>{new Date().getFullYear()}</h1>
+                    <h4 className={"absolute bottom-4 left-4 z-2"}>
+                        <Link
+                            className={"text-white font-bold text-shadow-xl text-[13px] transition duration-200 ease-in-out hover:text-teal-500 hover:shadow-xl hover:text-shadow-teal-700 z-2"}
+                            target={"_blank"}
+                            href={"https://github.com/szpadelinho"}>
+                            Check out my other projects!
+                        </Link>
+                    </h4>
                     {showBanner && (
                         <IntroBanner bannerVisible={bannerVisible} />
                     )}
@@ -92,11 +101,6 @@ export default function AuthClient() {
                         {mode === "Main" ? (
                             <>
                                 <div className={"absolute w-screen h-screen flex content-center items-center justify-center mask-center z-2 perspective-dramatic"}>
-                                    <h1 className={`flex absolute bottom-3 right-3 text-white text-[15px] ${yesteryear.className}`}>{new Date().getFullYear()}</h1>
-                                    <h4 className={"absolute bottom-4 left-4"}><Link
-                                        className={"text-white font-bold text-shadow-xl text-[13px] transition duration-200 ease-in-out hover:text-teal-500 hover:shadow-xl hover:text-shadow-teal-700"}
-                                        target={"_blank"}
-                                        href={"https://github.com/szpadelinho"}>Check out my other projects!</Link></h4>
                                     <div
                                         className="relative flex items-center justify-center flex-col h-80 w-160 shadow-lg shadow-gray-500 rotate-x-[1.4deg] mb-10 bg-[url(/images/paper_texture.png)]">
                                         <div className={"absolute bottom-4 left-4 flex items-center justify-center flex-row gap-2"}>

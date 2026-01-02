@@ -1,9 +1,8 @@
 import {
     ConciergeBell,
-    Key,
     LampDesk,
     LogOut, Medal,
-    PenTool,
+    Undo2,
     University,
     Volume,
     Volume1,
@@ -144,7 +143,7 @@ const Navbar = ({
                             )
                         }
                     }}
-                            className={`${page === "Profile" || page === "Ranking" && "fixed left-10 top-10"} ${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                            className={`${(page === "Profile" || page === "Ranking") && "fixed left-10 top-10"} ${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                             style={page === "LoveInHeart" ? {
                                 borderWidth: "8px",
                                 borderStyle: "solid",
@@ -207,8 +206,19 @@ const Navbar = ({
                         router?.push("/ranking")
                     }, 500)
                 }}
-                        className={`${getPageStyle(page)} z-10 absolute top-10 right-25 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                        className={`${getPageStyle(page)} z-10 absolute top-10 left-25 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                     <Medal size={25}/>
+                </button>
+            )}
+            {page === "Ranking" && (
+                <button onClick={() => {
+                    setLoading?.(true)
+                    setTimeout(() => {
+                        router?.push("/profile")
+                    }, 500)
+                }}
+                        className={`${getPageStyle(page)} z-10 absolute top-10 left-25 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                    <Undo2 size={25}/>
                 </button>
             )}
         </>

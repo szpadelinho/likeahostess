@@ -27,7 +27,7 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
     const [clubId, setClubId] = useState<number | null>(null)
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
-    const {volume, setVolume} = useVolume()
+    const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(() => {
@@ -105,15 +105,19 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
                         </h1>
                         <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={50} width={50}/>
                     </div>
-                    <h2 className={`absolute top-70 z-50 text-[25px] ${cookie.className}`}>
-                        Summed money: {totals?.money}
-                    </h2>
-                    <h2 className={`absolute top-80 z-50 text-[25px] ${cookie.className}`}>
-                        Summed up popularity: {totals?.popularity}
-                    </h2>
-                    <h2 className={`absolute top-90 z-50 text-[25px] ${cookie.className}`}>
-                        Average supply level: {totals?.supplies}%
-                    </h2>
+                    {totals && (
+                        <>
+                            <h2 className={`absolute top-70 z-50 text-[25px] ${cookie.className}`}>
+                                Summed money: {totals?.money}
+                            </h2>
+                            <h2 className={`absolute top-80 z-50 text-[25px] ${cookie.className}`}>
+                                Summed up popularity: {totals?.popularity}
+                            </h2>
+                            <h2 className={`absolute top-90 z-50 text-[25px] ${cookie.className}`}>
+                                Average supply level: {Math.round(totals.supplies * 100) / 100}%
+                            </h2>
+                        </>
+                    )}
                     <div className={"absolute top-120 flex justify-center items-center gap-1 flex-col"}>
                         <h1 className={`z-50 text-[30px] ${cookie.className}`}>
                             Favourite club

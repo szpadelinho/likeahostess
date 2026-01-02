@@ -8,7 +8,6 @@ import {
     Tiny5,
     Yesteryear
 } from "next/font/google";
-import {prisma} from "../../prisma/prisma";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -167,6 +166,14 @@ export type WindowType =
     | "SupplyAlert"
     | "MoneyAlert"
     | null
+
+export type Ranking = {
+    id: string
+    name: string | null
+    money: number
+    popularity: number
+    supplies: number
+}
 
 //fonts
 export const yesteryear = Yesteryear({
