@@ -14,6 +14,7 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import {signOut} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
+import {texturina} from "@/app/types";
 
 interface NavbarProps {
     router?: AppRouterInstance,
@@ -220,6 +221,11 @@ const Navbar = ({
                         className={`${getPageStyle(page)} z-10 absolute top-10 left-25 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                     <Undo2 size={25}/>
                 </button>
+            )}
+            {page === "Selection" && (
+                <h1 className={`${getPageStyle(page)} ${texturina.className} left-1/2 -translate-x-[50%] z-10 absolute top-10 text-[30px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_80%)]`}>
+                    Choose the club
+                </h1>
             )}
         </>
     )

@@ -7,13 +7,14 @@ import LoadingBanner from "@/components/loadingBanner";
 import ReactPlayer from "react-player";
 import clsx from "clsx";
 import Navbar from "@/components/navbar";
-import {ClubSelection, texturina} from "@/app/types";
+import {ClubSelection, StoredClub, texturina} from "@/app/types";
 import {useVolume} from "@/app/context/volumeContext";
 import {HeartHandshake, Package} from "lucide-react";
 
 const SelectionClient = () => {
     const router = useRouter()
     const [clubs, setClubs] = useState<ClubSelection[]>([])
+    const [latestClub, setLatestClub] = useState<StoredClub | null>(null)
     const [currentIndex, setCurrentIndex] = useState(0)
     const [fadeOut, setFadeOut] = useState(false)
     const [direction, setDirection] = useState<"prev" | null | "next">(null)
@@ -41,8 +42,21 @@ const SelectionClient = () => {
             }
         };
 
-        checkSession();
-    }, []);
+        checkSession()
+    }, [])
+
+    useEffect(() => {
+        const latest = localStorage.getItem("selectedClub")
+        if(!latest) return
+
+        try{
+            const parsed = JSON.parse(latest)
+            setLatestClub(parsed)
+        }
+        catch(err){
+            console.error("Something went wrong while fetching latest club: ", err)
+        }
+    }, [])
 
     useEffect(() => {
         if(clubs.length > 0 && clubs[currentIndex]){
@@ -51,7 +65,7 @@ const SelectionClient = () => {
         else{
             setLoading(true)
         }
-    }, [clubs, currentIndex]);
+    }, [clubs, currentIndex])
 
     const currentClub = clubs[currentIndex]
 
@@ -164,7 +178,7 @@ const SelectionClient = () => {
                                 {getClubs().map((club) => (
                                     <div
                                         key={club.id}
-                                        className={`flex flex-col items-center justify-center`}
+                                        className={"flex flex-col items-center justify-center"}
                                         style={{
                                             transform: getTransform(club.position),
                                             opacity: getOpacity(club.position),
@@ -173,6 +187,13 @@ const SelectionClient = () => {
                                                 : "opacity 0.4s ease-in-out"
                                         }}
                                     >
+                                        {(latestClub && latestClub.id === club.id) && (
+                                            <div className={`absolute z-[999] h-full w-full pointer-events-none bg-[radial-gradient(ellipse_at_center,_rgba(200,50,150,.5)_0%,_rgba(0,0,0,0)_75%)]`}>
+                                                <p className={"absolute p-5 font-[500] right-2 top-2 text-pink-400 bg-[radial-gradient(ellipse_at_center,_rgba(200,0,150,1)_-200%,_rgba(0,0,0,0)_75%)]"}>
+                                                    Last visited!
+                                                </p>
+                                            </div>
+                                        )}
                                         <div className={"relative flex flex-col items-center justify-center hover:scale-110 active:scale-120 duration-300 ease-in-out"}>
                                             <Image
                                                 src={`${club.exterior}`}
@@ -243,6 +264,11 @@ const SelectionClient = () => {
                                     </div>
                                 ))}
                             </div>
+                            {latestClub && (
+                                <div>
+
+                                </div>
+                            )}
                             <div
                                 className={`flex flex-col text-center text-[25px] justify-center rounded-[20] -mb-20 mt-20 h-1/8 w-300 text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_75%)] ${clsx(
                                     "transition-opacity duration-400",
