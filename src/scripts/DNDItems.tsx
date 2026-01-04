@@ -92,7 +92,7 @@ export const DroppableSlot = ({type, onDrop, children, expectedId}: DroppableSlo
     const [status, setStatus] = useState<'idle' | 'correct' | 'wrong'>('idle')
     const [droppedChild, setDroppedChild] = useState<ReactNode | null>(null)
 
-    const [{isOver}, drop] = useDrop(() => ({
+    const [{isOver, canDrop}, drop] = useDrop(() => ({
         accept: type,
         drop: (item: { id: string, icon: ReactNode }) => {
             const correct = item.id === expectedId
@@ -107,6 +107,7 @@ export const DroppableSlot = ({type, onDrop, children, expectedId}: DroppableSlo
         },
         collect: (monitor) => ({
             isOver: monitor.isOver(),
+            canDrop: monitor.canDrop()
         }),
     }))
 
@@ -124,7 +125,7 @@ export const DroppableSlot = ({type, onDrop, children, expectedId}: DroppableSlo
     return (
         <button
             ref={buttonRef}
-            className={`border-2 p-5 rounded-[15] transition-all duration-300 hover:scale-110 ease-in-out ${colorStatus}`}>
+            className={`border-2 ${canDrop && "border-dotted"} p-5 rounded-[15] transition-all duration-300 hover:scale-110 ease-in-out ${colorStatus}`}>
             {status === 'correct' ? droppedChild : children}
         </button>
     )
@@ -199,7 +200,8 @@ export const DroppableClient = ({
                 clients[index] ? 'bg-pink-800 opacity-100' : 'bg-pink-700'
             } ${wiggleClient[index] ? '!bg-red-600 scale-120' : 'scale-100'} ${
                 isOver && canDrop ? 'scale-110 bg-pink-900' : ''
-            }`}
+            }
+            ${canDrop && "border-dotted"}`}
         >
             {clients[index] ? <Meh size={50}/> : <BookUser size={50}/>}
         </button>
@@ -329,7 +331,7 @@ export const DroppableHostessSlot = ({
     return (
         <div
             ref={divRef}
-            className={`relative flex justify-center items-center bg-pink-800 rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 text-pink-200 border-2 transition duration-200 ease-in-out transform active:scale-105 ${
+            className={`relative flex justify-center items-center bg-pink-800 rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 text-pink-200 border-2 ${canDrop && "border-dotted"} transition duration-200 ease-in-out transform active:scale-105 ${
                 isOver && canDrop ? "bg-pink-900 scale-105" : ""
             }`}
         >
@@ -423,7 +425,7 @@ export const DroppableHostessTableSlot = ({
     return (
         <div
             ref={divRef}
-            className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950/70 transition-all duration-200 ease-in-out transform active:scale-90 ${
+            className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 border-2 ${canDrop && "border-dotted"} opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950/70 transition-all duration-200 ease-in-out transform active:scale-90 ${
                 hostesses[index] ? 'bg-pink-800 opacity-100' : 'bg-pink-700'
             } ${wiggleHostess[index] ? '!bg-red-600 scale-120' : 'scale-100'} ${
                 isOver && canDrop ? 'scale-110 bg-pink-900' : ''

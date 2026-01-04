@@ -253,7 +253,8 @@ const Interior = ({
                         <div key={i}
                              className={`${hostesses[i] || clients[i] ? "opacity-100" : "opacity-75"} duration-300 ease-in-out relative flex justify-center items-center p-4 ${positioning(i)}`}>
                             <div
-                                className={"absolute h-75 w-75 -z-1 flex bg-[radial-gradient(ellipse_at_center,_rgba(163,0,76,1)_50%,_rgba(134,16,67,1)_75%,_rgba(134,16,67,1)_100%)]"}/>
+                                className={"absolute h-75 w-75 -z-1 flex"}/>
+                            <div className={"absolute -z-1 w-80 h-80 bg-[radial-gradient(ellipse_at_center,_rgba(170,0,100,1)_50%,_rgba(134,16,67,0)_70%,_rgba(134,16,67,0)_100%)]"}/>
                             <Image
                                 src={
                                     !visit[i] && dinedTables[i] ?

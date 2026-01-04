@@ -52,6 +52,8 @@ const SelectionClient = () => {
         try{
             const parsed = JSON.parse(latest)
             setLatestClub(parsed)
+
+            setCurrentIndex(parsed.id - 1)
         }
         catch(err){
             console.error("Something went wrong while fetching latest club: ", err)
