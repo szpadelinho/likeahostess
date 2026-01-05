@@ -105,7 +105,7 @@ const RankingClient = () => {
                                             {entry.name ?? "Unknown guy"}
                                         </td>
                                         <td className={"px-4 py-2 border-black border-1"}>
-                                            {page === "Money" ? entry.money.toLocaleString() :
+                                            {page === "Money" ? `¥${entry.money.toLocaleString()}` :
                                                 page === "Popularity" ? entry.popularity.toLocaleString() :
                                                     `${entry.supplies.toLocaleString()}%`
                                             }

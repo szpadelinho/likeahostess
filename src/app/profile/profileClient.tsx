@@ -108,7 +108,7 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
                     {totals && (
                         <>
                             <h2 className={`absolute top-70 z-50 text-[25px] ${cookie.className}`}>
-                                Summed money: {totals?.money}
+                                Summed money: ¥{totals?.money}
                             </h2>
                             <h2 className={`absolute top-80 z-50 text-[25px] ${cookie.className}`}>
                                 Summed up popularity: {totals?.popularity}

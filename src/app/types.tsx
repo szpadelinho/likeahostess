@@ -349,6 +349,19 @@ export const CLUB_RANKS: Record<number, string> = {
     100: "Legendary Club Chairman"
 } as const
 
+export interface NewSerena{
+    name: string
+    selection: string
+    drinks: string
+    supplies: string
+    song: string
+}
+
+export const newSerenaType: NewSerena[] = [
+    {name: "Date", selection: "date_new_serena", drinks: "date_new_serena_2", supplies: "date_new_serena_3", song: "-hlRhz4FHkg"},
+    {name: "Reina", selection: "reina_new_serena", drinks: "reina_new_serena_2", supplies: "reina_new_serena_3", song: "YFj4P2zmD5c"}
+]
+
 export const drinks: Drink[] = [
     {id: 0, title: "Essence of the Dragon of Dojima", description: "Apparently really pricey. However, only one person managed to demolish this booze.", price: 10000000, color: "red", tattoo: "oryu"},
     {id: 1, title: "Essence of the Lifeline of Kamurocho", description: "From what is known, this alcohol boosts your luck to gain more money... Huge if true.", price: 2000000, color: "purple", tattoo: "phoenix"},
