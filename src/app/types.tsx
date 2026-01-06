@@ -175,6 +175,20 @@ export type Ranking = {
     supplies: number
 }
 
+export interface NewSerena{
+    name: string
+    selection: string
+    drinks: string
+    supplies: string
+    song: string
+}
+
+export interface Moneylender{
+    name: string
+    photo: string
+    song: string
+}
+
 //fonts
 export const yesteryear = Yesteryear({
     weight: "400",
@@ -217,11 +231,6 @@ export const marckScript = Marck_Script({
 })
 
 export const coustard = Coustard({
-    weight: "400",
-    subsets: ['latin'],
-})
-
-export const courierPrime = Courier_Prime({
     weight: "400",
     subsets: ['latin'],
 })
@@ -349,17 +358,14 @@ export const CLUB_RANKS: Record<number, string> = {
     100: "Legendary Club Chairman"
 } as const
 
-export interface NewSerena{
-    name: string
-    selection: string
-    drinks: string
-    supplies: string
-    song: string
-}
-
 export const newSerenaType: NewSerena[] = [
     {name: "Date", selection: "date_new_serena", drinks: "date_new_serena_2", supplies: "date_new_serena_3", song: "-hlRhz4FHkg"},
     {name: "Reina", selection: "reina_new_serena", drinks: "reina_new_serena_2", supplies: "reina_new_serena_3", song: "YFj4P2zmD5c"}
+]
+
+export const moneylenderType: Moneylender[] = [
+    {name: "Mine", photo: "mine_moneylender", song: "FxPDNViVcow"},
+    {name: "Hana", photo: "hana_moneylender", song: "CSulHg_OTn4"}
 ]
 
 export const drinks: Drink[] = [

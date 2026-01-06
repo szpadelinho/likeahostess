@@ -183,7 +183,7 @@ const NewSerenaClient = () => {
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"NewSerena"} mode={mode} switchMode={switchMode}/>
             {newSerena && (
                 <>
-                    <Image src={mode === "Selection" ? `/images/${newSerena?.selection}.png` : mode === "Drinks" ? `/images/${newSerena?.drinks}.png` : supplies && supplies >= 100 ? `/images/${newSerena?.selection}` : `/images/${newSerena?.supplies}.png`} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
+                    <Image src={mode === "Selection" ? `/images/${newSerena?.selection}.png` : mode === "Drinks" ? `/images/${newSerena?.drinks}.png` : supplies && supplies >= 100 ? `/images/${newSerena?.selection}.png` : `/images/${newSerena?.supplies}.png`} alt={"New Serena interior"} fill={true} className={"object-cover"}/>
                     {club !== null && (
                         <div
                             className={`${molle.className} gap-2 absolute bg-black/60 border-2 border-white rounded-[5] bottom-5 right-5 h-40 p-2 text-center content-center items-center flex flex-row text-[20px] text-white z-1`}>
