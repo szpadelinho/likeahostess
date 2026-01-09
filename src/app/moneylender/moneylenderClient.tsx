@@ -30,13 +30,13 @@ export const MoneylenderClient = () => {
     const { data: session } = useSession()
 
     useEffect(() => {
-        /*if(Math.random() > 0.1){
+        if (Math.random() > 0.1){
             setMoneylender(moneylenderType[0])
         }
-        else{
+        else
+        {
             setMoneylender(moneylenderType[1])
-        }*/
-        setMoneylender(moneylenderType[1])
+        }
     }, [])
 
     useEffect(() => {
@@ -155,7 +155,7 @@ export const MoneylenderClient = () => {
                                         <button
                                             onClick={() => {
                                                 if(clubData){
-                                                    handleMoneyTransaction({session, clubData, setMoney, setClub, change: loan.amount}).then()
+                                                    handleMoneyTransaction({session, clubData, setMoney, setClub, change: -loan.amount}).then()
                                                     handleLoanTransaction({session, clubData, amount: loan.amount, type: "Payment"}).then()
                                                     setLoan(null)
                                                 }
