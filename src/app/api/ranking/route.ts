@@ -13,6 +13,8 @@ export async function GET() {
             select: {
                 id: true,
                 name: true,
+                image: true,
+                experience: true,
                 userClub: {
                     select: {
                         money: true,
@@ -40,6 +42,8 @@ export async function GET() {
                 return {
                     id: user.id,
                     name: user.name,
+                    image: user.image,
+                    experience: user.experience,
                     money: totals.money,
                     popularity: totals.popularity,
                     supplies: Math.round((totals.supplies / clubCount) * 100) / 100
@@ -52,11 +56,13 @@ export async function GET() {
         const moneyRanking = [...aggregated].sort((a, b) => b.money - a.money)
         const popularityRanking = [...aggregated].sort((a, b) => b.popularity - a.popularity)
         const suppliesRanking = [...aggregated].sort((a, b) => b.supplies - a.supplies)
+        const experienceRanking = [...aggregated].sort((a, b) => b.experience - a.experience)
 
         return NextResponse.json({
             money: moneyRanking.slice(0, 10),
             popularity: popularityRanking.slice(0, 10),
-            supplies: suppliesRanking.slice(0, 10)
+            supplies: suppliesRanking.slice(0, 10),
+            experience: experienceRanking.slice(0, 10),
         })
     }
     catch (err) {

@@ -9,7 +9,7 @@ import Navbar from "@/components/navbar";
 import Image from "next/image";
 import LoadingBanner from "@/components/loadingBanner";
 import {cookie, Ranking} from "@/app/types";
-import {BanknoteArrowUp, Box, Laugh} from "lucide-react";
+import {BanknoteArrowUp, Box, Laugh, Sparkles} from "lucide-react";
 
 const RankingClient = () => {
     const router = useRouter()
@@ -18,8 +18,8 @@ const RankingClient = () => {
     const [muted, setMuted] = useState(false)
     const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
-    const [totals, setTotals] = useState<{money: Ranking[], popularity: Ranking[], supplies: Ranking[]} | null>(null)
-    const [page, setPage] = useState<"Money" | "Popularity" | "Supplies">("Money")
+    const [totals, setTotals] = useState<{money: Ranking[], popularity: Ranking[], supplies: Ranking[], experience: Ranking[]} | null>(null)
+    const [page, setPage] = useState<"Money" | "Popularity" | "Supplies" | "Experience">("Money")
 
     const ranking = useMemo(() => {
         if(!totals) return null
@@ -31,6 +31,8 @@ const RankingClient = () => {
                 return totals.popularity
             case "Supplies":
                 return totals.supplies
+            case "Experience":
+                return totals.experience
             default:
                 return []
         }
@@ -102,12 +104,16 @@ const RankingClient = () => {
                                             {i + 1}.
                                         </td>
                                         <td className={"px-4 py-2 border-black border-1"}>
-                                            {entry.name ?? "Unknown guy"}
+                                            <div className={"flex flex-row gap-2"}>
+                                                <Image src={entry.image} alt={"Profile picture"} height={25} width={25} className={"rounded-full border-2 border-black"}/>
+                                                {entry.name ?? "Unknown guy"}
+                                            </div>
                                         </td>
                                         <td className={"px-4 py-2 border-black border-1"}>
                                             {page === "Money" ? `¥${entry.money.toLocaleString()}` :
                                                 page === "Popularity" ? entry.popularity.toLocaleString() :
-                                                    `${entry.supplies.toLocaleString()}%`
+                                                    page === "Supplies" ?`${entry.supplies.toLocaleString()}%` :
+                                                        `${entry.experience.toLocaleString()}`
                                             }
                                         </td>
                                     </tr>
@@ -115,21 +121,26 @@ const RankingClient = () => {
                             })}
                         </tbody>
                     </table>
-                    <div className={"flex justify-center items-center gap-2 z-2"}>
+                    <div className={"flex justify-center items-center gap-2 z-2 text-[10px]"}>
                         <button
-                            className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                            className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row text-center items-center cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
                             onClick={() => setPage("Money")}>
                             <p>Money</p><BanknoteArrowUp/>
                         </button>
                         <button
-                            className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                            className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row text-center items-center cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
                             onClick={() => setPage("Popularity")}>
                             <p>Popularity</p><Laugh/>
                         </button>
                         <button
-                            className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                            className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row text-center items-center cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
                             onClick={() => setPage("Supplies")}>
                             <p>Supplies</p><Box/>
+                        </button>
+                        <button
+                            className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row text-center items-center cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                            onClick={() => setPage("Experience")}>
+                            <p>Experience</p><Sparkles/>
                         </button>
                     </div>
                 </div>

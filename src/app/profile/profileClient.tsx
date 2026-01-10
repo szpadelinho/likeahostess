@@ -7,10 +7,11 @@ import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
 import {Session} from "next-auth";
 import Navbar from "@/components/navbar";
-import {cookie, FavClub, StoredClub} from "@/app/types";
+import {CLUB_RANKS, cookie, FavClub, getLevel, getRank, Rank, StoredClub} from "@/app/types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {signOut} from "next-auth/react";
+import {XPBar} from "@/components/XPBar";
 
 interface ProfileClientProps {
     session?: Session | null,
@@ -29,6 +30,27 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
     const [muted, setMuted] = useState(false)
     const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
+    const [experience, setExperience] = useState<number>(0)
+    const [rank, setRank] = useState<Rank>({lvl: 0, rank: CLUB_RANKS[0]})
+
+    useEffect(() => {
+        const fetchExperience = async () => {
+            try {
+                const res = await fetch("/api/user", {method: "GET"})
+                const data = await res.json()
+                setExperience(data.experience)
+            } catch (err) {
+                console.log("Failed to fetch user experience", err)
+            }
+        }
+        fetchExperience()
+    }, [])
+
+    useEffect(() => {
+        const lvl = getLevel(experience)
+        const rank = getRank(lvl)
+        setRank({lvl, rank})
+    }, [experience])
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -106,17 +128,26 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
                         <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={50} width={50}/>
                     </div>
                     {totals && (
-                        <>
-                            <h2 className={`absolute top-70 z-50 text-[25px] ${cookie.className}`}>
+                        <div className={`absolute top-55 flex flex-col text-center justify-center ${cookie.className} text-[25px] z-50`}>
+                            <h2>
+                                Currently at level {Math.floor(experience / 1000)}
+                            </h2>
+                            <h2>
+                                Experience: {experience}/1000
+                            </h2>
+                            <h2>
+                                Title: {rank.rank}
+                            </h2>
+                            <h2>
                                 Summed money: ¥{totals?.money}
                             </h2>
-                            <h2 className={`absolute top-80 z-50 text-[25px] ${cookie.className}`}>
+                            <h2>
                                 Summed up popularity: {totals?.popularity}
                             </h2>
-                            <h2 className={`absolute top-90 z-50 text-[25px] ${cookie.className}`}>
+                            <h2>
                                 Average supply level: {Math.round(totals.supplies * 100) / 100}%
                             </h2>
-                        </>
+                        </div>
                     )}
                     <div className={"absolute top-120 flex justify-center items-center gap-1 flex-col"}>
                         <h1 className={`z-50 text-[30px] ${cookie.className}`}>

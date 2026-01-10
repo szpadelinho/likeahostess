@@ -170,9 +170,11 @@ export type WindowType =
 export type Ranking = {
     id: string
     name: string | null
+    image: string
     money: number
     popularity: number
     supplies: number
+    experience: number
 }
 
 export interface NewSerena{
