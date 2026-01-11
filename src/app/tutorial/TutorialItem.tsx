@@ -1,23 +1,23 @@
 import Image from "next/image";
 import React, {useEffect, useState} from "react";
 import {
-    AudioWaveform,
     BookHeart,
     BookUser, BottleWine,
-    CarTaxiFront, DatabaseBackup, Disc3,
+    DatabaseBackup,
     DoorOpen,
-    Flower,
     Github, HandHeart,
     HeartHandshake, HeartPlus,
-    IdCard,
     JapaneseYen,
-    LogOut, Martini,
-    MicVocal, Pause, SkipBack, SkipForward, StepBack, StepForward,
+    Martini, Medal,
+    Package, SkipBack, SkipForward,
     Trash2, UtensilsCrossed, VenetianMask,
-    Volume2
+    Volume2,
 } from "lucide-react";
 import clsx from "clsx";
-import {yesteryear} from "@/app/types";
+import {cookie, yesteryear} from "@/app/types";
+import {XPBar} from "@/components/XPBar";
+import {MenuModal} from "@/components/menuModal";
+import JamPlayer from "@/components/jamPlayer";
 
 interface TutorialItemProps {
     label: string,
@@ -46,7 +46,7 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                     <div className={"absolute top-40 left-145 flex flex-row w-[780px] justify-between"}>
                         <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>Authentication help</h1>
-                            <p>The most important page - your authentication. Since you NEED to authenticate, here is a little tutorial on what to do, in case you are lost.<br/><br/>You have two options to log in:</p>
+                            <p>The most important page - your authentication. Since you NEED to authenticate, here is a little tutorial on what to do, in case you are lost.<br/><br/>You have three options to log in:</p>
                             <div className={"flex flex-row gap-2 items-center"}>
                                 <button
                                     className={"border-black border-2 rounded-sm w-[105px] opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}>
@@ -61,8 +61,15 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                                     </svg>
                                     <p>Discord</p>
                                 </button>
+                                <button
+                                    className={"border-black border-2 rounded-sm w-[105px] opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}>
+                                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewBox="0 0 50 50">
+                                        <path d="M 25.996094 48 C 13.3125 48 2.992188 37.683594 2.992188 25 C 2.992188 12.316406 13.3125 2 25.996094 2 C 31.742188 2 37.242188 4.128906 41.488281 7.996094 L 42.261719 8.703125 L 34.675781 16.289063 L 33.972656 15.6875 C 31.746094 13.78125 28.914063 12.730469 25.996094 12.730469 C 19.230469 12.730469 13.722656 18.234375 13.722656 25 C 13.722656 31.765625 19.230469 37.269531 25.996094 37.269531 C 30.875 37.269531 34.730469 34.777344 36.546875 30.53125 L 24.996094 30.53125 L 24.996094 20.175781 L 47.546875 20.207031 L 47.714844 21 C 48.890625 26.582031 47.949219 34.792969 43.183594 40.667969 C 39.238281 45.53125 33.457031 48 25.996094 48 Z"></path>
+                                    </svg>
+                                    <p>Google</p>
+                                </button>
                             </div>
-                            <p>When you are on the authentication page, click one of these two buttons to select your service, which you will use to log into the system.<br/><br/>Later, you will be redirected.</p>
+                            <p>When you are on the authentication page, click one of these buttons to select your service, which you will use to log into the system.<br/><br/>Later, you will be redirected.</p>
                         </div>
                         <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>What to do when I am redirected?</h1>
@@ -114,107 +121,80 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                             <h1 className={`text-[40px] ${yesteryear.className}`}>What happens next?</h1>
                             <p>After selecting the club you will play with, you are being redirected straight into the club's main hall. From now on, you are being a manager.</p>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>How can I change the club?</h1>
-                            <p>With HUD, you can use a taxi to switch to a different club.</p>
+                            <p>With HUD, you can use a taxi to switch to a different club.<br/>Alternatively, you can press "M" on your keyboard.</p>
                         </div>
                     </div>
                 )}
                 {label === "HUD" && (
                     <div className={"absolute top-40 left-145 flex flex-row w-[780px] justify-between"}>
-                        <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
+                        <div className={"flex flex-col items-center justify-center gap-20 max-w-[337px]"}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>User interface</h1>
                             <div
-                                className={`bg-pink-500 w-130 h-40 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white scale-60`}>
-                                <div className={"bg-[radial-gradient(circle_at_center,_#be185d_50%,_#9d174d_75%,_#831843_100%)] h-[130%] w-[40%] rounded-[20] flex justify-center relative"}>
+                                className={`scale-40 text-center items-center flex flex-row text-[20px] rounded-[20] text-pink-200`}>
+                                <div className={"bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,.5)_40%,_rgba(255,255,255,0)_70%)] h-150 w-250 -left-75 absolute"}/>
+                                <div className={"flex flex-col text-center justify-center gap-3"}>
+                                    <div className={`flex flex-row justify-center items-center gap-3 opacity-50 relative ${yesteryear.className}`}>
+                                        <Image
+                                            className={"object-contain absolute left-1/2 -translate-x-[50%] bottom-7.5 z-9"}
+                                            src="/images/stardust_logo.png"
+                                            alt={"Logo"}
+                                            height={100}
+                                            width={150}
+                                        />
+                                        <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center z-10"}>
+                                            <JapaneseYen/>
+                                            <p>123456789</p>
+                                        </h2>
+                                        <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10"}>
+                                            <HeartHandshake/>
+                                            <p>2000</p>
+                                        </h2>
+                                        <h2 className={`flex flex-row text-[20px] font-[400] justify-center gap-1 items-center z-10`}>
+                                            <Package/>
+                                            <p>100%</p>
+                                        </h2>
+                                    </div>
+                                    <div className={`flex flex-row justify-center group ${yesteryear.className}`}>
+                                        <div className={`flex flex-row justify-center items-center gap-10 opacity-50`}>
+                                            <p className={"ease-in-out duration-300 text-pink-200 hover:text-pink-100 text-[25px]"}>
+                                                Pretty popular
+                                            </p>
+                                        </div>
+                                        <div className={"absolute flex justify-center items-center opacity-0 pointer-events-none group-hover:opacity-100 ease-in-out duration-300"}>
+                                            <XPBar value={500} rank={{lvl: 24, rank: "Pretty popular"}}/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className={"relative rounded-[20] flex justify-center w-40"}>
                                     <Image
-                                        className={"flex absolute -bottom-[25%]"}
-                                        src={"/images/kazuki.png"}
+                                        className={"flex absolute -bottom-50"}
+                                        src="/images/kazuki.png"
                                         alt={"Host"}
                                         height={500}
-                                        width={100}
+                                        width={150}
                                     />
-                                </div>
-                                <div className={"flex flex-row text-center justify-center content-center w-[60%] h-[100%] p-5"}>
-                                    <div className={"flex flex-col justify-center w-[60%]"}>
-                                        <h1 className={"text-[22px] font-[700]"}>Kazuki</h1>
-                                        <h2 className={"text-[18px] font-[600]"}>Stardust</h2>
-                                    </div>
-                                    <div className={"flex flex-col justify-center w-[40%]"}>
-                                        <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center"}>
-                                            <JapaneseYen/>
-                                            <p>1000000</p>
-                                        </h2>
-                                        <h2 className={"flex flex-row text-[20px] font-[400] justify-center gap-1 content-center text-center items-center w-full"}>
-                                            <HeartHandshake/>
-                                            <p>10000</p>
-                                        </h2>
-                                    </div>
+                                    <h1 className={`absolute right-3 -bottom-10 origin-bottom-right text-nowrap rotate-90 opacity-50 text-[clamp(24px,4vw,50px)] ${yesteryear.className}`}>
+                                        Kazuki
+                                    </h1>
                                 </div>
                             </div>
-                            <p>Here is an information about your character and the club you are currently managing. You can see the name of the main host, name of the club, your wealth and popularity.</p>
+                            <p>Here is an information about your character and the club you are currently managing. You can see the name of the main host, name of the club, your wealth, popularity and supply level.<br/>You can see also your rank and current experience level by hovering on the title.</p>
                         </div>
-                        <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
-                            <h1 className={`text-[25px] ${yesteryear.className}`}>Your panel:</h1>
-                            <div
-                                className={"gap-5 bg-pink-500 p-3 text-center content-center items-center justify-center flex flex-row text-[20px] rounded-[15] text-white font-[600]"}>
-                                <div className={"flex content-center justify-center items-center flex-row gap-2"}>
-                                    <button
-                                        className={"border-white border-2 rounded-[12] p-2 cursor-zoom-in text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
-                                        <Flower/>
-                                    </button>
-                                    <button
-                                        className={"border-white border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}                                    >
-                                        <MicVocal/>
-                                    </button>
-                                </div>
-                                <button
-                                    className={"border-white border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
-                                    <IdCard/>
-                                </button>
-                                <div className={"flex content-center justify-center gap-2"}>
-                                    <button
-                                        className={"border-white border-2 rounded-[12] p-2 cursor-wait hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
-                                        <CarTaxiFront/>
-                                    </button>
-                                    <button
-                                        className={"border-white border-2 rounded-[12] p-2 cursor-alias hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
-                                        <LogOut/>
-                                    </button>
-                                </div>
+                        <div className={"flex flex-col items-center justify-center gap-30 max-w-[337px]"}>
+                            <h1 className={`text-[20px] ${yesteryear.className}`}>By pressing "Escape", you can view a whole menu:</h1>
+                            <div className={"flex justify-center items-center scale-25 w-400"}>
+                                <MenuModal menu={true} closing={false} handleClick={() => {}} setWindow={() => {}}/>
                             </div>
-                            <div className={"w-[100%] flex flex-row items-center justify-between gap-5"}>
-                                <button
-                                    className={"text-white border-white border-2 rounded-[12] p-2 cursor-zoom-in text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
-                                    <Flower/>
-                                </button>
-                                <p>Management - here you can select the hostesses who will work for you.</p>
-                            </div>
-                            <div className={"w-[100%] flex flex-row items-center justify-between gap-5"}>
-                                <button
-                                    className={"text-white border-white border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}                                    >
-                                    <MicVocal/>
-                                </button>
-                                <p>Activities - a little booster for the clubs popularity.</p>
-                            </div>
-                            <div className={"w-[100%] flex flex-row items-center justify-between gap-5"}>
-                                <button
-                                    className={"text-white border-white border-2 rounded-[12] p-2 cursor-copy text-[15px] hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
-                                    <IdCard/>
-                                </button>
-                                <p>Profile card - statistics and your profile options.</p>
-                            </div>
-                            <div className={"w-[100%] flex flex-row items-center justify-between gap-5"}>
-                                <button
-                                    className={"text-white border-white border-2 rounded-[12] p-2 cursor-wait hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
-                                    <CarTaxiFront/>
-                                </button>
-                                <p>Taxi - use it to leave the club and select a different one from the carousel.</p>
-                            </div>
-                            <div className={"w-[100%] flex flex-row items-center justify-between gap-5"}>
-                                <button
-                                    className={"text-white border-white border-2 rounded-[12] p-2 cursor-alias hover:bg-white bg-pink-600 hover:text-black transition duration-200 ease-in-out transform active:scale-110"}>
-                                    <LogOut/>
-                                </button>
-                                <p>Log out - use it to log out and quit the game.</p>
+                            <div className={`text-[16px] ${yesteryear.className}`}>
+                                <h1>"M" - Management - choose your hostesses and view their stats,</h1>
+                                <h1>"P" - Activities - events for your club to gain new audacity,</h1>
+                                <h1>"Q" - Log off - quit the system,</h1>
+                                <h1>"E" - New Serena - buy supplies or drinks to gain effects,</h1>
+                                <h1>"I" - Profile - view your stats and rankings,</h1>
+                                <h1>"C" - Casino - gamble all your earnings and win it all,</h1>
+                                <h1>"S" - Selection - get into a cab and visit a different club,</h1>
+                                <h1>"L" - Love in Heart - visit local massage parlor to refreshen your workers,</h1>
+                                <h1>"B" - Moneylender - in case you go broke or just need more money, visit local man.</h1>
                             </div>
                         </div>
                     </div>
@@ -228,7 +208,7 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                                 className={`text-white flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white z-49 bg-red-950`}>
                                 <DoorOpen size={50}/>
                             </div>
-                            <p>Click on the icon to welcome the client. Later, click on a free table to assign him somewhere.</p>
+                            <p>Drag the client to a table:</p>
                             <div className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-white border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950 transition-all duration-200 ease-in-out transform active:scale-90 hover:shadow-sm hover:shadow-white bg-pink-700`}>
                                 <BookUser size={50}/>
                             </div>
@@ -386,24 +366,21 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                                        className={"rounded-[20]"}/>
                             </div>
                             <p>And then choose one of the performers activities:</p>
-                            <div className={"flex justify-center items-center flex-row text-[15px] bg-pink-900 p-5 rounded-[20] gap-5 text-white scale-55"} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                                <>
-                                    <button className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
-                                        <SkipBack/>
-                                    </button>
-                                    <div
-                                        className={"flex justify-center items-center flex-row border-white border-2 rounded-[15] p-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-pink-200 transition-all duration-200 ease-in-out active:scale-105"}>
-                                        <p className={"w-100 flex flex-row justify-center items-center gap-2"}>I wanna change myself!!!</p>
-                                        <p className={`w-20 flex flex-row justify-center items-center`}>
-                                            <JapaneseYen size={15}/>
-                                            <p>100000</p>
-                                        </p>
-                                        <p className={"w-20 flex flex-row justify-center items-center gap-1"}><HandHeart size={15}/>10000</p>
-                                    </div>
-                                    <button className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 scale-100 hover:scale-110"}>
-                                        <SkipForward/>
-                                    </button>
-                                </>
+                            <div
+                                className={"scale-75 flex justify-center items-center flex-row text-[15px] text-pink-200 bg-pink-950 p-3 rounded-[20] gap-3"}
+                                style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+                                <button
+                                        className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
+                                    <SkipBack/>
+                                </button>
+                                <div
+                                     className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-102 active:scale-95 hover:text-pink-200 transition-all duration-200 ease-in-out"}>
+                                    <p className={"w-100 flex flex-row justify-center items-center gap-2"}>GET to the TOP!!</p>
+                                </div>
+                                <button
+                                        className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 scale-100 hover:scale-110"}>
+                                    <SkipForward/>
+                                </button>
                             </div>
                         </div>
                         <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
@@ -417,38 +394,24 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                         <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>Jams</h1>
                             <p>The whole website offers a music player! With this, there is always some melody in the background of every single page. The main Jam Player looks like this:</p>
-                            <div className={"scale-60 text-white z-49 flex justify-center items-center flex-row text-[15px] bg-pink-950 p-3 rounded-[20] gap-5 transition duration-200 ease-in-out"} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                                <div
-                                    className={"flex bg-red-950 justify-center items-center flex-row border-white border-2 rounded-[15] p-2 transition duration-200 ease-in-out"}>
-                                    <div className={"w-100 flex flex-row justify-center items-center gap-3 font-[600]"}>
-                                        <Disc3 className={`transition-transform spin`}/>
-                                        A pretty good jam
-                                        <div className={"flex justify-center items-center gap-1 text-[12px] text-pink-300 ml-5"}>
-                                            <p>0:23</p>
-                                            <p><AudioWaveform size={15}/></p>
-                                            <p>5:55</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 hover:scale-110"}>
-                                    <StepBack/>
-                                </button>
-                                <button className="hover:text-pink-200 transition duration-200 ease-in-out hover:scale-110 transform active:scale-130">
-                                    <Pause/>
-                                </button>
-                                <button className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 hover:scale-110"}>
-                                    <StepForward/>
-                                </button>
+                            <div className={"ml-100 scale-50 mb-10"}>
+                                <JamPlayer jams={[{id: "a", title: "Some good jam indeed", media: "NOT EXISTING BRUV"}]} isJamPlaying={false} setIsJamPlaying={() => {}}/>
                             </div>
                             <p>Pausing the player will make the music stop. You can either skip or select the previous song.</p>
                         </div>
                         <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>Some pages have only one song</h1>
                             <p>Jam Player mainly works in the club's management game. Some of the pages only have a button to either mute or unmute the player:</p>
-                            <button
-                                    className={"z-50 border-2 rounded-[10] p-2 cursor-alias hover:bg-pink-300 bg-pink-500 text-pink-300 border-pink-300 hover:border-pink-500 hover:text-pink-500 transition-all duration-200 ease-in-out transform active:scale-110 text-white"}>
-                                <Volume2/>
-                            </button>
+                            <div className={`flex justify-center items-center group relative`}>
+                                <button
+                                    className={`border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                                    <Volume2/>
+                                </button>
+                                <div
+                                    className={`absolute hover:opacity-100 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120 pt-2 flex justify-center items-center h-5 -bottom-6 opacity-0 group-hover:opacity-50 group-hover:pointer-events-auto pointer-events-none z-50`}>
+                                    <input className={"accent-white"} type={"range"} min={0} max={100}/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
@@ -464,13 +427,27 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                                 </h1>
                                 <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={50} width={50}/>
                             </div>
-                            <h2 className={`z-50 text-[25px] ${yesteryear.className}`}>
-                                Summed money: 100000000
-                            </h2>
-                            <h2 className={`z-50 text-[25px] ${yesteryear.className}`}>
-                                Summed up popularity: 250000
-                            </h2>
-                            <div className={"size-60 relative flex justify-center items-center z-50"}>
+                            <div className={`flex flex-col gap-0 text-center justify-center ${cookie.className} text-[25px] z-50`}>
+                                <h2>
+                                    Currently at level 25
+                                </h2>
+                                <h2>
+                                    Experience: 500/1000
+                                </h2>
+                                <h2>
+                                    Title: Pretty popular
+                                </h2>
+                                <h2>
+                                    Summed money: ¥123456789
+                                </h2>
+                                <h2>
+                                    Summed up popularity: 2000
+                                </h2>
+                                <h2>
+                                    Average supply level: 100%
+                                </h2>
+                            </div>
+                            <div className={"size-50 relative flex justify-center items-center z-50 -mt-20"}>
                                 <Image src={"/images/stardust_logo.png"} alt={"Club logo"} width={200} height={100} className={"z-50"}/>
                                 <Image src={"/images/kazuki.png"} alt={"Host render"} width={40} height={100}
                                        className={"absolute z-50 ml-55 mt-15"}/>
@@ -493,6 +470,11 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                                 </button>
                                 <p>If you want to delete your account for some reason, this button is your friend.</p>
                             </div>
+                            <h1>There is also a ranking system, which you can select by clicking:</h1>
+                            <button
+                                    className={`-mt-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                                <Medal size={25}/>
+                            </button>
                         </div>
                     </div>
                 )}

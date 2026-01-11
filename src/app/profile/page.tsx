@@ -3,6 +3,7 @@ import {Metadata} from "next";
 import {auth} from "@/lib/auth";
 import {prisma} from "../../../prisma/prisma";
 import LoadingBanner from "@/components/loadingBanner";
+import {redirect} from "next/navigation";
 
 export async function generateMetadata(): Promise<Metadata> {
     const session = await auth()
@@ -14,7 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 const Profile = async () => {
     const session = await auth()
-    if(!session?.user?.email) return <div>Unauthorized</div>
+    if(!session || !session?.user?.email) redirect("/auth")
 
     const user = await prisma.user.findUnique({
         where: {email: session.user.email},

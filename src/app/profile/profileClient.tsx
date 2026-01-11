@@ -11,7 +11,6 @@ import {CLUB_RANKS, cookie, FavClub, getLevel, getRank, Rank, StoredClub} from "
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {signOut} from "next-auth/react";
-import {XPBar} from "@/components/XPBar";
 
 interface ProfileClientProps {
     session?: Session | null,
