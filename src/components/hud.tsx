@@ -255,7 +255,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                             width={150}
                         />
                         <h1 className={`absolute right-3 -bottom-10 origin-bottom-right text-nowrap rotate-90 opacity-50 text-[clamp(24px,4vw,50px)] ${yesteryear.className}`}>
-                            {club.host.name} {club.host.surname}
+                            {club.host.name} {club.host.name === "Kazuki" && "and"} {club.host.surname}
                         </h1>
                     </div>
                 </div>
