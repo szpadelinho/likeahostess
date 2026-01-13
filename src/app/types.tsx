@@ -1,6 +1,6 @@
 import {BuffetType, EffectType, type Prisma} from "@prisma/client";
 import {
-    Cookie, Courier_Prime, Coustard,
+    Cookie, Coustard,
     Emilys_Candy,
     Fascinate_Inline, Federo, Marck_Script,
     Molle,
@@ -369,6 +369,8 @@ export const moneylenderType: Moneylender[] = [
     {name: "Mine", photo: "mine_moneylender", song: "FxPDNViVcow"},
     {name: "Hana", photo: "hana_moneylender", song: "CSulHg_OTn4"}
 ]
+
+export const loadingImages: string[] = ["loading", "loading2"]
 
 export const drinks: Drink[] = [
     {id: 0, title: "Essence of the Dragon of Dojima", description: "Apparently really pricey. However, only one person managed to demolish this booze.", price: 10000000, color: "red", tattoo: "oryu"},
