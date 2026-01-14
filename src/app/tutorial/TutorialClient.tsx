@@ -9,7 +9,11 @@ import {useRouter} from "next/navigation";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 
-const Tutorial = () => {
+interface TutorialClientProps {
+    isLogged: boolean
+}
+
+const Tutorial = ({isLogged}: TutorialClientProps) => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
     const {volume, setVolume} = useVolume()
@@ -36,25 +40,28 @@ const Tutorial = () => {
     }, [])
 
     const tutorialItems = [
-        { label: "Authentication", left: "left-12", width: "w-[4vw]", rotate: "rotate-12" },
-        { label: "Club selection", left: "left-40.5", width: "w-[5.5vw]" },
-        { label: "HUD", left: "left-67.5", width: "w-[7vw]" },
-        { label: "Game logic", left: "left-102", width: "w-[7vw]" },
-        { label: "Inquiries", left: "left-137", width: "w-[7vw]" },
-        { label: "Activities", left: "left-171.5", width: "w-[7vw]" },
-        { label: "Jams", left: "left-206.5", width: "w-[7vw]" },
-        { label: "Profile card", left: "left-241.5", width: "w-[5vw]" },
-        { label: "Additional tips", left: "left-273", width: "w-[4vw]", rotate: "-rotate-12" },
+        {label: "Authentication", left: "left-12", width: "w-[4vw]", rotate: "rotate-12"},
+        {label: "Club selection", left: "left-40.5", width: "w-[5.5vw]"},
+        {label: "HUD", left: "left-67.5", width: "w-[7vw]"},
+        {label: "Game logic", left: "left-102", width: "w-[7vw]"},
+        {label: "Inquiries", left: "left-137", width: "w-[7vw]"},
+        {label: "Activities", left: "left-171.5", width: "w-[7vw]"},
+        {label: "Jams", left: "left-206.5", width: "w-[7vw]"},
+        {label: "Profile card", left: "left-241.5", width: "w-[5vw]"},
+        {label: "Additional tips", left: "left-273", width: "w-[4vw]", rotate: "-rotate-12"},
     ]
 
-    return(
+    return (
         <>
-            <div className={`z-[1000] fixed h-screen w-screen bg-black duration-500 ease-in-out pointer-events-none ${quit ? "opacity-100" : "opacity-0"}`}/>
+            <div
+                className={`z-[1000] fixed h-screen w-screen bg-black duration-500 ease-in-out pointer-events-none ${quit ? "opacity-100" : "opacity-0"}`}/>
             <LoadingBanner show={loading}/>
             <div className={"flex h-screen w-screen justify-center items-center text-[30px]"}>
                 <Image src={"/images/books.png"} alt={"Bookshelf"} fill={true} className="z-1"/>
-                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Tutorial"} setQuit={setQuit}/>
-                <div className={"relative grid grid-cols-9 items-center w-300 gap-4 p-2 whitespace-nowrap z-50 mix-blend-mode-burn mt-3"}>
+                <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Tutorial"}
+                        setQuit={setQuit} isLogged={isLogged}/>
+                <div
+                    className={"relative grid grid-cols-9 items-center w-300 gap-4 p-2 whitespace-nowrap z-50 mix-blend-mode-burn mt-3"}>
                     <ReactPlayer
                         src={"https://youtube.com/embed/OR9Xls1S0s4?autoplay=1"}
                         playing={isPlaying}

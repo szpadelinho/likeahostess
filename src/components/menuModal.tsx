@@ -99,7 +99,7 @@ export const MenuModal = ({
             Icon: LogOut,
             cursor: "cursor-alias",
             onClick: () => setWindow("LogOff")
-        }
+        },
     ]
 
     if (!menu && !closing) return null

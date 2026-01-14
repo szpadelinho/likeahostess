@@ -1,7 +1,7 @@
 import {
     ConciergeBell,
     LampDesk,
-    LogOut, Medal,
+    LogOut, Medal, Play,
     Undo2,
     University,
     Volume,
@@ -15,6 +15,7 @@ import {signOut} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {texturina} from "@/app/types";
+import {auth} from "@/lib/auth";
 
 interface NavbarProps {
     router?: AppRouterInstance,
@@ -29,7 +30,8 @@ interface NavbarProps {
     switchMode?: (mode: ("Selection" | "Drinks" | "Supplies")) => void,
     setContract?: (show: boolean) => void,
     paper?: boolean,
-    setQuit?: (value: (((prevState: boolean) => boolean) | boolean)) => void
+    setQuit?: (value: (((prevState: boolean) => boolean) | boolean)) => void,
+    isLogged?: boolean
 }
 
 const Navbar = ({
@@ -43,7 +45,8 @@ const Navbar = ({
                     switchMode,
                     setContract,
                     paper,
-                    setQuit
+                    setQuit,
+                    isLogged
                 }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
     const [showLamp, setShowLamp] = useState(false)
@@ -130,10 +133,9 @@ const Navbar = ({
                 </div>
                 {page !== "Auth" && (
                     <button onClick={() => {
-                        if(page === "Tutorial" || page === "Selection"){
+                        if (page === "Tutorial" || page === "Selection") {
                             setQuit?.(true)
-                        }
-                        else{
+                        } else {
                             setLoading(true)
                         }
                         {
@@ -223,9 +225,20 @@ const Navbar = ({
                 </button>
             )}
             {page === "Selection" && (
-                <h1 className={`${getPageStyle(page)} ${texturina.className} left-1/2 -translate-x-[50%] z-10 absolute top-10 text-[30px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_80%)]`}>
+                <h1 className={`${texturina.className} left-1/2 -translate-x-[50%] z-10 absolute top-10 text-[30px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_80%)]`}>
                     Choose the club
                 </h1>
+            )}
+            {(page === "Tutorial" && isLogged) && (
+                <button
+                    onClick={() => {
+                        setLoading?.(true)
+                        router?.push("/selection")
+                    }}
+                    className={`flex flex-row justify-center items-center gap-2 ${getPageStyle(page)} left-1/2 -translate-x-[50%] z-10 absolute top-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                    Start
+                    <Play size={25}/>
+                </button>
             )}
         </>
     )

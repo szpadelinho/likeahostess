@@ -6,7 +6,7 @@ interface Props {
     bannerVisible: boolean
 }
 
-const IntroBanner = ({bannerVisible}: Props) => {
+const GamepadBanner = ({bannerVisible}: Props) => {
     const [fade, setFade] = useState<boolean>(true)
 
     useEffect(() => {
@@ -30,4 +30,4 @@ const IntroBanner = ({bannerVisible}: Props) => {
     )
 }
 
-export default IntroBanner
+export default GamepadBanner

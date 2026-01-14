@@ -114,6 +114,9 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
             case "b":
                 handleWindow("Moneylender")
                 break
+            case "t":
+                handleWindow("Tutorial")
+                break
 
         }
     }, [handleClick, handleWindow])

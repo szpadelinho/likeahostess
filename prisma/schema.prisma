@@ -17,6 +17,7 @@ model User {
   experience Int @default(0)
   createdAt     DateTime   @default(now())
   updatedAt     DateTime   @updatedAt
+  tutorialDone Boolean @default(false)
   accounts      Account[]
   sessions      Session[]
   userClub      UserClub[]

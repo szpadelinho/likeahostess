@@ -185,6 +185,25 @@ export const ModalContent = ({
                 },
             ],
         },
+        {
+            key: "moneyALert",
+            active: window === "Tutorial",
+            image: "/images/katase.png",
+            alt: "Katase",
+            title: "Are you willing to check tutorial?",
+            buttons: [
+                {
+                    label: "Seek help",
+                    onClick: () => router.push("/tutorial"),
+                    style: "cursor-zoom-in",
+                },
+                {
+                    label: "Leave it",
+                    onClick: onCloseModal,
+                    style: "cursor-zoom-in",
+                },
+            ],
+        },
     ]
 
     const activeModal = modalConfigs.find((modal) => modal.active)
