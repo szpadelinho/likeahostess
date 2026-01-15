@@ -7,3 +7,9 @@ export default auth(async (req) => {
         return Response.redirect(new URL("/tutorial", req.nextUrl.origin))
     }
 })
+
+export const config = {
+    matcher: [
+        "/((?!api/auth|auth|_next|favicon.ico).*)",
+    ],
+}

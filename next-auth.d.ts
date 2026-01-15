@@ -1,5 +1,4 @@
 import { DefaultSession } from "next-auth"
-import { AdapterUser } from "next-auth/adapters"
 
 declare module "next-auth" {
     interface User {
@@ -11,12 +10,6 @@ declare module "next-auth" {
             id: string
             tutorialDone: boolean
         } & DefaultSession["user"]
-    }
-}
-
-declare module "next-auth/adapters" {
-    interface AdapterUser {
-        tutorialDone: boolean
     }
 }
 

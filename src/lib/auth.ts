@@ -38,13 +38,17 @@ export const { auth, handlers } = NextAuth({
 
     callbacks: {
         async redirect({url, baseUrl}){
+            if (url === baseUrl || url === `${baseUrl}/` || url === `${baseUrl}/auth`) {
+                return `${baseUrl}/selection`
+            }
+
             return url.startsWith(baseUrl) ? url : baseUrl
         },
 
         async jwt({ token, user }) {
             if (user) {
                 token.id = user.id
-                token.tutorialDone = (user as any).tutorialDone
+                token.tutorialDone = (user as any).tutorialDone ?? false
             }
             return token
         },

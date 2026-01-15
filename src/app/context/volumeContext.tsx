@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState } from "react";
+import {createContext, useContext, useEffect, useState} from "react";
 
 interface VolumeContextType {
     volume: number
@@ -10,7 +10,16 @@ interface VolumeContextType {
 const VolumeContext = createContext<VolumeContextType | null>(null);
 
 export function VolumeProvider({ children }: { children: React.ReactNode }) {
-    const [volume, setVolume] = useState(100)
+    const [volume, setVolume] = useState<number>(100)
+
+    useEffect(() => {
+        const storedVolume = localStorage.getItem("volume")
+        if(storedVolume !== null) setVolume(Number(storedVolume))
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem("volume", volume.toString())
+    }, [volume])
 
     return (
         <VolumeContext.Provider value={{ volume, setVolume }}>
