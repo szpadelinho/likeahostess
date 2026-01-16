@@ -31,6 +31,9 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
     const [loading, setLoading] = useState<boolean>(true)
     const [experience, setExperience] = useState<number>(0)
     const [rank, setRank] = useState<Rank>({lvl: 0, rank: CLUB_RANKS[0]})
+    const [edit, setEdit] = useState<boolean>(false)
+    const [nick, setNick] = useState<string>("")
+    const [avatar, setAvatar] = useState<string>("")
 
     useEffect(() => {
         const fetchExperience = async () => {
@@ -44,6 +47,13 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
         }
         fetchExperience()
     }, [])
+
+    useEffect(() => {
+        if (session?.user) {
+            setNick(session.user.name ?? "");
+            setAvatar(session.user.image ?? "");
+        }
+    }, [session])
 
     useEffect(() => {
         const lvl = getLevel(experience)
@@ -117,8 +127,28 @@ const ProfileClient = ({session, totals, favClub}: ProfileClientProps) => {
                 />
                 <Image src={"/images/paper_card.png"} alt={"Paper card being held"} fill={true}
                        className={"absolute inset-0"}/>
+                {edit && (
+                    <div className={"absolute inset-0 flex items-center justify-center z-[200] text-black backdrop-blur-sm"} onClick={() => setEdit(false)}>
+                        <div className={"flex justify-center items-center z-[999]"}>
+                            <Image src={"/images/paper_texture.png"} alt={"Paper card"} height={100} width={600} className={"z-1"}/>
+                            <div className={`absolute flex justify-center items-center flex-col gap-2 z-50 ${cookie.className} text-[40px]`}>
+                                <h1>Nickname:</h1>
+                                <input required={true} type={"text"} value={nick} className={"w-100 border-black border-2 rounded-sm opacity-70 hover:opacity-100 text-[30px] text-center flex justify-center items-center"} onChange={e => {
+                                    setNick(e.target.value)
+                                }}/>
+                                <h1>Profile picture:</h1>
+                                <input required={true} type={"text"} value={avatar} className={"w-100 border-black border-2 rounded-sm opacity-70 hover:opacity-100 text-[30px] text-center flex justify-center items-center"} onChange={e => {
+                                    setAvatar(e.target.value)
+                                }}/>
+                                <button className={"border-black border-2 rounded-sm opacity-70 text-[25px] p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}>
+                                    Apply changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
                 <div className={"h-screen w-screen flex items-center justify-center z-50 text-black"}>
-                    <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Profile"}/>
+                    <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Profile"} setEdit={setEdit}/>
                     <div className={"absolute top-35 flex items-center justify-center z-50 flex-row gap-10"}>
                         <Image src={session?.user?.image ?? "/images/dragon.png"} alt={"Profile picture"} height={50} width={50} className={"rounded-full border-2 border-black"}/>
                         <h1 className={`z-50 text-[50px] ${cookie.className}`}>

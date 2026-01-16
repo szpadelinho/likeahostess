@@ -1,7 +1,7 @@
 import {
     ConciergeBell,
     LampDesk,
-    LogOut, Medal, Play,
+    LogOut, Medal, Pen, Play,
     Undo2,
     University,
     Volume,
@@ -31,7 +31,8 @@ interface NavbarProps {
     setContract?: (show: boolean) => void,
     paper?: boolean,
     setQuit?: (value: (((prevState: boolean) => boolean) | boolean)) => void,
-    isLogged?: boolean
+    isLogged?: boolean,
+    setEdit?: (value: (((prevState: boolean) => boolean) | boolean)) => void
 }
 
 const Navbar = ({
@@ -46,7 +47,8 @@ const Navbar = ({
                     setContract,
                     paper,
                     setQuit,
-                    isLogged
+                    isLogged,
+                    setEdit
                 }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
     const [showLamp, setShowLamp] = useState(false)
@@ -209,8 +211,16 @@ const Navbar = ({
                         router?.push("/ranking")
                     }, 500)
                 }}
-                        className={`${getPageStyle(page)} z-10 absolute top-10 left-25 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                        className={`${getPageStyle(page)} z-10 absolute top-10 left-40 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                     <Medal size={25}/>
+                </button>
+            )}
+            {page === "Profile" && (
+                <button onClick={() => {
+                    setEdit?.(true)
+                }}
+                        className={`${getPageStyle(page)} z-10 absolute top-10 left-25 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                    <Pen size={25}/>
                 </button>
             )}
             {page === "Ranking" && (
