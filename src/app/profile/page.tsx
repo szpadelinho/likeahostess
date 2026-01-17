@@ -4,6 +4,7 @@ import {auth} from "@/lib/auth";
 import {prisma} from "../../../prisma/prisma";
 import LoadingBanner from "@/components/loadingBanner";
 import {redirect} from "next/navigation";
+import {useSession} from "next-auth/react";
 
 export async function generateMetadata(): Promise<Metadata> {
     const session = await auth()
@@ -52,7 +53,7 @@ const Profile = async () => {
     if (!totals || !favClub) return <LoadingBanner show={true} />
 
     return(
-        <ProfileClient session={session} totals={totals} favClub={favClub!}/>
+        <ProfileClient totals={totals} favClub={favClub!}/>
     )
 }
 

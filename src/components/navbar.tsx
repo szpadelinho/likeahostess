@@ -32,7 +32,7 @@ interface NavbarProps {
     paper?: boolean,
     setQuit?: (value: (((prevState: boolean) => boolean) | boolean)) => void,
     isLogged?: boolean,
-    setEdit?: (value: (((prevState: boolean) => boolean) | boolean)) => void
+    setEdit?: (show: boolean) => void
 }
 
 const Navbar = ({

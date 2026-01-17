@@ -11,7 +11,6 @@ interface Props {
 const LoadingBanner = ({show}: Props) => {
     const [visible, setVisible] = useState(show)
 
-
     useEffect(() => {
         if(show) setVisible(true)
         else{
