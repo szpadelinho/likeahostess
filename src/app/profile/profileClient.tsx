@@ -35,6 +35,10 @@ const ProfileClient = ({totals, favClub}: ProfileClientProps) => {
     const [avatar, setAvatar] = useState<string>("")
     const [error, setError] = useState<string>("")
 
+    const avatarSrc = avatar
+        ? `${avatar}?v=${session?.user?.image ? "1" : "0"}`
+        : "/images/dragon.png"
+
     useEffect(() => {
         const fetchExperience = async () => {
             try {
@@ -50,8 +54,9 @@ const ProfileClient = ({totals, favClub}: ProfileClientProps) => {
 
     useEffect(() => {
         if (session?.user) {
-            setNick(session.user.name ?? "");
-            setAvatar(session.user.image ?? "");
+            setNick(session.user.name ?? "")
+            setAvatar(session.user.image ?? "")
+            console.log(session.user.image)
         }
     }, [session])
 
@@ -121,8 +126,10 @@ const ProfileClient = ({totals, favClub}: ProfileClientProps) => {
             })
         })
         if (res.ok) {
-            await update()
-            router.refresh()
+            await update({
+                name: nick,
+                image: avatar,
+            })
             setEdit(false)
         } else {
             setError("Something went wrong")
@@ -179,7 +186,7 @@ const ProfileClient = ({totals, favClub}: ProfileClientProps) => {
                     <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Profile"}
                             setEdit={setEdit}/>
                     <div className={"absolute top-35 flex items-center justify-center z-50 flex-row gap-10"}>
-                        <Image src={session?.user?.image || "/images/dragon.png"} alt={"Profile picture"} height={50}
+                        <img key={avatarSrc} src={avatarSrc || "/images/dragon.png"} alt={"Profile picture"} height={50}
                                width={50} className={"rounded-full border-2 border-black"}/>
                         <h1 className={`z-50 text-[50px] ${cookie.className}`}>
                             {session?.user?.name}'s card

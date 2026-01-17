@@ -45,18 +45,27 @@ export const { auth, handlers } = NextAuth({
             return url.startsWith(baseUrl) ? url : baseUrl
         },
 
-        async jwt({ token, user }) {
+        async jwt({ token, user, trigger, session }) {
             if (user) {
                 token.id = user.id
                 token.tutorialDone = (user as any).tutorialDone ?? false
+                token.image = user.image
+                token.name = user.name
+            }
+
+            if(trigger === "update" && session){
+                if(session.name) token.name = session.name
+                if(session.image) token.image = session.image
             }
             return token
         },
 
         async session({ session, token }) {
-            if (token && session.user) {
+            if (token && session?.user) {
                 session.user.id = token.id as string
                 session.user.tutorialDone = token.tutorialDone as boolean
+                session.user.image = token.image as string
+                session.user.name = token.name as string
             }
             return session
         },
