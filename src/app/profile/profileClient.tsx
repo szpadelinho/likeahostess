@@ -186,12 +186,12 @@ const ProfileClient = ({totals, favClub}: ProfileClientProps) => {
                     <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Profile"}
                             setEdit={setEdit}/>
                     <div className={"absolute top-35 flex items-center justify-center z-50 flex-row gap-10"}>
-                        <img key={avatarSrc} src={avatarSrc || "/images/dragon.png"} alt={"Profile picture"} height={50}
-                               width={50} className={"rounded-full border-2 border-black"}/>
+                        <img key={avatarSrc} src={avatarSrc || "/images/dragon.png"} alt={"Profile picture"} height={64}
+                               width={64} className={"rounded-full border-2 border-black"}/>
                         <h1 className={`z-50 text-[50px] ${cookie.className}`}>
                             {session?.user?.name}'s card
                         </h1>
-                        <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={50} width={50}/>
+                        <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={64} width={64}/>
                     </div>
                     {totals && (
                         <div
