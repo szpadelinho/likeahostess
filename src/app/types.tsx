@@ -142,6 +142,11 @@ export interface Effect{
     active: boolean
 }
 
+export interface Client {
+    present: boolean
+    expectedAttractiveness: number
+}
+
 export const SERVICE_TYPES = [
     "ashtray",
     "lady_glass",

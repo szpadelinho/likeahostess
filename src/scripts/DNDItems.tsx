@@ -1,9 +1,20 @@
 import {useDrag, useDrop} from 'react-dnd';
 import {iconConverter} from "@/scripts/iconConverter";
 import {Dispatch, ReactNode, SetStateAction, useRef, useState} from "react";
-import {BookUser, DoorClosed, DoorOpen, EyeClosed, HeartPlus, Meh, VenetianMask} from "lucide-react";
+import {
+    Annoyed,
+    BookUser, Box,
+    DoorClosed,
+    DoorOpen, Droplet,
+    EyeClosed, Flame,
+    HeartPlus,
+    Laugh, LucideIcon, Martini,
+    Meh,
+    Smile, Snowflake, Sun, SunMoon,
+    VenetianMask
+} from "lucide-react";
 import Image from "next/image";
-import { Hostess, WindowType, Buffet } from "@/app/types";
+import {Hostess, WindowType, Buffet, Client} from "@/app/types";
 
 interface DroppableSlotsProps {
     type: 'beverage' | 'meal'
@@ -18,14 +29,15 @@ interface DraggableDoorProps {
 
 interface DroppableClientProps {
     index: number,
-    clients: boolean[],
-    setClients: Dispatch<SetStateAction<boolean[]>>,
+    clients: (Client | null)[],
+    setClients: Dispatch<SetStateAction<(Client | null)[]>>,
     hostesses: (Hostess | null)[],
     setSelectedClient: Dispatch<SetStateAction<boolean>>,
     InquiryHandler: (i: number, type: "Service" | "Buffet" | "End" | null, status: boolean) => void,
     wiggleClient: boolean[],
     setWaitingClient: Dispatch<SetStateAction<boolean>>,
-    inquiryType: ("Service" | "Buffet" | "End" | null)[]
+    inquiryType: ("Service" | "Buffet" | "End" | null)[],
+    attractiveness?: number
 }
 
 interface DraggableHostessProps {
@@ -57,7 +69,7 @@ interface DroppableHostessTableSlotProps {
     setHostessesPanel: Dispatch<SetStateAction<(Hostess | null)[]>>,
     wiggleHostess: boolean[],
     setWiggleHostess: (value: boolean[]) => void,
-    clients: boolean[],
+    clients: (Client | null)[],
     inquiryType: ("Service" | "Buffet" | "End" | null)[],
     InquiryHandler: (i: number, type: ("Service" | "Buffet" | "End" | null), status: boolean) => void
 }
@@ -165,7 +177,8 @@ export const DroppableClient = ({
                                     InquiryHandler,
                                     wiggleClient,
                                     setWaitingClient,
-                                    inquiryType
+                                    inquiryType,
+                                    attractiveness
                                 }: DroppableClientProps) => {
     const [{isOver, canDrop}, drop] = useDrop<{ id: number, type: "client" }, void, {
         isOver: boolean;
@@ -175,7 +188,7 @@ export const DroppableClient = ({
         drop: () => {
             if (!clients[index]) {
                 const updatedClients = [...clients]
-                updatedClients[index] = true
+                updatedClients[index] = {present: true, expectedAttractiveness: Math.round(Math.random() * 6)}
                 setClients(updatedClients)
                 setSelectedClient(false)
                 setWaitingClient(false)
@@ -193,6 +206,38 @@ export const DroppableClient = ({
     const buttonRef = useRef<HTMLButtonElement>(null)
     drop(buttonRef)
 
+    const calculateAttractivenessIcon = (value?: number) => {
+        if(value === undefined) return
+        let Icon: LucideIcon
+        switch(value){
+            case 0:
+                Icon = Box
+                break
+            case 1:
+                Icon = Snowflake
+                break
+            case 2:
+                Icon = Droplet
+                break
+            case 3:
+                Icon = SunMoon
+                break
+            case 4:
+                Icon = Sun
+                break
+            case 5:
+                Icon = Flame
+                break
+            default:
+                Icon = Martini
+        }
+        return (
+            <p className={"absolute text-pink-200 right-2 top-2 pointer-events-none"}>
+                <Icon size={15}/>
+            </p>
+        )
+    }
+
     return (
         <button
             ref={buttonRef}
@@ -203,7 +248,12 @@ export const DroppableClient = ({
             }
             ${canDrop && "border-dotted"}`}
         >
-            {clients[index] ? <Meh size={50}/> : <BookUser size={50}/>}
+            {!clients[index] || !attractiveness ? <><BookUser size={50}/>{calculateAttractivenessIcon(clients[index]?.expectedAttractiveness)}</> :
+                clients[index]?.expectedAttractiveness > attractiveness ? <Meh size={50}/>
+                    : clients[index]?.expectedAttractiveness == attractiveness ? <Smile size={50}/>
+                        : clients[index]?.expectedAttractiveness < attractiveness ? <Laugh size={50}/>
+                            : <Annoyed size={50}/>
+            }
         </button>
     )
 }

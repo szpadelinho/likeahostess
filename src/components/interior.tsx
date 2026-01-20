@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import LoadingBar from "@/components/loadingBar";
 import {DraggableDoor, DroppableClient, DroppableHostessTableSlot} from "@/scripts/DNDItems";
-import {ServiceType, SERVICE_TYPES, Hostess} from "@/app/types";
+import {ServiceType, SERVICE_TYPES, Hostess, Client} from "@/app/types";
 
 interface InteriorProps {
     hostesses: (Hostess | null)[],
@@ -64,7 +64,7 @@ const Interior = ({
                       supplies
                   }: InteriorProps) => {
     const items = Array(8).fill(null)
-    const [clients, setClients] = useState<boolean[]>(Array(8).fill(false))
+    const [clients, setClients] = useState<(Client | null)[]>(Array(8).fill(null))
 
     const [wiggleHostess, setWiggleHostess] = useState<boolean[]>(Array(8).fill(false))
     const [wiggleClient, setWiggleClient] = useState<boolean[]>(Array(8).fill(false))
@@ -98,7 +98,7 @@ const Interior = ({
                 if (clients[i] && hostesses[i]) {
                     setClients(prev => {
                         const updated = [...prev]
-                        updated[i] = false
+                        updated[i] = null
                         return updated
                     })
                     if (hostesses[i]) {
@@ -334,12 +334,12 @@ const Interior = ({
                                 <DroppableClient index={i} clients={clients} setClients={setClients}
                                                  hostesses={hostesses} setSelectedClient={setSelectedClient}
                                                  InquiryHandler={InquiryHandler} wiggleClient={wiggleClient}
-                                                 setWaitingClient={setWaitingClient} inquiryType={inquiryType}/>
+                                                 setWaitingClient={setWaitingClient} inquiryType={inquiryType} attractiveness={hostesses[i]?.attractiveness}/>
                                 {clients[i] && (
                                     <button onClick={() => {
                                         const updatedClients =
                                             [...clients]
-                                        updatedClients[i] = false
+                                        updatedClients[i] = null
                                         setClients(updatedClients)
                                         InquiryHandler(i, null, false)
                                     }}

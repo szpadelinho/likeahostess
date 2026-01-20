@@ -23,7 +23,6 @@ const RankingClient = () => {
 
     const ranking = useMemo(() => {
         if(!totals) return null
-
         switch(page){
             case "Money":
                 return totals.money
