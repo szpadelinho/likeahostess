@@ -311,8 +311,6 @@ export const DroppableHostessSlot = ({
                                          hostesses,
                                          setHostesses,
                                          setHostessesManagement,
-                                         selectedHostess,
-                                         setSelectedHostess,
                                          setWindow,
                                      }: DroppableHostessSlotProps) => {
     const hostess = hostesses[index]
@@ -398,12 +396,12 @@ export const DroppableHostessSlot = ({
             ) : (
                 <button
                     className={`flex justify-center items-center rounded-[17] transform active:scale-105 w-[100px] h-[100px] ${
-                        selectedHostess
+                        hostess
                             ? "hover:bg-pink-200 hover:text-pink-950"
                             : "hover:bg-pink-900 hover:text-pink-300"
                     } transition duration-300 ease-in-out`}
                     onClick={() => {
-                        if (!selectedHostess) setWindow("Management")
+                        if (!hostess) setWindow("Management")
                     }}
                 >
                     <HeartPlus/>
