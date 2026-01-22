@@ -6,7 +6,7 @@ import {useRouter} from "next/navigation";
 import React, {useEffect, useState} from "react";
 import ReactPlayer from "react-player";
 import Navbar from "@/components/navbar";
-import {CLUB_RANKS, cookie, FavClub, getLevel, getRank, Rank, StoredClub} from "@/app/types";
+import {CLUB_RANKS, cookie, FavClub, getLevel, getRank, ProfileUser, Rank, StoredClub} from "@/app/types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {signOut, useSession} from "next-auth/react";
@@ -18,53 +18,33 @@ interface ProfileClientProps {
         supplies: number
     } | undefined,
     favClub: FavClub,
+    user: ProfileUser,
+    isMe: boolean
 }
 
-const ProfileClient = ({totals, favClub}: ProfileClientProps) => {
+const ProfileClient = ({totals, favClub, user, isMe}: ProfileClientProps) => {
     const router = useRouter()
-    const { data: session, update } = useSession()
+    const {data: session, update} = useSession()
     const [clubId, setClubId] = useState<number | null>(null)
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
     const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
-    const [experience, setExperience] = useState<number>(0)
     const [rank, setRank] = useState<Rank>({lvl: 0, rank: CLUB_RANKS[0]})
     const [edit, setEdit] = useState<boolean>(false)
-    const [nick, setNick] = useState<string>("")
-    const [avatar, setAvatar] = useState<string>("")
+    const [nick, setNick] = useState(user.name ?? "")
+    const [avatar, setAvatar] = useState(user.image ?? "")
     const [error, setError] = useState<string>("")
 
     const avatarSrc = avatar
-        ? `${avatar}?v=${session?.user?.image ? "1" : "0"}`
+        ? `${avatar}?v=${user.image ? "1" : "0"}`
         : "/images/dragon.png"
 
     useEffect(() => {
-        const fetchExperience = async () => {
-            try {
-                const res = await fetch("/api/user", {method: "GET"})
-                const data = await res.json()
-                setExperience(data.experience)
-            } catch (err) {
-                console.log("Failed to fetch user experience", err)
-            }
-        }
-        fetchExperience()
-    }, [])
-
-    useEffect(() => {
-        if (session?.user) {
-            setNick(session.user.name ?? "")
-            setAvatar(session.user.image ?? "")
-            console.log(session.user.image)
-        }
-    }, [session])
-
-    useEffect(() => {
-        const lvl = getLevel(experience)
+        const lvl = getLevel(user.experience)
         const rank = getRank(lvl)
         setRank({lvl, rank})
-    }, [experience])
+    }, [user.experience])
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -184,12 +164,12 @@ const ProfileClient = ({totals, favClub}: ProfileClientProps) => {
                 </div>
                 <div className={"h-screen w-screen flex items-center justify-center z-50 text-black"}>
                     <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Profile"}
-                            setEdit={setEdit}/>
+                            setEdit={setEdit} isMe={isMe}/>
                     <div className={"absolute top-35 flex items-center justify-center z-50 flex-row gap-10"}>
                         <img key={avatarSrc} src={avatarSrc || "/images/dragon.png"} alt={"Profile picture"} height={64}
-                               width={64} className={"rounded-full border-2 border-black"}/>
+                             width={64} className={"rounded-full border-2 border-black"}/>
                         <h1 className={`z-50 text-[50px] ${cookie.className}`}>
-                            {session?.user?.name}'s card
+                            {user.name}'s card
                         </h1>
                         <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={64} width={64}/>
                     </div>
@@ -197,10 +177,10 @@ const ProfileClient = ({totals, favClub}: ProfileClientProps) => {
                         <div
                             className={`absolute top-55 flex flex-col text-center justify-center ${cookie.className} text-[25px] z-50`}>
                             <h2>
-                                Currently at level {Math.floor(experience / 1000)}
+                                Currently at level {Math.floor(user.experience / 1000)}
                             </h2>
                             <h2>
-                                Experience: {experience}/1000
+                                Experience: {user.experience}/1000
                             </h2>
                             <h2>
                                 Title: {rank.rank}
@@ -221,26 +201,32 @@ const ProfileClient = ({totals, favClub}: ProfileClientProps) => {
                             Favourite club
                         </h1>
                         <div className={"relative flex justify-center items-center z-50"}>
-                            <Image src={favClub.club.logo} alt={"Club logo"} width={200} height={100}
-                                   className={"z-50"}/>
-                            <Image src={favClub.club.host.image} alt={"Host render"} width={40} height={100}
-                                   className={"absolute z-50 ml-55 mt-15"}/>
+                            {favClub && (
+                                <>
+                                    <Image src={favClub.club.logo} alt={"Club logo"} width={200} height={100}
+                                           className={"z-50"}/>
+                                    <Image src={favClub.club.host.image} alt={"Host render"} width={40} height={100}
+                                           className={"absolute z-50 ml-55 mt-15"}/>
+                                </>
+                            )}
                             <div
                                 className={"absolute flex h-full w-full scale-200 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,.5)_-50%,_rgba(0,0,0,0)_50%)] z-49"}/>
                         </div>
                     </div>
-                    <div className={"flex justify-center items-center gap-5 flex-row absolute bottom-50 left-[42%]"}>
-                        <button
-                            className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
-                            onClick={handleReset}>
-                            <p>Reset account</p><DatabaseBackup/>
-                        </button>
-                        <button
-                            className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
-                            onClick={handleDelete}>
-                            <p>Delete account</p><Trash2/>
-                        </button>
-                    </div>
+                    {isMe && (
+                        <div className={"flex justify-center items-center gap-5 flex-row absolute bottom-50 left-[42%]"}>
+                            <button
+                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                                onClick={handleReset}>
+                                <p>Reset account</p><DatabaseBackup/>
+                            </button>
+                            <button
+                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                                onClick={handleDelete}>
+                                <p>Delete account</p><Trash2/>
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </>

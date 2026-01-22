@@ -1,10 +1,9 @@
 import ProfileClient from "@/app/profile/profileClient";
 import {Metadata} from "next";
 import {auth} from "@/lib/auth";
-import {prisma} from "../../../prisma/prisma";
 import LoadingBanner from "@/components/loadingBanner";
 import {redirect} from "next/navigation";
-import {useSession} from "next-auth/react";
+import {prisma} from "../../../../prisma/prisma";
 
 export async function generateMetadata(): Promise<Metadata> {
     const session = await auth()
@@ -14,23 +13,23 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 }
 
-const Profile = async () => {
+const Profile = async ({params}: {params: {userId: string}}) => {
     const session = await auth()
     if(!session || !session?.user?.email) redirect("/auth")
 
     const user = await prisma.user.findUnique({
-        where: {email: session.user.email},
-        include: {userClub: true}
+        where: { id: params.userId },
+        include: { userClub: true }
     })
 
-    if(!user) redirect("/")
+    if (!user) redirect("/ranking")
 
     let totals = user?.userClub.reduce((acc, uc) => {
-        acc.money += uc.money
-        acc.popularity += uc.popularity
-        acc.supplies += uc.supplies
-        return acc
-    },
+            acc.money += uc.money
+            acc.popularity += uc.popularity
+            acc.supplies += uc.supplies
+            return acc
+        },
         {money: 0, popularity: 0, supplies: 0}
     )
 
@@ -55,7 +54,7 @@ const Profile = async () => {
     if (!totals || !favClub) return <LoadingBanner show={true} />
 
     return(
-        <ProfileClient totals={totals} favClub={favClub!} user={user} isMe/>
+        <ProfileClient totals={totals} favClub={favClub!} user={user} isMe={false}/>
     )
 }
 

@@ -197,6 +197,13 @@ export interface Moneylender{
     song: string
 }
 
+export interface ProfileUser {
+    id: string
+    name: string | null
+    image: string | null
+    experience: number
+}
+
 //fonts
 export const yesteryear = Yesteryear({
     weight: "400",
@@ -404,7 +411,7 @@ export const intros = [
     "sD-UJEQHXZc", // YAKUZA 0
     "GhKDpI9T1Hg", // YAKUZA KIWAMI
     "tmR_H5NZVVI", // YAKUZA KIWAMI 2
-    "axnVPHo6BgI", // YAKUZA KIWAMI 3
+    "yt5pHeJHRDc", // YAKUZA KIWAMI 3
     "M4JEwZeTKtI", // JUDGMENT
     "LiSSAV1xpYo", // LOST JUDGMENT
     "2gCemGx-W18", // KENZAN
