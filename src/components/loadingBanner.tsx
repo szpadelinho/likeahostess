@@ -3,6 +3,7 @@
 import Image from "next/image";
 import {useEffect, useState} from "react";
 import {yesteryear} from "@/app/types";
+import {useVolume} from "@/app/context/volumeContext";
 
 interface Props {
     show: boolean
@@ -10,11 +11,16 @@ interface Props {
 
 const LoadingBanner = ({show}: Props) => {
     const [visible, setVisible] = useState(show)
+    const { fadeTo, restore } = useVolume()
 
     useEffect(() => {
-        if(show) setVisible(true)
+        if(show) {
+            fadeTo(0)
+            setVisible(true)
+        }
         else{
             const timeout = setTimeout(() => setVisible(false), 1000)
+            restore()
             return (() => clearTimeout(timeout))
         }
     }, [show])

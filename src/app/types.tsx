@@ -204,6 +204,13 @@ export interface ProfileUser {
     experience: number
 }
 
+export interface VolumeContextType {
+    volume: number
+    setVolume: (v: number) => void
+    fadeTo: (v: number, duration?: number) => void
+    restore: () => void
+}
+
 //fonts
 export const yesteryear = Yesteryear({
     weight: "400",

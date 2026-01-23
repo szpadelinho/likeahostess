@@ -1,28 +1,60 @@
 "use client"
 
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useRef, useState} from "react";
+import {VolumeContextType} from "@/app/types";
 
-interface VolumeContextType {
-    volume: number
-    setVolume: (v: number) => void
-}
-
-const VolumeContext = createContext<VolumeContextType | null>(null);
+const VolumeContext = createContext<VolumeContextType | null>(null)
 
 export function VolumeProvider({ children }: { children: React.ReactNode }) {
-    const [volume, setVolume] = useState<number>(100)
+    const [volume, setVolumeState] = useState<number>(100)
+    const [baseVolume, setBaseVolume] = useState<number>(100)
+    const animationRef = useRef<number | null>(null)
 
     useEffect(() => {
-        const storedVolume = localStorage.getItem("volume")
-        if(storedVolume !== null) setVolume(Number(storedVolume))
+        const stored = localStorage.getItem("volume")
+        if (stored !== null) {
+            const v = Number(stored)
+            setVolumeState(v)
+            setBaseVolume(v)
+        }
     }, [])
 
     useEffect(() => {
-        localStorage.setItem("volume", volume.toString())
-    }, [volume])
+        localStorage.setItem("volume", baseVolume.toString())
+    }, [baseVolume])
+
+    const setVolume = (v: number) => {
+        setVolumeState(v)
+        setBaseVolume(v)
+    }
+
+    const fadeTo = (target: number, duration = 1000) => {
+        if(animationRef.current){
+            cancelAnimationFrame(animationRef.current)
+        }
+
+        const from = volume
+        const start = performance.now()
+
+        const animate = (time: number) => {
+            const progress = Math.min((time - start) / duration, 1)
+            const eased = progress * (2 - progress)
+            const current = from + (target - from) * eased
+
+            setVolumeState(Math.round(current))
+
+            if(progress < 1){
+                animationRef.current = requestAnimationFrame(animate)
+            }
+        }
+
+        animationRef.current = requestAnimationFrame(animate)
+    }
+
+    const restore = () => fadeTo(baseVolume)
 
     return (
-        <VolumeContext.Provider value={{ volume, setVolume }}>
+        <VolumeContext.Provider value={{ volume, setVolume, fadeTo, restore }}>
             {children}
         </VolumeContext.Provider>
     );

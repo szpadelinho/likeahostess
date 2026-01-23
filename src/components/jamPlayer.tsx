@@ -21,7 +21,6 @@ interface Props {
 
 const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
     const [currentTrack, setCurrentTrack] = useState(0)
-    const [muted, setMuted] = useState(true)
     const [hidden, setHidden] = useState<boolean>(false)
 
     const [currentTime, setCurrentTime] = useState(0)
@@ -124,12 +123,12 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
                 playing={isJamPlaying}
                 controls={false}
                 autoPlay={true}
-                muted={muted}
+                muted={volume === 0}
                 loop={loop}
                 style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
                 volume={volume / 100}
                 onEnded={nextTrack}
-                onReady={() => setMuted(false)}
+                onReady={() => setIsJamPlaying(true)}
                 onTimeUpdate={(time) => setCurrentTime(time.currentTarget.currentTime)}
                 onDurationChange={(duration) => setDuration(duration.currentTarget.duration)}
             />
