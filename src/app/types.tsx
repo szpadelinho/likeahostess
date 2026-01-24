@@ -211,6 +211,23 @@ export interface VolumeContextType {
     restore: () => void
 }
 
+export interface Message{
+    id?: string
+    userId: string
+    username: string
+    content: string
+    roomId: string
+    createdAt?: string
+    name?: string
+    userImage?: string
+}
+
+export interface ChatUser{
+    userId: string,
+    username: string
+    userImage: string
+}
+
 //fonts
 export const yesteryear = Yesteryear({
     weight: "400",

@@ -11,11 +11,12 @@ import {
 } from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
-import {signOut} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {texturina} from "@/app/types";
 import {auth} from "@/lib/auth";
+import ChatClient from "@/components/chatClient";
 
 interface NavbarProps {
     router?: AppRouterInstance,
@@ -252,6 +253,7 @@ const Navbar = ({
                     <Play size={25}/>
                 </button>
             )}
+            <ChatClient/>
         </>
     )
 }

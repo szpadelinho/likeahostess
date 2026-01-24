@@ -20,9 +20,12 @@ model User {
   tutorialDone Boolean @default(false)
   accounts      Account[]
   sessions      Session[]
-  userClub      UserClub[]
 
+  userClub      UserClub[]
   UserHostess UserHostess[]
+
+  ChatMessage ChatMessage[]
+  ChatMember ChatMember[]
 }
 
 model Account {
@@ -176,6 +179,40 @@ model Effect {
   active Boolean @default(true)
 
   userClub UserClub @relation(fields: [userClubId], references: [id], onDelete: Cascade)
+}
+
+model ChatRoom {
+  id        String   @id @default(cuid())
+  name      String?
+  createdAt DateTime @default(now())
+
+  chatMessages  ChatMessage[]
+  members   ChatMember[]
+}
+
+model ChatMember {
+  id        String   @id @default(cuid())
+  userId    String
+  roomId    String
+  joinedAt  DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  room ChatRoom @relation(fields: [roomId], references: [id])
+
+  @@unique([userId, roomId])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  username String
+  userImage String?
+  userId String
+  roomId String
+
+  user User @relation(fields: [userId], references: [id])
+  room ChatRoom @relation(fields: [roomId], references: [id])
 }
 
 enum BuffetType {
