@@ -30,6 +30,7 @@ import {
 } from "@/app/types";
 import {useSession} from "next-auth/react";
 import {useVolume} from "@/app/context/volumeContext";
+import ChatClient from "@/components/chatClient";
 
 const Main = () => {
     const {data: session} = useSession()
@@ -87,6 +88,7 @@ const Main = () => {
     const [serviceType, setServiceType] = useState<(ServiceType | null)[]>(Array(8).fill(null))
 
     const [quit, setQuit] = useState<boolean>(false)
+    const [isTyping, setIsTyping] = useState<boolean>(false)
 
     useEffect(() => {
         const fetchHostesses = async () => {
@@ -325,6 +327,7 @@ const Main = () => {
             )}
             {!fetched && (
                 <MainWrapper>
+                    <ChatClient page={"Main"} setIsTyping={setIsTyping}/>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
                     <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType} barKeys={barKeys} money={money} supplies={supplies}/>
                     {club && (
@@ -344,6 +347,7 @@ const Main = () => {
                                 rank={rank}
                                 loan={loan}
                                 effect={effect}
+                                isTyping={isTyping}
                             />
                         </>
                     )}

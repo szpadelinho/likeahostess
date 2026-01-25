@@ -14,7 +14,7 @@ import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-
 import {signOut, useSession} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
-import {texturina} from "@/app/types";
+import {getPageStyle, PageType, texturina} from "@/app/types";
 import {auth} from "@/lib/auth";
 import ChatClient from "@/components/chatClient";
 
@@ -25,7 +25,7 @@ interface NavbarProps {
     game?: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,
     setGame?: (value: (((prevState: ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => ("Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) | "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null)) => void,
     setBackground?: (value: (((prevState: string) => string) | string)) => void,
-    page: "Auth" | "Casino" | "Moneylender" | "NewSerena" | "Profile" | "Selection" | "Tutorial" | "LoveInHeart" | "Ranking",
+    page: PageType,
     mode?: "Selection" | "Acceptance" | "Drinks" | "Supplies",
     changeMode?: () => void,
     switchMode?: (mode: ("Selection" | "Drinks" | "Supplies")) => void,
@@ -67,31 +67,6 @@ const Navbar = ({
             setTimeout(() => setShowLamp(false), 50)
         }
     }, [paper])
-
-    const getPageStyle = (page: string): string => {
-        switch (page) {
-            case "Auth":
-                return "border-1 border-white text-white rounded-[10] hover:bg-white hover:text-black"
-            case "Casino":
-                return "border-1 backdrop-blur-sm text-white rounded-[10] hover:backdrop-blur-xl"
-            case "Moneylender":
-                return "rounded-[5] bg-[url(/images/paper_texture.png)] bg-center text-stone-700 border-none hover:text-black"
-            case "NewSerena":
-                return "rounded-[5] border-white text-white bg-black/20 hover:bg-white hover:text-black"
-            case "Profile":
-                return "rounded-[5] border-stone-400 text-stone-200 hover:bg-stone-200 hover:text-stone-950 hover:border-stone-200"
-            case "Selection":
-                return "rounded-[10] border-white text-white hover:text-black hover:bg-white"
-            case "Tutorial":
-                return "rounded-[10] border-white text-white hover:text-black hover:bg-white"
-            case "LoveInHeart":
-                return "bg-[url(/images/wood_texture.png)] text-rose-100 hover:text-rose-500"
-            case "Ranking":
-                return "rounded-[5] border-stone-400 text-stone-200 hover:bg-stone-200 hover:text-stone-950 hover:border-stone-200"
-            default:
-                return ""
-        }
-    }
 
     return (
         <>
@@ -164,96 +139,98 @@ const Navbar = ({
                     </button>
                 )}
             </div>
-            {game && (
-                <button onClick={() => {
-                    setGame?.(null)
-                    setBackground?.("casino")
-                }}
-                        className={`${getPageStyle(page)} absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                    <University size={25}/>
-                </button>
-            )}
-            {mode === "Acceptance" && (
-                <button onClick={() => {
-                    changeMode?.()
-                }}
-                        className={`${getPageStyle(page)} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
-                        style={page === "LoveInHeart" ? {
-                            borderWidth: "8px",
-                            borderStyle: "solid",
-                            borderImageSource: "url('/images/wood_texture2.png')",
-                            borderImageSlice: 30,
-                            borderImageRepeat: "round"
-                        } : {}}
-                >
-                    <ConciergeBell size={25}/>
-                </button>
-            )}
-            {(mode === "Drinks" || mode === "Supplies") && (
-                <button onClick={() => {
-                    switchMode?.("Selection")
-                }}
-                        className={`${getPageStyle(page)} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
-                >
-                    <ConciergeBell size={25}/>
-                </button>
-            )}
-            {showLamp && (
-                <button onClick={() => {
-                    setContract?.(false)
-                }}
-                        className={`${getPageStyle(page)} ${fadeLamp ? "opacity-0 scale-0" : "opacity-100 scale-100"} z-10 absolute top-10 left-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
-                >
-                    <LampDesk size={25}/>
-                </button>
-            )}
-            {page === "Profile" && (
-                <button onClick={() => {
-                    setLoading?.(true)
-                    setTimeout(() => {
-                        router?.push("/ranking")
-                    }, 500)
-                }}
-                        className={`${getPageStyle(page)} z-10 absolute top-10 left-25 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                    <Medal size={25}/>
-                </button>
-            )}
-            {(page === "Profile" && isMe) && (
-                <button onClick={() => {
-                    setEdit?.(true)
-                }}
-                        className={`${getPageStyle(page)} z-10 absolute top-10 left-40 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                    <Pen size={25}/>
-                </button>
-            )}
-            {page === "Ranking" && (
-                <button onClick={() => {
-                    setLoading?.(true)
-                    setTimeout(() => {
-                        router?.push("/profile")
-                    }, 500)
-                }}
-                        className={`${getPageStyle(page)} z-10 absolute top-10 left-25 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                    <Undo2 size={25}/>
-                </button>
-            )}
-            {page === "Selection" && (
-                <h1 className={`${texturina.className} left-1/2 -translate-x-[50%] z-10 absolute top-10 text-[30px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_80%)]`}>
-                    Choose the club
-                </h1>
-            )}
-            {(page === "Tutorial" && isLogged) && (
-                <button
-                    onClick={() => {
-                        setLoading?.(true)
-                        router?.push("/selection")
+            <div className={"absolute top-10 left-10 flex items-center justify-center flex-row gap-5 z-[100]"}>
+                {game && (
+                    <button onClick={() => {
+                        setGame?.(null)
+                        setBackground?.("casino")
                     }}
-                    className={`flex flex-row justify-center items-center gap-2 ${getPageStyle(page)} left-1/2 -translate-x-[50%] z-10 absolute top-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                    Start
-                    <Play size={25}/>
-                </button>
-            )}
-            <ChatClient/>
+                            className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                        <University size={25}/>
+                    </button>
+                )}
+                {mode === "Acceptance" && (
+                    <button onClick={() => {
+                        changeMode?.()
+                    }}
+                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                            style={page === "LoveInHeart" ? {
+                                borderWidth: "8px",
+                                borderStyle: "solid",
+                                borderImageSource: "url('/images/wood_texture2.png')",
+                                borderImageSlice: 30,
+                                borderImageRepeat: "round"
+                            } : {}}
+                    >
+                        <ConciergeBell size={25}/>
+                    </button>
+                )}
+                {(mode === "Drinks" || mode === "Supplies") && (
+                    <button onClick={() => {
+                        switchMode?.("Selection")
+                    }}
+                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                    >
+                        <ConciergeBell size={25}/>
+                    </button>
+                )}
+                {showLamp && (
+                    <button onClick={() => {
+                        setContract?.(false)
+                    }}
+                            className={`${getPageStyle(page)} ${fadeLamp ? "opacity-0 scale-0" : "opacity-100 scale-100"} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                    >
+                        <LampDesk size={25}/>
+                    </button>
+                )}
+                {page === "Profile" && (
+                    <button onClick={() => {
+                        setLoading?.(true)
+                        setTimeout(() => {
+                            router?.push("/ranking")
+                        }, 500)
+                    }}
+                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                        <Medal size={25}/>
+                    </button>
+                )}
+                {(page === "Profile" && isMe) && (
+                    <button onClick={() => {
+                        setEdit?.(true)
+                    }}
+                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                        <Pen size={25}/>
+                    </button>
+                )}
+                {page === "Ranking" && (
+                    <button onClick={() => {
+                        setLoading?.(true)
+                        setTimeout(() => {
+                            router?.push("/profile")
+                        }, 500)
+                    }}
+                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                        <Undo2 size={25}/>
+                    </button>
+                )}
+                {page === "Selection" && (
+                    <h1 className={`${texturina.className} left-1/2 -translate-x-[50%] z-10 absolute top-10 text-[30px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_80%)]`}>
+                        Choose the club
+                    </h1>
+                )}
+                {(page === "Tutorial" && isLogged) && (
+                    <button
+                        onClick={() => {
+                            setLoading?.(true)
+                            router?.push("/selection")
+                        }}
+                        className={`flex flex-row justify-center items-center gap-2 ${getPageStyle(page)} left-1/2 -translate-x-[50%] z-10 absolute top-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                        Start
+                        <Play size={25}/>
+                    </button>
+                )}
+                <ChatClient page={page} />
+            </div>
         </>
     )
 }

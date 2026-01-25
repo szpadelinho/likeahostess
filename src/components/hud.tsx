@@ -22,10 +22,11 @@ interface Hud {
     rank: Rank
     loan: Loan | null
     effect: Effect | null
+    isTyping: boolean
 }
 
 
-const Hud = ({club, windowType, setWindow, setFade, money, popularity, experience, supplies, rank, loan, effect}: Hud) => {
+const Hud = ({club, windowType, setWindow, setFade, money, popularity, experience, supplies, rank, loan, effect, isTyping}: Hud) => {
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
@@ -83,6 +84,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
     }
 
     const handleButton = useCallback((e: KeyboardEvent) => {
+        if (isTyping) return
         switch(e.key){
             case "Escape":
                 handleClick()
