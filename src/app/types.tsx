@@ -502,28 +502,31 @@ export function blocksSupplies(effect: Effect | null): boolean {
     return effect?.type === "SAFEKEEPER_OF_THE_TOJO_CLAN"
 }
 
-export const getPageStyle = (page: string): string => {
+export const getPageStyle = (page: string, isChatPanel?: boolean): string => {
+    if(isChatPanel === null || isChatPanel === undefined) {
+        isChatPanel = false
+    }
     switch (page) {
         case "Main":
-            return "border-2 border-pink-400 text-pink-200 rounded-[10] bg-pink-900 hover:bg-pink-950 hover:text-pink-400"
+            return `border-2 border-pink-200 text-pink-200 rounded-[10] bg-pink-900 ${!isChatPanel && "hover:bg-pink-950 hover:text-pink-400"}`
         case "Auth":
-            return "border-1 border-white text-white rounded-[10] hover:bg-white hover:text-black"
+            return `border-1 border-white text-white rounded-[10] ${!isChatPanel && "hover:bg-white hover:text-black"}`
         case "Casino":
-            return "border-2 backdrop-blur-sm text-white rounded-[10] hover:backdrop-blur-xl hover:opacity-100"
+            return `border-2 backdrop-blur-sm text-white rounded-[10] hover:backdrop-blur-xl hover:opacity-100`
         case "Moneylender":
-            return "rounded-[5] bg-[url(/images/paper_texture.png)] bg-center text-stone-700 border-none hover:text-black"
+            return `rounded-[5] bg-[url(/images/paper_texture.png)] bg-center text-stone-700 border-none ${!isChatPanel && "hover:text-black"}`
         case "NewSerena":
-            return "rounded-[5] border-white text-white bg-black/20 hover:bg-white hover:text-black"
+            return `rounded-[5] border-white text-white bg-black/20 ${!isChatPanel && "hover:bg-white hover:text-black"}`
         case "Profile":
-            return "rounded-[5] border-stone-400 text-stone-200 hover:bg-stone-200 hover:text-stone-950 hover:border-stone-200"
+            return `rounded-[5] border-stone-400 text-stone-200 ${!isChatPanel && "hover:bg-stone-200"} hover:text-stone-950 hover:border-stone-200`
         case "Selection":
-            return "rounded-[10] border-white text-white hover:text-black hover:bg-white"
+            return `rounded-[10] border-white text-white ${!isChatPanel && "hover:bg-white hover:text-black"}`
         case "Tutorial":
-            return "rounded-[10] border-white text-white hover:text-black hover:bg-white"
+            return `rounded-[10] border-white text-white ${!isChatPanel && "hover:bg-white hover:text-black"}`
         case "LoveInHeart":
-            return "bg-[url(/images/wood_texture.png)] text-rose-100 hover:text-rose-500"
+            return `bg-[url(/images/wood_texture.png)] text-rose-100 ${!isChatPanel && "hover:text-rose-500"}`
         case "Ranking":
-            return "rounded-[5] border-stone-400 text-stone-200 hover:bg-stone-200 hover:text-stone-950 hover:border-stone-200"
+            return `rounded-[5] border-stone-400 text-stone-200 ${!isChatPanel && "hover:bg-stone-200 hover:text-stone-950"} hover:border-stone-200`
         default:
             return ""
     }

@@ -83,7 +83,7 @@ export default function ChatClient({page, setIsTyping}: ChatClientProps) {
         <>
             <div
                 onClick={() => setMode("EXPANDED")}
-                className={`${mode === "COMPACT" ? "opacity-50" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} transform duration-500 ease-in-out w-full max-w-lg mx-auto z-[50]`}
+                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg mx-auto z-[50]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -107,7 +107,7 @@ export default function ChatClient({page, setIsTyping}: ChatClientProps) {
                 </div>
             </div>
             <div
-                className={`${mode === "EXPANDED" ? "opacity-100" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page)} transform duration-500 ease-in-out fixed left-50 ${page === "Main" ? "top-5" : "top-10"} w-full max-w-lg mx-auto z-[50]`}
+                className={`${mode === "EXPANDED" ? "opacity-100" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page, true)} duration-300 ease-in-out fixed left-50 ${page === "Main" ? "top-5" : "top-10"} w-full max-w-lg mx-auto z-[50]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -127,21 +127,23 @@ export default function ChatClient({page, setIsTyping}: ChatClientProps) {
                     ))}
                     <div ref={bottomRef}/>
                 </div>
-                <input
-                    value={input}
-                    onFocus={() => setIsTyping?.(true)}
-                    onBlur={() => setIsTyping?.(false)}
-                    onChange={e => setInput(e.target.value)}
-                    onKeyDown={e => e.key === "Enter" && sendMessage()}
-                    className={"p-1 w-full"}
-                    placeholder={"Type a message..."}
-                />
+                <div className={"flex items-center justify-center w-full"}>
+                    <input
+                        value={input}
+                        onFocus={() => setIsTyping?.(true)}
+                        onBlur={() => setIsTyping?.(false)}
+                        onChange={e => setInput(e.target.value)}
+                        onKeyDown={e => e.key === "Enter" && sendMessage()}
+                        className={`p-1 border-1 rounded-[10] w-[97%] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}
+                        placeholder={"Type a message..."}
+                    />
+                </div>
                 <button
-                    className={`absolute -right-4 -top-4 p-2 ${page && getPageStyle(page)}`}
+                    className={`absolute rounded-[10] active:scale-105 hover:scale-102 -right-4 -top-4 p-2 ${page && getPageStyle(page)} transform duration-300 ease-in-out`}
                     onClick={() => setMode("COMPACT")}>
                     <EyeClosed size={20}/>
                 </button>
-                <button onClick={sendMessage} className={"mt-2 px-4 py-1 rounded"}>Send</button>
+                <button onClick={sendMessage} className={`m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>Send</button>
             </div>
         </>
     )

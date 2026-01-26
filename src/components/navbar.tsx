@@ -126,7 +126,7 @@ const Navbar = ({
                             )
                         }
                     }}
-                            className={`${(page === "Profile" || page === "Ranking") && "fixed left-10 top-10"} ${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                            className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                             style={page === "LoveInHeart" ? {
                                 borderWidth: "8px",
                                 borderStyle: "solid",
@@ -214,7 +214,7 @@ const Navbar = ({
                     </button>
                 )}
                 {page === "Selection" && (
-                    <h1 className={`${texturina.className} left-1/2 -translate-x-[50%] z-10 absolute top-10 text-[30px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_80%)]`}>
+                    <h1 className={`${texturina.className} fixed left-1/2 -translate-x-[50%] z-10 text-[30px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_80%)]`}>
                         Choose the club
                     </h1>
                 )}
@@ -229,7 +229,9 @@ const Navbar = ({
                         <Play size={25}/>
                     </button>
                 )}
-                <ChatClient page={page} />
+                {(page !== "Auth" && page !== "Tutorial") && (
+                    <ChatClient page={page} />
+                )}
             </div>
         </>
     )
