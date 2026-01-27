@@ -81,8 +81,7 @@ const Interior = ({
                 const timer = setTimeout(() => {
                     setWaitingClient(true)
                     clientRef.current = new Audio("/sfx/client_arrived.m4a")
-                    clientRef.current.play().catch(() => {
-                    })
+                    clientRef.current.play().catch()
                 }, random)
                 return () => {
                     clearTimeout(timer)

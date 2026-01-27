@@ -518,7 +518,7 @@ export const getPageStyle = (page: string, isChatPanel?: boolean): string => {
         case "NewSerena":
             return `rounded-[5] border-white text-white bg-black/20 ${!isChatPanel && "hover:bg-white hover:text-black"}`
         case "Profile":
-            return `rounded-[5] border-stone-400 text-stone-200 ${!isChatPanel && "hover:bg-stone-200"} hover:text-stone-950 hover:border-stone-200`
+            return `rounded-[5] border-stone-400 text-stone-200 ${!isChatPanel && "hover:bg-stone-200 hover:text-stone-950"} hover:border-stone-200`
         case "Selection":
             return `rounded-[10] border-white text-white ${!isChatPanel && "hover:bg-white hover:text-black"}`
         case "Tutorial":

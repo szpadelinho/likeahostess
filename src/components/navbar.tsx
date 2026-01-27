@@ -11,11 +11,10 @@ import {
 } from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
-import {signOut, useSession} from "next-auth/react";
+import {signOut} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {getPageStyle, PageType, texturina} from "@/app/types";
-import {auth} from "@/lib/auth";
 import ChatClient from "@/components/chatClient";
 
 interface NavbarProps {
@@ -230,7 +229,7 @@ const Navbar = ({
                     </button>
                 )}
                 {(page !== "Auth" && page !== "Tutorial") && (
-                    <ChatClient page={page} />
+                    <ChatClient page={page} setLoading={setLoading}/>
                 )}
             </div>
         </>

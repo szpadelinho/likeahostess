@@ -327,7 +327,7 @@ const Main = () => {
             )}
             {!fetched && (
                 <MainWrapper>
-                    <ChatClient page={"Main"} setIsTyping={setIsTyping}/>
+                    <ChatClient page={"Main"} setIsTyping={setIsTyping} setLoading={setLoading}/>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
                     <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType} barKeys={barKeys} money={money} supplies={supplies}/>
                     {club && (

@@ -5,20 +5,24 @@ import {supabase} from "@/lib/supabaseClient"
 import {ChatUser, getPageStyle, Message, PageType, yesteryear} from "@/app/types";
 import {useSession} from "next-auth/react";
 import {EyeClosed} from "lucide-react";
+import {useRouter} from "next/navigation";
 
 interface ChatClientProps {
     page?: PageType,
-    setIsTyping?: Dispatch<SetStateAction<boolean>>
+    setIsTyping?: Dispatch<SetStateAction<boolean>>,
+    setLoading: (value: (((prevState: boolean) => boolean) | boolean)) => void
 }
 
-export default function ChatClient({page, setIsTyping}: ChatClientProps) {
+export default function ChatClient({page, setIsTyping, setLoading}: ChatClientProps) {
+    const router = useRouter()
     const {data: session} = useSession()
-    const [user, setUser] = useState<ChatUser | null>(null)
+    const userRef = useRef<ChatUser | null>(null)
     const [roomId, setRoomId] = useState("GLOBAL")
     const [messages, setMessages] = useState<Message[]>([])
     const [input, setInput] = useState("")
     const [mode, setMode] = useState<"COMPACT" | "EXPANDED">("COMPACT")
     const bottomRef = useRef<HTMLDivElement | null>(null)
+    const chatRef = useRef<HTMLAudioElement | null>(null)
 
     useEffect(() => {
         bottomRef.current?.scrollIntoView({behavior: "smooth"})
@@ -26,7 +30,7 @@ export default function ChatClient({page, setIsTyping}: ChatClientProps) {
 
     useEffect(() => {
         if (session?.user?.name && session?.user?.id && session?.user?.image) {
-            setUser({userId: session.user.id, username: session.user.name, userImage: session.user.image})
+            userRef.current = {userId: session.user.id, username: session.user.name, userImage: session.user.image}
         }
     }, [session])
 
@@ -49,6 +53,12 @@ export default function ChatClient({page, setIsTyping}: ChatClientProps) {
                 table: 'ChatMessage'
             }, payload => {
                 console.log('Otrzymano nową wiadomość:', payload)
+                if (payload.new.content.includes(`@${userRef?.current?.username}`)) {
+                    chatRef.current = new Audio("/sfx/msg_ping.mp3")
+                } else {
+                    chatRef.current = new Audio("/sfx/msg.mp3")
+                }
+                chatRef.current.play().catch()
                 setMessages(prev => [...prev, payload.new as Message])
             })
             .subscribe((status) => {
@@ -63,7 +73,7 @@ export default function ChatClient({page, setIsTyping}: ChatClientProps) {
     }, [roomId])
 
     const sendMessage = async () => {
-        if (!input.trim() || !user) return
+        if (!input.trim() || !userRef.current) return
 
         await fetch("/api/chat/send", {
             method: "POST",
@@ -117,12 +127,23 @@ export default function ChatClient({page, setIsTyping}: ChatClientProps) {
                     bottom: -35
                 } : {}}
             >
-                <div className={"h-64 overflow-y-auto p-2 mb-2 overflow-x-hidden"}>
+                <div className={"h-64 overflow-y-auto p-2 mb-2 overflow-x-hidden flex flex-col gap-1"}>
                     {messages.map(msg => (
                         <div key={msg.id} className={"flex items-center gap-2"}>
-                            <img src={msg.userImage ?? "/images/dragon.png"} alt={msg.username}
-                                 className={"w-8 h-8 rounded-full"}/>
-                            <p><strong>{msg.username}:</strong> {msg.content}</p>
+                            <img
+                                onDoubleClick={() => {
+                                setLoading(true)
+                                router.push(`/profile/${msg.userId}`)
+                            }} src={msg.userImage ?? "/images/dragon.png"} alt={msg.username}
+                                 className={"w-8 h-8 rounded-full hover:w-8.5 hover:h-8.5 hover:opacity-50 transition-all transform duration-100 ease-in-out"}/>
+                            <h1 className={"flex justify-center items-center gap-1"}
+                                onClick={() => {
+                                if (!input.includes(msg.username)) {
+                                    setInput(`@${msg.username}`)
+                                }
+                            }}>
+                                <p className={"hover:scale-102 hover:opacity-50 font-[700] duration-100 ease-in-out"}>{msg.username}:</p> {msg.content}
+                            </h1>
                         </div>
                     ))}
                     <div ref={bottomRef}/>
@@ -143,7 +164,9 @@ export default function ChatClient({page, setIsTyping}: ChatClientProps) {
                     onClick={() => setMode("COMPACT")}>
                     <EyeClosed size={20}/>
                 </button>
-                <button onClick={sendMessage} className={`m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>Send</button>
+                <button onClick={sendMessage}
+                        className={`m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>Send
+                </button>
             </div>
         </>
     )
