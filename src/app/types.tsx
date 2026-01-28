@@ -435,41 +435,23 @@ export const DRINKS_MAP: Record<number, EffectType> = {
     4: EffectType.FIGHTING_VIPER,
 }
 
-export const intros = [
-    "9qNuScKbYuc", // YAKUZA 1
-    "SbNYIduyg-U", // YAKUZA 2
-    "AcUjoThA53Y", // YAKUZA 3
-    "Ut37SOojuaE", // YAKUZA 4
-    "Fn91JE4jYWk", // YAKUZA 5
-    "CHE5PWK_ZOE", // YAKUZA 6
-    "ATH0ej8Thc4", // YAKUZA 7
-    "73c7cjH8NE0", // YAKUZA 8
-    "sD-UJEQHXZc", // YAKUZA 0
-    "GhKDpI9T1Hg", // YAKUZA KIWAMI
-    "tmR_H5NZVVI", // YAKUZA KIWAMI 2
-    "yt5pHeJHRDc", // YAKUZA KIWAMI 3
-    "M4JEwZeTKtI", // JUDGMENT
-    "LiSSAV1xpYo", // LOST JUDGMENT
-    "2gCemGx-W18", // KENZAN
+export const GAMES = [
+    { title: "Howl of the Dragon (Yakuza)", intro: "9qNuScKbYuc", main: "9qNuScKbYuc" },
+    { title: "Roar of the Twin Dragons (Yakuza 2)", intro: "SbNYIduyg-U", main: "SbNYIduyg-U" },
+    { title: "Howl of the Dragon God (Yakuza 3)", intro: "O63aB268BBE", main: "AcUjoThA53Y" },
+    { title: "Roarless Dragon (Yakuza 4)", intro: "Ut37SOojuaE", main: "Ut37SOojuaE" },
+    { title: "The hearts of theirs (Yakuza 5)", intro: "Fn91JE4jYWk", main: "Fn91JE4jYWk" },
+    { title: "Howl of Yinglong (Yakuza 6)", intro: "9laKzDA-klQ", main: "9laKzDA-klQ" },
+    { title: "Darkness in light (Yakuza: Like a Dragon)", intro: "ATH0ej8Thc4", main: "Esoo3VaxGHI" },
+    { title: "Burned Out (Like a Dragon: Infinite Wealth)", intro: "73c7cjH8NE0", main: "73c7cjH8NE0" },
+    { title: "Pandora's Place (Yakuza 0)", intro: "Yy_kAjr0Ero", main: "sD-UJEQHXZc" },
+    { title: "Howl of the Extreme Dragon (Yakuza Kiwami)", intro: "GhKDpI9T1Hg", main: "oZWyNXZyk1A" },
+    { title: "Roar of the Twin Dragons (Yakuza Kiwami 2)", intro: "tmR_H5NZVVI", main: "djFlYHGWKiM" },
+    { title: "Howl of the Extreme Dragon God (Yakuza Kiwami 3)", intro: "yt5pHeJHRDc", main: "U_-3ezL8nUM" },
+    { title: "DOOR (Judgment)", intro: "M4JEwZeTKtI", main: "M4JEwZeTKtI" },
+    { title: "Lost in the Rain (Lost Judgment)", intro: "LiSSAV1xpYo", main: "LiSSAV1xpYo" },
+    { title: "Howl of the Old Dragon (Ryu Ga Gotoku Kenzan)", intro: "cxz7RqRPCpo", main: "cxz7RqRPCpo" },
 ]
-
-export const INTROS_MAP: Record<number, string> = {
-    0: "Howl of the Dragon (Yakuza)",
-    1: "Roar of the Twin Dragons (Yakuza 2)",
-    2: "Howl of the Dragon God (Yakuza 3)",
-    3: "Roarless Dragon (Yakuza 4)",
-    4: "The hearts of theirs (Yakuza 5)",
-    5: "Howl of Yinglong (Yakuza 6)",
-    6: "Darkness in light (Yakuza: Like a Dragon)",
-    7: "Burned Out (Like a Dragon: Infinite Wealth)",
-    8: "Pandora's Place (Yakuza 0)",
-    9: "Howl of the Extreme Dragon (Yakuza Kiwami)",
-    10: "Roar of the Twin Dragons (Yakuza Kiwami 2)",
-    11: "Howl of the Extreme Dragon God (Yakuza Kiwami 3)",
-    12: "DOOR (Judgment)",
-    13: "Lost in the Rain (Lost Judgment)",
-    14: "Howl of the Old Dragon (Ryu Ga Gotoku Kenzan)"
-}
 
 export const getLevel = (xp: number) => {
     return Math.min(Math.floor(xp / 1000), 100)

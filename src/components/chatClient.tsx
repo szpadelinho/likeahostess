@@ -93,7 +93,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
         <>
             <div
                 onClick={() => setMode("EXPANDED")}
-                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg mx-auto z-[50]`}
+                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[50]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",

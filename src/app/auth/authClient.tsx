@@ -10,32 +10,37 @@ import Image from "next/image";
 import ReactPlayer from "react-player";
 import Navbar from "@/components/navbar";
 import LoadingBanner from "@/components/loadingBanner";
-import {intros, INTROS_MAP, monoton, yesteryear} from "@/app/types";
+import {GAMES, monoton, yesteryear} from "@/app/types";
 import {useVolume} from "@/app/context/volumeContext";
+import TitleBanner from "@/components/titleBanner";
 
 export default function AuthClient() {
     const {data: session} = useSession()
     const router = useRouter()
-    const [showBanner, setShowBanner] = useState(true)
-    const [bannerVisible, setBannerVisible] = useState(true)
+    const [showGamepadBanner, setShowGamepadBanner] = useState(true)
+    const [showTitleBanner, setShowTitleBanner] = useState(false)
+    const [gamepadBannerVisible, setGamepadBannerVisible] = useState(true)
+    const [titleBannerVisible, setTitleBannerVisible] = useState(false)
+    const [titleActive, setTitleActive] = useState(false)
     const [isPlaying, setIsPlaying] = useState(false)
-    const [muted, setMuted] = useState(false)
+    const [muted, setMuted] = useState<[boolean, boolean]>([false, true])
     const {volume} = useVolume()
     const [source, setSource] = useState<string | null>(null)
-    const [title, setTitle] = useState<string | null>(null)
+    const [game, setGame] = useState<typeof GAMES[0] | null>(null)
     const [mode, setMode] = useState<"Main" | "Authentication">("Main")
     const [transition, setTransition] = useState<"Child" | "Parent" | null>(null)
     const [lastProvider, setLastProvider] = useState<"discord" | "github" | "google" | null>(null)
 
     useEffect(() => {
-        const random = Math.floor(Math.random() * intros.length)
-        setTitle(INTROS_MAP[random])
-        setSource(intros[random])
+        const random = Math.floor(Math.random() * GAMES.length)
+
+        setGame(GAMES[random])
+        setSource(GAMES[random].intro)
     }, [])
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setMuted(false)
+            setMuted([false, true])
         }, 1)
 
         return () => clearTimeout(timer)
@@ -44,7 +49,7 @@ export default function AuthClient() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsPlaying(true)
-        }, 4500)
+        }, 3500)
 
         return () => clearTimeout(timer)
     }, [])
@@ -70,11 +75,47 @@ export default function AuthClient() {
 
     useEffect(() => {
         const timeout = setTimeout(() => {
-            setBannerVisible(false)
-            setTimeout(() => setShowBanner(false), 1000)
-        }, 5000)
+            setGamepadBannerVisible(false)
+
+            setShowTitleBanner(true)
+            setTitleActive(true)
+            requestAnimationFrame(() => {
+                setTitleBannerVisible(true)
+            })
+
+            setTimeout(() => {
+                setShowGamepadBanner(false)
+            }, 1000)
+        }, 3500)
         return () => clearTimeout(timeout)
     }, [])
+
+    useEffect(() => {
+        if (!titleActive) return
+
+        const handleTitleInteraction = () => {
+            setSource(game && game.main)
+            setTitleBannerVisible(false)
+            setTitleActive(false)
+            setTimeout(() => {
+                setShowTitleBanner(false)
+            }, 1000)
+
+            window.removeEventListener("mousedown", handleTitleInteraction)
+            window.removeEventListener("keydown", handleTitleInteraction)
+            window.removeEventListener("touchstart", handleTitleInteraction)
+        }
+
+        window.addEventListener("mousedown", handleTitleInteraction)
+        window.addEventListener("keydown", handleTitleInteraction)
+        window.addEventListener("touchstart", handleTitleInteraction)
+
+        return () => {
+            window.removeEventListener("mousedown", handleTitleInteraction)
+            window.removeEventListener("keydown", handleTitleInteraction)
+            window.removeEventListener("touchstart", handleTitleInteraction)
+        }
+    }, [titleActive])
 
     const changeMode = (mode: "Main" | "Authentication") => {
         setTransition("Child")
@@ -99,7 +140,7 @@ export default function AuthClient() {
             <>
                 <div
                     className={`duration-500 ease-in-out transition ${transition === "Parent" ? "opacity-0" : "opacity-100"}`}>
-                    <Image src={"/icon.png"} alt={"App icon"} height={200} width={100}
+                    <Image src={"/images/icon-full.png"} alt={"App icon"} height={150} width={150}
                            className={"absolute top-5 left-5 z-2"}/>
                     <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Auth"}/>
                     <h1 className={`flex absolute bottom-3 right-3 text-white text-[15px] z-2 ${yesteryear.className}`}>{new Date().getFullYear()}</h1>
@@ -111,8 +152,11 @@ export default function AuthClient() {
                             Check out my other projects!
                         </Link>
                     </h4>
-                    {showBanner && (
-                        <GamepadBanner bannerVisible={bannerVisible}/>
+                    {showGamepadBanner && (
+                        <GamepadBanner bannerVisible={gamepadBannerVisible}/>
+                    )}
+                    {showTitleBanner && (
+                        <TitleBanner bannerVisible={titleBannerVisible}/>
                     )}
                     <div
                         className={`duration-500 ease-in-out transition ${transition === "Child" ? "opacity-0" : "opacity-100"}`}>
@@ -227,7 +271,7 @@ export default function AuthClient() {
                            navigator.clipboard.writeText(`https://youtube.com/watch/${source}?autoplay=1`)
                                .then(() => console.log("Successfully copied the URL"))
                        }}>
-                        {title}
+                        {game && game.title}
                     </p>
                     <ReactPlayer
                         src={`https://youtube.com/embed/${source}?autoplay=1`}
@@ -235,7 +279,7 @@ export default function AuthClient() {
                         controls={false}
                         autoPlay={true}
                         loop={true}
-                        muted={muted}
+                        muted={muted[0]}
                         volume={volume / 100}
                         style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
                     />
