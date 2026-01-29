@@ -3,7 +3,7 @@
 import {useSession, signIn} from "next-auth/react"
 import {Github, Key, LibraryBig, Undo2} from "lucide-react";
 import Link from "next/link";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {redirect, useRouter} from "next/navigation"
 import GamepadBanner from "@/components/gamepadBanner";
 import Image from "next/image";
@@ -30,6 +30,7 @@ export default function AuthClient() {
     const [mode, setMode] = useState<"Main" | "Authentication">("Main")
     const [transition, setTransition] = useState<"Child" | "Parent" | null>(null)
     const [lastProvider, setLastProvider] = useState<"discord" | "github" | "google" | null>(null)
+    const titleRef = useRef<HTMLAudioElement | null>(null)
 
     useEffect(() => {
         const random = Math.floor(Math.random() * GAMES.length)
@@ -97,6 +98,8 @@ export default function AuthClient() {
             setSource(game && game.main)
             setTitleBannerVisible(false)
             setTitleActive(false)
+            titleRef.current = new Audio("/sfx/title_start.mp3")
+            titleRef.current.play().catch()
             setTimeout(() => {
                 setShowTitleBanner(false)
             }, 1000)
