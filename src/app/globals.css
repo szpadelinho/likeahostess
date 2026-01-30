@@ -66,11 +66,9 @@ input::-webkit-inner-spin-button {
 @keyframes pulseText {
     0%, 100% {
         opacity: 1;
-        transform: scale(1);
     }
     50% {
-        opacity: 0.6;
-        transform: scale(1.1);
+        opacity: .3;
     }
 }
 

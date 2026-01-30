@@ -50,7 +50,7 @@ export default function AuthClient() {
     useEffect(() => {
         const timer = setTimeout(() => {
             setIsPlaying(true)
-        }, 3500)
+        }, 5000)
 
         return () => clearTimeout(timer)
     }, [])
@@ -75,20 +75,25 @@ export default function AuthClient() {
     }, [])
 
     useEffect(() => {
-        const timeout = setTimeout(() => {
+        const t1 = setTimeout(() => {
             setGamepadBannerVisible(false)
+        }, 3500)
 
+        const t2 = setTimeout(() => {
+            setShowGamepadBanner(false)
             setShowTitleBanner(true)
             setTitleActive(true)
-            requestAnimationFrame(() => {
-                setTitleBannerVisible(true)
-            })
+        }, 4500)
 
-            setTimeout(() => {
-                setShowGamepadBanner(false)
-            }, 1000)
-        }, 3500)
-        return () => clearTimeout(timeout)
+        const t3 = setTimeout(() => {
+            setTitleBannerVisible(true)
+        }, 4550)
+
+        return () => {
+            clearTimeout(t1)
+            clearTimeout(t2)
+            clearTimeout(t3)
+        }
     }, [])
 
     useEffect(() => {
@@ -155,12 +160,14 @@ export default function AuthClient() {
                             Check out my other projects!
                         </Link>
                     </h4>
-                    {showGamepadBanner && (
-                        <GamepadBanner bannerVisible={gamepadBannerVisible}/>
-                    )}
-                    {showTitleBanner && (
-                        <TitleBanner bannerVisible={titleBannerVisible}/>
-                    )}
+                    <div className={`absolute z-[999] inset-0 bg-black duration-1000 ease-in-out transform pointer-events-none ${showGamepadBanner || showTitleBanner ? "opacity-100" : "opacity-0"}`}>
+                        {showGamepadBanner && (
+                            <GamepadBanner bannerVisible={gamepadBannerVisible}/>
+                        )}
+                        {showTitleBanner && (
+                            <TitleBanner bannerVisible={titleBannerVisible}/>
+                        )}
+                    </div>
                     <div
                         className={`duration-500 ease-in-out transition ${transition === "Child" ? "opacity-0" : "opacity-100"}`}>
                         <Image

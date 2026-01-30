@@ -8,6 +8,17 @@ import {
     Tiny5,
     Yesteryear
 } from "next/font/google";
+import DarkVeil from "@/ui/DarkVeil";
+import Aurora from "@/ui/Aurora";
+import FloatingLines from "@/ui/FloatingLines";
+import Dither from "@/ui/Dither";
+import LightRays from "@/ui/LightRays";
+import LiquidChrome from "@/ui/LiquidChrome";
+import Particles from "@/ui/Particles";
+import Plasma from "@/ui/Plasma";
+import LiquidEther from "@/ui/LiquidEther";
+import PixelBlast from "@/ui/PixelBlast";
+import LightPillar from "@/ui/LightPillar";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -438,7 +449,7 @@ export const DRINKS_MAP: Record<number, EffectType> = {
 export const GAMES = [
     { title: "Howl of the Dragon (Yakuza)", intro: "9qNuScKbYuc", main: "9qNuScKbYuc" },
     { title: "Roar of the Twin Dragons (Yakuza 2)", intro: "SbNYIduyg-U", main: "SbNYIduyg-U" },
-    { title: "Howl of the Dragon God (Yakuza 3)", intro: "O63aB268BBE", main: "AcUjoThA53Y" },
+    { title: "Howl of the Dragon God (Yakuza 3)", intro: "Ga_NC3pXvbc", main: "AcUjoThA53Y" },
     { title: "Roarless Dragon (Yakuza 4)", intro: "Ut37SOojuaE", main: "Ut37SOojuaE" },
     { title: "The hearts of theirs (Yakuza 5)", intro: "Fn91JE4jYWk", main: "Fn91JE4jYWk" },
     { title: "Howl of Yinglong (Yakuza 6)", intro: "9laKzDA-klQ", main: "9laKzDA-klQ" },
@@ -513,3 +524,131 @@ export const getPageStyle = (page: string, isChatPanel?: boolean): string => {
             return ""
     }
 }
+
+export const backgroundRenders = [
+    <DarkVeil
+        hueShift={302}
+        noiseIntensity={.01}
+        scanlineIntensity={0}
+        speed={.5}
+        scanlineFrequency={0}
+        warpAmount={0}
+        grayscale={true}
+    />,
+    <Aurora
+        colorStops={["#fff","#fff","#fff"]}
+        blend={0.5}
+        amplitude={1.0}
+        speed={.5}
+    />,
+    <FloatingLines
+        linesGradient={["#fff", "#878787", "#232323"]}
+        enabledWaves={["top","middle","bottom"]}
+        lineCount={10}
+        lineDistance={20}
+        bendRadius={10}
+        bendStrength={-1.5}
+        interactive={true}
+        parallax={true}
+    />,
+    <Dither
+        waveColor={[0.5,0.5,0.5]}
+        disableAnimation={false}
+        enableMouseInteraction
+        mouseRadius={0.3}
+        colorNum={4}
+        waveAmplitude={0.3}
+        waveFrequency={3}
+        waveSpeed={0.05}
+    />,
+    <LightRays
+        raysOrigin="top-center"
+        raysColor="#fff"
+        raysSpeed={1}
+        lightSpread={0.5}
+        rayLength={3}
+        followMouse={true}
+        mouseInfluence={0.1}
+        noiseAmount={0}
+        distortion={0}
+        className="custom-rays"
+        pulsating={false}
+        fadeDistance={1}
+        saturation={1}
+    />,
+    <LiquidChrome
+        baseColor={[.02, .02, .02]}
+        speed={.5}
+        amplitude={0.6}
+        interactive={true}
+    />,
+    <Particles
+        particleColors={["#ffffff"]}
+        particleCount={1000}
+        particleSpread={10}
+        speed={0.1}
+        particleBaseSize={100}
+        moveParticlesOnHover
+        alphaParticles
+        disableRotation={false}
+        pixelRatio={1}
+    />,
+    <Plasma
+        color="#ffffff"
+        speed={0.6}
+        direction="forward"
+        scale={1.1}
+        opacity={0.8}
+        mouseInteractive={true}
+    />,
+    <LiquidEther
+        colors={[ '#fff', '#808080', '#000000' ]}
+        mouseForce={20}
+        cursorSize={100}
+        isViscous
+        viscous={30}
+        iterationsViscous={32}
+        iterationsPoisson={32}
+        resolution={0.5}
+        isBounce={false}
+        autoDemo
+        autoSpeed={0.5}
+        autoIntensity={2.2}
+        takeoverDuration={0.25}
+        autoResumeDelay={3000}
+        autoRampDuration={0.6}
+    />,
+    <PixelBlast
+        variant="square"
+        pixelSize={4}
+        color="#ffffff"
+        patternScale={2}
+        patternDensity={1}
+        pixelSizeJitter={0}
+        enableRipples
+        rippleSpeed={0.4}
+        rippleThickness={0.12}
+        rippleIntensityScale={1.5}
+        liquid={false}
+        liquidStrength={0.12}
+        liquidRadius={1.2}
+        liquidWobbleSpeed={5}
+        speed={0.5}
+        edgeFade={0.25}
+        transparent
+    />,
+    <LightPillar
+        topColor="#ffffff"
+        bottomColor="#ffffff"
+        intensity={1}
+        rotationSpeed={0.3}
+        glowAmount={0.002}
+        pillarWidth={3}
+        pillarHeight={0.4}
+        noiseIntensity={0.5}
+        pillarRotation={25}
+        interactive={false}
+        mixBlendMode="screen"
+        quality="high"
+    />
+]
