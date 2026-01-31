@@ -19,6 +19,7 @@ import Plasma from "@/ui/Plasma";
 import LiquidEther from "@/ui/LiquidEther";
 import PixelBlast from "@/ui/PixelBlast";
 import LightPillar from "@/ui/LightPillar";
+import Ballpit from "@/ui/Ballpit";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -650,5 +651,13 @@ export const backgroundRenders = [
         interactive={false}
         mixBlendMode="screen"
         quality="high"
+    />,
+    <Ballpit
+        count={440}
+        gravity={0.01}
+        friction={0.987}
+        wallBounce={1}
+        followCursor={false}
+        colors={[ '#fff', '#808080', '#000000' ]}
     />
 ]

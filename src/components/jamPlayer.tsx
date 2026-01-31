@@ -9,9 +9,10 @@ import {
     PanelRightClose,
     PanelRightOpen, Volume, VolumeX, Volume1, Volume2, Repeat, Shuffle
 } from "lucide-react"
-import {useState} from "react";
+import React, {useState} from "react";
 import ReactPlayer from "react-player";
 import {useVolume} from "@/app/context/volumeContext";
+import ElasticSlider from "@/ui/ElasticSlider";
 
 interface Props {
     jams: Jam[]
@@ -104,8 +105,17 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
                     {volume > 33 && volume < 67 && <Volume1/>}
                     {volume > 66 && <Volume2/>}
                 </button>
-                <div className={"absolute duration-300 ease-in-out pl-2 flex justify-center items-center h-5 bg-pink-950 -right-34 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none z-50"}>
-                    <input className={"accent-pink-600"} type={"range"} value={volume} min={0} max={100} onChange={(e) => {setVolume(parseInt(e.target.value))}}/>
+                <div className={"scale-75 absolute duration-300 ease-in-out flex justify-center w-50 items-center h-10 bg-pink-950 -right-40 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none z-50"}>
+                    <ElasticSlider
+                        leftIcon={<div className={"bg-pink-950"}><Volume color={"pink"}/></div>}
+                        rightIcon={<Volume2 color={"pink"}/>}
+                        startingValue={0}
+                        defaultValue={volume}
+                        maxValue={100}
+                        isStepped={false}
+                        stepSize={1}
+                        onChange={setVolume}
+                    />
                 </div>
             </div>
             <button onClick={prevTrack} className={"hover:text-pink-300 transition duration-200 ease-in-out transform active:-translate-x-3 active:text-pink-500 scale-100 hover:scale-110"}>

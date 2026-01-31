@@ -16,6 +16,7 @@ import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {getPageStyle, PageType, texturina} from "@/app/types";
 import ChatClient from "@/components/chatClient";
+import ElasticSlider from "@/ui/ElasticSlider";
 
 interface NavbarProps {
     router?: AppRouterInstance,
@@ -71,7 +72,7 @@ const Navbar = ({
         <>
             <LoadingBanner show={loading}/>
             <div className={"absolute top-10 right-10 flex items-center justify-center flex-row gap-5 z-[100]"}>
-                <div className={`${page === "Auth" && "right-5"} flex justify-center items-center group relative`}>
+                <div className={`${page === "Auth" && "right-10"} flex justify-center items-center group relative`}>
                     <button
                         className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                         style={page === "LoveInHeart" ? {
@@ -94,20 +95,18 @@ const Navbar = ({
                         {volume > 66 && <Volume2/>}
                     </button>
                     <div
-                        className={`absolute ${getPageStyle(page)} hover:opacity-100 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120 pt-2 flex justify-center items-center h-5 -bottom-5 opacity-0 group-hover:opacity-50 group-hover:pointer-events-auto pointer-events-none z-50`}
-                        style={page === "LoveInHeart" ? {
-                            borderWidth: "8px",
-                            borderStyle: "solid",
-                            borderImageSource: "url('/images/wood_texture2.png')",
-                            borderImageSlice: 30,
-                            borderImageRepeat: "round",
-                            bottom: -35
-                        } : {}}
+                        className={`absolute hover:opacity-100 p-5 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-101 active:scale-102 flex justify-center items-center h-5 -bottom-11 opacity-0 group-hover:opacity-50 group-hover:pointer-events-auto pointer-events-none z-50`}
                     >
-                        <input className={"accent-white"} type={"range"} value={volume} min={0} max={100}
-                               onChange={(e) => {
-                                   setVolume(parseInt(e.target.value))
-                               }}/>
+                        <ElasticSlider
+                            leftIcon={<Volume color={"white"}/>}
+                            rightIcon={<Volume2 color={"white"}/>}
+                            startingValue={0}
+                            defaultValue={volume}
+                            maxValue={100}
+                            isStepped={false}
+                            stepSize={1}
+                            onChange={setVolume}
+                        />
                     </div>
                 </div>
                 {page !== "Auth" && (
