@@ -252,6 +252,25 @@ export interface ChatUser{
     userImage: string
 }
 
+export interface RoomMember {
+    userId: string
+    username: string
+    userImage?: string
+}
+
+export interface Room {
+    id: string
+    name?: string
+    createdAt?: string
+    members?: RoomMember[]
+}
+
+export interface ChatUserList{
+    id: string
+    name: string
+    image: string
+}
+
 //fonts
 export const yesteryear = Yesteryear({
     weight: "400",
