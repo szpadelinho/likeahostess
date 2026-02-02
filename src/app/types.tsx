@@ -265,6 +265,11 @@ export interface Room {
     members?: RoomMember[]
 }
 
+interface RoomDisplayProps {
+    room: Room
+    currentUserId?: string
+}
+
 export interface ChatUserList{
     id: string
     name: string
@@ -513,6 +518,42 @@ export function blocksFatigue(effect: Effect | null) : boolean {
 
 export function blocksSupplies(effect: Effect | null): boolean {
     return effect?.type === "SAFEKEEPER_OF_THE_TOJO_CLAN"
+}
+
+export function RoomDisplay({room, currentUserId}: RoomDisplayProps) {
+
+    if (room.id === "GLOBAL") {
+        return <p>Global Chat</p>
+    }
+
+    if (!room.members?.length) {
+        return <p>{room.name || "Chat"}</p>
+    }
+
+    const otherMembers =
+        room.members?.filter(
+            m => m.userId !== currentUserId
+        ) ?? []
+
+    return (
+        <div className="flex items-center gap-2">
+            <div className="flex -space-x-2">
+                {otherMembers.slice(0, 3).map(member => (
+                    <img
+                        key={member.userId}
+                        src={member.userImage ?? "/images/dragon.png"}
+                        alt={member.username ?? ""}
+                        className="w-6 h-6 rounded-full border"
+                    />
+                ))}
+            </div>
+            <p>
+                {room.name ||
+                    otherMembers.map(m => m.username).join(", ")
+                }
+            </p>
+        </div>
+    )
 }
 
 export const getPageStyle = (page: string, isChatPanel?: boolean): string => {

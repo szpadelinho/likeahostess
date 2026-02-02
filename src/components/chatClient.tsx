@@ -2,7 +2,7 @@
 
 import {Dispatch, SetStateAction, useEffect, useRef, useState} from "react"
 import {supabase} from "@/lib/supabaseClient"
-import {ChatUser, ChatUserList, getPageStyle, Message, PageType, Room, yesteryear} from "@/app/types";
+import {ChatUser, ChatUserList, getPageStyle, Message, PageType, Room, RoomDisplay, yesteryear} from "@/app/types";
 import {useSession} from "next-auth/react";
 import {EyeClosed, List, MessageSquarePlus, Plus, Send} from "lucide-react";
 import {useRouter} from "next/navigation";
@@ -56,7 +56,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
         const loadUsers = async () => {
             const res = await fetch(`/api/users`)
             const data = await res.json()
-            setUsers(data)
+            setUsers(data.filter((u: ChatUserList) => u.id !== session?.user?.id))
         }
 
         loadRooms()
@@ -126,7 +126,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 users: userIds,
-                name: selectedUsers.length > 1 ? roomName : selectedUsers[0].name
+                ...(selectedUsers.length > 1 && { name: roomName })
             })
         })
 
@@ -141,14 +141,6 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
         setRoomCreation(false)
         setSelectedUsers([])
         setRoomName("")
-    }
-
-    const getRoomDisplayName = (room: Room) => {
-        if (room.id === "GLOBAL") return "Global Chat"
-        if (room.name) return room.name
-
-        const otherMember = room.members?.find(m => m.userId !== userRef.current?.userId)
-        return otherMember?.username || "Chat"
     }
 
     const lastMessage = messages.at(-1)
@@ -192,7 +184,12 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 } : {}}
             >
                 <h1 className={"flex justify-center items-center text-center w-full border-b-2 rounded-[10] font-[700]"}>
-                    {getRoomDisplayName(currentRoom)}
+                    {currentRoom && (
+                        <RoomDisplay
+                            room={currentRoom}
+                            currentUserId={userRef.current?.userId}
+                        />
+                    )}
                 </h1>
                 <div className={"h-64 overflow-y-auto p-2 mb-2 overflow-x-hidden flex flex-col gap-1"}>
                     {messages.map(msg => (
@@ -237,22 +234,36 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                         <Send/>
                     </button>
                     <button
-                        onClick={() => setList(!list)}
+                        onClick={() => {
+                            if(list){
+                                setRoomCreation(false)
+                                setList(false)
+                            }
+                            else {
+                                setList(true)
+                            }
+                        }}
                         className={`m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>
                         <List/>
                     </button>
                 </div>
-                <div className={`${list ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} w-50 duration-300 ease-in-out absolute flex flex-col justify-between ${page && getPageStyle(page)}`}>
+                <div className={`${list ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} gap-2 w-50 duration-300 ease-in-out absolute flex flex-col justify-between ${page && getPageStyle(page, true)}`}>
                     {rooms.map(room => (
                         <div
                             onClick={() => setCurrentRoom(room)}
-                            key={room.id} className={`flex flex-row justify-center items-center text-center gap-2 w-full`}>
+                            key={room.id} className={`flex flex-row justify-center items-center text-center gap-2 bg-pink-950 rounded-[10] font-[700] hover:text-pink-400 duration-200 ease-in-out w-full`}>
                             <h1>
-                                {room.name}
+                                <RoomDisplay
+                                    room={room}
+                                    currentUserId={userRef.current?.userId}
+                                />
                             </h1>
                         </div>
                     ))}
-                    <div onClick={() => setRoomCreation(true)} className={"flex flex-row justify-center items-center text-center gap-2 w-full"}>
+                    <div onClick={() => {
+                        setRoomCreation(true)
+                        setList(false)
+                    }} className={"flex flex-row justify-center items-center text-center gap-2 w-full bg-pink-950 rounded-[10] hover:text-pink-400 duration-200 ease-in-out font-[700]"}>
                         <Plus/>
                     </div>
                 </div>
@@ -269,7 +280,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                                     )
                                 }}
                                 className={`
-                                    flex gap-2 items-center cursor-pointer p-1 rounded duration-200 ease-in-out
+                                    flex flex-row gap-2 items-center cursor-pointer p-1 rounded duration-200 ease-in-out
                                     ${selectedUsers.includes(user) ? "bg-pink-400/40" : ""}
                                 `}
                             >

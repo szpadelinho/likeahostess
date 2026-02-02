@@ -10,13 +10,33 @@ export async function GET(req: Request) {
         const rooms = await prisma.chatRoom.findMany({
             where: {
                 members: {
-                    some: {
-                        userId
+                    some: { userId }
+                }
+            },
+            include: {
+                members: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                image: true
+                            }
+                        }
                     }
                 }
             }
         })
-        return NextResponse.json(rooms)
+        const formattedRooms = rooms.map(room => ({
+            ...room,
+            members: room.members.map(m => ({
+                userId: m.user.id,
+                username: m.user.name,
+                userImage: m.user.image
+            }))
+        }))
+
+        return NextResponse.json(formattedRooms)
     }
     catch(err){
         return NextResponse.json({error: err})
@@ -40,7 +60,19 @@ export async function POST(req: Request) {
                         members: {some: {userId: u}}
                     }))
                 },
-                include: {members: true}
+                include: {
+                    members: {
+                        include: {
+                            user: {
+                                select: {
+                                    id: true,
+                                    name: true,
+                                    image: true
+                                }
+                            }
+                        }
+                    }
+                }
             })
 
             if (existing) return NextResponse.json(existing)
@@ -53,10 +85,31 @@ export async function POST(req: Request) {
                     create: allUsers.map(id => ({userId: id}))
                 }
             },
-            include: {members: true}
+            include: {
+                members: {
+                    include: {
+                        user: {
+                            select: {
+                                id: true,
+                                name: true,
+                                image: true
+                            }
+                        }
+                    }
+                }
+            }
         })
 
-        return NextResponse.json(room)
+        const formattedRoom = {
+            ...room,
+            members: room.members.map(m => ({
+                userId: m.user.id,
+                username: m.user.name,
+                userImage: m.user.image
+            }))
+        }
+
+        return NextResponse.json(formattedRoom)
     } catch (err) {
         console.error(err)
         return NextResponse.json({error: "Internal server error"}, {status: 500})

@@ -196,8 +196,8 @@ model ChatMember {
   roomId    String
   joinedAt  DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
-  room ChatRoom @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
 
   @@unique([userId, roomId])
 }
@@ -211,8 +211,8 @@ model ChatMessage {
   userId String
   roomId String
 
-  user User @relation(fields: [userId], references: [id])
-  room ChatRoom @relation(fields: [roomId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  room ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
 }
 
 enum BuffetType {
