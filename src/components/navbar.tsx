@@ -3,7 +3,7 @@ import {
     LampDesk,
     LogOut, Medal, Pen, Play,
     Undo2,
-    University,
+    University, User,
     Volume,
     Volume1,
     Volume2,
@@ -198,6 +198,17 @@ const Navbar = ({
                     }}
                             className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                         <Pen size={25}/>
+                    </button>
+                )}
+                {(page === "Profile" && !isMe) && (
+                    <button onClick={() => {
+                        setLoading?.(true)
+                        setTimeout(() => {
+                            router?.push("/profile")
+                        }, 500)
+                    }}
+                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                        <User size={25}/>
                     </button>
                 )}
                 {page === "Ranking" && (

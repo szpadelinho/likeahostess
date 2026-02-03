@@ -58,7 +58,6 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
             const data = await res.json()
             setUsers(data.filter((u: ChatUserList) => u.id !== session?.user?.id))
         }
-
         loadRooms()
         loadUsers()
     }, [])
@@ -235,8 +234,11 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     </button>
                     <button
                         onClick={() => {
-                            if(list){
+                            if(roomCreation) {
                                 setRoomCreation(false)
+                                return
+                            }
+                            if(list){
                                 setList(false)
                             }
                             else {
@@ -251,7 +253,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     {rooms.map(room => (
                         <div
                             onClick={() => setCurrentRoom(room)}
-                            key={room.id} className={`flex flex-row justify-center items-center text-center gap-2 bg-pink-950 rounded-[10] font-[700] hover:text-pink-400 duration-200 ease-in-out w-full`}>
+                            key={room.id} className={`flex flex-row justify-center items-center text-center gap-2 rounded-[10] font-[700] duration-200 ease-in-out w-full ${page && getPageStyle(page)}`}>
                             <h1>
                                 <RoomDisplay
                                     room={room}
@@ -263,11 +265,11 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     <div onClick={() => {
                         setRoomCreation(true)
                         setList(false)
-                    }} className={"flex flex-row justify-center items-center text-center gap-2 w-full bg-pink-950 rounded-[10] hover:text-pink-400 duration-200 ease-in-out font-[700]"}>
+                    }} className={`flex flex-row justify-center items-center text-center gap-2 w-full rounded-[10] duration-200 ease-in-out font-[700] ${page && getPageStyle(page)}`}>
                         <Plus/>
                     </div>
                 </div>
-                <div className={`absolute flex flex-col gap-2 items-center p-2 bg-pink-950 ${roomCreation ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} duration-300 ease-in-out ${page && getPageStyle(page)}`}>
+                <div className={`absolute flex flex-col gap-2 items-center p-2 ${roomCreation ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} duration-300 ease-in-out ${page && getPageStyle(page)}`}>
                     <div className={`duration-300 ease-in-out flex flex-col justify-between ${page && getPageStyle(page, true)}`}>
                         {users.map(user => (
                             <div
