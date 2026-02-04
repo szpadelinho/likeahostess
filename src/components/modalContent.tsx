@@ -103,7 +103,7 @@ export const ModalContent = ({
         {
             key: "newSerena",
             active: window === "NewSerena",
-            image: "/images/date_menu.png",
+            image: "/images/date.png",
             alt: "Makoto Date",
             title: "Visit your local bar?",
             buttons: [
@@ -122,7 +122,7 @@ export const ModalContent = ({
         {
             key: "moneylender",
             active: window === "Moneylender",
-            image: "/images/mine_menu.png",
+            image: "/images/mine.png",
             alt: "Mine Yoshitaka",
             title: "Ask for a loan?",
             buttons: [
@@ -141,7 +141,7 @@ export const ModalContent = ({
         {
             key: "loveInHeart",
             active: window === "LoveInHeart",
-            image: "/images/saejima_menu.png",
+            image: "/images/saejima.png",
             alt: "Taiga Saejima",
             title: "Go for a massage?",
             buttons: [

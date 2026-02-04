@@ -178,8 +178,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     borderStyle: "solid",
                     borderImageSource: "url('/images/wood_texture2.png')",
                     borderImageSlice: 30,
-                    borderImageRepeat: "round",
-                    bottom: -35
+                    borderImageRepeat: "round"
                 } : {}}
             >
                 <h1 className={"flex justify-center items-center text-center w-full border-b-2 rounded-[10] font-[700]"}>

@@ -22,7 +22,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
             <div
                 className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(150,50,100,1)_100%)] w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                <div className={"w-full m-5 grid grid-cols-3 gap-5 max-h-[465px] overflow-y-auto pr-2"}>
+                <div className={"w-full m-5 grid grid-cols-3 gap-5 max-h-[465px] overflow-y-auto p-2"}>
                     {hostesses.map((hostess) => (
                         <DraggableHostess key={hostess.id} hostess={hostess} source={"management"} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess}/>
                     ))}
@@ -61,7 +61,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                             <h1>{selectedHostess.bio}</h1>
                         </div>
                         <div className={`flex justify-center items-center ${selectedHostess.fatigue >= 100 && "mix-blend-color-burn"}`}>
-                            <div className="relative w-[180px] h-[500px]">
+                            <div className="relative w-[180px] h-[520px]">
                                 <Image
                                     src={selectedHostess.cover}
                                     alt={`${selectedHostess.name} ${selectedHostess.surname}`}
