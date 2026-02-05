@@ -211,7 +211,7 @@ const SelectionClient = () => {
                                                     src={`${club.host.image}`}
                                                     alt="Host"
                                                     height={200}
-                                                    width={125}
+                                                    width={140}
                                                     className="rounded-md"
                                                 />
                                             </div>
@@ -266,11 +266,6 @@ const SelectionClient = () => {
                                     </div>
                                 ))}
                             </div>
-                            {latestClub && (
-                                <div>
-
-                                </div>
-                            )}
                             <div
                                 className={`flex flex-col text-center text-[25px] justify-center rounded-[20] -mb-20 mt-20 h-1/8 w-300 text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_75%)] ${clsx(
                                     "transition-opacity duration-400",

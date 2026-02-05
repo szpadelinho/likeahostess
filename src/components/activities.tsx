@@ -63,17 +63,13 @@ const Activities = ({
         return hostSurname === performerSurname ? activityCost * 0.5 : activityCost
     }
 
-    useEffect(() => {
-        setActivityIndex(0)
-    }, [selectedPerformer])
-
     return (
         <div
             className={`w-screen h-180 text-center content-center justify-center items-start flex flex-row text-pink-200 z-51 gap-20`}>
             <div
                 className={"gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,70,1)_50%,_rgba(134,16,67,1)_75%,_rgba(150,50,100,1)_100%)] w-100 text-center content-center items-start justify-center flex flex-row text-[20px] rounded-[20] text-pink-200 font-[600]"}
                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-                <div className={"w-full grid m-5 grid-cols-3 gap-5"}>
+                <div className={"w-full m-5 grid grid-cols-3 gap-5 max-h-[465px] overflow-y-auto p-2"}>
                     {performers.map((performer) => {
                         const isSelected = selectedPerformer?.id === performer.id
 
@@ -81,6 +77,7 @@ const Activities = ({
                             <div
                                 key={performer.id}
                                 onClick={() => {
+                                    setActivityIndex(0)
                                     if (isSelected) {
                                         setSelectedPerformer(null)
                                     } else {
@@ -165,11 +162,9 @@ const Activities = ({
                                 )}
                             </div>
                         </div>
-                        <div className={"flex justify-center items-center"}>
-                            <Image src={selectedPerformer.cover}
-                                   alt={`${selectedPerformer.name} ${selectedPerformer.surname} full body shot`}
-                                   height={300} width={300}/>
-                        </div>
+                        <Image src={selectedPerformer.cover}
+                               alt={`${selectedPerformer.name} ${selectedPerformer.surname} full body shot`}
+                               height={300} width={300}/>
                     </div>
                 </div>
             ) : (
