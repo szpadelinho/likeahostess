@@ -24,7 +24,7 @@ const Profile = async ({params}: {params: {userId: string}}) => {
 
     if (!user) redirect("/ranking")
 
-    let totals = user?.userClub.reduce((acc, uc) => {
+    const totals = user?.userClub.reduce((acc, uc) => {
             acc.money += uc.money
             acc.popularity += uc.popularity
             acc.supplies += uc.supplies

@@ -119,9 +119,9 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                         </div>
                         <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>What happens next?</h1>
-                            <p>After selecting the club you will play with, you are being redirected straight into the club's main hall. From now on, you are being a manager.</p>
+                            <p>After selecting the club you will play with, you are being redirected straight into the club&apos;s main hall. From now on, you are being a manager.</p>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>How can I change the club?</h1>
-                            <p>With HUD, you can use a taxi to switch to a different club.<br/>Alternatively, you can press "M" on your keyboard.</p>
+                            <p>With HUD, you can use a taxi to switch to a different club.<br/>Alternatively, you can press &quot;M&quot; on your keyboard.</p>
                         </div>
                     </div>
                 )}
@@ -181,20 +181,20 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                             <p>Here is an information about your character and the club you are currently managing. You can see the name of the main host, name of the club, your wealth, popularity and supply level.<br/>You can see also your rank and current experience level by hovering on the title.</p>
                         </div>
                         <div className={"flex flex-col items-center justify-center gap-30 max-w-[337px]"}>
-                            <h1 className={`text-[20px] ${yesteryear.className}`}>By pressing "Escape", you can view a whole menu:</h1>
+                            <h1 className={`text-[20px] ${yesteryear.className}`}>By pressing &quot;Escape&quot;, you can view a whole menu:</h1>
                             <div className={"flex justify-center items-center scale-25 w-400"}>
                                 <MenuModal menu={true} closing={false} handleClick={() => {}} setWindow={() => {}}/>
                             </div>
                             <div className={`text-[16px] ${yesteryear.className}`}>
-                                <h1>"M" - Management - choose your hostesses and view their stats,</h1>
-                                <h1>"P" - Activities - events for your club to gain new audacity,</h1>
-                                <h1>"Q" - Log off - quit the system,</h1>
-                                <h1>"E" - New Serena - buy supplies or drinks to gain effects,</h1>
-                                <h1>"I" - Profile - view your stats and rankings,</h1>
-                                <h1>"C" - Casino - gamble all your earnings and win it all,</h1>
-                                <h1>"S" - Selection - get into a cab and visit a different club,</h1>
-                                <h1>"L" - Love in Heart - visit local massage parlor to refreshen your workers,</h1>
-                                <h1>"B" - Moneylender - in case you go broke or just need more money, visit local man.</h1>
+                                <h1>&quot;M&quot; - Management - choose your hostesses and view their stats,</h1>
+                                <h1>&quot;P&quot; - Activities - events for your club to gain new audacity,</h1>
+                                <h1>&quot;Q&quot; - Log off - quit the system,</h1>
+                                <h1>&quot;E&quot; - New Serena - buy supplies or drinks to gain effects,</h1>
+                                <h1>&quot;I&quot; - Profile - view your stats and rankings,</h1>
+                                <h1>&quot;C&quot; - Casino - gamble all your earnings and win it all,</h1>
+                                <h1>&quot;S&quot; - Selection - get into a cab and visit a different club,</h1>
+                                <h1>&quot;L&quot; - Love in Heart - visit local massage parlor to refreshen your workers,</h1>
+                                <h1>&quot;B&quot; - Moneylender - in case you go broke or just need more money, visit local man.</h1>
                             </div>
                         </div>
                     </div>
@@ -314,7 +314,7 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                                         height={200}
                                         width={250}
                                     />
-                                    <p className={"absolute -bottom-5 text-pink-900 text-[20px]"}>Guest's glass</p>
+                                    <p className={"absolute -bottom-5 text-pink-900 text-[20px]"}>Guest&apos;s glass</p>
                                     <Image
                                         src={`/images/hostess_service_guest_glass.png`}
                                         alt={"Hostess is calling for a service"}
@@ -357,7 +357,7 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                     <div className={"absolute top-40 left-145 flex flex-row w-[780px] justify-between"}>
                         <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>Activities</h1>
-                            <p>You can use activities to boost your club's popularity. Select a performer:</p>
+                            <p>You can use activities to boost your club&apos;s popularity. Select a performer:</p>
                             <div
                                 className={`flex justify-center items-center rounded-[20] border-white border-2 hover:bg-pink-950 hover:shadow-white hover:shadow-sm hover:text-black transition duration-200 ease-in-out transform active:scale-105 bg-pink-900`}>
                                 <Image src={"/images/haruka.png"} alt={`Performer head shot`}
@@ -370,22 +370,22 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                                 className={"scale-75 flex justify-center items-center flex-row text-[15px] text-pink-200 bg-pink-950 p-3 rounded-[20] gap-3"}
                                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                                 <button
-                                        className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
+                                    className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
                                     <SkipBack/>
                                 </button>
                                 <div
-                                     className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-102 active:scale-95 hover:text-pink-200 transition-all duration-200 ease-in-out"}>
+                                    className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-102 active:scale-95 hover:text-pink-200 transition-all duration-200 ease-in-out"}>
                                     <p className={"w-100 flex flex-row justify-center items-center gap-2"}>GET to the TOP!!</p>
                                 </div>
                                 <button
-                                        className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 scale-100 hover:scale-110"}>
+                                    className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:translate-x-3 scale-100 hover:scale-110"}>
                                     <SkipForward/>
                                 </button>
                             </div>
                         </div>
                         <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>What is the purpose of this mechanic?</h1>
-                            <p>Players can quickly boost their club's popularity with a single action. They can see a video of activities done by hostesses, hosts or other personas.</p>
+                            <p>Players can quickly boost their club&apos;s popularity with a single action. They can see a video of activities done by hostesses, hosts or other personas.</p>
                         </div>
                     </div>
                 )}
@@ -401,7 +401,7 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                         </div>
                         <div className={"flex flex-col items-center justify-center gap-5 max-w-[337px]"}>
                             <h1 className={`text-[40px] ${yesteryear.className}`}>Some pages have only one song</h1>
-                            <p>Jam Player mainly works in the club's management game. Some of the pages only have a button to either mute or unmute the player:</p>
+                            <p>Jam Player mainly works in the club&apos;s management game. Some of the pages only have a button to either mute or unmute the player:</p>
                             <div className={`flex justify-center items-center group relative`}>
                                 <button
                                     className={`border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
@@ -423,7 +423,7 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                             <div className={"flex items-center justify-center z-50 flex-row gap-10"}>
                                 <Image src={"/images/dragon.png"} alt={"Profile picture"} height={50} width={50} className={"rounded-full"}/>
                                 <h1 className={`z-50 text-[25px] ${yesteryear.className}`}>
-                                    User's card
+                                    User&apos;s card
                                 </h1>
                                 <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={50} width={50}/>
                             </div>
@@ -472,7 +472,7 @@ const TutorialItem = ({label, setActive}: TutorialItemProps) => {
                             </div>
                             <h1>There is also a ranking system, which you can select by clicking:</h1>
                             <button
-                                    className={`-mt-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                                className={`-mt-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                                 <Medal size={25}/>
                             </button>
                         </div>

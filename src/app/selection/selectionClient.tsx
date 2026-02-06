@@ -22,7 +22,7 @@ const SelectionClient = () => {
     const [quit, setQuit] = useState<boolean>(false)
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(true)
-    const {volume, setVolume} = useVolume()
+    const {volume} = useVolume()
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -43,7 +43,7 @@ const SelectionClient = () => {
         };
 
         checkSession()
-    }, [])
+    }, [router])
 
     useEffect(() => {
         const latest = localStorage.getItem("selectedClub")

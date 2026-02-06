@@ -171,7 +171,7 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult}: RoulettePr
 
         ctx.imageSmoothingEnabled = true
         drawRoulette(ctx, rotation, ballRotation)
-    }, [rotation, ballRotation, ballDrop])
+    }, [rotation, ballRotation, ballDrop, drawRoulette])
 
     const spin = () => {
         if (spinning) return

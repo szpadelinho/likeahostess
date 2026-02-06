@@ -185,7 +185,7 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
                 audio.play()
             })
         }
-    }, [showCard])
+    }, [showCard, audio])
 
     const cards = {
         "spades": ["spades_ace", "spades_two", "spades_three", "spades_four", "spades_five", "spades_six", "spades_seven", "spades_eight", "spades_nine", "spades_ten", "spades_jack", "spades_queen", "spades_king"],
@@ -343,7 +343,7 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
     const handleGame = (type: string, value: string | null) => {
         if (type === "Chohan" && value !== null) {
             updateMoney(-bet).then()
-            let sum = Array(2)
+            const sum = Array(2)
             for (let i = 0; i < 2; i++) {
                 sum[i] = Math.floor(Math.random() * (6 - 1)) + 1
             }
@@ -364,7 +364,7 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
         }
         else if (type === "Blackjack") {
             updateMoney(-bet).then()
-            let freshDeck = handleDeckShuffle(handleDeckBuild())
+            const freshDeck = handleDeckShuffle(handleDeckBuild())
             const userHand = freshDeck.slice(0, 2)
             const dealerHand = freshDeck.slice(2, 4)
             const remainingDeck = freshDeck.slice(4)
@@ -410,10 +410,10 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
                 setWin(0)
             }
         }
-    }, [userCards])
+    }, [userCards, bet, calculateHandValue, dealerCards, isPlayerTurn, updateMoney])
 
     const dealerPlay = (currentDeck: string[]) => {
-        let hand = [...dealerCards]
+        const hand = [...dealerCards]
         const newDeck = [...currentDeck]
 
         while (calculateHandValue(hand) < 17) {

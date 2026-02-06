@@ -310,7 +310,7 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
                 evaluateHands()
                 setPlayerActionPending(false)
             }
-        }, [stage])
+        }, [stage, evaluateHands, setPlayerActionPending])
 
         return (
             <div className="flex flex-col justify-center items-center h-full w-full">
@@ -357,3 +357,5 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
             </div>
         )
     })
+
+TexasHoldEm.displayName = "TexasHoldEm"

@@ -15,7 +15,7 @@ import { useSession } from "next-auth/react";
 export const MoneylenderClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
-    const {volume, setVolume} = useVolume()
+    const {volume} = useVolume()
     const [value, setValue] = useState(100000)
     const [loading, setLoading] = useState<boolean>(true)
     const [show, setShow] = useState(false)

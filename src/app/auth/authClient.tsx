@@ -59,7 +59,7 @@ export default function AuthClient() {
         if (session) {
             router.push("/")
         }
-    }, [session])
+    }, [session, router])
 
     useEffect(() => {
         const latest = localStorage.getItem("lastLoginProvider")
@@ -123,7 +123,7 @@ export default function AuthClient() {
             window.removeEventListener("keydown", handleTitleInteraction)
             window.removeEventListener("touchstart", handleTitleInteraction)
         }
-    }, [titleActive])
+    }, [titleActive, game])
 
     const changeMode = (mode: "Main" | "Authentication") => {
         setTransition("Child")

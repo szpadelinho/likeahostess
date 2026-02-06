@@ -26,7 +26,7 @@ export const Clock = () => {
         }, 1000)
 
         return () => clearInterval(timer)
-    }, [semicolon])
+    }, [semicolon, analog])
 
     const getSeason = (date: Date) => {
         const month = date.getMonth()

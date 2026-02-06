@@ -60,7 +60,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
         }
         loadRooms()
         loadUsers()
-    }, [])
+    }, [session?.user?.id])
 
     useEffect(() => {
         if (!currentRoom) return

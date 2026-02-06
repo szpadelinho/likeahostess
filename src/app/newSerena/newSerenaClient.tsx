@@ -16,7 +16,7 @@ import {NewSerena} from "@/app/types";
 const NewSerenaClient = () => {
     const [isPlaying, setIsPlaying] = useState<boolean>(true)
     const [muted, setMuted] = useState(false)
-    const {volume, setVolume} = useVolume()
+    const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
     const [mode, setMode] = useState<"Selection" | "Drinks" | "Supplies">("Selection")
     const [fade, setFade] = useState<boolean>(false)
@@ -215,7 +215,7 @@ const NewSerenaClient = () => {
                     <div className={`${molle.className} ${fade ? "opacity-0" : "opacity-100"} duration-300 ease-in-out w-screen h-screen flex flex-col items-center justify-center text-[30px]`}>
                         {mode === "Selection" && (
                             <div className={"absolute bottom-5 gap-10 flex flex-col items-center justify-center bg-black/60 border-2 border-white rounded-[5] p-15"}>
-                                <h1 className={"text-white text-[50px]"}>What's the matter, {club?.host?.surname}?</h1>
+                                <h1 className={"text-white text-[50px]"}>What is the matter, {club?.host?.surname}?</h1>
                                 <div className={"gap-20 flex flex-row items-center justify-center"}>
                                     <button
                                         onClick={() => {switchMode("Drinks")}}

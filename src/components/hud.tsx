@@ -121,7 +121,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                 break
 
         }
-    }, [handleClick, handleWindow])
+    }, [handleClick, handleWindow, isTyping])
 
     useEffect(() => {
         window.addEventListener("keydown", handleButton)
@@ -131,7 +131,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
     useEffect(() => {
         if(supplies <= 0) handleWindow("SupplyAlert")
         if(money <= 0) handleWindow("MoneyAlert")
-    }, [supplies, money])
+    }, [supplies, money, handleWindow])
 
     const Countdown = ({ value }: { value: Loan | Effect }) => {
         const [now, setNow] = useState<Date>(new Date())

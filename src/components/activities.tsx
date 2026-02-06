@@ -1,6 +1,6 @@
 import Image from "next/image";
 import {HandHeart, JapaneseYen, PiggyBank, SkipBack, SkipForward} from "lucide-react";
-import {useEffect, useState} from "react";
+import {useState} from "react";
 import {Activity, Club, coustard, Performer} from "@/app/types";
 import {handleMoneyTransaction, handlePopularityTransaction} from "@/lib/transactions";
 import {Session} from "next-auth";

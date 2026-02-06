@@ -19,7 +19,7 @@ export async function GET(req: Request){
     return NextResponse.json(user)
 }
 
-export async function POST(req: Request){
+export async function POST(){
     const session = await auth()
     if(!session?.user?.email) return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
 
@@ -36,7 +36,7 @@ export async function POST(req: Request){
     return NextResponse.json({ success: true });
 }
 
-export async function DELETE(req: Request){
+export async function DELETE(){
     const session = await auth()
     if(!session?.user?.email) return NextResponse.json({ error: "Unauthorized" })
 
@@ -48,4 +48,6 @@ export async function DELETE(req: Request){
     await prisma.user.delete({
         where: {id: user.id}
     })
+
+    return NextResponse.json({ success: true })
 }

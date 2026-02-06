@@ -31,11 +31,11 @@ const ElasticSlider: React.FC<ElasticSliderProps> = ({
     return (
         <div className={`flex flex-col items-center justify-center gap-4 w-48 ${className}`}>
             <Slider
-                defaultValue={defaultValue}
-                startingValue={startingValue}
-                maxValue={maxValue}
-                isStepped={isStepped}
-                stepSize={stepSize}
+                defaultValue={defaultValue ?? 0}
+                startingValue={startingValue ?? 0}
+                maxValue={maxValue ?? 100}
+                isStepped={isStepped ?? true}
+                stepSize={stepSize ?? 1}
                 leftIcon={leftIcon}
                 rightIcon={rightIcon}
                 onChange={onChange}

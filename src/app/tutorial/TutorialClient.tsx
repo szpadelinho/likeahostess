@@ -16,7 +16,7 @@ interface TutorialClientProps {
 const Tutorial = ({isLogged}: TutorialClientProps) => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
-    const {volume, setVolume} = useVolume()
+    const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
     const [quit, setQuit] = useState<boolean>(false)
     const [active, setActive] = useState<string | null>(null)

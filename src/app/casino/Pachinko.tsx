@@ -52,6 +52,20 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
         }
     }
 
+    const toggleHold = (index: number) => {
+        if (spinning[index]) {
+            const stop = stopRef.current
+            if (stop) {
+                stop.currentTime = 0
+                stop.play().catch(() => {
+                })
+            }
+        }
+        setSpinning(prev => {
+            return prev.map((val, i) => index === i ? false : val)
+        })
+    }
+
     const handleButton = useCallback((e: KeyboardEvent) => {
         if (e.code === "Space") {
             e.preventDefault()
@@ -65,7 +79,7 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
                 startGame()
             }
         }
-    }, [spinning, slots, startGame])
+    }, [spinning, slots, startGame, toggleHold])
 
     useEffect(() => {
         window.addEventListener("keydown", handleButton)
@@ -92,21 +106,7 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
         return () => {
             intervals.forEach(clearInterval)
         }
-    }, [spinning])
-
-    const toggleHold = (index: number) => {
-        if (spinning[index]) {
-            const stop = stopRef.current
-            if (stop) {
-                stop.currentTime = 0
-                stop.play().catch(() => {
-                })
-            }
-        }
-        setSpinning(prev => {
-            return prev.map((val, i) => index === i ? false : val)
-        })
-    }
+    }, [spinning, elements.length])
 
     const prevSpinningRef = useRef(spinning)
 
@@ -145,7 +145,7 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
                 onTransaction("lose").then()
             }
         }
-    }, [spinning, slots, setScore])
+    }, [spinning, slots, setScore, onTransaction])
 
     const getIcon = (Icon: any): { fill: string, color: string } => {
         switch (Icon) {

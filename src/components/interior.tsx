@@ -45,8 +45,6 @@ interface InteriorProps {
 const Interior = ({
                       hostesses,
                       setHostesses,
-                      selectedHostess,
-                      setSelectedHostess,
                       setHostessesPanel,
                       dinedTables,
                       setInquiryTableId,
@@ -67,10 +65,8 @@ const Interior = ({
     const [clients, setClients] = useState<(Client | null)[]>(Array(8).fill(null))
 
     const [wiggleHostess, setWiggleHostess] = useState<boolean[]>(Array(8).fill(false))
-    const [wiggleClient, setWiggleClient] = useState<boolean[]>(Array(8).fill(false))
 
     const [waitingClient, setWaitingClient] = useState<boolean>(false)
-    const [selectedClient, setSelectedClient] = useState<boolean>(false)
 
     const clientRef = useRef<HTMLAudioElement | null>(null)
 
@@ -89,7 +85,7 @@ const Interior = ({
                 }
             }
         }
-    }, [waitingClient])
+    }, [waitingClient, money, supplies])
 
     useEffect(() => {
         visit.forEach((v, i) => {
@@ -331,8 +327,8 @@ const Interior = ({
                                     )}
                                 </>
                                 <DroppableClient index={i} clients={clients} setClients={setClients}
-                                                 hostesses={hostesses} setSelectedClient={setSelectedClient}
-                                                 InquiryHandler={InquiryHandler} wiggleClient={wiggleClient}
+                                                 hostesses={hostesses}
+                                                 InquiryHandler={InquiryHandler}
                                                  setWaitingClient={setWaitingClient} inquiryType={inquiryType} attractiveness={hostesses[i]?.attractiveness}/>
                                 {clients[i] && (
                                     <button onClick={() => {

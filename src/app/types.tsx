@@ -588,6 +588,7 @@ export const getPageStyle = (page: string, isChatPanel?: boolean): string => {
 
 export const backgroundRenders = [
     <DarkVeil
+        key={0}
         hueShift={302}
         noiseIntensity={.01}
         scanlineIntensity={0}
@@ -597,12 +598,14 @@ export const backgroundRenders = [
         grayscale={true}
     />,
     <Aurora
+        key={1}
         colorStops={["#fff","#fff","#fff"]}
         blend={0.5}
         amplitude={1.0}
         speed={.5}
     />,
     <FloatingLines
+        key={2}
         linesGradient={["#fff", "#878787", "#232323"]}
         enabledWaves={["top","middle","bottom"]}
         lineCount={10}
@@ -613,6 +616,7 @@ export const backgroundRenders = [
         parallax={true}
     />,
     <Dither
+        key={3}
         waveColor={[0.5,0.5,0.5]}
         disableAnimation={false}
         enableMouseInteraction
@@ -623,6 +627,7 @@ export const backgroundRenders = [
         waveSpeed={0.05}
     />,
     <LightRays
+        key={4}
         raysOrigin="top-center"
         raysColor="#fff"
         raysSpeed={1}
@@ -638,12 +643,14 @@ export const backgroundRenders = [
         saturation={1}
     />,
     <LiquidChrome
+        key={5}
         baseColor={[.02, .02, .02]}
         speed={.5}
         amplitude={0.6}
         interactive={true}
     />,
     <Particles
+        key={6}
         particleColors={["#ffffff"]}
         particleCount={1000}
         particleSpread={10}
@@ -655,6 +662,7 @@ export const backgroundRenders = [
         pixelRatio={1}
     />,
     <Plasma
+        key={7}
         color="#ffffff"
         speed={0.6}
         direction="forward"
@@ -663,6 +671,7 @@ export const backgroundRenders = [
         mouseInteractive={true}
     />,
     <LiquidEther
+        key={8}
         colors={[ '#fff', '#808080', '#000000' ]}
         mouseForce={20}
         cursorSize={100}
@@ -680,6 +689,7 @@ export const backgroundRenders = [
         autoRampDuration={0.6}
     />,
     <PixelBlast
+        key={9}
         variant="square"
         pixelSize={4}
         color="#ffffff"
@@ -699,6 +709,7 @@ export const backgroundRenders = [
         transparent
     />,
     <LightPillar
+        key={10}
         topColor="#ffffff"
         bottomColor="#ffffff"
         intensity={1}
@@ -713,6 +724,7 @@ export const backgroundRenders = [
         quality="high"
     />,
     <Ballpit
+        key={11}
         count={440}
         gravity={0.01}
         friction={0.987}

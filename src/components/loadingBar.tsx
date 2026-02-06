@@ -28,7 +28,7 @@ const LoadingBar = ({duration, onComplete, paused, onProgressChange}: Props) => 
             })
         }, interval)
         return () => clearInterval(timer)
-    }, [duration, paused])
+    }, [duration, paused, onComplete, onProgressChange])
 
     return (
         <div

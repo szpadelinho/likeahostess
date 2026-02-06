@@ -23,7 +23,7 @@ const LoadingBanner = ({show}: Props) => {
             restore()
             return (() => clearTimeout(timeout))
         }
-    }, [show])
+    }, [show, fadeTo, restore])
 
     return (
         <div className={`absolute inset-0 pointer-events-none flex justify-center items-center z-[999] transition-opacity duration-1000 text-white ${

@@ -21,7 +21,7 @@ const FlowerStem = createLucideIcon("FlowerStem", flowerStem)
 export const LoveInHeartClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(false)
-    const {volume, setVolume} = useVolume()
+    const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
     const [massage, setMassage] = useState<"Standard" | "Deluxe" | "VIP" | "Super VIP" | null>(null)
     const [mode, setMode] = useState<"Selection" | "Acceptance">("Selection")

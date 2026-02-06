@@ -170,7 +170,7 @@ const ProfileClient = ({totals, favClub, user, isMe}: ProfileClientProps) => {
                         <img key={avatarSrc} src={avatarSrc || "/images/dragon.png"} alt={"Profile picture"} height={64}
                              width={64} className={"rounded-full border-2 border-black"}/>
                         <h1 className={`z-50 text-[50px] ${cookie.className}`}>
-                            {user.name}'s card
+                            {user.name}&apos;s card
                         </h1>
                         <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={64} width={64}/>
                     </div>

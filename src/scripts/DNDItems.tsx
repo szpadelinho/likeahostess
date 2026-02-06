@@ -32,9 +32,7 @@ interface DroppableClientProps {
     clients: (Client | null)[],
     setClients: Dispatch<SetStateAction<(Client | null)[]>>,
     hostesses: (Hostess | null)[],
-    setSelectedClient: Dispatch<SetStateAction<boolean>>,
     InquiryHandler: (i: number, type: "Service" | "Buffet" | "End" | null, status: boolean) => void,
-    wiggleClient: boolean[],
     setWaitingClient: Dispatch<SetStateAction<boolean>>,
     inquiryType: ("Service" | "Buffet" | "End" | null)[],
     attractiveness?: number
@@ -173,9 +171,7 @@ export const DroppableClient = ({
                                     clients,
                                     setClients,
                                     hostesses,
-                                    setSelectedClient,
                                     InquiryHandler,
-                                    wiggleClient,
                                     setWaitingClient,
                                     inquiryType,
                                     attractiveness
@@ -190,7 +186,6 @@ export const DroppableClient = ({
                 const updatedClients = [...clients]
                 updatedClients[index] = {present: true, expectedAttractiveness: Math.round(Math.random() * 6)}
                 setClients(updatedClients)
-                setSelectedClient(false)
                 setWaitingClient(false)
                 if (hostesses[index] !== null && inquiryType[index] !== "Buffet") {
                     InquiryHandler(index, 'Buffet', true)
@@ -243,7 +238,7 @@ export const DroppableClient = ({
             ref={buttonRef}
             className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950/70 transition-all duration-200 ease-in-out transform active:scale-90 ${
                 clients[index] ? 'bg-pink-800 opacity-100' : 'bg-pink-700'
-            } ${wiggleClient[index] ? '!bg-red-600 scale-120' : 'scale-100'} ${
+            } ${
                 isOver && canDrop ? 'scale-110 bg-pink-900' : ''
             }
             ${canDrop && "border-dotted"}`}

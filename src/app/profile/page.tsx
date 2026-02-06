@@ -4,7 +4,6 @@ import {auth} from "@/lib/auth";
 import {prisma} from "../../../prisma/prisma";
 import LoadingBanner from "@/components/loadingBanner";
 import {redirect} from "next/navigation";
-import {useSession} from "next-auth/react";
 
 export async function generateMetadata(): Promise<Metadata> {
     const session = await auth()
@@ -25,7 +24,7 @@ const Profile = async () => {
 
     if(!user) redirect("/")
 
-    let totals = user?.userClub.reduce((acc, uc) => {
+    const totals = user?.userClub.reduce((acc, uc) => {
         acc.money += uc.money
         acc.popularity += uc.popularity
         acc.supplies += uc.supplies
