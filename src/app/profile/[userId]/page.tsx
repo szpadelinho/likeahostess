@@ -13,9 +13,11 @@ export async function generateMetadata(): Promise<Metadata> {
     }
 }
 
-const Profile = async ({params}: {params: {userId: string}}) => {
+const Profile = async (props: {params: Promise<{userId: string}>}) => {
     const session = await auth()
     if(!session || !session?.user?.email) redirect("/auth")
+
+    const params = await props.params
 
     const user = await prisma.user.findUnique({
         where: { id: params.userId },
