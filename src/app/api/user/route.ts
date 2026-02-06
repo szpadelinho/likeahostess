@@ -56,3 +56,20 @@ export async function POST(req: Request){
         return NextResponse.json({error: "Server error"}, {status: 500})
     }
 }
+
+export async function DELETE(){
+    const session = await auth()
+    if (!session) return NextResponse.json({ error: "Unauthorized" }, {status: 401})
+
+    try{
+        const user = await prisma.user.delete({
+            where: {id: session?.user?.id}
+        })
+
+        return NextResponse.json({user, success: true})
+    }
+    catch(err){
+        console.error(err)
+        return NextResponse.json({error: "Server error"}, {status: 500})
+    }
+}

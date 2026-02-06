@@ -35,6 +35,7 @@ const ProfileClient = ({totals, favClub, user, isMe}: ProfileClientProps) => {
     const [nick, setNick] = useState(user.name ?? "")
     const [avatar, setAvatar] = useState(user.image ?? "")
     const [error, setError] = useState<string>("")
+    const [isDeletionModal, setIsDeletionModal] = useState<boolean>(false)
 
     const avatarSrc = avatar
         ? `${avatar}?v=${user.image ? "1" : "0"}`
@@ -84,7 +85,7 @@ const ProfileClient = ({totals, favClub, user, isMe}: ProfileClientProps) => {
     }
 
     const handleDelete = async () => {
-        const res = await fetch('/api/deleteUser', {
+        const res = await fetch('/api/user', {
             method: 'DELETE',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({userId: session?.user?.id}),
@@ -214,18 +215,43 @@ const ProfileClient = ({totals, favClub, user, isMe}: ProfileClientProps) => {
                         </div>
                     </div>
                     {isMe && (
-                        <div className={"flex justify-center items-center gap-5 flex-row absolute bottom-50 left-[42%]"}>
-                            <button
-                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
-                                onClick={handleReset}>
-                                <p>Reset account</p><DatabaseBackup/>
-                            </button>
-                            <button
-                                className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
-                                onClick={handleDelete}>
-                                <p>Delete account</p><Trash2/>
-                            </button>
-                        </div>
+                        <>
+                            <div className={"flex justify-center items-center gap-5 flex-row absolute bottom-50 left-[42%]"}>
+                                <button
+                                    className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                                    onClick={handleReset}>
+                                    <p>Reset account</p><DatabaseBackup/>
+                                </button>
+                                <button
+                                    className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                                    onClick={() => setIsDeletionModal(true)}>
+                                    <p>Delete account</p><Trash2/>
+                                </button>
+                            </div>
+                            <div
+                                onClick={() => setIsDeletionModal(false)}
+                                className={`${isDeletionModal ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} text-red-600 ${cookie.className} absolute inset-0 duration-300 ease-in-out flex justify-center items-center backdrop-blur-[5px] z-[100]`}>
+                                <div
+                                    onClick={(e) => e.stopPropagation()}
+                                    className={"flex justify-center flex-col gap-5 p-5 items-center bg-[url(/images/paper_texture.png)]"}>
+                                    <p className={"font-[700] text-[40px] text-center"}>Are you sure you want to delete your account?<br/> Deletion is permanent!</p>
+                                    <div className={"flex flex-row gap-5"}>
+                                        <button
+                                            onClick={handleDelete}
+                                            className={"w-45 text-[20px] text-center justify-center items-center flex border-black border-2 rounded-sm opacity-70 p-2 flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                                        >
+                                            Please delete my account
+                                        </button>
+                                        <button
+                                            onClick={() => setIsDeletionModal(false)}
+                                            className={"w-45 text-[20px] text-center justify-center items-center flex border-black border-2 rounded-sm opacity-70 p-2 flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
+                                        >
+                                            I want to keep my account
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
