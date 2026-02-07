@@ -18,7 +18,7 @@ import {towelFolded, cupSaucer} from "@lucide/lab";
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
-import {Buffet, ServiceType, Hostess, Club, StoredClub} from "@/app/types";
+import {Buffet, ServiceType, Hostess, Club, StoredClub, getPageStyle} from "@/app/types";
 import {Session} from "next-auth";
 import {
     handleExperienceTransaction, handleHostessFatigueTransaction,
@@ -325,7 +325,12 @@ export const Inquiry = ({
                                         <h1>Beverages</h1>
                                         <div className={"grid grid-cols-5 gap-5"}>
                                             {beverages.map((beverage, i) => (
-                                                <DraggableItem key={i} item={beverage} type="beverage"/>
+                                                <div key={i} className={"relative group"}>
+                                                    <DraggableItem item={beverage} type="beverage"/>
+                                                    <span className={`absolute text-nowrap -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-pink-950 text-pink-200 rounded-[10] p-1 z-50`}>
+                                                        {beverage.name}
+                                                    </span>
+                                                </div>
                                             ))}
                                         </div>
                                     </>
@@ -335,7 +340,12 @@ export const Inquiry = ({
                                         <h1>Meals</h1>
                                         <div className={"grid grid-cols-5 gap-5"}>
                                             {meals.map((meal, i) => (
-                                                <DraggableItem key={i} item={meal} type={"meal"}/>
+                                                <div key={i} className={"relative group"}>
+                                                    <DraggableItem key={i} item={meal} type={"meal"}/>
+                                                    <span className={`absolute text-nowrap -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-pink-950 text-pink-200 rounded-[10] p-1 z-50`}>
+                                                        {meal.name}
+                                                    </span>
+                                                </div>
                                             ))}
                                         </div>
                                     </>
@@ -419,14 +429,18 @@ export const Inquiry = ({
                             style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
                             <div className={"grid grid-cols-3 grid-rows-2 gap-10 p-3"}>
                                 {serviceActions.map((action, i) => (
-                                    <button
-                                        key={i}
-                                        className={`flex justify-center items-center border-white border-2 rounded-[20] p-5 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === action.title ? "!bg-red-600 !hover:bg-red-600 !active:bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
-                                        onClick={() => {
-                                            InquiryServiceHandler(action.title)
-                                        }}>
-                                        <action.Icon size={50}/>
-                                    </button>
+                                    <div key={i} className={"relative group"}>
+                                        <button
+                                            className={`flex justify-center items-center border-white border-2 rounded-[20] p-5 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === action.title ? "!bg-red-600 !hover:bg-red-600 !active:bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
+                                            onClick={() => {
+                                                InquiryServiceHandler(action.title)
+                                            }}>
+                                            <action.Icon size={50}/>
+                                        </button>
+                                        <span className={`absolute text-nowrap -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-pink-950 text-pink-200 rounded-[10] p-1 z-50`}>
+                                            {action.title.replace("_", " ").replace(/\b\w/g, c => c.toUpperCase())}
+                                        </span>
+                                    </div>
                                 ))}
                             </div>
                         </div>

@@ -1,11 +1,10 @@
 import {useDrag, useDrop} from 'react-dnd';
 import {iconConverter} from "@/scripts/iconConverter";
-import {Dispatch, ReactNode, SetStateAction, useRef, useState} from "react";
+import {Dispatch, ReactNode, SetStateAction, useMemo, useRef, useState} from "react";
 import {
-    Annoyed,
+    Annoyed, ConciergeBell,
     BookUser, Box,
-    DoorClosed,
-    DoorOpen, Droplet,
+    Droplet,
     EyeClosed, Flame,
     HeartPlus,
     Laugh, LucideIcon, Martini,
@@ -14,7 +13,7 @@ import {
     VenetianMask
 } from "lucide-react";
 import Image from "next/image";
-import {Hostess, WindowType, Buffet, Client} from "@/app/types";
+import {Hostess, WindowType, Buffet, Client, clientMugshots} from "@/app/types";
 
 interface DroppableSlotsProps {
     type: 'beverage' | 'meal'
@@ -154,6 +153,12 @@ export const DraggableDoor = ({waitingClient}: DraggableDoorProps) => {
     const buttonRef = useRef<HTMLButtonElement>(null)
     drag(buttonRef)
 
+    const image = useMemo(() => {
+        return clientMugshots[
+            Math.floor(Math.random() * clientMugshots.length)
+            ]
+    }, [])
+
     return (
         <button
             ref={buttonRef}
@@ -161,7 +166,7 @@ export const DraggableDoor = ({waitingClient}: DraggableDoorProps) => {
                 waitingClient ? 'bg-red-950 text-pink-500 hover:bg-pink-950/70 hover:text-pink-700 active:text-pink-500 active:bg-pink-900' : 'bg-pink-900 text-pink-400 hover:bg-pink-800 hover:text-pink-500 active:text-pink-300 active:bg-pink-700'
             } ${isDragging ? 'opacity-50' : 'opacity-100'}`}
         >
-            {waitingClient ? <DoorOpen size={50}/> : <DoorClosed size={50}/>}
+            {waitingClient ? <Image className={"rounded-[20]"} src={`/images/${image}`} alt={"Client mugshot"} fill={true}/> : <ConciergeBell size={50}/>}
         </button>
     )
 }
@@ -227,10 +232,30 @@ export const DroppableClient = ({
                 Icon = Martini
         }
         return (
-            <p className={"absolute text-pink-200 right-2 top-2 pointer-events-none"}>
-                <Icon size={15}/>
+            <p className={"absolute text-pink-200 pointer-events-none"}>
+                <Icon size={50}/>
             </p>
         )
+    }
+
+    const renderIcons = () => {
+        let content
+        if (!clients[index]) {
+            content = <BookUser size={50} />
+        } else if (clients[index] && !hostesses[index]) {
+            content = calculateAttractivenessIcon(clients[index].expectedAttractiveness)
+        } else if (clients[index] && hostesses[index]) {
+            const expected = clients[index].expectedAttractiveness
+            if (attractiveness && expected > attractiveness) {
+                content = <Meh size={50} />
+            } else if (expected === attractiveness) {
+                content = <Smile size={50} />
+            } else {
+                content = <Laugh size={50} />
+            }
+        }
+
+        return content
     }
 
     return (
@@ -243,12 +268,7 @@ export const DroppableClient = ({
             }
             ${canDrop && "border-dotted"}`}
         >
-            {!clients[index] || !attractiveness ? <><BookUser size={50}/>{calculateAttractivenessIcon(clients[index]?.expectedAttractiveness)}</> :
-                clients[index]?.expectedAttractiveness > attractiveness ? <Meh size={50}/>
-                    : clients[index]?.expectedAttractiveness == attractiveness ? <Smile size={50}/>
-                        : clients[index]?.expectedAttractiveness < attractiveness ? <Laugh size={50}/>
-                            : <Annoyed size={50}/>
-            }
+            {renderIcons()}
         </button>
     )
 }

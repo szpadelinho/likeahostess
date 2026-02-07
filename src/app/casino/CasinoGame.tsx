@@ -703,26 +703,28 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
                         <div
                             className={`absolute left-1/2 top-5 z-50 flex flex-row justify-center items-center ${yesteryear.className} text-[40px] gap-5`}>
                             <p>Total bet: ¥{bets.reduce((sum, bet) => sum + bet.amount, 0).toLocaleString()}</p>
-                            <button
-                                className={`p-1 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                                onClick={() => setBets([])}>
-                                Clear bets
-                            </button>
                         </div>
                     </div>
-                    <button
-                        className={`${yesteryear.className} absolute bottom-10 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                        onClick={() => {
-                            const totalBet = bets.reduce((sum, bet) => sum + bet.amount, 0)
-                            updateMoney(-totalBet).then()
-                            rouletteRef.current?.spin()
-                        }}>
-                        Spin the roulette
-                    </button>
+                    <div className={"flex flex-row absolute bottom-10 gap-5 left-1/2 -translate-x-[50%]"}>
+                        <button
+                            className={`${yesteryear.className} text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
+                            onClick={() => {
+                                const totalBet = bets.reduce((sum, bet) => sum + bet.amount, 0)
+                                updateMoney(-totalBet).then()
+                                rouletteRef.current?.spin()
+                            }}>
+                            Spin the roulette
+                        </button>
+                        <button
+                            className={`${yesteryear.className} text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
+                            onClick={() => setBets([])}>
+                            Clear bets
+                        </button>
+                    </div>
                     {score !== null && (
-                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
+                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
                             <p>The winning number is {score}</p>
-                            <p>{bet}</p>
+                            <p>¥{bet}</p>
                         </h1>
                     )}
                 </>

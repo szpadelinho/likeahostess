@@ -1,69 +1,87 @@
-"use client"
+'use client'
 
-import {createContext, useContext, useEffect, useRef, useState} from "react";
-import {VolumeContextType} from "@/app/types";
+import React, {createContext, useContext, useRef, useState, useCallback} from "react";
 
-const VolumeContext = createContext<VolumeContextType | null>(null)
+interface VolumeContextType {
+    volume: number;
+    setVolume: (value: number, instant?: boolean) => void;
+    fadeTo: (value: number) => void;
+    restore: () => void;
+}
 
-export function VolumeProvider({ children }: { children: React.ReactNode }) {
-    const [volume, setVolumeState] = useState<number>(100)
-    const [baseVolume, setBaseVolume] = useState<number>(100)
-    const animationRef = useRef<number | null>(null)
+const VolumeContext = createContext<VolumeContextType | undefined>(undefined);
 
-    useEffect(() => {
-        const stored = localStorage.getItem("volume")
-        if (stored !== null) {
-            const v = Number(stored)
-            setVolumeState(v)
-            setBaseVolume(v)
+export const VolumeProvider = ({children}: {children: React.ReactNode}) => {
+    const [volume, setVolumeState] = useState(50);
+    const volumeRef = useRef(50);
+    const savedVolumeRef = useRef<number>(50);
+    const animationRef = useRef<number | null>(null);
+    const startValueRef = useRef<number>(0);
+    const targetValueRef = useRef<number>(0);
+    const startTimeRef = useRef<number>(0);
+
+    const setVolume = useCallback((target: number, instant: boolean = false) => {
+        const clampedTarget = Math.min(Math.max(target, 0), 100);
+
+        if (animationRef.current) {
+            cancelAnimationFrame(animationRef.current);
+            animationRef.current = null;
         }
-    }, [])
-
-    useEffect(() => {
-        localStorage.setItem("volume", baseVolume.toString())
-    }, [baseVolume])
-
-    const setVolume = (v: number) => {
-        setVolumeState(v)
-        setBaseVolume(v)
-    }
-
-    const fadeTo = (target: number, duration = 1000) => {
-        if(animationRef.current){
-            cancelAnimationFrame(animationRef.current)
+        if (instant) {
+            volumeRef.current = clampedTarget;
+            setVolumeState(clampedTarget)
+            savedVolumeRef.current = clampedTarget;
+            return;
         }
 
-        const from = volume
-        const start = performance.now()
+        startValueRef.current = volumeRef.current;
+        targetValueRef.current = clampedTarget;
+        startTimeRef.current = performance.now();
+        const duration = 500; // ms
 
         const animate = (time: number) => {
-            const progress = Math.min((time - start) / duration, 1)
-            const eased = progress * (2 - progress)
-            const current = from + (target - from) * eased
+            const elapsed = time - startTimeRef.current;
+            const progress = Math.min(elapsed / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            const current = startValueRef.current + (targetValueRef.current - startValueRef.current) * eased;
+            const nextVal = Math.round(current);
 
-            setVolumeState(Math.round(current))
+            volumeRef.current = nextVal;
 
-            if(progress < 1){
-                animationRef.current = requestAnimationFrame(animate)
+            setVolumeState(nextVal);
+
+            if (progress < 1) {
+                animationRef.current = requestAnimationFrame(animate);
+            } else {
+                animationRef.current = null;
+                volumeRef.current = targetValueRef.current;
+                setVolumeState(targetValueRef.current);
             }
-        }
+        };
 
-        animationRef.current = requestAnimationFrame(animate)
-    }
+        animationRef.current = requestAnimationFrame(animate);
+    }, []);
 
-    const restore = () => fadeTo(baseVolume)
+    const fadeTo = useCallback((target: number) => {
+        savedVolumeRef.current = volumeRef.current;
+        setVolume(target, false);
+    }, [setVolume]);
+
+    const restore = useCallback(() => {
+        setVolume(savedVolumeRef.current, false);
+    }, [setVolume]);
 
     return (
-        <VolumeContext.Provider value={{ volume, setVolume, fadeTo, restore }}>
+        <VolumeContext.Provider value={{volume, setVolume, fadeTo, restore}}>
             {children}
         </VolumeContext.Provider>
     );
-}
+};
 
-export function useVolume() {
+export const useVolume = () => {
     const context = useContext(VolumeContext);
     if (!context) {
-        throw new Error("useVolume must be used inside VolumeProvider")
+        throw new Error("useVolume must be used within a VolumeProvider");
     }
-    return context
-}
+    return context;
+};

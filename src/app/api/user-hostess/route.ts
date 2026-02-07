@@ -37,19 +37,3 @@ export async function POST(req: Request){
         return NextResponse.json({error: "Failed to init fatigue"}, {status: 500})
     }
 }
-
-export async function GET(req: Request){
-    const {searchParams} = new URL(req.url)
-    const userId = searchParams.get("userId")
-
-    if(!userId){
-        return NextResponse.json([], { status: 200 })
-    }
-
-    const fatigue = await prisma.userHostess.findMany({
-        where: {userId},
-        select: {hostessId: true, fatigue: true}
-    })
-
-    return NextResponse.json(fatigue)
-}

@@ -10,7 +10,7 @@ import {
     PanelRightOpen, Volume, VolumeX, Volume1, Volume2, Repeat, Shuffle
 } from "lucide-react"
 import React, {useState} from "react";
-import ReactPlayer from "react-player";
+import ReactPlayer from "react-player"
 import {useVolume} from "@/app/context/volumeContext";
 import ElasticSlider from "@/ui/ElasticSlider";
 
@@ -114,7 +114,7 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
                         maxValue={100}
                         isStepped={false}
                         stepSize={1}
-                        onChange={setVolume}
+                        onChange={(val) => setVolume(val, true)}
                     />
                 </div>
             </div>
@@ -135,7 +135,7 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
                 autoPlay={true}
                 muted={volume === 0}
                 loop={loop}
-                style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
+                style={{height: '1px', width: '1px', visibility: 'hidden', position: 'absolute'}}
                 volume={volume / 100}
                 onEnded={nextTrack}
                 onReady={() => setIsJamPlaying(true)}

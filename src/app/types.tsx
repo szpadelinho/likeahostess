@@ -2,8 +2,8 @@ import {BuffetType, EffectType, type Prisma} from "@prisma/client";
 import {
     Cookie, Coustard,
     Emilys_Candy,
-    Fascinate_Inline, Federo, Marck_Script,
-    Molle,
+    Fascinate_Inline, Federo, IM_Fell_English, Marck_Script,
+    Sour_Gummy,
     Texturina,
     Tiny5,
     Yesteryear
@@ -302,7 +302,7 @@ export const texturina = Texturina({
     subsets: ['latin'],
 })
 
-export const molle = Molle({
+export const molle = IM_Fell_English({
     weight: "400",
     subsets: ['latin'],
 })
@@ -323,6 +323,11 @@ export const coustard = Coustard({
 })
 
 export const monoton = Federo({
+    weight: "400",
+    subsets: ['latin'],
+})
+
+export const sourGummy = Sour_Gummy({
     weight: "400",
     subsets: ['latin'],
 })
@@ -732,4 +737,9 @@ export const backgroundRenders = [
         followCursor={false}
         colors={[ '#fff', '#808080', '#000000' ]}
     />
+]
+
+export const clientMugshots = [
+    "client_mugshot.png",
+    "client_mugshot2.png"
 ]

@@ -168,7 +168,7 @@ const ProfileClient = ({totals, favClub, user, isMe}: ProfileClientProps) => {
                             setEdit={setEdit} isMe={isMe}/>
                     <div className={"absolute top-35 flex items-center justify-center z-50 flex-row gap-10"}>
                         <img key={avatarSrc} src={avatarSrc || "/images/dragon.png"} alt={"Profile picture"} height={64}
-                             width={64} className={"rounded-full border-2 border-black"}/>
+                             width={64} className={"object-cover aspect-square rounded-full border-2 border-black"}/>
                         <h1 className={`z-50 text-[50px] ${cookie.className}`}>
                             {user.name}&apos;s card
                         </h1>

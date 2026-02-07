@@ -93,22 +93,12 @@ const Main = () => {
     useEffect(() => {
         const fetchHostesses = async () => {
             try {
-                const resHostess = await fetch("/api/hostess")
-                const hostessData: Hostess[] = await resHostess.json()
-                const sortedHostess = hostessData.sort((a: Hostess, b: Hostess) => Number(a.id) - Number(b.id))
-
-                const resFatigue = await fetch(`/api/user-hostess?userId=${session?.user?.id}`)
-                const fatigueData: { hostessId: string, fatigue: number }[] = await resFatigue.json()
-
-                const dataMap: Record<string, number> = {}
-                fatigueData.forEach(f => dataMap[f.hostessId] = f.fatigue)
-
-                const merged = sortedHostess.map(h => ({
-                    ...h,
-                    fatigue: dataMap[h.id]
-                }))
-                setHostessesManagement(merged)
-
+                const res = await fetch("/api/hostess")
+                const data: Hostess[] = await res.json()
+                const sorted = data.sort(
+                    (a, b) => Number(a.id) - Number(b.id)
+                )
+                setHostessesManagement(sorted)
                 setLoading(false)
             } catch (err) {
                 console.log(err)
@@ -116,6 +106,7 @@ const Main = () => {
         }
         if (session?.user?.id)
             fetchHostesses()
+
     }, [session?.user?.id])
 
     useEffect(() => {

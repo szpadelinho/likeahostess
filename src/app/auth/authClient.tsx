@@ -104,6 +104,7 @@ export default function AuthClient() {
             setTitleBannerVisible(false)
             setTitleActive(false)
             titleRef.current = new Audio("/sfx/title_start.mp3")
+            titleRef.current.volume = volume / 100
             titleRef.current.play().catch()
             setTimeout(() => {
                 setShowTitleBanner(false)

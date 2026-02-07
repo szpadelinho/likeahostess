@@ -89,16 +89,13 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 chatRef.current.play().catch()
                 setMessages(prev => [...prev, payload.new as Message])
             })
-            .subscribe((status) => {
-                console.log("Status subskrypcji:", status)
-            })
-
-        channel.subscribe()
+            .subscribe(status => console.log("Status subskrypcji:", status))
 
         return () => {
             supabase.removeChannel(channel)
         }
     }, [currentRoom])
+
 
     const sendMessage = async () => {
         if (!input.trim() || !userRef.current) return

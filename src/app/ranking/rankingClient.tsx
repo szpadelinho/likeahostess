@@ -107,7 +107,7 @@ const RankingClient = () => {
                                                 setLoading(true)
                                                 router.push(`/profile/${entry.id}`)
                                             }} className={"flex flex-row gap-2 hover:text-stone-700 duration-300 ease-in-out transform hover:underline"}>
-                                                <Image src={entry.image} alt={"Profile picture"} height={25} width={25} className={"rounded-full border-2 border-black"}/>
+                                                <Image src={entry.image} alt={"Profile picture"} height={25} width={25} className={"object-cover aspect-square rounded-full border-2 border-black"}/>
                                                 {entry.name ?? "Unknown guy"}
                                             </div>
                                         </td>

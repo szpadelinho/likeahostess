@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import LoadingBar from "@/components/loadingBar";
 import {DraggableDoor, DroppableClient, DroppableHostessTableSlot} from "@/scripts/DNDItems";
-import {ServiceType, SERVICE_TYPES, Hostess, Client} from "@/app/types";
+import {ServiceType, SERVICE_TYPES, Hostess, Client, sourGummy} from "@/app/types";
 
 interface InteriorProps {
     hostesses: (Hostess | null)[],
@@ -237,9 +237,14 @@ const Interior = ({
 
     return (
         <>
-            <div className={"absolute flex justify-center items-center -left-5 -bottom-5 z-3 text-pink-200"}>
+            <div className={`${waitingClient ? "opacity-100" : "opacity-25"} duration-300 ease-in-out absolute flex justify-center items-center -left-5 -bottom-5 z-3 text-pink-200`}>
                 <Image src={"/images/entry.png"} alt={"Entry corridor"} height={200} width={255}/>
                 <DraggableDoor waitingClient={waitingClient}/>
+                {waitingClient && (
+                    <h1 className={`${sourGummy.className} absolute top-5 text-pink-300 font-[700]`}>
+                        A client has arrived!
+                    </h1>
+                )}
             </div>
             <div
                 className="w-screen absolute top-[45%] -translate-y-1/2 flex justify-center items-center p-10 text-pink-200">
@@ -275,7 +280,7 @@ const Interior = ({
                             />
                             {!visit[i] && dinedTables[i] && (
                                 <button
-                                    className={`absolute top-17.5 border-pink-300 hover:border-pink-500 border-2 p-2 rounded-[10] z-50 text-pink-300 hover:text-pink-500 bg-pink-950/70 hover:bg-pink-300 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
+                                    className={`absolute top-17.5 border-pink-300 hover:border-pink-500 border-2 p-2 rounded-[10] z-[100] text-pink-300 hover:text-pink-500 bg-pink-950/70 hover:bg-pink-300 duration-200 ease-in-out scale-100 active:scale-105 shadow-sm shadow-pink-300 hover:shadow-pink-500`}
                                     onClick={() => {
                                         setDinedTables(prev => {
                                             const updated = [...prev]

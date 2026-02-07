@@ -105,122 +105,167 @@ const Navbar = ({
                             maxValue={100}
                             isStepped={false}
                             stepSize={1}
-                            onChange={setVolume}
+                            onChange={(val) => setVolume(val, true)}
                         />
                     </div>
                 </div>
                 {page !== "Auth" && (
-                    <button onClick={() => {
-                        if (page === "Tutorial" || page === "Selection") {
-                            setQuit?.(true)
-                        } else {
-                            setLoading(true)
-                        }
-                        {
-                            page !== "Selection" ? (
-                                router?.push("/")
-                            ) : (
-                                signOut({redirectTo: "/auth"})
-                            )
-                        }
-                    }}
-                            className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
-                            style={page === "LoveInHeart" ? {
-                                borderWidth: "8px",
-                                borderStyle: "solid",
-                                borderImageSource: "url('/images/wood_texture2.png')",
-                                borderImageSlice: 30,
-                                borderImageRepeat: "round"
-                            } : {}}
-                    >
-                        <LogOut size={25}/>
-                    </button>
+                    <div className={"relative group"}>
+                        <button onClick={() => {
+                            if (page === "Tutorial" || page === "Selection") {
+                                setQuit?.(true)
+                            } else {
+                                setLoading(true)
+                            }
+                            {
+                                page !== "Selection" ? (
+                                    router?.push("/")
+                                ) : (
+                                    signOut({redirectTo: "/auth"})
+                                )
+                            }
+                        }}
+                                className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                                style={page === "LoveInHeart" ? {
+                                    borderWidth: "8px",
+                                    borderStyle: "solid",
+                                    borderImageSource: "url('/images/wood_texture2.png')",
+                                    borderImageSlice: 30,
+                                    borderImageRepeat: "round"
+                                } : {}}
+                        >
+                            <LogOut size={25}/>
+                        </button>
+                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                            Quit page
+                        </span>
+                    </div>
                 )}
             </div>
             <div className={"absolute top-10 left-10 flex items-center justify-center flex-row gap-5 z-[100]"}>
                 {game && (
-                    <button onClick={() => {
-                        setGame?.(null)
-                        setBackground?.("casino")
-                    }}
-                            className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                        <University size={25}/>
-                    </button>
+                    <div className={"relative group"}>
+                        <button onClick={() => {
+                            setGame?.(null)
+                            setBackground?.("casino")
+                        }}
+                                className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                            <University size={25}/>
+                        </button>
+                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                            Back to casino lobby
+                        </span>
+                    </div>
                 )}
                 {mode === "Acceptance" && (
-                    <button onClick={() => {
-                        changeMode?.()
-                    }}
-                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
-                            style={page === "LoveInHeart" ? {
-                                borderWidth: "8px",
-                                borderStyle: "solid",
-                                borderImageSource: "url('/images/wood_texture2.png')",
-                                borderImageSlice: 30,
-                                borderImageRepeat: "round"
-                            } : {}}
-                    >
-                        <ConciergeBell size={25}/>
-                    </button>
+                    <div className={"relative group"}>
+                        <button onClick={() => {
+                            changeMode?.()
+                        }}
+                                className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                                style={page === "LoveInHeart" ? {
+                                    borderWidth: "8px",
+                                    borderStyle: "solid",
+                                    borderImageSource: "url('/images/wood_texture2.png')",
+                                    borderImageSlice: 30,
+                                    borderImageRepeat: "round"
+                                } : {}}
+                        >
+                            <ConciergeBell size={25}/>
+                        </button>
+                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                            Back to massage selection
+                        </span>
+                    </div>
                 )}
                 {(mode === "Drinks" || mode === "Supplies") && (
-                    <button onClick={() => {
-                        switchMode?.("Selection")
-                    }}
-                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
-                    >
-                        <ConciergeBell size={25}/>
-                    </button>
+                    <div className={"relative group"}>
+                        <button onClick={() => {
+                            switchMode?.("Selection")
+                        }}
+                                className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                        >
+                            <ConciergeBell size={25}/>
+                        </button>
+                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                            Back to bar selections
+                        </span>
+                    </div>
                 )}
                 {showLamp && (
-                    <button onClick={() => {
-                        setContract?.(false)
-                    }}
-                            className={`${getPageStyle(page)} ${fadeLamp ? "opacity-0 scale-0" : "opacity-100 scale-100"} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
-                    >
-                        <LampDesk size={25}/>
-                    </button>
+                    <div className={"relative group"}>
+                        <button onClick={() => {
+                            setContract?.(false)
+                        }}
+                                className={`${getPageStyle(page)} ${fadeLamp ? "opacity-0 scale-0" : "opacity-100 scale-100"} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                        >
+                            <LampDesk size={25}/>
+                        </button>
+                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                            Return paper
+                        </span>
+                    </div>
                 )}
                 {page === "Profile" && (
-                    <button onClick={() => {
-                        setLoading?.(true)
-                        setTimeout(() => {
-                            router?.push("/ranking")
-                        }, 500)
-                    }}
-                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                        <Medal size={25}/>
-                    </button>
+                    <div className={"relative group"}>
+                        <button onClick={() => {
+                            setLoading?.(true)
+                            setTimeout(() => {
+                                router?.push("/ranking")
+                            }, 500)
+                        }}
+                                className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                            <Medal size={25}/>
+                        </button>
+                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                            Check rankings
+                        </span>
+                    </div>
                 )}
                 {(page === "Profile" && isMe) && (
-                    <button onClick={() => {
-                        setEdit?.(true)
-                    }}
-                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                        <Pen size={25}/>
-                    </button>
+                    <div className={"relative group"}>
+                        <button onClick={() => {
+                            setEdit?.(true)
+                        }}
+                                className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                            <Pen size={25}/>
+                        </button>
+                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                            Edit your profile
+                        </span>
+                    </div>
                 )}
                 {(page === "Profile" && !isMe) && (
-                    <button onClick={() => {
-                        setLoading?.(true)
-                        setTimeout(() => {
-                            router?.push("/profile")
-                        }, 500)
-                    }}
-                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                        <User size={25}/>
-                    </button>
+                    <div className={"relative group"}>
+                        <button onClick={() => {
+                            setLoading?.(true)
+                            setTimeout(() => {
+                                router?.push("/profile")
+                            }, 500)
+                        }}
+                                className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                            <User size={25}/>
+                        </button>
+                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                            Back to my profile
+                        </span>
+                    </div>
                 )}
                 {page === "Ranking" && (
-                    <button onClick={() => {
-                        setLoading?.(true)
-                        setTimeout(() => {
-                            router?.push("/profile")
-                        }, 500)
-                    }}
-                            className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
-                        <Undo2 size={25}/>
-                    </button>
+                    <div className={"relative group"}>
+                        <button onClick={() => {
+                            setLoading?.(true)
+                            setTimeout(() => {
+                                router?.push("/profile")
+                            }, 500)
+                        }}
+                                className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                            <Undo2 size={25}/>
+                        </button>
+                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                            View your profile
+                        </span>
+                    </div>
                 )}
                 {page === "Selection" && (
                     <h1 className={`${texturina.className} fixed left-1/2 -translate-x-[50%] z-10 text-[30px] text-white bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_80%)]`}>

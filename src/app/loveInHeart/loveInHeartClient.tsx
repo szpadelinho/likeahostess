@@ -44,32 +44,24 @@ export const LoveInHeartClient = () => {
     }, [])
 
     useEffect(() => {
+        if (!session) return
         const fetchHostesses = async () => {
             try {
-                const resHostess = await fetch("/api/hostess")
-                const hostessData: HostessMassage[] = await resHostess.json()
-                const sortedHostess = hostessData.sort((a: HostessMassage, b: HostessMassage) => Number(a.id) - Number(b.id))
-
-                const resFatigue = await fetch(`/api/user-hostess?userId=${session?.user?.id}`)
-                const fatigueData: { hostessId: string, fatigue: number }[] = await resFatigue.json()
-
-                const dataMap: Record<string, number> = {}
-                fatigueData.forEach(f => dataMap[f.hostessId] = f.fatigue)
-
-                const merged = sortedHostess.map(h => ({
-                    ...h,
-                    fatigue: dataMap[h.id]
-                }))
-                setHostesses(merged)
-
-                setLoading(false)
+                const res = await fetch("/api/hostess")
+                if (!res.ok) throw new Error("Failed to fetch hostesses")
+                const data: HostessMassage[] = await res.json()
+                setHostesses(
+                    data.sort((a, b) => Number(a.id) - Number(b.id))
+                )
             } catch (err) {
-                console.log(err)
+                console.error(err)
+            } finally {
+                setLoading(false)
             }
         }
-        if (session?.user?.id)
-            fetchHostesses()
-    }, [session?.user?.id])
+        fetchHostesses()
+
+    }, [session])
 
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
@@ -208,7 +200,7 @@ export const LoveInHeartClient = () => {
                             borderImageRepeat: "round"
                         }}
                         className={"relative bg-[url(/images/wood_texture.png)] flex items-center justify-center flex-col z-1 p-2 rounded-[5] duration-300 ease-in-out"}>
-                        <div className={"grid grid-cols-5 gap-10"}>
+                        <div className={"grid grid-cols-6 gap-10"}>
                             {hostesses.map((hostess) => {
                                 return (
                                     <div
@@ -300,7 +292,7 @@ export const LoveInHeartClient = () => {
                                     borderImageRepeat: "round"
                                 }}
                                 className={"relative bg-[url(/images/wood_texture.png)] flex items-center justify-center flex-col z-1 p-2 rounded-[5] duration-300 ease-in-out"}>
-                                <div className={"grid grid-cols-5 gap-10"}>
+                                <div className={"grid grid-cols-6 gap-10"}>
                                     {hostesses.map((hostess) => {
                                         const current = hostess.fatigue
                                         const predicted = Math.max(0, current - reduction)
