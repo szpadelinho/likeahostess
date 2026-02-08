@@ -78,9 +78,10 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
             .on('postgres_changes', {
                 event: 'INSERT',
                 schema: 'public',
-                table: 'ChatMessage'
+                table: 'ChatMessage',
+                filter: `roomId=eq.${currentRoom.id}`
             }, payload => {
-                console.log('Otrzymano nową wiadomość:', payload)
+                /*console.log('Otrzymano nową wiadomość:', payload)*/
                 if (payload.new.content.includes(`@${userRef?.current?.username}`)) {
                     chatRef.current = new Audio("/sfx/msg_ping.mp3")
                 } else {
@@ -89,7 +90,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 chatRef.current.play().catch()
                 setMessages(prev => [...prev, payload.new as Message])
             })
-            .subscribe(status => console.log("Status subskrypcji:", status))
+            .subscribe(/*status => console.log("Status subskrypcji:", status)*/)
 
         return () => {
             supabase.removeChannel(channel)
