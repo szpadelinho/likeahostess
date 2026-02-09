@@ -1,6 +1,84 @@
-import {Club, Hostess, HostessMassage, StoredClub} from "@/app/types";
+import {Club, EndTypes, Hostess, HostessMassage, InquiryTypes, StoredClub} from "@/app/types";
 import {SetStateAction} from "react";
-import {EffectType} from "@prisma/client";
+import {ActionStatus, ActionType, EffectType} from "@prisma/client";
+import {auth} from "@/lib/auth";
+
+interface InquiryStart {
+    setMoney: (fn: (x: number) => number) => void,
+    setPopularity: (fn: (x: number) => number) => void,
+    setExperience: (fn: (x: number) => number) => void,
+    setSupplies: (fn: (x: number) => number) => void,
+    setHostesses: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>,
+    hostessId: number,
+    clubId: number,
+    type: InquiryTypes
+    endOption?: EndTypes
+    mealId?: number,
+    beverageId?: number
+}
+
+interface GameAction {
+    type: ActionType
+    status: ActionStatus
+
+}
+
+export const handleGameAction = async ({type, status}: GameAction) => {
+    try{
+        await fetch("api/action", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                type,
+                status
+            }),
+        })
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+export const handleInquiry = async ({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId, clubId, mealId, beverageId, type, endOption} : InquiryStart) => {
+    try{
+        const res = await fetch("api/inquiry", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                hostessId,
+                clubId,
+                mealId,
+                beverageId,
+                type,
+                endOption
+            }),
+        })
+        const data = await res.json()
+
+        setMoney(data.money)
+        setPopularity(data.popularity)
+        setExperience(data.exp)
+        setSupplies(data.supplies)
+        setHostesses(data.hostesses)
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+export const handleInquiryService = async ({} : {}) => {
+    const session = await auth()
+    if (!session?.user?.id) {
+        return console.error("Missing userId")
+    }
+}
+
+export const handleInquiryEnd = async ({} : {}) => {
+    const session = await auth()
+    if (!session?.user?.id) {
+        return console.error("Missing userId")
+    }
+}
 
 export const handleMoneyTransaction = async ({
                                       session,

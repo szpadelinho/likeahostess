@@ -26,6 +26,8 @@ model User {
 
   ChatMessage ChatMessage[]
   ChatMember ChatMember[]
+
+  GameAction GameAction[]
 }
 
 model Account {
@@ -213,6 +215,33 @@ model ChatMessage {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   room ChatRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+}
+
+model GameAction {
+  id        String   @id @default(cuid())
+  userId    String
+  type      ActionType
+  status    ActionStatus
+  startedAt DateTime @default(now())
+  endsAt    DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum ActionType {
+  INQUIRY_START
+  INQUIRY_SERVICE
+  INQUIRY_END
+  CASINO
+  MASSAGE
+  ACTIVITY
+  LOAN
+  EFFECT
+}
+
+enum ActionStatus {
+  ACTIVE
+  COMPLETED
 }
 
 enum BuffetType {

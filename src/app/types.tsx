@@ -276,6 +276,17 @@ export interface ChatUserList{
     image: string
 }
 
+export type InquiryTypes =
+    "START"
+    | "SERVICE"
+    | "STOP"
+
+export type EndTypes =
+    "GOODBYE"
+    | "PRESENT"
+    | "COVER"
+    | "EXTEND"
+
 //fonts
 export const yesteryear = Yesteryear({
     weight: "400",
