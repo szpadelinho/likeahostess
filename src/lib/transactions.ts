@@ -1,26 +1,61 @@
 import {Club, EndTypes, Hostess, HostessMassage, InquiryTypes, StoredClub} from "@/app/types";
 import {SetStateAction} from "react";
 import {ActionStatus, ActionType, EffectType} from "@prisma/client";
-import {auth} from "@/lib/auth";
 
-interface InquiryStart {
-    setMoney: (fn: (x: number) => number) => void,
-    setPopularity: (fn: (x: number) => number) => void,
-    setExperience: (fn: (x: number) => number) => void,
-    setSupplies: (fn: (x: number) => number) => void,
-    setHostesses: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>,
-    hostessId: number,
-    clubId: number,
+interface InquiryHandler {
+    setMoney: (fn: (x: number) => number) => void
+    setPopularity: (fn: (x: number) => number) => void
+    setExperience: (fn: (x: number) => number) => void
+    setSupplies: (fn: (x: number) => number) => void
+    setHostesses: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>
+    hostessId: number
+    clubId: number
     type: InquiryTypes
     endOption?: EndTypes
-    mealId?: number,
+    mealId?: number
     beverageId?: number
+}
+
+interface ActivityHandler {
+    clubData: StoredClub
+    activityId: number
+    setClub: (value: SetStateAction<Club | null>) => void
+    setPopularity: (fn: (x: number) => number) => void
+    setExperience: (fn: (x: number) => number) => void
+}
+
+interface MassageHandler {
+    clubData: StoredClub
+    massageId: number
+    setHostesses: React.Dispatch<React.SetStateAction<Hostess | null>>
+    setMoney: (fn: (x: number) => number) => void
+}
+
+interface LoanHandler {
+    clubData: StoredClub
+    amount?: number
+    setMoney: (fn: (x: number) => number) => void
+    setClub: (value: SetStateAction<Club | null>) => void
+}
+
+interface EffectHandler {
+    clubData: StoredClub
+    effect: EffectType
+    setMoney: (fn: (x: number) => number) => void
+    setClub: (value: SetStateAction<Club | null>) => void
+}
+
+interface SuppliesHandler {
+    clubData: StoredClub
+    amount: number
+    setMoney: (fn: (x: number) => number) => void
+    setSupplies: (fn: (x: number) => number) => void
+    setClub: (value: SetStateAction<Club | null>) => void
 }
 
 interface GameAction {
     type: ActionType
     status: ActionStatus
-
 }
 
 export const handleGameAction = async ({type, status}: GameAction) => {
@@ -39,7 +74,7 @@ export const handleGameAction = async ({type, status}: GameAction) => {
     }
 }
 
-export const handleInquiry = async ({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId, clubId, mealId, beverageId, type, endOption} : InquiryStart) => {
+export const handleInquiry = async ({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId, clubId, mealId, beverageId, type, endOption} : InquiryHandler) => {
     try{
         const res = await fetch("api/inquiry", {
             method: 'POST',
@@ -66,17 +101,106 @@ export const handleInquiry = async ({setMoney, setPopularity, setExperience, set
     }
 }
 
-export const handleInquiryService = async ({} : {}) => {
-    const session = await auth()
-    if (!session?.user?.id) {
-        return console.error("Missing userId")
+export const handleActivity = async ({clubData, activityId, setClub, setPopularity, setExperience} : ActivityHandler) => {
+    try{
+        const res = await fetch("api/activity", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clubData,
+                activityId
+            }),
+        })
+
+        const data = await res.json()
+
+        setClub(data.clubData)
+        setPopularity(data.clubData.popularity)
+        setExperience(data.experience)
+    }
+    catch(err){
+        console.log(err)
     }
 }
 
-export const handleInquiryEnd = async ({} : {}) => {
-    const session = await auth()
-    if (!session?.user?.id) {
-        return console.error("Missing userId")
+export const handleMassage = async ({clubData, massageId, setHostesses, setMoney} : MassageHandler) => {
+    try{
+        const res = await fetch("api/massage", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clubData,
+                massageId
+            })
+        })
+
+        const data = await res.json()
+        setHostesses(data.hostesses)
+        setMoney(data.money)
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+export const handleLoan = async ({clubData, amount, setMoney, setClub}: LoanHandler) => {
+    try{
+        const res = await fetch("api/moneylender", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clubData,
+                amount
+            })
+        })
+
+        const data = await res.json()
+        setClub(data.clubData)
+        setMoney(data.clubData.money)
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+export const handleEffect = async ({clubData, effect, setMoney, setClub}: EffectHandler) => {
+    try{
+        const res = await fetch("api/new-serena/effect", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clubData,
+                effect
+            })
+        })
+
+        const data = await res.json()
+        setClub(data.clubData)
+        setMoney(data.clubData.money)
+    }
+    catch(err){
+        console.log(err)
+    }
+}
+
+export const handleSupplies = async ({clubData, amount, setMoney, setSupplies, setClub}: SuppliesHandler) => {
+    try{
+        const res = await fetch("api/new-serena/supplies", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                clubData,
+                amount
+            })
+        })
+
+        const data = await res.json()
+        setClub(data.clubData)
+        setMoney(data.clubData.money)
+        setSupplies(data.clubData.supplies)
+    }
+    catch(err){
+        console.log(err)
     }
 }
 
