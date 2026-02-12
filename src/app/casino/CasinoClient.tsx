@@ -11,7 +11,6 @@ import {Club, StoredClub, yesteryear} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {useSession} from "next-auth/react";
-import {handleMoneyTransaction} from "@/lib/transactions";
 
 const CasinoClient = () => {
     const router = useRouter()
@@ -63,10 +62,6 @@ const CasinoClient = () => {
                 setLoading(false)
             })
     }, [])
-
-    const updateMoney = async (change: number) => {
-        handleMoneyTransaction({session, clubData, setMoney, setClub, change}).then()
-    }
 
     const panels: {title: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null, description: string, position: string}[] = [
         {
@@ -132,7 +127,7 @@ const CasinoClient = () => {
                     ))}
                 </>
             ):(
-                club && <CasinoGame game={game} money={club.money} club={club} updateMoney={updateMoney}/>
+                club && <CasinoGame game={game} money={club.money} club={club} setMoney={setMoney}/>
             )}
             {club && game && (
                 <div

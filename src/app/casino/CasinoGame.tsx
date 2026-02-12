@@ -6,7 +6,8 @@ import RouletteBoard from "@/app/casino/RouletteBoard";
 import Roulette from "@/app/casino/Roulette";
 import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
 import {Pachinko} from "@/app/casino/Pachinko";
-import {Club} from "@/app/types";
+import {cards, Club, getCardValue, personaMap, rankMap, suitMap} from "@/app/types";
+import {handleRoulette} from "@/lib/transactions";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -18,9 +19,10 @@ interface CasinoGameProps {
     money: number,
     club: Club,
     updateMoney: (change: number) => Promise<void>
+    setMoney: (fn: (x: number) => number) => void
 }
 
-const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
+const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps) => {
     const rouletteRef = useRef<{ spin: () => void } | null>(null)
     const pokerRef = useRef<any>(null)
 
@@ -187,114 +189,8 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
         }
     }, [showCard, audio])
 
-    const cards = {
-        "spades": ["spades_ace", "spades_two", "spades_three", "spades_four", "spades_five", "spades_six", "spades_seven", "spades_eight", "spades_nine", "spades_ten", "spades_jack", "spades_queen", "spades_king"],
-        "hearts": ["hearts_ace", "hearts_two", "hearts_three", "hearts_four", "hearts_five", "hearts_six", "hearts_seven", "hearts_eight", "hearts_nine", "hearts_ten", "hearts_jack", "hearts_queen", "hearts_king"],
-        "diamonds": ["diamonds_ace", "diamonds_two", "diamonds_three", "diamonds_four", "diamonds_five", "diamonds_six", "diamonds_seven", "diamonds_eight", "diamonds_nine", "diamonds_ten", "diamonds_jack", "diamonds_queen", "diamonds_king"],
-        "clubs": ["clubs_ace", "clubs_two", "clubs_three", "clubs_four", "clubs_five", "clubs_six", "clubs_seven", "clubs_eight", "clubs_nine", "clubs_ten", "clubs_jack", "clubs_queen", "clubs_king"],
-        "default": "default"
-    }
-
-    const getCardValue = (card: string): number => {
-        const rankMap: Record<string, number> = {
-            "spades_ace": 11, "hearts_ace": 11, "diamonds_ace": 11, "clubs_ace": 11,
-            "spades_two": 2, "hearts_two": 2, "diamonds_two": 2, "clubs_two": 2,
-            "spades_three": 3, "hearts_three": 3, "diamonds_three": 3, "clubs_three": 3,
-            "spades_four": 4, "hearts_four": 4, "diamonds_four": 4, "clubs_four": 4,
-            "spades_five": 5, "hearts_five": 5, "diamonds_five": 5, "clubs_five": 5,
-            "spades_six": 6, "hearts_six": 6, "diamonds_six": 6, "clubs_six": 6,
-            "spades_seven": 7, "hearts_seven": 7, "diamonds_seven": 7, "clubs_seven": 7,
-            "spades_eight": 8, "hearts_eight": 8, "diamonds_eight": 8, "clubs_eight": 8,
-            "spades_nine": 9, "hearts_nine": 9, "diamonds_nine": 9, "clubs_nine": 9,
-            "spades_ten": 10, "hearts_ten": 10, "diamonds_ten": 10, "clubs_ten": 10,
-            "spades_jack": 10, "hearts_jack": 10, "diamonds_jack": 10, "clubs_jack": 10,
-            "spades_queen": 10, "hearts_queen": 10, "diamonds_queen": 10, "clubs_queen": 10,
-            "spades_king": 10, "hearts_king": 10, "diamonds_king": 10, "clubs_king": 10,
-        }
-
-        return rankMap[card] || 0
-    }
-
     const getCardPersona = (card: string): { title: string; persona: string } => {
-        const personaMap: Record<string, string> = {
-            "spades_ace": "Shintaro Kazama",
-            "hearts_ace": "Sohei Dojima",
-            "diamonds_ace": "Futoshi Shimano",
-            "clubs_ace": "Jin Goda",
-            "spades_two": "Jun Oda",
-            "hearts_two": "Makoto Makimura",
-            "diamonds_two": "Homare Nishitani",
-            "clubs_two": "Lao Gui",
-            "spades_three": "Makoto Date",
-            "hearts_three": "Yumi Sawamura",
-            "diamonds_three": "The Florist of Sai",
-            "clubs_three": "Osamu Kashiwagi",
-            "spades_four": "Yukio Terada",
-            "hearts_four": "Lady Yayoi Dojima",
-            "diamonds_four": "Nishida",
-            "clubs_four": "Toranosuke Sengoku",
-            "spades_five": "Rikiya Shimabukuro",
-            "hearts_five": "Tsuyoshi Kanda",
-            "diamonds_five": "Yoshitaka Mine",
-            "clubs_five": "Lau Ka Long",
-            "spades_six": "Masayoshi Tanimura",
-            "hearts_six": "Hana",
-            "diamonds_six": "Daisaku Minami",
-            "clubs_six": "Go Hamazaki",
-            "spades_seven": "Tatsuo Shinada",
-            "hearts_seven": "Masaru Watase",
-            "diamonds_seven": "Kamon Kanai",
-            "clubs_seven": "Masato Aizawa",
-            "spades_eight": "Joon-Gi Han",
-            "hearts_eight": "Haruto Sawamura",
-            "diamonds_eight": "Heizo Hiwami",
-            "clubs_eight": "Kanji Koshimizu",
-            "spades_nine": "Yu Nanba",
-            "hearts_nine": "Masato Arakawa",
-            "diamonds_nine": "Koichi Adachi",
-            "clubs_nine": "Tianyou Zhao",
-            "spades_ten": "Jo Amon",
-            "hearts_ten": "Onimichio",
-            "diamonds_ten": "Munancho Suzuki",
-            "clubs_ten": "Pocket Circuit Fighter Fujisawa",
-            "spades_jack": "Shun Akiyama",
-            "hearts_jack": "Akira Nishikiyama",
-            "diamonds_jack": "Daigo Dojima",
-            "clubs_jack": "Ryuji Goda",
-            "spades_queen": "Saeko Mukoda",
-            "hearts_queen": "Haruka Sawamura",
-            "diamonds_queen": "Seonhee",
-            "clubs_queen": "Kaoru Sayama",
-            "spades_king": "Kiryu Kazuma",
-            "hearts_king": "Ichiban Kasuga",
-            "diamonds_king": "Goro Majima",
-            "clubs_king": "Taiga Saejima",
-        }
-
         const [suitKey, rankKey] = card.split("_")
-
-        const suitMap: Record<string, string> = {
-            spades: "Spades",
-            hearts: "Hearts",
-            diamonds: "Diamonds",
-            clubs: "Clubs",
-        };
-
-        const rankMap: Record<string, string> = {
-            ace: "Ace",
-            two: "Two",
-            three: "Three",
-            four: "Four",
-            five: "Five",
-            six: "Six",
-            seven: "Seven",
-            eight: "Eight",
-            nine: "Nine",
-            ten: "Ten",
-            jack: "Jack",
-            queen: "Queen",
-            king: "King",
-        };
 
         const title = suitKey && rankKey
             ? `${rankMap[rankKey]} of ${suitMap[suitKey]}`
@@ -708,10 +604,8 @@ const CasinoGame = ({game, money, club, updateMoney}: CasinoGameProps) => {
                     <div className={"flex flex-row absolute bottom-10 gap-5 left-1/2 -translate-x-[50%]"}>
                         <button
                             className={`${yesteryear.className} text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                            onClick={() => {
-                                const totalBet = bets.reduce((sum, bet) => sum + bet.amount, 0)
-                                updateMoney(-totalBet).then()
-                                rouletteRef.current?.spin()
+                            onClick={async () => {
+
                             }}>
                             Spin the roulette
                         </button>

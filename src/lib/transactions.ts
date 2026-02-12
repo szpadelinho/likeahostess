@@ -1,5 +1,5 @@
 import {Club, EndTypes, Hostess, HostessMassage, InquiryTypes, StoredClub} from "@/app/types";
-import {SetStateAction} from "react";
+import {Dispatch, SetStateAction} from "react";
 import {ActionStatus, ActionType, EffectType} from "@prisma/client";
 
 interface InquiryHandler {
@@ -53,6 +53,18 @@ interface SuppliesHandler {
     setClub: (value: SetStateAction<Club | null>) => void
 }
 
+interface RouletteBet {
+    type: string
+    amount: number
+}
+
+interface RouletteHandler {
+    bets: RouletteBet[]
+    setMoney: (fn: (x: number) => number) => void
+    setScore: Dispatch<SetStateAction<string | number | boolean | null>>
+    setWin: Dispatch<SetStateAction<0 | 2 | 1>>
+}
+
 interface GameAction {
     type: ActionType
     status: ActionStatus
@@ -70,7 +82,7 @@ export const handleGameAction = async ({type, status}: GameAction) => {
         })
     }
     catch(err){
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -97,7 +109,7 @@ export const handleInquiry = async ({setMoney, setPopularity, setExperience, set
         setHostesses(data.hostesses)
     }
     catch(err){
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -119,7 +131,7 @@ export const handleActivity = async ({clubData, activityId, setClub, setPopulari
         setExperience(data.experience)
     }
     catch(err){
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -139,7 +151,7 @@ export const handleMassage = async ({clubData, massageId, setHostesses, setMoney
         setMoney(data.money)
     }
     catch(err){
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -159,7 +171,7 @@ export const handleLoan = async ({clubData, amount, setMoney, setClub}: LoanHand
         setMoney(data.clubData.money)
     }
     catch(err){
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -179,7 +191,7 @@ export const handleEffect = async ({clubData, effect, setMoney, setClub}: Effect
         setMoney(data.clubData.money)
     }
     catch(err){
-        console.log(err)
+        console.error(err)
     }
 }
 
@@ -200,7 +212,32 @@ export const handleSupplies = async ({clubData, amount, setMoney, setSupplies, s
         setSupplies(data.clubData.supplies)
     }
     catch(err){
-        console.log(err)
+        console.error(err)
+    }
+}
+
+export const handleRoulette = async ({bets, setMoney, setScore, setWin}: RouletteHandler) => {
+    try{
+        const res = await fetch("api/roulette", {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                bets
+            })
+        })
+
+        if(!res.ok) return console.error("Error on handleRoulette")
+
+        const data = await res.json()
+
+        setMoney(data.money)
+        setScore(data.score)
+        setWin(data.payout)
+
+        return data.winningNumber
+    }
+    catch(err){
+        console.error(err)
     }
 }
 

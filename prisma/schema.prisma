@@ -228,6 +228,43 @@ model GameAction {
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+model GameRound {
+  id            String   @id @default(cuid())
+  userId        String
+  gameType      GameType
+  status        RoundStatus
+  winningNumber Int?
+  totalBet      Int
+  payout        Int?
+  createdAt     DateTime @default(now())
+  resolvedAt    DateTime?
+
+  bets          Bet[]
+}
+
+model Bet {
+  id        String @id @default(cuid())
+  roundId   String
+  type      String
+  amount    Int
+
+  round     GameRound @relation(fields: [roundId], references: [id])
+}
+
+enum GameType {
+  PACHINKO
+  ROULETTE
+  BLACKJACK
+  CHOHAN
+  TEXASHOLDEM
+}
+
+enum RoundStatus {
+  BETTING
+  SPINNING
+  RESOLVED
+}
+
 enum ActionType {
   INQUIRY_START
   INQUIRY_SERVICE
