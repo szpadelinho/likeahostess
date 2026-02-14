@@ -274,6 +274,7 @@ enum ActionType {
   ACTIVITY
   LOAN
   EFFECT
+  SUPPLIES
 }
 
 enum ActionStatus {
