@@ -9,7 +9,7 @@ import {Club, Moneylender, moneylenderType, StoredClub, yesteryear} from "@/app/
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import { Loan } from "@/app/types"
-import {handleLoanTransaction, handleMoneyTransaction} from "@/lib/transactions";
+import {handleGameAction, handleLoan, handleLoanTransaction, handleMoneyTransaction} from "@/lib/transactions";
 import { useSession } from "next-auth/react";
 
 export const MoneylenderClient = () => {
@@ -155,8 +155,8 @@ export const MoneylenderClient = () => {
                                         <button
                                             onClick={() => {
                                                 if(clubData){
-                                                    handleMoneyTransaction({session, clubData, setMoney, setClub, change: -loan.amount}).then()
-                                                    handleLoanTransaction({session, clubData, amount: loan.amount, type: "Payment"}).then()
+                                                    handleGameAction({type: "LOAN", status: "ACTIVE"}).then()
+                                                    handleLoan({clubData, setMoney, setClub}).then()
                                                     setLoan(null)
                                                 }
                                             }}
@@ -201,8 +201,8 @@ export const MoneylenderClient = () => {
                                                 }
                                                 else {
                                                     if(clubData){
-                                                        handleMoneyTransaction({session, clubData, setMoney, setClub, change: value}).then()
-                                                        handleLoanTransaction({session, clubData, amount: value, type: "Takeout"}).then()
+                                                        handleGameAction({type: "LOAN", status: "ACTIVE"}).then()
+                                                        handleLoan({clubData, amount: value, setMoney, setClub}).then()
                                                         setLoading(true)
                                                         setTimeout(() => {
                                                             router.push("/")

@@ -11,7 +11,10 @@ import {Club, emilysCandy, HostessMassage, StoredClub} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useSession} from "next-auth/react";
 import {useVolume} from "@/app/context/volumeContext";
-import {handleFatigueTransaction, handleMoneyTransaction} from "@/lib/transactions";
+import {
+    handleGameAction,
+    handleMassage,
+} from "@/lib/transactions";
 
 const FlowerLotus = createLucideIcon("FlowerLotus", flowerLotus)
 const FlowerRose = createLucideIcon("FlowerRose", flowerRose)
@@ -27,7 +30,7 @@ export const LoveInHeartClient = () => {
     const [mode, setMode] = useState<"Selection" | "Acceptance">("Selection")
     const [fade, setFade] = useState<boolean>(false)
     const [hostesses, setHostesses] = useState<HostessMassage[]>([])
-    const [clubData, setClubData] = useState<Club | null>(null)
+    const [clubData, setClubData] = useState<StoredClub | null>(null)
     const [money, setMoney] = useState<number>(0)
     const [club, setClub] = useState<Club | null>(null)
 
@@ -99,7 +102,6 @@ export const LoveInHeartClient = () => {
             setFade(false)
         }, 500)
     }
-
 
     const massageItems = [
         {
@@ -348,8 +350,10 @@ export const LoveInHeartClient = () => {
                                     borderImageRepeat: "round"
                                 }}
                                 onClick={() => {
-                                    handleFatigueTransaction({session, setHostesses, change: reduction}).then()
-                                    handleMoneyTransaction({session, clubData, setClub, setMoney, change: price}).then()
+                                    if(clubData && massage){
+                                        handleGameAction({type: "MASSAGE", status: "ACTIVE"}).then()
+                                        handleMassage({clubData, massageId: massageItems.findIndex((item) => item.title === massage), setHostesses, setMoney}).then()
+                                    }
                                     changeMode()
                                 }}
                                 className={"relative bg-[url(/images/wood_texture.png)] text-[30px] flex items-center justify-center flex-col z-1 p-2 rounded-[5] duration-300 ease-in-out hover:scale-110 active:scale-120"}

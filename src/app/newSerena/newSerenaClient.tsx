@@ -9,8 +9,11 @@ import {NotebookTabs, Play} from "lucide-react";
 import {Club, Drink, drinks, DRINKS_MAP, Effect, molle, newSerenaType, StoredClub} from "@/app/types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
-import {handleEffectTransaction, handleMoneyTransaction, handleSuppliesTransaction} from "@/lib/transactions";
-import {useSession} from "next-auth/react";
+import {
+    handleEffect,
+    handleGameAction,
+    handleSupplies,
+} from "@/lib/transactions";
 import {NewSerena} from "@/app/types";
 
 const NewSerenaClient = () => {
@@ -28,8 +31,6 @@ const NewSerenaClient = () => {
     const [supplies, setSupplies] = useState<number>(0)
     const [effect, setEffect] = useState<Effect | null>(null)
     const [newSerena, setNewSerena] = useState<NewSerena | null>(null)
-
-    const { data: session } = useSession()
 
     const drinkPosition = (id: number) : string => {
         switch(id){
@@ -260,8 +261,8 @@ const NewSerenaClient = () => {
                                                             <button
                                                                 onClick={() => {
                                                                     if(clubData){
-                                                                        handleEffectTransaction({session, clubData, type: DRINKS_MAP[drink.id], action: "CREATE"}).then()
-                                                                        handleMoneyTransaction({session, clubData, setMoney, setClub, change: -drink.price}).then()
+                                                                        handleGameAction({type: "EFFECT", status: "ACTIVE"}).then()
+                                                                        handleEffect({clubData, effect: DRINKS_MAP[drink.id], setMoney, setClub}).then()
                                                                         switchMode("Selection")
                                                                     }
                                                                 }}
@@ -311,8 +312,10 @@ const NewSerenaClient = () => {
                                                 <h1>¥{(100 - supplies) * 1000}</h1>
                                                 <button
                                                     onClick={() => {
-                                                        handleMoneyTransaction({session, clubData, setMoney, setClub, change: (100 - supplies) * 1000}).then()
-                                                        handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: 100 - supplies}).then()
+                                                        if(clubData) {
+                                                            handleGameAction({type: "SUPPLIES", status: "ACTIVE"}).then()
+                                                            handleSupplies({clubData, amount: 100 - supplies, setMoney, setSupplies, setClub}).then()
+                                                        }
                                                         switchMode("Selection")
                                                     }}
                                                     className={"border-b-2 border-black text-[20px] opacity-50 hover:opacity-100 duration-300 ease-in-out"}>

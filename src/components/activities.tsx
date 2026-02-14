@@ -1,8 +1,11 @@
 import Image from "next/image";
 import {HandHeart, JapaneseYen, PiggyBank, SkipBack, SkipForward} from "lucide-react";
 import {useState} from "react";
-import {Activity, Club, coustard, Performer} from "@/app/types";
-import {handleMoneyTransaction, handlePopularityTransaction} from "@/lib/transactions";
+import {Activity, Club, coustard, Performer, StoredClub} from "@/app/types";
+import {
+    handleActivity,
+    handleGameAction
+} from "@/lib/transactions";
 import {Session} from "next-auth";
 
 interface Props {
@@ -17,10 +20,11 @@ interface Props {
     setIsJamPlaying: (isJamPlaying: boolean) => void,
     setJamToggle: (jamToggle: boolean) => void,
     session: Session | null,
-    clubData: Club | null,
+    clubData: StoredClub,
     setPopularity: (value: (((prevState: number) => number) | number)) => void,
     setMoney: (value: (((prevState: number) => number) | number)) => void,
-    setClub: (value: (((prevState: (Club | null)) => (Club | null)) | Club | null)) => void
+    setClub: (value: (((prevState: (Club | null)) => (Club | null)) | Club | null)) => void,
+    setExperience: (value: (((prevState: number) => number) | number)) => void
 }
 
 const Activities = ({
@@ -38,6 +42,7 @@ const Activities = ({
                         clubData,
                         setPopularity,
                         setMoney,
+                        setExperience,
                         setClub
                     }: Props) => {
     const [activityIndex, setActivityIndex] = useState(0)
@@ -138,20 +143,8 @@ const Activities = ({
                                             setJamToggle(isJamPlaying)
                                             setIsJamPlaying(false)
                                             setSelectedActivity(performerActivities[activityIndex])
-                                            handlePopularityTransaction({
-                                                session,
-                                                clubData,
-                                                setPopularity,
-                                                setClub,
-                                                change: performerActivities[activityIndex].popularityGain
-                                            }).then()
-                                            handleMoneyTransaction({
-                                                session,
-                                                clubData,
-                                                setMoney,
-                                                setClub,
-                                                change: performerActivities[activityIndex].cost
-                                            }).then()
+                                            handleGameAction({type: "ACTIVITY", status: "ACTIVE"}).then()
+                                            handleActivity({clubData, activityId: activityIndex, setClub, setPopularity, setExperience, setMoney}).then()
                                         }}
                                              className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-102 active:scale-95 hover:text-pink-200 transition-all duration-200 ease-in-out"}>
                                             <p className={"w-100 flex flex-row justify-center items-center gap-2"}>{performerActivities[activityIndex].name}</p>

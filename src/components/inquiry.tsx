@@ -21,7 +21,7 @@ import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
 import {Buffet, ServiceType, Hostess, Club, StoredClub, getPageStyle} from "@/app/types";
 import {Session} from "next-auth";
 import {
-    handleExperienceTransaction, handleHostessFatigueTransaction,
+    handleExperienceTransaction, handleGameAction, handleHostessFatigueTransaction, handleInquiry,
     handleMoneyTransaction,
     handlePopularityTransaction,
     handleSuppliesTransaction
@@ -193,14 +193,10 @@ export const Inquiry = ({
     })()
 
     const InquiryEndHandler = (type: "End" | "Extend", present: boolean, payment: boolean) => {
-        let money = Math.floor(Math.random() * (10000 - 100) + 100)
-        const popularity = Math.floor(Math.random() * (50 - 10) + 10)
-        const experience = Math.floor(Math.random() * (50 - 1) + 1)
-        let supplies = 0
-        if (inquiryTableId !== null) {
+        handleGameAction({type: "INQUIRY_END", status: "ACTIVE"}).then()
+        if (inquiryTableId !== null && hostesses[inquiryTableId] !== null && clubData) {
             if (present) {
-                money = Math.floor(money / 2)
-                supplies -= 1
+                handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "STOP", endOption: "PRESENT"}).then()
             }
             if (type === "End") {
                 setVisit(prev => {
@@ -209,7 +205,7 @@ export const Inquiry = ({
                     return updated
                 })
                 if (payment) {
-                    handleMoneyTransaction({session, clubData, setMoney, setClub, change: money}).then()
+                    handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "STOP", endOption: "GOODBYE"}).then()
                 }
             } else {
                 const extensionChance = Math.random()
@@ -231,30 +227,17 @@ export const Inquiry = ({
                         return updated
                     })
                 }
-                handleMoneyTransaction({session, clubData, setMoney, setClub, change: money}).then()
+                handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "STOP", endOption: "EXTEND"}).then()
             }
-            handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
-            handleExperienceTransaction({session, setExperience, change: experience}).then()
-            handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: supplies}).then()
-            if(hostesses[inquiryTableId] !== null && clubData){
-                handleHostessFatigueTransaction({session, setHostesses, clubId: clubData.id, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
-            }
+            handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "STOP", endOption: "COVER"}).then()
             inquiryClose(inquiryTableId)
         }
     }
 
     const InquiryServiceHandler = (type: ServiceType) => {
-        if (inquiryTableId !== null && type === serviceType[inquiryTableId]) {
-            const money = Math.floor(Math.random() * (1000 - 100) + 100)
-            const popularity = Math.floor(Math.random() * (10 - 1) + 1)
-            const experience = Math.floor(Math.random() * (10 - 1) + 1)
-            handleMoneyTransaction({session, clubData, setMoney, setClub, change: money}).then()
-            handlePopularityTransaction({session, clubData, setPopularity, setClub, change: popularity}).then()
-            handleExperienceTransaction({session, setExperience, change: experience}).then()
-            handleSuppliesTransaction({session, clubData, setSupplies, setClub, change: -1}).then()
-            if(hostesses[inquiryTableId] !== null && clubData){
-                handleHostessFatigueTransaction({session, setHostesses, clubId: clubData.id, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
-            }
+        if (inquiryTableId !== null && type === serviceType[inquiryTableId] && hostesses[inquiryTableId] !== null && clubData) {
+            handleGameAction({type: "INQUIRY_START", status: "ACTIVE"}).then()
+            handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "SERVICE"}).then()
             inquiryClose(inquiryTableId)
         } else {
             setWiggle(type)
@@ -363,45 +346,10 @@ export const Inquiry = ({
                                             return updated
                                         })
                                     }
-                                    let money = 0
-                                    let supplies = 0
-                                    const popularity = Math.floor(Math.random() * (10 - 1) + 1)
-                                    const experience = Math.floor(Math.random() * (10 - 1) + 1)
-                                    if (randomBeverage !== null) {
-                                        money += randomBeverage.price
-                                        supplies -= 1
-                                    }
-                                    if (randomMeal !== null) {
-                                        money += randomMeal.price
-                                        supplies -= 1
-                                    }
                                     inquiryClose(inquiryTableId)
-                                    if (money !== 0 || supplies !== 0) {
-                                        handleMoneyTransaction({
-                                            session,
-                                            clubData,
-                                            setMoney,
-                                            setClub,
-                                            change: money
-                                        }).then()
-                                        handlePopularityTransaction({
-                                            session,
-                                            clubData,
-                                            setPopularity,
-                                            setClub,
-                                            change: popularity
-                                        }).then()
-                                        handleExperienceTransaction({session, setExperience, change: experience}).then()
-                                        handleSuppliesTransaction({
-                                            session,
-                                            clubData,
-                                            setSupplies,
-                                            setClub,
-                                            change: supplies
-                                        }).then()
-                                        if(hostesses[inquiryTableId] !== null && clubData){
-                                            handleHostessFatigueTransaction({session, setHostesses, clubId: clubData.id, hostessId: hostesses[inquiryTableId].id, change: -1}).then()
-                                        }
+                                    if (hostesses[inquiryTableId] !== null && clubData) {
+                                        handleGameAction({type: "INQUIRY_START", status: "ACTIVE"}).then()
+                                        handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, mealId: randomMealIndex, beverageId: randomBeverageIndex, type: "START"}).then()
                                     }
                                 }}>
                                 {dealButtonText}

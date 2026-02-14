@@ -1,5 +1,5 @@
 import {Club, EndTypes, Hostess, HostessMassage, InquiryTypes, StoredClub} from "@/app/types";
-import {SetStateAction} from "react";
+import {Dispatch, SetStateAction} from "react";
 import {ActionStatus, ActionType, EffectType} from "@prisma/client";
 
 interface InquiryHandler {
@@ -8,8 +8,8 @@ interface InquiryHandler {
     setExperience: (fn: (x: number) => number) => void
     setSupplies: (fn: (x: number) => number) => void
     setHostesses: React.Dispatch<React.SetStateAction<(Hostess | null)[]>>
-    hostessId: number
-    clubId: number
+    hostessId: string
+    clubId: string
     type: InquiryTypes
     endOption?: EndTypes
     mealId?: number
@@ -22,12 +22,13 @@ interface ActivityHandler {
     setClub: (value: SetStateAction<Club | null>) => void
     setPopularity: (fn: (x: number) => number) => void
     setExperience: (fn: (x: number) => number) => void
+    setMoney: (fn: (x: number) => number) => void
 }
 
 interface MassageHandler {
     clubData: StoredClub
     massageId: number
-    setHostesses: React.Dispatch<React.SetStateAction<Hostess | null>>
+    setHostesses: Dispatch<SetStateAction<HostessMassage[]>>
     setMoney: (fn: (x: number) => number) => void
 }
 
@@ -101,7 +102,7 @@ export const handleInquiry = async ({setMoney, setPopularity, setExperience, set
     }
 }
 
-export const handleActivity = async ({clubData, activityId, setClub, setPopularity, setExperience} : ActivityHandler) => {
+export const handleActivity = async ({clubData, activityId, setClub, setPopularity, setExperience, setMoney} : ActivityHandler) => {
     try{
         const res = await fetch("api/activity", {
             method: 'POST',
@@ -117,6 +118,7 @@ export const handleActivity = async ({clubData, activityId, setClub, setPopulari
         setClub(data.clubData)
         setPopularity(data.clubData.popularity)
         setExperience(data.experience)
+        setMoney(data.clubData.money)
     }
     catch(err){
         console.log(err)
