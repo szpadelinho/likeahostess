@@ -10,15 +10,15 @@ export async function POST(req: Request){
 
     if(hostessId === null || clubId === null ||  mealId === null || beverageId === null) return NextResponse.json({ error: "Incorrect data types" }, { status: 402 })
 
+    const gameAction = await prisma.gameAction.findFirst({
+        where: {
+            userId: session.user.id
+        }
+    })
+
+    if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
+
     try{
-        const activeAction = await prisma.gameAction.findFirst({
-            where: {
-                userId: session.user.id
-            }
-        })
-
-        if(activeAction) return NextResponse.json({error: "Game action already active"}, {status: 400})
-
         let popularity = Math.floor(Math.random() * (10 - 1) + 1)
         const experience = Math.floor(Math.random() * (10 - 1) + 1)
         let money = 0
@@ -102,6 +102,15 @@ export async function POST(req: Request){
                 }
             }
         })
+
+        if(updatedClub && user) {
+            await prisma.gameAction.delete({
+                where: {
+                    userId: session.user.id,
+                    id: gameAction.id
+                }
+            })
+        }
 
         return NextResponse.json({money: updatedClub.money, popularity: updatedClub.popularity, supplies: updatedClub.supplies, experience: user.experience, hostesses: updatedHostesses})
     }

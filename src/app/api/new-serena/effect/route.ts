@@ -21,6 +21,14 @@ export async function POST(req: Request){
         FIGHTING_VIPER: 5000000
     }
 
+    const gameAction = await prisma.gameAction.findFirst({
+        where: {
+            userId: session.user.id
+        }
+    })
+
+    if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
+
     try{
         const existing = await prisma.effect.findFirst({
             where: {
@@ -57,6 +65,15 @@ export async function POST(req: Request){
                 }
             }
         })
+
+        if(club) {
+            await prisma.gameAction.delete({
+                where: {
+                    userId: session.user.id,
+                    id: gameAction.id
+                }
+            })
+        }
     }
     catch(err){
         console.error(err)

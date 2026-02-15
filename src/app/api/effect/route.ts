@@ -9,6 +9,14 @@ export async function GET(req: Request) {
     const userId = session?.user?.id
     if (!session || !userId || !clubId) return NextResponse.json({error: "Unauthorized"}, {status: 401})
 
+    const gameAction = await prisma.gameAction.findFirst({
+        where: {
+            userId: session.user.id
+        }
+    })
+
+    if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
+
     const userClub = await prisma.userClub.findUnique({
         where: {
             userId_clubId: {
@@ -36,6 +44,15 @@ export async function GET(req: Request) {
                 where: { id: effect.id }
             })
             return NextResponse.json(null)
+        }
+
+        if(effect) {
+            await prisma.gameAction.delete({
+                where: {
+                    userId: session.user.id,
+                    id: gameAction.id
+                }
+            })
         }
 
         return NextResponse.json(effect)
@@ -67,6 +84,14 @@ export async function POST(req: Request){
 
     if(!userClub) return NextResponse.json({error: "No such userClub found"}, {status: 404})
 
+    const gameAction = await prisma.gameAction.findFirst({
+        where: {
+            userId: session.user.id
+        }
+    })
+
+    if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
+
     try{
         const existingEffect = await prisma.effect.findFirst({
             where: {
@@ -93,6 +118,15 @@ export async function POST(req: Request){
                 expiresAt,
             }
         })
+
+        if(effect) {
+            await prisma.gameAction.delete({
+                where: {
+                    userId: session.user.id,
+                    id: gameAction.id
+                }
+            })
+        }
 
         return NextResponse.json(effect, { status: 201 })
     }
@@ -124,13 +158,31 @@ export async function DELETE(req: Request){
 
     if(!userClub) return NextResponse.json({error: "No such userClub found"}, {status: 404})
 
+    const gameAction = await prisma.gameAction.findFirst({
+        where: {
+            userId: session.user.id
+        }
+    })
+
+    if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
+
     try {
-        const loan = await prisma.effect.deleteMany({
+        const effect = await prisma.effect.deleteMany({
             where: {
                 userClubId: userClub.id,
             }
         })
-        return NextResponse.json(loan)
+
+        if(effect) {
+            await prisma.gameAction.delete({
+                where: {
+                    userId: session.user.id,
+                    id: gameAction.id
+                }
+            })
+        }
+
+        return NextResponse.json({deleted: true})
     } catch (err) {
         console.error("Effect Route.ts", err)
         return NextResponse.json({error: "Cannot delete effect"}, {status: 500})

@@ -11,6 +11,14 @@ export async function POST(req: Request){
     if(clubData === undefined || activityId === undefined) return NextResponse.json({message: "Incorrect credentials"}, {status: 400})
 
     try{
+        const gameAction = await prisma.gameAction.findFirst({
+            where: {
+                userId: session.user.id
+            }
+        })
+
+        if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
+
         const activity = await prisma.activity.findFirst({
             where: {
                 id: activityId
@@ -46,6 +54,15 @@ export async function POST(req: Request){
                 }
             }
         })
+
+        if(club && user) {
+            await prisma.gameAction.delete({
+                where: {
+                    userId: session.user.id,
+                    id: gameAction.id
+                }
+            })
+        }
 
         return NextResponse.json({clubData: club, experience: user.experience})
     }
