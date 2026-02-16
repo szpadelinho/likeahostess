@@ -1,7 +1,7 @@
 import Image from "next/image";
-import {Cherry, Apple, Heart, Star, Citrus, createLucideIcon} from "lucide-react"
-import {strawberry, peach, pumpkin, pear, watermelon, flowerTulip} from "@lucide/lab"
+import {Cherry, Apple, Heart, Star, Citrus} from "lucide-react"
 import {useCallback, useEffect, useRef, useState} from "react";
+import {elements, FlowerTulip, getIcon, Peach, Pear, Pumpkin, Strawberry, Watermelon} from "@/lib/casino";
 
 interface PachinkoProps {
     setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,
@@ -9,15 +9,6 @@ interface PachinkoProps {
 }
 
 export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
-    const Strawberry = createLucideIcon("Strawberry", strawberry)
-    const Peach = createLucideIcon("Peach", peach)
-    const Pumpkin = createLucideIcon("Pumpkin", pumpkin)
-    const Pear = createLucideIcon("Pear", pear)
-    const Watermelon = createLucideIcon("Watermelon", watermelon)
-    const FlowerTulip = createLucideIcon("FlowerTulip", flowerTulip)
-
-    const elements = [Apple, Cherry, Star, Heart, Citrus, Strawberry, Peach, Pumpkin, Pear, Watermelon, FlowerTulip]
-
     const [slots, setSlots] = useState([0, 0, 0])
     const [spinning, setSpinning] = useState([false, false, false])
 
@@ -146,35 +137,6 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
             }
         }
     }, [spinning, slots, setScore, onTransaction])
-
-    const getIcon = (Icon: any): { fill: string, color: string } => {
-        switch (Icon) {
-            case Apple:
-                return {fill: "#ff1a1a", color: "#bd1212"}
-            case Cherry:
-                return {fill: "#da0000", color: "#b50000"}
-            case Star:
-                return {fill: "#ffc400", color: "#ff8800"}
-            case Heart:
-                return {fill: "#ff0000", color: "#ff00f2"}
-            case Citrus:
-                return {fill: "#f3ff00", color: "#c5c500"}
-            case Strawberry:
-                return {fill: "#ff0000", color: "#ff4b4b"}
-            case Peach:
-                return {fill: "#ff5900", color: "#c63b00"}
-            case Pumpkin:
-                return {fill: "#ff4d00", color: "#bd3700"}
-            case Pear:
-                return {fill: "#ccff34", color: "#819f00"}
-            case Watermelon:
-                return {fill: "#00ff05", color: "#31aa00"}
-            case FlowerTulip:
-                return {fill: "#7400ff", color: "#600098"}
-            default:
-                return {fill: "#ffffff", color: "#000000"}
-        }
-    }
 
     return (
         <>

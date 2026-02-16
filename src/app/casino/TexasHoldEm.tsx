@@ -2,38 +2,9 @@ import React, {useState, useEffect, forwardRef, useImperativeHandle} from "react
 import Image from "next/image"
 import {Coins, JapaneseYen} from "lucide-react"
 import {Club, yesteryear} from "@/app/types";
+import {buildDeck, cardToPokerNotation, handleDeckShuffle} from "@/lib/casino";
 
 const Hand: any = require("pokersolver").Hand
-
-const rankMap: Record<string, string> = {
-    ace: "A", two: "2", three: "3", four: "4", five: "5",
-    six: "6", seven: "7", eight: "8", nine: "9",
-    ten: "T", jack: "J", queen: "Q", king: "K",
-}
-
-const suitMap: Record<string, string> = {
-    spades: "s", hearts: "h", diamonds: "d", clubs: "c",
-}
-
-const cardToPokerNotation = (card: string) => {
-    const [suit, rank] = card.split("_")
-    return `${rankMap[rank]}${suitMap[suit]}`
-}
-
-const buildDeck = () => {
-    const suits = ["spades", "hearts", "diamonds", "clubs"]
-    const ranks = ["ace", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "jack", "queen", "king"]
-    return suits.flatMap(s => ranks.map(r => `${s}_${r}`))
-}
-
-const shuffleDeck = (deck: string[]) => {
-    const newDeck = [...deck];
-    for (let i = newDeck.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [newDeck[i], newDeck[j]] = [newDeck[j], newDeck[i]]
-    }
-    return newDeck
-}
 
 interface TexasHoldEmProps {
     setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,
@@ -83,7 +54,7 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
         const [pot, setPot] = useState<number>(0)
 
         const startGame = () => {
-            const freshDeck = shuffleDeck(buildDeck())
+            const freshDeck = handleDeckShuffle(buildDeck())
             setPlayers([
                 {
                     name: club.host.surname,

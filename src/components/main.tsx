@@ -363,7 +363,7 @@ const Main = () => {
                                                              setSelectedHostess={setSelectedHostess}/>}
                         </ModalWrapper>
                     )}
-                    {window === "Activities" && (
+                    {window === "Activities" && clubData && (
                         <ModalWrapper
                             fade={fade}
                             onClose={() => {
@@ -372,7 +372,7 @@ const Main = () => {
                         }}>
                             {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
                                                              selectedPerformer={selectedPerformer}
-                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity} club={club} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying} setJamToggle={setJamToggle} session={session} clubData={clubData} setPopularity={setPopularity} setMoney={setMoney} setClub={setClub}/>}
+                                                             setSelectedPerformer={setSelectedPerformer} activities={activity} setSelectedActivity={setSelectedActivity} club={club} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying} setJamToggle={setJamToggle} session={session} clubData={clubData} setPopularity={setPopularity} setMoney={setMoney} setClub={setClub} setExperience={setExperience}/>}
                         </ModalWrapper>
                     )}
                 </MainWrapper>

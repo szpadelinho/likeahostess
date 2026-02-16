@@ -7,7 +7,7 @@ import Roulette from "@/app/casino/Roulette";
 import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
 import {Pachinko} from "@/app/casino/Pachinko";
 import {cards, Club, getCardValue, personaMap, rankMap, suitMap} from "@/app/types";
-import {handleRoulette} from "@/lib/transactions";
+import {handleDeckBuild, handleDeckShuffle, renderDice} from "@/lib/casino";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -218,24 +218,6 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
         return total
     }
 
-    const handleDeckBuild = () => {
-        const suits = Object.keys(cards).filter(k => k !== "default")
-        let deck: string[] = []
-        suits.forEach((suit) => {
-            deck = deck.concat(cards[suit as keyof typeof cards])
-        })
-        return deck
-    }
-
-    const handleDeckShuffle = (deck: string[]) => {
-        const newDeck = [...deck]
-        for (let i = newDeck.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [newDeck[i], newDeck[j]] = [newDeck[j], newDeck[i]]
-        }
-        return newDeck
-    }
-
     const handleGame = (type: string, value: string | null) => {
         if (type === "Chohan" && value !== null) {
             updateMoney(-bet).then()
@@ -392,29 +374,6 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
                 }
             })
         }
-    }
-
-
-    const renderDice = (value: number) => {
-        return (
-            <div className={"grid grid-cols-3 grid-rows-3"}>
-                {Array.from({length: 9}).map((_, i) => {
-                    const positions: Record<number, number[]> = {
-                        1: [4],
-                        2: [0, 8],
-                        3: [0, 4, 8],
-                        4: [0, 2, 6, 8],
-                        5: [0, 2, 4, 6, 8],
-                        6: [0, 2, 3, 5, 6, 8],
-                    }
-                    return positions[value].includes(i) ? (
-                        <CircleSmall key={i} size={50} fill="black"/>
-                    ) : (
-                        <div key={i}></div>
-                    )
-                })}
-            </div>
-        )
     }
 
     return (

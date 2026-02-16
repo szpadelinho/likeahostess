@@ -10,11 +10,10 @@ import Navbar from "@/components/navbar";
 import {Club, StoredClub, yesteryear} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
-import {useSession} from "next-auth/react";
+import {panels} from "@/lib/casino";
 
 const CasinoClient = () => {
     const router = useRouter()
-    const {data: session} = useSession()
     const [clubData, setClubData] = useState<StoredClub | null>(null)
     const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
@@ -63,33 +62,6 @@ const CasinoClient = () => {
             })
     }, [])
 
-    const panels: {title: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null, description: string, position: string}[] = [
-        {
-            title: "Roulette",
-            description: "A classic game. The dealer places a metal ball inside of the roulette, which is rolling through the number spots. The players have multiple possibilities to bet over - number, color, row, odd/even, interval and many others.",
-            position: "right-70 top-90"
-        },
-        {
-            title: "Blackjack",
-            description: "A card game. The dealer gives himself two cards - one visible and one hidden. The players however receive two visible cards. The goal for the players is to have a bigger score than the dealer. However, when the score is bigger than 21 - the game is over. If you score a 21, a \"Blackjack\" is being called.",
-            position: "left-50 bottom-90"
-        },
-        {
-            title: "Poker",
-            description: "A card game. The players take one card per round. They either bet or pass on the play. The goal is to have the most fitting 5-card hand with the cards on the table. The winner has the strongest hand.",
-            position: "left-150 top-90"
-        },
-        {
-            title: "Chohan",
-            description: "Even versus Odd. The dealer is shaking a bamboo bowl, in which two dices are being shaken. In this game, the goal is to predict what the sum of two dices will be. You either call it the sum to be even (chō) or odd (han).",
-            position: "right-100 bottom-15"
-        },
-        {
-            title: "Pachinko",
-            description: "Classic pachinko slots. Here you can either spend half of your life looking for the grand prize or... simply win it all at once. Choice is yours (actually not).",
-            position: "right-25 top-125"
-        },
-    ]
     return(
         <div className={"flex flex-col h-screen w-screen items-center justify-center text-white z-50 gap-5"}>
             <LoadingBanner show={loading}/>
