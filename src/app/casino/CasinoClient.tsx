@@ -7,7 +7,7 @@ import {useRouter} from "next/navigation";
 import Image from "next/image";
 import CasinoGame from "@/app/casino/CasinoGame";
 import Navbar from "@/components/navbar";
-import {Club, StoredClub, yesteryear} from "../types";
+import {StoredClub, yesteryear} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {panels} from "@/lib/casino";
@@ -17,7 +17,6 @@ const CasinoClient = () => {
     const [clubData, setClubData] = useState<StoredClub | null>(null)
     const {volume} = useVolume()
     const [loading, setLoading] = useState<boolean>(true)
-    const [club, setClub] = useState<Club | null>(null)
     const [isPlaying, setIsPlaying] = useState(true)
     const [muted, setMuted] = useState(true)
     const [game, setGame] = useState<"Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null>(null)
@@ -34,32 +33,10 @@ const CasinoClient = () => {
 
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
-        if (!stored) return console.error("Could not find stored club")
+        if (!stored) return console.error("Could not find stored clubData")
         const parsedClub: StoredClub = JSON.parse(stored)
         setClubData(parsedClub)
-
-        fetch(`/api/user-club?clubId=${parsedClub.id}`, {method: "POST"})
-            .then(async (res) => {
-                const data = await res.text()
-                if (!res.ok) {
-                    console.error("API error:", res.status, data)
-                    throw new Error("Failed to fetch club data")
-                }
-                return JSON.parse(data)
-            })
-            .then((userData) => {
-                const mergedClub: Club = {
-                    name: parsedClub.name,
-                    host: parsedClub.host,
-                    logo: parsedClub.logo,
-                    money: userData.money,
-                    popularity: userData.popularity,
-                    supplies: userData.supplies
-                }
-                setClub(mergedClub)
-                setMoney(mergedClub.money)
-                setLoading(false)
-            })
+        setLoading(false)
     }, [])
 
     return(
@@ -99,16 +76,16 @@ const CasinoClient = () => {
                     ))}
                 </>
             ):(
-                club && <CasinoGame game={game} money={club.money} club={club} setMoney={setMoney}/>
+                clubData && <CasinoGame game={game} clubData={clubData} setMoney={setMoney}/>
             )}
-            {club && game && (
+            {clubData && game && (
                 <div
                     className={`backdrop-blur-md absolute ${game !== "Blackjack" && game !== "Poker" ? "left-5 w-130" : "left-15"} bottom-5 h-25 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}>
                     {game !== "Blackjack" && game !== "Poker" && (
                         <div className={"backdrop-blur-xl h-[130%] w-[30%] rounded-[20] flex justify-center relative"}>
                             <Image
                                 className={"flex absolute bottom-[-80%]"}
-                                src={club.host.image}
+                                src={clubData.host.image}
                                 alt={"Host"}
                                 height={500}
                                 width={150}
@@ -117,8 +94,8 @@ const CasinoClient = () => {
                     )}
                     <div className={`${yesteryear.className} flex flex-row text-center justify-center content-center ${game !== "Blackjack" && game !== "Poker" ? "w-[70%]" : "gap-10"} h-[100%] p-5`}>
                         <div className={"flex flex-col justify-center w-[60%]"}>
-                            <h1 className={"text-[35px] text-nowrap"}>{club.host.name} {club.host.surname}</h1>
-                            <h2 className={"text-[25px]"}>{club.name}</h2>
+                            <h1 className={"text-[35px] text-nowrap"}>{clubData.host.name} {clubData.host.surname}</h1>
+                            <h2 className={"text-[25px]"}>{clubData.name}</h2>
                         </div>
                         <div className={"flex flex-col justify-center w-[40%]"}>
                             <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center"}>

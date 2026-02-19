@@ -1,7 +1,6 @@
 import Image from "next/image";
-import {Cherry, Apple, Heart, Star, Citrus} from "lucide-react"
 import {useCallback, useEffect, useRef, useState} from "react";
-import {elements, FlowerTulip, getIcon, Peach, Pear, Pumpkin, Strawberry, Watermelon} from "@/lib/casino";
+import {elements, getIcon} from "@/lib/casino";
 
 interface PachinkoProps {
     setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,

@@ -1,13 +1,14 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Yesteryear} from "next/font/google";
-import {CircleSmall, GlassWater, JapaneseYen, Minus, Plus} from "lucide-react";
+import {JapaneseYen, Minus, Plus} from "lucide-react";
 import Image from "next/image";
 import RouletteBoard from "@/app/casino/RouletteBoard";
 import Roulette from "@/app/casino/Roulette";
 import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
 import {Pachinko} from "@/app/casino/Pachinko";
-import {cards, Club, getCardValue, personaMap, rankMap, suitMap} from "@/app/types";
-import {handleDeckBuild, handleDeckShuffle, renderDice} from "@/lib/casino";
+import {cards, getCardValue, personaMap, rankMap, StoredClub, suitMap} from "@/app/types";
+import {handleDeckBuild, handleDeckShuffle} from "@/lib/casino";
+import {Chohan} from "@/app/casino/Chohan";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -16,13 +17,11 @@ const yesteryear = Yesteryear({
 
 interface CasinoGameProps {
     game: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,
-    money: number,
-    club: Club,
-    updateMoney: (change: number) => Promise<void>
+    clubData: StoredClub,
     setMoney: (fn: (x: number) => number) => void
 }
 
-const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps) => {
+const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     const rouletteRef = useRef<{ spin: () => void } | null>(null)
     const pokerRef = useRef<any>(null)
 
@@ -148,7 +147,7 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
 
         if (net > 0) {
             setWin(2)
-            updateMoney(net).then()
+            // updateMoney(net).then()
         }
         else if (net === 0) setWin(1)
         else setWin(0)
@@ -220,7 +219,7 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
 
     const handleGame = (type: string, value: string | null) => {
         if (type === "Chohan" && value !== null) {
-            updateMoney(-bet).then()
+            // updateMoney(-bet).then()
             const sum = Array(2)
             for (let i = 0; i < 2; i++) {
                 sum[i] = Math.floor(Math.random() * (6 - 1)) + 1
@@ -241,7 +240,7 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
             }
         }
         else if (type === "Blackjack") {
-            updateMoney(-bet).then()
+            // updateMoney(-bet).then()
             const freshDeck = handleDeckShuffle(handleDeckBuild())
             const userHand = freshDeck.slice(0, 2)
             const dealerHand = freshDeck.slice(2, 4)
@@ -277,7 +276,7 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
                 setWin(0)
             } else if (calculateHandValue(userCards) === 21) {
                 setScore("Blackjack! Congatulations, sir!")
-                updateMoney(bet * 2.5).then()
+                // updateMoney(bet * 2.5).then()
                 setIsPlayerTurn(false)
                 setGameOver(true)
                 setWin(2)
@@ -288,7 +287,7 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
                 setWin(0)
             }
         }
-    }, [userCards, bet, calculateHandValue, dealerCards, isPlayerTurn, updateMoney])
+    }, [userCards, bet, calculateHandValue, dealerCards, isPlayerTurn])
 
     const dealerPlay = (currentDeck: string[]) => {
         const hand = [...dealerCards]
@@ -303,11 +302,11 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
 
         if (dealerValue > 21 || userValue > dealerValue) {
             setScore("You sir have beaten the dealer!")
-            updateMoney(bet * 2).then()
+            // updateMoney(bet * 2).then()
             setWin(2)
         } else if (dealerValue === userValue) {
             setScore("It is a push, sir.")
-            updateMoney(bet).then()
+            // updateMoney(bet).then()
             setWin(1)
         } else {
             setScore("No luck today, sir! Dealer wins!")
@@ -331,7 +330,7 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
             setScore(won)
             if (won) {
                 setPrize(bet * 2)
-                updateMoney(bet * 2).then()
+                // updateMoney(bet * 2).then()
             } else {
                 setPrize(bet)
             }
@@ -340,21 +339,21 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
 
     const handleBet = (type: string, action: "Add" | "Lower") => {
         if (game === "Chohan") {
-            setBet(prev => {
-                if (action === "Add") {
-                    return Math.min(prev + 1000, 10000, money)
-                } else {
-                    return Math.max(prev - 1000, 1000)
-                }
-            })
+            // setBet(prev => {
+            //     if (action === "Add") {
+            //         return Math.min(prev + 1000, 10000, money)
+            //     } else {
+            //         return Math.max(prev - 1000, 1000)
+            //     }
+            // })
         } else if (game === "Blackjack") {
-            setBet(prev => {
-                if (action === "Add") {
-                    return Math.min(prev + 1000, 50000, money)
-                } else {
-                    return Math.max(prev - 1000, 1000)
-                }
-            })
+            // setBet(prev => {
+            //     if (action === "Add") {
+            //         return Math.min(prev + 1000, 50000, money)
+            //     } else {
+            //         return Math.max(prev - 1000, 1000)
+            //     }
+            // })
         } else if (game === "Roulette") {
             setBets(prev => {
                 const existing = prev.find(b => b.type === type)
@@ -381,57 +380,7 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
             {game === "Chohan" && (
                 <>
                     <h1 className={`text-[75px] ${yesteryear.className}`}>Chō-Han</h1>
-                    <div className={"flex flex-col justify-center items-center gap-5"}>
-                        <div className={"flex flex-row justify-center items-center h-160 gap-5"}>
-                            <GlassWater fill={"white"} size={400} className={"-rotate-180"}/>
-                            <div className={"flex flex-row justify-center items-center gap-5"}>
-                                {array.map((item, i) => (
-                                    <div
-                                        key={i}
-                                        className={"flex justify-center items-center border-2 bg-white rounded-[20px] h-40 w-40"}
-                                    >
-                                        {renderDice(item)}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                        <div
-                            className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
-                            <button
-                                className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                                onClick={() => {
-                                    handleGame("Chohan", "Even")
-                                }}>
-                                <p className={"text-[25px]"}>Even</p>
-                                <CircleSmall fill={"white"}/>
-                            </button>
-                            <button
-                                className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
-                                onClick={() => {
-                                    handleBet("Chohan", "Lower")
-                                }}>
-                                <Minus size={30}/>
-                            </button>
-                            <p className={"p-2 rounded-[10] w-25 justify-center items-center text-center flex text-nowrap gap-1"}>
-                                <JapaneseYen size={15}/>{bet}
-                            </p>
-                            <button
-                                className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
-                                onClick={() => {
-                                    handleBet("Chohan", "Add")
-                                }}>
-                                <Plus size={30}/>
-                            </button>
-                            <button
-                                className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                                onClick={() => {
-                                    handleGame("Chohan", "Odd")
-                                }}>
-                                <p className={"text-[25px]"}>Odd</p>
-                                <CircleSmall/>
-                            </button>
-                        </div>
-                    </div>
+                    <Chohan clubData={clubData} setMoney={setMoney} array={array} setArray={setArray} setPrize={setPrize}/>
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-md p-2 h-55 w-120 rounded-[20] text-[40px] flex justify-center items-center flex-col`}>
                             <p>{score ? `You won ${prize}!` : `You lost ${prize}.`}</p>
@@ -447,9 +396,9 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
                     <div
                         className={`backdrop-blur-sm flex flex-row justify-center items-center gap-30 p-10 h-150 rounded-[20] ${yesteryear.className}`}>
                         <div className="w-60 h-screen flex justify-center items-center">
-                            <Image src={club.host.image} alt={"You"} height={250} width={170}/>
+                            <Image src={clubData.host.image} alt={"You"} height={250} width={170}/>
                         </div>
-                        <h1 className={`z-50 text-white text-[30px] w-25 flex justify-center items-center`}>{club.host.name} {club.host.surname}</h1>
+                        <h1 className={`z-50 text-white text-[30px] w-25 flex justify-center items-center`}>{clubData.host.name} {clubData.host.surname}</h1>
                         <div className={"relative flex flex-col justify-center items-center w-50 h-full"}>
                             <div className={"relative h-50 w-50"}>
                                 {userCards.map((userCard, i) => (
@@ -587,15 +536,17 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
                     <h1 className={`absolute top-5 text-[75px] ${yesteryear.className}`}>Poker</h1>
                     <div
                         className={"relative h-[75vh] w-[75vw] flex justify-center items-center flex-row bg-green-800 rounded-[100] border-20 border-amber-950"}>
-                        <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
-                                     playerActionPending={playerActionPending}
-                                     setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard}
-                                     cards={cards} club={club} updateMoney={updateMoney}/>
+                        {/*
+                            <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
+                                        playerActionPending={playerActionPending}
+                                         setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard}
+                                         cards={cards} club={clubData}/>
+                        */}
                     </div>
                     {(stage === null || stage === "Showdown") && (
                         <button
                             onClick={() => {
-                                updateMoney(-5000).then()
+                                // updateMoney(-5000).then()
                                 pokerRef?.current.startGame()
                             }}
                             className={`${yesteryear.className} absolute bottom-5 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
@@ -637,7 +588,7 @@ const CasinoGame = ({game, money, club, updateMoney, setMoney}: CasinoGameProps)
                             else if (type === "pair") change = 1000
                             else if (type === "start") change = -100
 
-                            await updateMoney(change)
+                            // await updateMoney(change)
                         }}
                         setScore={setScore}/>
                     {score !== null && (

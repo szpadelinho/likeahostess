@@ -72,6 +72,18 @@ input::-webkit-inner-spin-button {
     }
 }
 
+@keyframes shake {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(8deg); }
+    50% { transform: rotate(-8deg); }
+    75% { transform: rotate(6deg); }
+    100% { transform: rotate(0deg); }
+}
+
+.shake {
+    animation: shake 0.8s ease-in-out;
+}
+
 *{
     cursor: url("/cursors/default.png") 10 10, auto !important;
 }
