@@ -236,9 +236,9 @@ model GameRound {
   winningNumber Int?
   totalBet      Int
   payout        Int?
+  gameData Json?
   createdAt     DateTime @default(now())
   resolvedAt    DateTime?
-
   bets          Bet[]
 }
 

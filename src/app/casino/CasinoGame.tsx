@@ -581,16 +581,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             )}
             {game === "Pachinko" && (
                 <>
-                    <Pachinko
-                        onTransaction={async (type: "jackpot" | "pair" | "lose" | "start") => {
-                            let change = 0
-                            if (type === "jackpot") change = 10000
-                            else if (type === "pair") change = 1000
-                            else if (type === "start") change = -100
-
-                            // await updateMoney(change)
-                        }}
-                        setScore={setScore}/>
+                    <Pachinko clubData={clubData} setMoney={setMoney} setScore={setScore}/>
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
                             <p>{score}</p>

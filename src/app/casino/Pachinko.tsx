@@ -1,14 +1,19 @@
 import Image from "next/image";
 import {useCallback, useEffect, useRef, useState} from "react";
 import {elements, getIcon} from "@/lib/casino";
+import {StoredClub} from "@/app/types";
+import {handleGameAction} from "@/lib/transactions";
 
 interface PachinkoProps {
     setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,
-    onTransaction: (type: "jackpot" | "pair" | "lose" | "start") => Promise<void>
+    clubData: StoredClub,
+    setMoney: (fn: (x: number) => number) => void
 }
 
-export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
+export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
     const [slots, setSlots] = useState([0, 0, 0])
+    const [gameId, setGameId] = useState<string | null>(null)
+    const [serverSlots, setServerSlots] = useState([0, 0, 0])
     const [spinning, setSpinning] = useState([false, false, false])
 
     const loopRef = useRef<HTMLAudioElement | null>(null)
@@ -29,8 +34,21 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
         }
     }, [])
 
-    const startGame = () => {
-        onTransaction("start").then()
+    const startGame = async () => {
+        handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
+        const res = await fetch("/api/casino/pachinko/start", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                clubData
+            })
+        })
+
+        const data = await res.json()
+        setGameId(data.gameId)
+        setMoney(data.userClub.money)
+        setServerSlots(data.slots)
+
         setScore(null)
         setSpinning([true, true, true])
 
@@ -40,6 +58,21 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
             loop.play().catch(() => {
             })
         }
+    }
+
+    const endGame = async () => {
+        const res = await fetch("api/casino/pachinko/result", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                clubData,
+                gameId
+            })
+        })
+
+        const data = await res.json()
+        setScore(data.score)
+        setMoney(data.userClub.money)
     }
 
     const toggleHold = (index: number) => {
@@ -54,6 +87,9 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
         setSpinning(prev => {
             return prev.map((val, i) => index === i ? false : val)
         })
+        setSlots(prev => {
+            return prev.map((val, i) => index === i ? serverSlots[index] : val)
+        })
     }
 
     const handleButton = useCallback((e: KeyboardEvent) => {
@@ -66,7 +102,7 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
             } else if (!spinning[0] && !spinning[1] && spinning[2]) {
                 toggleHold(2)
             } else {
-                startGame()
+                startGame().then()
             }
         }
     }, [spinning, slots, startGame, toggleHold])
@@ -123,19 +159,9 @@ export const Pachinko = ({setScore, onTransaction}: PachinkoProps) => {
                 }
             }, 100)
 
-            const [a, b, c] = slots
-            if (a === b && b === c) {
-                setScore("JACKPOT!!! +10000")
-                onTransaction("jackpot").then()
-            } else if (a === b || b === c || a === c) {
-                setScore("Two of a kind! +1000")
-                onTransaction("pair").then()
-            } else {
-                setScore("No luck.")
-                onTransaction("lose").then()
-            }
+            endGame().then()
         }
-    }, [spinning, slots, setScore, onTransaction])
+    }, [spinning, slots, setScore])
 
     return (
         <>

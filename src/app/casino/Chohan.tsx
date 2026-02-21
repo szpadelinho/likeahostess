@@ -22,7 +22,7 @@ export const Chohan = ({clubData, setMoney, array, setArray, setPrize}: ChohanPr
         handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
 
         try {
-            const res = await fetch("api/casino/pachinko", {
+            const res = await fetch("api/casino/chohan", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
