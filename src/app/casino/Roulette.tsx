@@ -1,17 +1,22 @@
 import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react"
+import {StoredClub} from "@/app/types";
+import {degToRad, redNumbers, RouletteBet, wheelNumbers} from "@/lib/casino";
 
 interface RouletteProps {
-    handleRouletteResult: (winningNumber: number) => void
+    handleRouletteResult: (gameId: string) => void,
+    clubData: StoredClub,
+    bets: RouletteBet[],
+    setMoney: (fn: (x: number) => number) => void
 }
 
-const Roulette = forwardRef(function Roulette({handleRouletteResult}: RouletteProps, ref) {
+const Roulette = forwardRef(function Roulette({handleRouletteResult, clubData, bets, setMoney}: RouletteProps, ref) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const [spinning, setSpinning] = useState(false)
     const [rotation, setRotation] = useState(0)
     const [ballRotation, setBallRotation] = useState(0)
     const [ballDrop, setBallDrop] = useState(0)
-
     const spinSoundRef = useRef<HTMLAudioElement | null>(null)
+
     useEffect(() => {
         spinSoundRef.current = new Audio("/sfx/roulette.m4a")
         spinSoundRef.current.volume = 1
@@ -20,14 +25,6 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult}: RoulettePr
             spinSoundRef.current = null
         }
     }, [])
-
-    const wheelNumbers = [
-        0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23,
-        10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26
-    ]
-    const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-
-    const degToRad = (d: number) => (d * Math.PI) / 180
 
     const drawRoulette = (ctx: CanvasRenderingContext2D, angleOffset: number, ballAngle: number) => {
         const size = ctx.canvas.width
@@ -173,19 +170,32 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult}: RoulettePr
         drawRoulette(ctx, rotation, ballRotation)
     }, [rotation, ballRotation, ballDrop, drawRoulette])
 
-    const spin = () => {
+    const spin = async () => {
+        if (bets === null) return
+        const start = await fetch("api/casino/roulette/start", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                clubData,
+                bets
+            }),
+        })
+
+        const startData = await start.json()
+        const randomIndex = startData.randomIndex
+        const gameId = startData.gameId
+        setMoney(startData.userClub.money)
+
         if (spinning) return
         setSpinning(true)
         setBallDrop(0)
 
         const spinSound = spinSoundRef.current
-        if(spinSound){
+        if (spinSound) {
             spinSound.currentTime = 0
-            spinSound.play().catch(() => {})
+            spinSound.play().catch(() => {
+            })
         }
-
-        const randomIndex = Math.floor(Math.random() * wheelNumbers.length)
-        const winningNumber = wheelNumbers[randomIndex]
 
         const spinsWheel = 6
         const spinsBall = 8
@@ -213,7 +223,7 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult}: RoulettePr
             if (t < 1) requestAnimationFrame(animate)
             else {
                 setSpinning(false)
-                handleRouletteResult(winningNumber)
+                handleRouletteResult(gameId)
 
                 const dropStart = performance.now()
                 const dropDuration = 800
@@ -229,7 +239,6 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult}: RoulettePr
                 requestAnimationFrame(drop)
             }
         }
-
         requestAnimationFrame(animate)
     }
 

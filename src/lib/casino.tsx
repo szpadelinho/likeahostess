@@ -121,6 +121,108 @@ export const buildDeck = () => {
     return suits.flatMap(s => ranks.map(r => `${s}_${r}`))
 }
 
+export const getBetsValidation = (bets: RouletteBet[], winningNumber: number) => {
+    let totalWin = 0
+    let totalLoss = 0
+    bets.forEach(({type, amount}) => {
+        const multiplier = getMultiplier(type)
+
+        let isWin = false
+        switch (type) {
+            case "Red":
+                isWin = redNumbers.includes(winningNumber)
+                break
+            case "Black":
+                isWin = blackNumbers.includes(winningNumber)
+                break
+            case "Even":
+                isWin = winningNumber !== 0 && winningNumber % 2 === 0
+                break
+            case "Odd":
+                isWin = winningNumber % 2 === 1
+                break
+            case "1 to 18":
+                isWin = winningNumber >= 1 && winningNumber <= 18
+                break
+            case "19 to 36":
+                isWin = winningNumber >= 19 && winningNumber <= 36
+                break
+            case "1st 12":
+                isWin = winningNumber >= 1 && winningNumber <= 12
+                break
+            case "2nd 12":
+                isWin = winningNumber >= 13 && winningNumber <= 24
+                break
+            case "3rd 12":
+                isWin = winningNumber >= 25 && winningNumber <= 36
+                break
+            case "Column 1":
+                isWin = [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34].includes(winningNumber)
+                break
+            case "Column 2":
+                isWin = [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35].includes(winningNumber)
+                break
+            case "Column 3":
+                isWin = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36].includes(winningNumber)
+                break
+            default:
+                if (!isNaN(Number(type))) {
+                    isWin = Number(type) === winningNumber
+                }
+                break
+        }
+
+        if (isWin) {
+            totalWin += amount * multiplier
+        } else {
+            totalLoss = amount
+        }
+    }, 0)
+    return { totalWin, totalLoss }
+}
+
+export const getMultiplier = (type: string) => {
+    switch (type) {
+        case "Red":
+        case "Black":
+        case "Even":
+        case "Odd":
+        case "1 to 18":
+        case "19 to 36":
+            return 2
+        case "1st 12":
+        case "2nd 12":
+        case "3rd 12":
+        case "Column 1":
+        case "Column 2":
+        case "Column 3":
+            return 3
+        case "0":
+            return 36
+        default:
+            if (!isNaN(Number(type))) return 1
+            return 0
+    }
+}
+
+export const numbers = [
+    [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
+    [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35],
+    [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34]
+]
+
+export const wheelNumbers = [ 0, 32, 15, 19, 4, 21, 2, 25, 17, 34, 6, 27, 13, 36, 11, 30, 8, 23, 10, 5, 24, 16, 33, 1, 20, 14, 31, 9, 22, 18, 29, 7, 28, 12, 35, 3, 26 ]
+
+export const degToRad = (d: number) => (d * Math.PI) / 180
+
+export interface RouletteBet{
+    type: string
+    amount: number
+}
+
+export const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
+export const blackNumbers = numbers.flat().filter((n) => !redNumbers.includes(n))
+
 export const Strawberry = createLucideIcon("Strawberry", strawberry)
 export const Peach = createLucideIcon("Peach", peach)
 export const Pumpkin = createLucideIcon("Pumpkin", pumpkin)

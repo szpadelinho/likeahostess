@@ -7,8 +7,9 @@ import Roulette from "@/app/casino/Roulette";
 import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
 import {Pachinko} from "@/app/casino/Pachinko";
 import {cards, getCardValue, personaMap, rankMap, StoredClub, suitMap} from "@/app/types";
-import {handleDeckBuild, handleDeckShuffle} from "@/lib/casino";
+import {handleDeckBuild, handleDeckShuffle, RouletteBet} from "@/lib/casino";
 import {Chohan} from "@/app/casino/Chohan";
+import {handleGameAction} from "@/lib/transactions";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -49,109 +50,28 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     const cardRef = useRef<HTMLImageElement | null>(null)
     const [rotation, setRotation] = useState({x: 0, y: 0})
 
-    const [bets, setBets] = useState<{ type: string, amount: number }[]>([])
+    const [bets, setBets] = useState<RouletteBet[]>([])
 
     const audio = new Audio("/sfx/name_introduction.m4a")
 
     const [selectedBet, setSelectedBet] = useState<string | null>(null)
 
-    const redNumbers = [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36]
-    const blackNumbers = Array.from({length: 36}, (_, i) => i + 1).filter(n => !redNumbers.includes(n))
+    const handleRouletteResult = async (gameId: string) => {
+        const end = await fetch("api/casino/roulette/reveal", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({
+                clubData,
+                gameId
+            }),
+        })
 
-    const handleRouletteResult = (winningNumber: number) => {
+        const endData = await end.json()
+        const winningNumber = endData.winningNumber
+        const net = endData.net
+        const win = endData.win
         setScore(winningNumber)
-
-        const getMultiplier = (type: string) => {
-            switch (type) {
-                case "Red":
-                case "Black":
-                case "Even":
-                case "Odd":
-                case "1 to 18":
-                case "19 to 36":
-                    return 2
-                case "1st 12":
-                case "2nd 12":
-                case "3rd 12":
-                case "Column 1":
-                case "Column 2":
-                case "Column 3":
-                    return 3
-                case "0":
-                    return 36
-                default:
-                    if (!isNaN(Number(type))) return 1
-                    return 0
-            }
-        }
-
-        let totalWin = 0
-        let totalLoss = 0
-
-        bets.forEach(({type, amount}) => {
-            const multiplier = getMultiplier(type)
-
-            let isWin = false
-            switch (type) {
-                case "Red":
-                    isWin = redNumbers.includes(winningNumber)
-                    break
-                case "Black":
-                    isWin = blackNumbers.includes(winningNumber)
-                    break
-                case "Even":
-                    isWin = winningNumber !== 0 && winningNumber % 2 === 0
-                    break
-                case "Odd":
-                    isWin = winningNumber % 2 === 1
-                    break
-                case "1 to 18":
-                    isWin = winningNumber >= 1 && winningNumber <= 18
-                    break
-                case "19 to 36":
-                    isWin = winningNumber >= 19 && winningNumber <= 36
-                    break
-                case "1st 12":
-                    isWin = winningNumber >= 1 && winningNumber <= 12
-                    break
-                case "2nd 12":
-                    isWin = winningNumber >= 13 && winningNumber <= 24
-                    break
-                case "3rd 12":
-                    isWin = winningNumber >= 25 && winningNumber <= 36
-                    break
-                case "Column 1":
-                    isWin = [1, 4, 7, 10, 13, 16, 19, 22, 25, 28, 31, 34].includes(winningNumber)
-                    break
-                case "Column 2":
-                    isWin = [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35].includes(winningNumber)
-                    break
-                case "Column 3":
-                    isWin = [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36].includes(winningNumber)
-                    break
-                default:
-                    if (!isNaN(Number(type))) {
-                        isWin = Number(type) === winningNumber
-                    }
-                    break
-            }
-
-            if (isWin) {
-                totalWin += amount * multiplier
-            } else {
-                totalLoss = amount
-            }
-        }, 0)
-
-        const net = totalWin - totalLoss
-
-        if (net > 0) {
-            setWin(2)
-            // updateMoney(net).then()
-        }
-        else if (net === 0) setWin(1)
-        else setWin(0)
-
+        setWin(win)
         setBet(net)
     }
 
@@ -501,7 +421,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                     <h1 className={`absolute top-15 text-[75px] ${yesteryear.className}`}>Roulette</h1>
                     <div
                         className={"relative p-10 gap-20 flex justify-center items-center flex-row bg-green-800 rounded-[50] border-20 border-amber-950"}>
-                        <Roulette ref={rouletteRef} handleRouletteResult={handleRouletteResult}/>
+                        <Roulette ref={rouletteRef} handleRouletteResult={handleRouletteResult} clubData={clubData} bets={bets} setMoney={setMoney}/>
                         <RouletteBoard handleBet={handleBet} bets={bets} selectedBet={selectedBet}
                                        setSelectedBet={setSelectedBet}/>
                         <div
@@ -513,7 +433,8 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                         <button
                             className={`${yesteryear.className} text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
                             onClick={async () => {
-
+                                handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
+                                rouletteRef.current?.spin()
                             }}>
                             Spin the roulette
                         </button>
