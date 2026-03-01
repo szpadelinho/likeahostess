@@ -6,10 +6,11 @@ import RouletteBoard from "@/app/casino/RouletteBoard";
 import Roulette from "@/app/casino/Roulette";
 import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
 import {Pachinko} from "@/app/casino/Pachinko";
-import {cards, getCardValue, personaMap, rankMap, StoredClub, suitMap} from "@/app/types";
-import {handleDeckBuild, handleDeckShuffle, RouletteBet} from "@/lib/casino";
+import {personaMap, rankMap, StoredClub, suitMap} from "@/app/types";
+import {RouletteBet} from "@/lib/casino";
 import {Chohan} from "@/app/casino/Chohan";
 import {handleGameAction} from "@/lib/transactions";
+import {Blackjack} from "@/app/casino/Blackjack";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -28,7 +29,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
 
     const [stage, setStage] = useState<"PreFlop" | "Flop" | "Turn" | "River" | "Showdown" | null>(null)
     const [playerActionPending, setPlayerActionPending] = useState<boolean>(false)
-
+    const [gameId, setGameId] = useState<string | null>(null)
     const [score, setScore] = useState<boolean | string | number | null>(null)
     const [value, setValue] = useState<string>("")
     const [total, setTotal] = useState<number>(0)
@@ -120,24 +121,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
         return {title, persona}
     }
 
-    const calculateHandValue = (hand: string[]): number => {
-        let total = 0
-        let aces = 0
-
-        hand.forEach(card => {
-            const value = getCardValue(card)
-            total += value
-            if (value == 11) aces++
-        })
-
-        while (total > 21 && aces > 0) {
-            total -= 10
-            aces--
-        }
-        return total
-    }
-
-    const handleGame = (type: string, value: string | null) => {
+    const handleGame = async (type: string, value: string | null) => {
         if (type === "Chohan" && value !== null) {
             // updateMoney(-bet).then()
             const sum = Array(2)
@@ -160,86 +144,94 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             }
         }
         else if (type === "Blackjack") {
-            // updateMoney(-bet).then()
-            const freshDeck = handleDeckShuffle(handleDeckBuild())
-            const userHand = freshDeck.slice(0, 2)
-            const dealerHand = freshDeck.slice(2, 4)
-            const remainingDeck = freshDeck.slice(4)
-            setDeck(remainingDeck)
-
-            setUserCards(userHand)
-            setDealerCards(dealerHand)
+            handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
             setIsPlayerTurn(true)
             setGameOver(false)
             setScore(null)
+            const res = await fetch("api/casino/blackjack/start", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    clubData,
+                    bet
+                })
+            })
+            const data = await res.json()
+            setUserCards(data.userHand)
+            setDealerCards(data.dealerHand)
+            if(data.finished){
+                setWin(data.win)
+                setGameOver(true)
+                switch (data.win) {
+                    case 2:
+                        setScore("Blackjack! You sir are a winner!")
+                        break
+                    case 1:
+                        setScore("Both players have a blackjack, sir.")
+                        break
+                    case 0:
+                        setScore("Dealer with the blackjack, sir.")
+                        break
+                }
+                return
+            }
+            setGameId(data.gameId)
         }
     }
 
-    const playerHit = () => {
+    const playerHit = async () => {
         if (!isPlayerTurn || gameOver || deck.length === 0) return
 
-        const remainingDeck = [...deck];
-        const card = remainingDeck.shift()
+        const res = await fetch("api/casino/blackjack/play", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                clubData,
+                gameId
+            })
+        })
 
+        const data = await res.json()
+        const card = data.card
         if (card) {
             setUserCards(currentUserCards => [...currentUserCards, card])
-            setDeck(remainingDeck)
-        }
-    }
-
-    useEffect(() => {
-        if (isPlayerTurn) {
-            if (calculateHandValue(userCards) > 21) {
-                setScore("Oops... you sir are a bust!")
-                setIsPlayerTurn(false)
-                setGameOver(true)
-                setWin(0)
-            } else if (calculateHandValue(userCards) === 21) {
-                setScore("Blackjack! Congatulations, sir!")
-                // updateMoney(bet * 2.5).then()
-                setIsPlayerTurn(false)
-                setGameOver(true)
-                setWin(2)
-            } else if (calculateHandValue(dealerCards) === 21) {
-                setScore("The dealer had a blackjack!")
-                setIsPlayerTurn(false)
-                setGameOver(true)
-                setWin(0)
-            }
-        }
-    }, [userCards, bet, calculateHandValue, dealerCards, isPlayerTurn])
-
-    const dealerPlay = (currentDeck: string[]) => {
-        const hand = [...dealerCards]
-        const newDeck = [...currentDeck]
-
-        while (calculateHandValue(hand) < 17) {
-            hand.push(newDeck.shift()!)
         }
 
-        const dealerValue = calculateHandValue(hand)
-        const userValue = calculateHandValue(userCards)
-
-        if (dealerValue > 21 || userValue > dealerValue) {
-            setScore("You sir have beaten the dealer!")
-            // updateMoney(bet * 2).then()
+        if(data.win === 2){
+            setIsPlayerTurn(false)
+            setGameOver(true)
+            setScore("Blackjack! You sir are a winner!")
             setWin(2)
-        } else if (dealerValue === userValue) {
-            setScore("It is a push, sir.")
-            // updateMoney(bet).then()
-            setWin(1)
-        } else {
-            setScore("No luck today, sir! Dealer wins!")
-            setWin(0)
         }
-
-        setDealerCards(hand)
-        setGameOver(true)
     }
 
-    const playerStand = () => {
+    const playerStand = async () => {
         setIsPlayerTurn(false)
-        dealerPlay(deck)
+        const res = await fetch("api/casino/blackjack/reveal", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                clubData,
+                gameId,
+                dealerCards
+            })
+        })
+        const data = await res.json()
+        setWin(data.win)
+        setGameOver(true)
+        switch(data.win){
+            case 2:
+                setScore("You sir are a winner!")
+                break
+            case 1:
+                setScore("It is a push, sir.")
+                break
+            case 0:
+                setScore("No luck today, sir. Dealer wins!")
+                break
+            default:
+                setScore("It is my fault, sir.")
+        }
     }
 
     const handleScore = (type: string, value: string, total: number, array: Array<number>, won: boolean) => {
@@ -250,7 +242,6 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             setScore(won)
             if (won) {
                 setPrize(bet * 2)
-                // updateMoney(bet * 2).then()
             } else {
                 setPrize(bet)
             }
@@ -312,102 +303,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             )}
             {game === "Blackjack" && (
                 <div className={"flex flex-col justify-center items-center gap-10"}>
-                    <h1 className={`text-[75px] ${yesteryear.className}`}>Blackjack</h1>
-                    <div
-                        className={`backdrop-blur-sm flex flex-row justify-center items-center gap-30 p-10 h-150 rounded-[20] ${yesteryear.className}`}>
-                        <div className="w-60 h-screen flex justify-center items-center">
-                            <Image src={clubData.host.image} alt={"You"} height={250} width={170}/>
-                        </div>
-                        <h1 className={`z-50 text-white text-[30px] w-25 flex justify-center items-center`}>{clubData.host.name} {clubData.host.surname}</h1>
-                        <div className={"relative flex flex-col justify-center items-center w-50 h-full"}>
-                            <div className={"relative h-50 w-50"}>
-                                {userCards.map((userCard, i) => (
-                                    <Image key={i}
-                                           className={"absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"}
-                                           src={`/cards/${userCard}.png`}
-                                           alt={`User Card ${i}`} height={200} width={125}
-                                           style={{
-                                               top: `${i * 25}px`,
-                                               left: `${i * 15}px`,
-                                               zIndex: i,
-                                           }}
-                                           onClick={() => {
-                                               setShowCard(userCard)
-                                           }}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                        <div className={"flex flex-col justify-center items-center w-50 h-full"}>
-                            <div className={"relative h-50 w-50"}>
-                                {dealerCards.map((dealerCard, i) => (
-                                    <Image key={i}
-                                           className={"absolute rounded-[10] transition-transform duration-300 translate hover:-translate-y-25 active:scale-125"}
-                                           src={`/cards/${(i === 1 && isPlayerTurn && !gameOver) ? cards.default : dealerCard}.png`}
-                                           alt={`Dealer Card ${i}`} height={200} width={125}
-                                           style={{
-                                               top: `${i * 25}px`,
-                                               left: `${i * 15}px`,
-                                               zIndex: i,
-                                           }}
-                                           onClick={() => {
-                                               if (i === 1 && isPlayerTurn && !gameOver) {
-                                                   setShowCard(cards.default)
-                                               } else {
-                                                   setShowCard(dealerCard)
-                                               }
-                                           }}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                        <h1 className={"z-50 text-white text-[30px] w-25 flex justify-center items-center"}>Dealer
-                            Tanimura</h1>
-                        <div className="w-60 h-screen flex justify-center items-center">
-                            <Image src={`/images/tanimura_cover.png`} alt={"Dealer"} height={250} width={150}/>
-                        </div>
-                    </div>
-                    <div className={"flex flex-col justify-center items-center gap-5"}>
-                        {isPlayerTurn && !gameOver ? (
-                            <div
-                                className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
-                                <button
-                                    className={`${yesteryear.className} text-[20px] p-2 w-25 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                                    onClick={playerHit}>
-                                    Hit
-                                </button>
-                                <button
-                                    className={`${yesteryear.className} text-[20px] p-2 w-25 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
-                                    onClick={playerStand}>
-                                    Stand
-                                </button>
-                            </div>
-                        ) : (
-                            <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center"}>
-                                <button
-                                    className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
-                                    onClick={() => {
-                                        handleBet("Blackjack", "Lower")
-                                    }}>
-                                    <Minus size={30}/>
-                                </button>
-                                <button
-                                    className={"p-2 rounded-[10] w-50 justify-center items-center text-center flex text-nowrap gap-2 text-[20px] hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
-                                    onClick={() => {
-                                        handleGame("Blackjack", null)
-                                    }}>
-                                    <JapaneseYen size={20}/>{bet}
-                                </button>
-                                <button
-                                    className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
-                                    onClick={() => {
-                                        handleBet("Blackjack", "Add")
-                                    }}>
-                                    <Plus size={30}/>
-                                </button>
-                            </div>
-                        )}
-                    </div>
+                    <Blackjack clubData={clubData} userCards={userCards} dealerCards={dealerCards} setShowCard={setShowCard} isPlayerTurn={isPlayerTurn} gameOver={gameOver} bet={bet} handleBet={handleBet} playerHit={playerHit} playerStand={playerStand} handleGame={handleGame}/>
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
                             <p>{score}</p>

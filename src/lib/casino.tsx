@@ -1,4 +1,4 @@
-import {cards} from "@/app/types";
+import {cards, getCardValue} from "@/app/types";
 import {Apple, Cherry, CircleSmall, Citrus, createLucideIcon, Heart, Star} from "lucide-react";
 import React from "react";
 import {flowerTulip, peach, pear, pumpkin, strawberry, watermelon} from "@lucide/lab";
@@ -205,6 +205,23 @@ export const getMultiplier = (type: string) => {
     }
 }
 
+export const calculateHandValue = (hand: string[]): number => {
+    let total = 0
+    let aces = 0
+
+    hand.forEach(card => {
+        const value = getCardValue(card)
+        total += value
+        if (value == 11) aces++
+    })
+
+    while (total > 21 && aces > 0) {
+        total -= 10
+        aces--
+    }
+    return total
+}
+
 export const numbers = [
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
     [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35],
@@ -231,3 +248,9 @@ export const Watermelon = createLucideIcon("Watermelon", watermelon)
 export const FlowerTulip = createLucideIcon("FlowerTulip", flowerTulip)
 
 export const elements = [Apple, Cherry, Star, Heart, Citrus, Strawberry, Peach, Pumpkin, Pear, Watermelon, FlowerTulip]
+
+export type BlackjackGameData = {
+    deck: string[]
+    userCards: string[]
+    dealerCards: string[]
+}
