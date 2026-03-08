@@ -1,10 +1,8 @@
 import React, {useState, useEffect, forwardRef, useImperativeHandle} from "react"
 import Image from "next/image"
 import {Coins, JapaneseYen} from "lucide-react"
-import {Club, yesteryear} from "@/app/types";
-import {buildDeck, cardToPokerNotation, handleDeckShuffle} from "@/lib/casino";
-
-const Hand: any = require("pokersolver").Hand
+import {cards, Club, yesteryear} from "@/app/types";
+import {Player} from "@/lib/casino";
 
 interface TexasHoldEmProps {
     setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,
@@ -13,27 +11,12 @@ interface TexasHoldEmProps {
     playerActionPending: boolean
     setPlayerActionPending: (value: (((prevState: boolean) => boolean) | boolean)) => void
     setShowCard: (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void
-    cards: { spades: string[]; hearts: string[]; diamonds: string[]; clubs: string[]; default: string }
-    club: Club
+    clubData: Club
 }
 
 interface TexasHoldEmRef {
     startGame: () => void,
-    playerAction: (action: "Raise" | "Call" | "Fold") => void,
-}
-
-interface Player {
-    name: string
-    hand: string[]
-    chips: number
-    currentBet: number
-    folded: boolean
-    image: string
-    hasActed: boolean
-}
-
-interface TexasHoldEmProps {
-    updateMoney: (change: number) => Promise<void>
+    turn: (action: "Raise" | "Call" | "Fold") => void,
 }
 
 export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
@@ -44,244 +27,69 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
          playerActionPending,
          setPlayerActionPending,
          setShowCard,
-         cards,
-         club,
-         updateMoney
+         clubData
      }, ref) => {
         const [deck, setDeck] = useState<string[]>([])
         const [communityCards, setCommunityCards] = useState<string[]>([])
         const [players, setPlayers] = useState<Player[]>([])
         const [pot, setPot] = useState<number>(0)
+        const [gameId, setGameId] = useState<string | null>(null)
 
-        const startGame = () => {
-            const freshDeck = handleDeckShuffle(buildDeck())
-            setPlayers([
-                {
-                    name: club.host.surname,
-                    hand: freshDeck.slice(0, 2),
-                    chips: 5000,
-                    currentBet: 0,
-                    folded: false,
-                    image: `${club.host.surname.toLowerCase()}_poker`,
-                    hasActed: false
-                },
-                {
-                    name: "Someya",
-                    hand: freshDeck.slice(2, 4),
-                    chips: 5000,
-                    currentBet: 0,
-                    folded: false,
-                    image: "someya_poker",
-                    hasActed: false
-                },
-                {
-                    name: "Nagumo",
-                    hand: freshDeck.slice(4, 6),
-                    chips: 5000,
-                    currentBet: 0,
-                    folded: false,
-                    image: "nagumo_poker",
-                    hasActed: false
-                },
-                {
-                    name: "Tanimura the Dealer",
-                    hand: freshDeck.slice(6, 8),
-                    chips: 5000,
-                    currentBet: 0,
-                    folded: false,
-                    image: "tanimura_poker",
-                    hasActed: false
-                },
-            ])
-            setCommunityCards([])
-            setDeck(freshDeck.slice(8))
-            setStage("PreFlop")
-            setScore(null)
-            setPot(0)
+        const startGame = async () => {
+            const res = await fetch("api/casino/texasholdem/start", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    clubData
+                })
+            })
+            const data = await res.json()
+
+            setPlayers(data.players)
+            setCommunityCards(data.communityCards)
+            setDeck(data.deck)
+            setStage(data.stage)
+            setScore(data.score)
+            setPot(data.pot)
             setPlayerActionPending(true)
+            setGameId(data.gameId)
         }
 
-        const getMaxBet = (currentPlayers: Player[]) => Math.max(...currentPlayers.map(p => p.currentBet))
-
-        const isBettingComplete = (currentPlayers: Player[]) => {
-            const activePlayers = currentPlayers.filter(p => !p.folded)
-            if (activePlayers.length < 2) return true
-            const maxBet = getMaxBet(activePlayers)
-            return activePlayers.every(p => p.hasActed && p.currentBet === maxBet)
-        }
-
-        const playerAction = (action: "Raise" | "Call" | "Fold") => {
+        const turn = async (action: "Raise" | "Call" | "Fold") => {
             if (!playerActionPending) return
             setPlayerActionPending(false)
 
-            let updatedPlayers = players.map((p, i) => {
-                if (i === 0) {
-                    let newBet = p.currentBet
-                    let newChips = p.chips
-                    let isFolded = p.folded
-                    const maxBet = getMaxBet(players)
-
-                    if (action === "Raise") {
-                        const raiseAmount = maxBet + 1000
-                        newChips -= (raiseAmount - p.currentBet)
-                        newBet = raiseAmount
-                    } else if (action === "Call") {
-                        const toCall = maxBet - p.currentBet
-                        newChips -= toCall
-                        newBet += toCall
-                    } else if (action === "Fold") {
-                        isFolded = true
-                    }
-                    return {...p, currentBet: newBet, chips: newChips, folded: isFolded, hasActed: true}
-                }
-                return p
-            })
-
-            if (action === "Raise") {
-                updatedPlayers = updatedPlayers.map((p, i) => i !== 0 ? {...p, hasActed: false} : p)
-            }
-
-            setPlayers(updatedPlayers)
-            setTimeout(() => nextTurn(1, updatedPlayers), 200)
-        }
-
-        const nextTurn = (index: number, currentPlayers: Player[]) => {
-            if (isBettingComplete(currentPlayers)) {
-                const totalPot = currentPlayers.reduce((sum, p) => sum + p.currentBet, 0)
-                setPot(prev => prev + totalPot)
-                setPlayers(prev => prev.map(p => ({...p, currentBet: 0, hasActed: false})))
-                nextStage()
-                return
-            }
-
-            if (index >= currentPlayers.length) {
-                setTimeout(() => nextTurn(0, currentPlayers), 200)
-                return
-            }
-
-            const current = currentPlayers[index]
-
-            if (index === 0) {
-                if (!current.folded) {
-                    setPlayerActionPending(true)
-                } else {
-                    setTimeout(() => nextTurn(index + 1, currentPlayers), 200)
-                }
-                return
-            }
-
-            if (current.folded || current.hasActed) {
-                setTimeout(() => nextTurn(index + 1, currentPlayers), 200)
-                return
-            }
-
-            const maxBet = getMaxBet(currentPlayers)
-            let aiAction: "Call" | "Fold" | "Raise"
-
-            if (current.currentBet < maxBet) {
-                aiAction = Math.random() > 0.2 ? "Call" : "Fold"
-            } else {
-                aiAction = Math.random() > 0.7 ? "Raise" : "Call"
-            }
-
-            setTimeout(() => {
-                let updatedPlayers = currentPlayers.map((p, i) => {
-                    if (i === index) {
-                        let newBet = p.currentBet
-                        let newChips = p.chips
-                        let isFolded = p.folded
-                        if (aiAction === "Raise") {
-                            const raiseAmount = maxBet + 1000
-                            newChips -= (raiseAmount - p.currentBet)
-                            newBet = raiseAmount
-                        } else if (aiAction === "Call") {
-                            const toCall = maxBet - p.currentBet
-                            newChips -= toCall
-                            newBet += toCall
-                        } else if (aiAction === "Fold") {
-                            isFolded = true
-                        }
-                        return {...p, currentBet: newBet, chips: newChips, folded: isFolded, hasActed: true}
-                    }
-                    return p
+            const res = await fetch("api/casino/texasholdem/action", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    clubData,
+                    gameId,
+                    action
                 })
-
-                if (aiAction === "Raise") {
-                    updatedPlayers = updatedPlayers.map((p, i) => i !== index ? {...p, hasActed: false} : p)
-                }
-
-                setPlayers(updatedPlayers)
-                setTimeout(() => nextTurn(index + 1, updatedPlayers), 400)
-            }, 400)
-        }
-
-        const nextStage = () => {
-            if (stage === "Showdown") return
-
-            const activePlayers = players.filter(p => !p.folded)
-            if (activePlayers.length <= 1) {
-                setStage("Showdown")
-                return
-            }
-
-            setPlayerActionPending(true)
-
-            if (stage === "PreFlop") {
-                setCommunityCards(deck.slice(0, 3))
-                setDeck(deck.slice(3))
-                setStage("Flop")
-            } else if (stage === "Flop") {
-                setCommunityCards(prev => [...prev, deck[0]])
-                setDeck(deck.slice(1))
-                setStage("Turn")
-            } else if (stage === "Turn") {
-                setCommunityCards(prev => [...prev, deck[0]])
-                setDeck(deck.slice(1))
-                setStage("River")
-            } else if (stage === "River") {
-                setStage("Showdown")
-            }
-        }
-
-        const evaluateHands = () => {
-            const activePlayers = players.filter(p => !p.folded)
-            if (activePlayers.length === 0) return setScore("No winner.")
-
-            if (activePlayers.length === 1) {
-                setScore(`${activePlayers[0].name} wins the pot!`)
-
-                if (activePlayers[0].name === club.host.surname) updateMoney(pot).then()
-                return
-            }
-
-            const hands = activePlayers.map(p => {
-                const handObj = Hand.solve([...p.hand, ...communityCards].map(cardToPokerNotation))
-                handObj.playerName = p.name
-                return handObj
             })
 
-            const winners = Hand.winners(hands)
-            const winnerNames = [...new Set(winners.map((w: any) => w.playerName))]
+            const data = await res.json()
 
-            if (winnerNames.length === 1) {
-                setScore(`${winnerNames[0]} wins with ${winners[0].name}`)
+            setPlayers(data.players)
+            setCommunityCards(data.communityCards)
+            setDeck(data.deck)
+            setStage(data.stage)
+            setPot(data.pot)
+            setScore(data.score ?? null)
 
-                if(winnerNames[0] === club.host.surname) updateMoney(pot).then()
-            } else {
-                setScore(`It's a tie between ${winnerNames.join(", ")}!`)
-
-                if(winnerNames.includes(club.host.surname)) updateMoney(pot / winnerNames.length).then()
+            if(data.stage !== "Showdown"){
+                setPlayerActionPending(true)
             }
         }
 
-        useImperativeHandle(ref, () => ({startGame, playerAction}))
+        useImperativeHandle(ref, () => ({startGame, turn}))
 
         useEffect(() => {
             if (stage === "Showdown") {
-                evaluateHands()
                 setPlayerActionPending(false)
             }
-        }, [stage, evaluateHands, setPlayerActionPending])
+        }, [stage, setPlayerActionPending])
 
         return (
             <div className="flex flex-col justify-center items-center h-full w-full">
@@ -300,11 +108,11 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
                         <div className="flex gap-2 relative justify-center items-center">
                             {p.hand.map((card, j) => (
                                 <Image key={j}
-                                       src={`/cards/${stage === "Showdown" || p.name === club.host.surname ? card : "default"}.png`}
+                                       src={`/cards/${stage === "Showdown" || p.name === clubData.host.surname ? card : "default"}.png`}
                                        alt={card} height={180} width={110}
                                        className={"rounded-[10] transition-transform duration-300 translate hover:scale-110 active:scale-125"}
                                        onClick={() => {
-                                           if (stage !== "Showdown" && p.name !== club.host.surname) {
+                                           if (stage !== "Showdown" && p.name !== clubData.host.surname) {
                                                setShowCard(cards.default)
                                            } else {
                                                setShowCard(card)

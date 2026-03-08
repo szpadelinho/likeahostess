@@ -353,17 +353,16 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                     <h1 className={`absolute top-5 text-[75px] ${yesteryear.className}`}>Poker</h1>
                     <div
                         className={"relative h-[75vh] w-[75vw] flex justify-center items-center flex-row bg-green-800 rounded-[100] border-20 border-amber-950"}>
-                        {/*
-                            <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
-                                        playerActionPending={playerActionPending}
-                                         setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard}
-                                         cards={cards} club={clubData}/>
-                        */}
+                        <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
+                                     playerActionPending={playerActionPending}
+                                     setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard} clubData={clubData}
+                        />
                     </div>
                     {(stage === null || stage === "Showdown") && (
                         <button
                             onClick={() => {
                                 // updateMoney(-5000).then()
+                                handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
                                 pokerRef?.current.startGame()
                             }}
                             className={`${yesteryear.className} absolute bottom-5 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
@@ -373,17 +372,17 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                     {playerActionPending && stage && (
                         <div className={"absolute bottom-5 flex flex-row gap-10"}>
                             <button
-                                onClick={() => pokerRef?.current.playerAction("Raise")}
+                                onClick={() => pokerRef?.current.turn("Raise")}
                                 className={`${yesteryear.className} text-[40px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
                                 Raise
                             </button>
                             <button
-                                onClick={() => pokerRef?.current.playerAction("Call")}
+                                onClick={() => pokerRef?.current.turn("Call")}
                                 className={`${yesteryear.className} text-[40px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
                                 Call
                             </button>
                             <button
-                                onClick={() => pokerRef?.current.playerAction("Fold")}
+                                onClick={() => pokerRef?.current.turn("Fold")}
                                 className={`${yesteryear.className} text-[40px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
                                 Fold
                             </button>

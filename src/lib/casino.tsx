@@ -2,6 +2,7 @@ import {cards, getCardValue} from "@/app/types";
 import {Apple, Cherry, CircleSmall, Citrus, createLucideIcon, Heart, Star} from "lucide-react";
 import React from "react";
 import {flowerTulip, peach, pear, pumpkin, strawberry, watermelon} from "@lucide/lab";
+const Hand: any = require("pokersolver").Hand
 
 export const panels: {title: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null, description: string, position: string}[] = [
     {
@@ -222,6 +223,15 @@ export const calculateHandValue = (hand: string[]): number => {
     return total
 }
 
+export const getMaxBet = (currentPlayers: Player[]) => Math.max(...currentPlayers.map(p => p.currentBet))
+
+export const isBettingComplete = (currentPlayers: Player[]) => {
+    const activePlayers = currentPlayers.filter(p => !p.folded)
+    if (activePlayers.length < 2) return true
+    const maxBet = getMaxBet(activePlayers)
+    return activePlayers.every(p => p.hasActed && p.currentBet === maxBet)
+}
+
 export const numbers = [
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
     [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35],
@@ -253,4 +263,261 @@ export type BlackjackGameData = {
     deck: string[]
     userCards: string[]
     dealerCards: string[]
+}
+
+export interface Player {
+    id: number
+    name: string
+    hand: string[]
+    chips: number
+    currentBet: number
+    folded: boolean
+    image: string
+    hasActed: boolean
+    isAI: boolean
+}
+
+export type TexasHoldemGameData = {
+    players: Player[]
+    communityCards: string[]
+    deck: string[]
+    stage: TexasHoldEmStage
+    score: string | null
+    pot: number
+}
+
+export type TexasHoldEmStage = "PreFlop" | "Flop" | "Turn" | "River" | "Showdown"
+
+export const texasHoldEmTurn = (gameData: TexasHoldemGameData, action: "Raise" | "Call" | "Fold"): TexasHoldemGameData => {
+    let { players, deck, communityCards, stage, pot } = gameData
+    const maxBet = getMaxBet(players)
+
+    players = players.map((p, i) => {
+        if(i !== 0 ) return p
+
+        let newBet = p.currentBet
+        let newChips = p.chips
+        let isFolded = p.folded
+
+        if (action === "Raise") {
+            const raiseAmount = maxBet + 1000
+            newChips -= (raiseAmount - p.currentBet)
+            newBet = raiseAmount
+        }
+
+        if (action === "Call") {
+            const toCall = maxBet - p.currentBet
+            newChips -= toCall
+            newBet += toCall
+        }
+
+        if (action === "Fold") {
+            isFolded = true
+        }
+
+        return {
+            ...p,
+            currentBet: newBet,
+            chips: newChips,
+            folded: isFolded,
+            hasActed: true,
+            score: null
+        }
+    })
+
+    if (action === "Raise") {
+        players = players.map((p, i) =>
+            i !== 0 ? { ...p, hasActed: false } : p
+        )
+    }
+
+    players = runAITurns(players)
+
+    if(isBettingComplete(players)) {
+        const totalPot = players.reduce((sum, p) => sum + p.currentBet, 0)
+
+        pot += totalPot
+
+        players = players.map(p => ({
+            ...p,
+            currentBet: 0,
+            hasActed: false
+        }))
+
+        const stageResult = nextStage({ players, deck, communityCards, stage, pot, score: null })
+
+        players = stageResult.players
+        deck = stageResult.deck
+        communityCards = stageResult.communityCards
+        stage = stageResult.stage
+        pot = stageResult.pot
+    }
+
+    return {
+        players,
+        deck,
+        communityCards,
+        stage,
+        score: null,
+        pot
+    }
+}
+
+export const runAITurns = (players: Player[]): Player[] => {
+    const maxBet = getMaxBet(players)
+
+    return players.map((p, i) => {
+
+        if (i === 0 || p.folded) return p
+
+        let action: "Call" | "Fold" | "Raise"
+
+        if (p.currentBet < maxBet) {
+            action = Math.random() > 0.2 ? "Call" : "Fold"
+        } else {
+            action = Math.random() > 0.7 ? "Raise" : "Call"
+        }
+
+        let newBet = p.currentBet
+        let newChips = p.chips
+        let isFolded: boolean = p.folded
+
+        if (action === "Call") {
+            const toCall = maxBet - p.currentBet
+            newChips -= toCall
+            newBet += toCall
+        }
+
+        if (action === "Raise") {
+            const raiseAmount = maxBet + 1000
+            newChips -= (raiseAmount - p.currentBet)
+            newBet = raiseAmount
+        }
+
+        if (action === "Fold") {
+            isFolded = true
+        }
+
+        return {
+            ...p,
+            currentBet: newBet,
+            chips: newChips,
+            folded: isFolded,
+            hasActed: true
+        }
+    })
+}
+
+export const evaluateHands = (gameData: TexasHoldemGameData): TexasHoldemGameData => {
+
+    const { players, communityCards, pot } = gameData
+
+    const activePlayers = players.filter(p => !p.folded)
+
+    if(activePlayers.length === 1){
+
+        const winner = activePlayers[0]
+
+        const updatedPlayers = players.map(p =>
+            p.name === winner.name
+                ? {...p, chips: p.chips + pot}
+                : p
+        )
+
+        return {
+            ...gameData,
+            players: updatedPlayers,
+            score: `${winner.name} wins the pot!`
+        }
+    }
+
+    const hands = activePlayers.map(p => {
+
+        const handObj = Hand.solve(
+            [...p.hand, ...communityCards].map(cardToPokerNotation)
+        )
+
+        return {
+            solver: handObj,
+            player: p
+        }
+    })
+
+    const winners = Hand.winners(hands.map(h => h.solver))
+
+    const winnerHands = hands.filter(h =>
+        winners.includes(h.solver)
+    )
+
+    const split = pot / winnerHands.length
+
+    const updatedPlayers = players.map(p => {
+
+        const win = winnerHands.find(w => w.player.name === p.name)
+
+        if(win){
+            return {
+                ...p,
+                chips: p.chips + split
+            }
+        }
+
+        return p
+    })
+
+    return {
+        ...gameData,
+        players: updatedPlayers,
+        score: `Winner: ${winnerHands.map(w => w.player.name).join(", ")}`
+    }
+}
+
+export const nextStage = (gameData: TexasHoldemGameData): TexasHoldemGameData => {
+    let { players, deck, communityCards, stage, pot } = gameData
+
+    const activePlayers = players.filter(p => !p.folded)
+
+    if (activePlayers.length <= 1) {
+        return { ...gameData, stage: "Showdown" }
+    }
+
+    let newCommunityCards = [...communityCards]
+    let newDeck = [...deck]
+    let newStage: TexasHoldEmStage = stage
+
+    switch (stage) {
+        case "PreFlop":
+            newCommunityCards = newDeck.slice(0, 3)
+            newDeck = newDeck.slice(3)
+            newStage = "Flop"
+            break
+        case "Flop":
+            newCommunityCards = [...newCommunityCards, newDeck[0]]
+            newDeck = newDeck.slice(1)
+            newStage = "Turn"
+            break
+        case "Turn":
+            newCommunityCards = [...newCommunityCards, newDeck[0]]
+            newDeck = newDeck.slice(1)
+            newStage = "River"
+            break
+        case "River":
+            newStage = "Showdown"
+            break
+    }
+
+    const newPlayers = players.map(p => ({
+        ...p,
+        currentBet: 0,
+        hasActed: false
+    }))
+
+    return {
+        ...gameData,
+        players: newPlayers,
+        deck: newDeck,
+        communityCards: newCommunityCards,
+        stage: newStage,
+        pot
+    }
 }
