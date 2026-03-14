@@ -18,7 +18,7 @@ export async function POST(req: Request){
 
     if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
 
-    let userClub = await prisma.userClub.findUnique({
+    const userClub = await prisma.userClub.findUnique({
         where: {
             userId_clubId: {
                 userId,

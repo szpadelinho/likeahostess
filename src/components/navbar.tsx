@@ -111,20 +111,20 @@ const Navbar = ({
                 </div>
                 {page !== "Auth" && (
                     <div className={"relative group"}>
-                        <button onClick={() => {
-                            if (page === "Tutorial" || page === "Selection") {
-                                setQuit?.(true)
-                            } else {
-                                setLoading(true)
-                            }
-                            {
-                                page !== "Selection" ? (
+                        <button
+                            onClick={() => {
+                                if (page === "Tutorial" || page === "Selection") {
+                                    setQuit?.(true)
+                                } else {
+                                    setLoading(true)
+                                }
+
+                                if (page !== "Selection") {
                                     router?.push("/")
-                                ) : (
-                                    signOut({redirectTo: "/auth"})
-                                )
-                            }
-                        }}
+                                } else {
+                                    signOut({ redirectTo: "/auth" }).then()
+                                }
+                            }}
                                 className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
                                 style={page === "LoveInHeart" ? {
                                     borderWidth: "8px",

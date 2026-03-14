@@ -17,7 +17,7 @@ export async function POST(req: Request){
 
     if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
 
-    let userClub = await prisma.userClub.findUnique({
+    const userClub = await prisma.userClub.findUnique({
         where: {
             userId_clubId: {
                 userId,
@@ -83,7 +83,7 @@ export async function POST(req: Request){
         const pot = 0
 
         const round = await prisma.$transaction(async (tx) => {
-            let updatedClub = await tx.userClub.update({
+            const updatedClub = await tx.userClub.update({
                 where: { id: userClub.id },
                 data: { money: { decrement: 5000 } }
             })

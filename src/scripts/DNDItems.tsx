@@ -2,7 +2,7 @@ import {useDrag, useDrop} from 'react-dnd';
 import {iconConverter} from "@/scripts/iconConverter";
 import {Dispatch, ReactNode, SetStateAction, useMemo, useRef, useState} from "react";
 import {
-    Annoyed, ConciergeBell,
+    ConciergeBell,
     BookUser, Box,
     Droplet,
     EyeClosed, Flame,

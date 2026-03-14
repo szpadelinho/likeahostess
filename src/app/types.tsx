@@ -20,6 +20,7 @@ import LiquidEther from "@/ui/LiquidEther";
 import PixelBlast from "@/ui/PixelBlast";
 import LightPillar from "@/ui/LightPillar";
 import Ballpit from "@/ui/Ballpit";
+import Image from "next/image";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -661,7 +662,7 @@ export function RoomDisplay({room, currentUserId}: RoomDisplayProps) {
         <div className="flex items-center gap-2">
             <div className="flex -space-x-2">
                 {otherMembers.slice(0, 3).map(member => (
-                    <img
+                    <Image
                         key={member.userId}
                         src={member.userImage ?? "/images/dragon.png"}
                         alt={member.username ?? ""}

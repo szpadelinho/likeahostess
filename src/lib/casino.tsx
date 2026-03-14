@@ -473,7 +473,7 @@ export const evaluateHands = (gameData: TexasHoldemGameData): TexasHoldemGameDat
 }
 
 export const nextStage = (gameData: TexasHoldemGameData): TexasHoldemGameData => {
-    let { players, deck, communityCards, stage, pot } = gameData
+    const { players, deck, communityCards, stage, pot } = gameData
 
     const activePlayers = players.filter(p => !p.folded)
 

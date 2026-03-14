@@ -9,7 +9,7 @@ import {Club, Moneylender, moneylenderType, StoredClub, yesteryear} from "@/app/
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import { Loan } from "@/app/types"
-import {handleGameAction, handleLoan, handleLoanTransaction, handleMoneyTransaction} from "@/lib/transactions";
+import {handleGameAction, handleLoan} from "@/lib/transactions";
 import { useSession } from "next-auth/react";
 
 export const MoneylenderClient = () => {
@@ -27,7 +27,6 @@ export const MoneylenderClient = () => {
     const [moneylender, setMoneylender] = useState<Moneylender | null>(null)
 
     const router = useRouter()
-    const { data: session } = useSession()
 
     useEffect(() => {
         if (Math.random() > 0.1){

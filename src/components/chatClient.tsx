@@ -6,6 +6,7 @@ import {ChatUser, ChatUserList, getPageStyle, Message, PageType, Room, RoomDispl
 import {useSession} from "next-auth/react";
 import {EyeClosed, List, MessageSquarePlus, Plus, Send} from "lucide-react";
 import {useRouter} from "next/navigation";
+import Image from "next/image";
 
 interface ChatClientProps {
     page?: PageType,
@@ -161,7 +162,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                         <p className={`text-[20px] ${yesteryear.className}`}>Silence was louder than words...</p>
                     ) : (
                         <div className={"flex items-center gap-2"}>
-                            <img src={lastMessage?.userImage ?? "/images/dragon.png"} alt={lastMessage?.username}
+                            <Image src={lastMessage?.userImage ?? "/images/dragon.png"} alt={lastMessage?.username ?? "Unknown"}
                                  className={"w-8 h-8 rounded-full"}/>
                             <p><strong>{lastMessage?.username}:</strong> {lastMessage?.content}</p>
                         </div>
@@ -190,7 +191,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 <div className={"h-64 overflow-y-auto p-2 mb-2 overflow-x-hidden flex flex-col gap-1"}>
                     {messages.map(msg => (
                         <div key={msg.id} className={"flex items-center gap-2"}>
-                            <img
+                            <Image
                                 onDoubleClick={() => {
                                 setLoading(true)
                                 router.push(`/profile/${msg.userId}`)
@@ -283,7 +284,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                                     ${selectedUsers.includes(user) ? "bg-pink-400/40" : ""}
                                 `}
                             >
-                                <img src={user.image ?? "/images/dragon.png"} alt={user.name} className={"w-8 h-8 rounded-full"}/>
+                                <Image src={user.image ?? "/images/dragon.png"} alt={user.name} className={"w-8 h-8 rounded-full"}/>
                                 <h1 className={"font-[700]"}>
                                     {user.name}
                                 </h1>

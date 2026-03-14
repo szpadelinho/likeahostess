@@ -12,6 +12,7 @@ interface TexasHoldEmProps {
     setPlayerActionPending: (value: (((prevState: boolean) => boolean) | boolean)) => void
     setShowCard: (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void
     clubData: Club
+    setDeck: (value: (((prevState: string[]) => string[]) | string[])) => void
 }
 
 interface TexasHoldEmRef {
@@ -27,9 +28,9 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
          playerActionPending,
          setPlayerActionPending,
          setShowCard,
-         clubData
+         clubData,
+         setDeck
      }, ref) => {
-        const [deck, setDeck] = useState<string[]>([])
         const [communityCards, setCommunityCards] = useState<string[]>([])
         const [players, setPlayers] = useState<Player[]>([])
         const [pot, setPot] = useState<number>(0)
@@ -38,7 +39,7 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
         const startGame = async () => {
             const res = await fetch("api/casino/texasholdem/start", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     clubData
                 })
@@ -61,7 +62,7 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
 
             const res = await fetch("api/casino/texasholdem/action", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     clubData,
                     gameId,
@@ -78,7 +79,7 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
             setPot(data.pot)
             setScore(data.score ?? null)
 
-            if(data.stage !== "Showdown"){
+            if (data.stage !== "Showdown") {
                 setPlayerActionPending(true)
             }
         }

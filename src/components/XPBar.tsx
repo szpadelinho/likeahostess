@@ -6,7 +6,7 @@ interface XPBarProps{
     rank: Rank
 }
 
-export const XPBar = ({value, rank}: XPBarProps) => {
+export const XPBar = ({value}: XPBarProps) => {
     const level = Math.floor(value / 1000)
     const current = value % 1000
     const percent = Math.min(100, (current / 1000) * 100)

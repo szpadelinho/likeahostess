@@ -57,7 +57,7 @@ export async function POST(req: Request){
     }
 }
 
-export async function DELETE(req: Request){
+export async function DELETE(){
     const session = await auth()
     if(!session?.user.id) return NextResponse.json({error: "Unauthorized"}, {status: 401})
 

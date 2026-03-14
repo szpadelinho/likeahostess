@@ -30,7 +30,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
     const [menu, setMenu] = useState<boolean>(false)
     const [closing, setClosing] = useState<boolean>(false)
 
-    const handleClick = (close?: boolean) => {
+    const handleClick = useCallback((close?: boolean) => {
         if(menu || close){
             if(windowType){
                 setFade(true)
@@ -61,9 +61,9 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                 setClosing(false)
             }, 0)
         }
-    }
+    }, [])
 
-    const handleWindow = (window: WindowType | null) => {
+    const handleWindow = useCallback((window: WindowType | null) => {
         if(menu){
             setClosing(true)
             setTimeout(() => {
@@ -81,7 +81,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
         else {
             setWindow(window)
         }
-    }
+    }, [])
 
     const handleButton = useCallback((e: KeyboardEvent) => {
         if (isTyping) return

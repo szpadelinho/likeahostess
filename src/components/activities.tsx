@@ -38,7 +38,6 @@ const Activities = ({
                         isJamPlaying,
                         setIsJamPlaying,
                         setJamToggle,
-                        session,
                         clubData,
                         setPopularity,
                         setMoney,

@@ -1,6 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
 import {Yesteryear} from "next/font/google";
-import {JapaneseYen, Minus, Plus} from "lucide-react";
 import Image from "next/image";
 import RouletteBoard from "@/app/casino/RouletteBoard";
 import Roulette from "@/app/casino/Roulette";
@@ -43,6 +42,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     const [userCards, setUserCards] = useState<string[]>([])
     const [isPlayerTurn, setIsPlayerTurn] = useState<boolean>(false)
     const [gameOver, setGameOver] = useState<boolean>(false)
+
     const [deck, setDeck] = useState<string[]>([])
 
     const [showCard, setShowCard] = useState<string | null>(null)
@@ -52,8 +52,6 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     const [rotation, setRotation] = useState({x: 0, y: 0})
 
     const [bets, setBets] = useState<RouletteBet[]>([])
-
-    const audio = new Audio("/sfx/name_introduction.m4a")
 
     const [selectedBet, setSelectedBet] = useState<string | null>(null)
 
@@ -104,10 +102,11 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             setCardModal(false)
             requestAnimationFrame(() => {
                 setCardModal(true)
+                const audio = new Audio("/sfx/name_introduction.m4a")
                 audio.play()
             })
         }
-    }, [showCard, audio])
+    }, [showCard])
 
     const getCardPersona = (card: string): { title: string; persona: string } => {
         const [suitKey, rankKey] = card.split("_")
@@ -355,13 +354,12 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                         className={"relative h-[75vh] w-[75vw] flex justify-center items-center flex-row bg-green-800 rounded-[100] border-20 border-amber-950"}>
                         <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
                                      playerActionPending={playerActionPending}
-                                     setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard} clubData={clubData}
+                                     setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard} clubData={clubData} setDeck={setDeck}
                         />
                     </div>
                     {(stage === null || stage === "Showdown") && (
                         <button
                             onClick={() => {
-                                // updateMoney(-5000).then()
                                 handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
                                 pokerRef?.current.startGame()
                             }}

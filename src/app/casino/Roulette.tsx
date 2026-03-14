@@ -1,4 +1,4 @@
-import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react"
+import {forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState} from "react"
 import {StoredClub} from "@/app/types";
 import {degToRad, redNumbers, RouletteBet, wheelNumbers} from "@/lib/casino";
 
@@ -26,7 +26,7 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult, clubData, b
         }
     }, [])
 
-    const drawRoulette = (ctx: CanvasRenderingContext2D, angleOffset: number, ballAngle: number) => {
+    const drawRoulette = useCallback((ctx: CanvasRenderingContext2D, angleOffset: number, ballAngle: number) => {
         const size = ctx.canvas.width
         const radius = size / 2
         const sliceAngle = (2 * Math.PI) / wheelNumbers.length
@@ -158,7 +158,7 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult, clubData, b
         ctx.fill()
         ctx.stroke()
         ctx.restore()
-    }
+    }, [])
 
     useEffect(() => {
         const canvas = canvasRef.current

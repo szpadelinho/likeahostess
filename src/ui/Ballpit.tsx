@@ -211,13 +211,13 @@ class X {
         this.size.pixelRatio = pr;
     }
 
-    get postprocessing() {
-        return this.#postprocessing;
-    }
-    set postprocessing(value: any) {
-        this.#postprocessing = value;
-        this.render = value.render.bind(value);
-    }
+    // get postprocessing() {
+    //     return this.#postprocessing;
+    // }
+    // set postprocessing(value: any) {
+    //     this.#postprocessing = value;
+    //     this.render = value.render.bind(value);
+    // }
 
     #onIntersection(entries: IntersectionObserverEntry[]) {
         this.#isAnimating = entries[0].isIntersecting;

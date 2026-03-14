@@ -28,7 +28,7 @@ export async function POST(req: Request){
 
     if(!userClub) return NextResponse.json({message: "No such userClub"}, {status: 404})
 
-    let gameRound = await prisma.gameRound.findUnique({
+    const gameRound = await prisma.gameRound.findUnique({
         where: {
             id: gameId
         }

@@ -18,14 +18,9 @@ import {towelFolded, cupSaucer} from "@lucide/lab";
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
-import {Buffet, ServiceType, Hostess, Club, StoredClub, getPageStyle} from "@/app/types";
+import {Buffet, ServiceType, Hostess, Club, StoredClub} from "@/app/types";
 import {Session} from "next-auth";
-import {
-    handleExperienceTransaction, handleGameAction, handleHostessFatigueTransaction, handleInquiry,
-    handleMoneyTransaction,
-    handlePopularityTransaction,
-    handleSuppliesTransaction
-} from "@/lib/transactions";
+import {handleGameAction, handleInquiry} from "@/lib/transactions";
 
 const TowelFolded = createLucideIcon("TowelFolded", towelFolded)
 const CupSaucer = createLucideIcon("CupSaucer", cupSaucer)
@@ -68,10 +63,8 @@ export const Inquiry = ({
                             serviceType,
                             hostesses,
                             setBarKeys,
-                            session,
                             clubData,
                             setMoney,
-                            setClub,
                             setPopularity,
                             setExperience,
                             setSupplies,

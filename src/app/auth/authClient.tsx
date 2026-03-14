@@ -124,7 +124,7 @@ export default function AuthClient() {
             window.removeEventListener("keydown", handleTitleInteraction)
             window.removeEventListener("touchstart", handleTitleInteraction)
         }
-    }, [titleActive, game])
+    }, [titleActive, game, volume])
 
     const changeMode = (mode: "Main" | "Authentication") => {
         setTransition("Child")

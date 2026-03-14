@@ -105,7 +105,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
                 startGame().then()
             }
         }
-    }, [spinning, slots, startGame, toggleHold])
+    }, [spinning, slots, startGame, toggleHold, slots])
 
     useEffect(() => {
         window.addEventListener("keydown", handleButton)
@@ -132,7 +132,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
         return () => {
             intervals.forEach(clearInterval)
         }
-    }, [spinning, elements.length])
+    }, [spinning])
 
     const prevSpinningRef = useRef(spinning)
 
@@ -161,7 +161,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
 
             endGame().then()
         }
-    }, [spinning, slots, setScore])
+    }, [spinning, slots, setScore, endGame])
 
     return (
         <>
