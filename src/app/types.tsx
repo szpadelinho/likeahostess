@@ -666,7 +666,7 @@ export function RoomDisplay({room, currentUserId}: RoomDisplayProps) {
                         key={member.userId}
                         src={member.userImage ?? "/images/dragon.png"}
                         alt={member.username ?? ""}
-                        className="w-6 h-6 rounded-full border"
+                        height={24} width={24} className={"object-content rounded-full border"}
                     />
                 ))}
             </div>

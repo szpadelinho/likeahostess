@@ -9,14 +9,6 @@ export async function GET(req: Request) {
     const userId = session?.user?.id
     if (!session || !userId || !clubId) return NextResponse.json({error: "Unauthorized"}, {status: 401})
 
-    const gameAction = await prisma.gameAction.findFirst({
-        where: {
-            userId: session.user.id
-        }
-    })
-
-    if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
-
     const userClub = await prisma.userClub.findUnique({
         where: {
             userId_clubId: {
@@ -27,6 +19,12 @@ export async function GET(req: Request) {
     })
 
     if(!userClub) return NextResponse.json(null)
+
+    const gameAction = await prisma.gameAction.findFirst({
+        where: {
+            userId: session.user.id
+        }
+    })
 
     try {
         const effect = await prisma.effect.findFirst({
@@ -50,7 +48,7 @@ export async function GET(req: Request) {
             await prisma.gameAction.delete({
                 where: {
                     userId: session.user.id,
-                    id: gameAction.id
+                    id: gameAction?.id
                 }
             })
         }

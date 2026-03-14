@@ -163,7 +163,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     ) : (
                         <div className={"flex items-center gap-2"}>
                             <Image src={lastMessage?.userImage ?? "/images/dragon.png"} alt={lastMessage?.username ?? "Unknown"}
-                                 className={"w-8 h-8 rounded-full"}/>
+                                   height={32} width={32} className={"object-content rounded-full"}/>
                             <p><strong>{lastMessage?.username}:</strong> {lastMessage?.content}</p>
                         </div>
                     )}
@@ -196,7 +196,8 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                                 setLoading(true)
                                 router.push(`/profile/${msg.userId}`)
                             }} src={msg.userImage ?? "/images/dragon.png"} alt={msg.username}
-                                 className={"w-8 h-8 rounded-full hover:w-8.5 hover:h-8.5 hover:opacity-50 transition-all transform duration-100 ease-in-out"}/>
+                                height={24} width={24}
+                                 className={"object-content rounded-full hover:scale-110 hover:opacity-50 transition-all transform duration-100 ease-in-out"}/>
                             <h1 className={"flex justify-center items-center gap-1"}
                                 onClick={() => {
                                 if (!input.includes(msg.username)) {
@@ -284,7 +285,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                                     ${selectedUsers.includes(user) ? "bg-pink-400/40" : ""}
                                 `}
                             >
-                                <Image src={user.image ?? "/images/dragon.png"} alt={user.name} className={"w-8 h-8 rounded-full"}/>
+                                <Image src={user.image ?? "/images/dragon.png"} alt={user.name} height={32} width={32} className={"object-content rounded-full"}/>
                                 <h1 className={"font-[700]"}>
                                     {user.name}
                                 </h1>
