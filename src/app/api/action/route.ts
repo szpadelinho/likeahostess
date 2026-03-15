@@ -40,13 +40,16 @@ export async function POST(req: Request){
         })
         if(existing) return NextResponse.json({error: "Game action already active"}, {status: 400})
 
+        const now = new Date()
+        const future = new Date(now.getTime() + 10000)
+
         const gameAction = await prisma.gameAction.create({
             data: {
                 userId: session.user.id,
                 type,
                 status,
-                startedAt: new Date().toISOString(),
-                endsAt: new Date().toISOString() + 5,
+                startedAt: now,
+                endsAt: future,
             }
         })
 

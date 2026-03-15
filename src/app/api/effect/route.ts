@@ -1,6 +1,7 @@
 import {prisma} from "../../../../prisma/prisma";
 import {NextResponse} from "next/server";
 import {auth} from "@/lib/auth";
+import {drinks, DRINKS_MAP} from "@/app/types";
 
 export async function GET(req: Request) {
     const session = await auth()
@@ -20,12 +21,6 @@ export async function GET(req: Request) {
 
     if(!userClub) return NextResponse.json(null)
 
-    const gameAction = await prisma.gameAction.findFirst({
-        where: {
-            userId: session.user.id
-        }
-    })
-
     try {
         const effect = await prisma.effect.findFirst({
             where: {
@@ -44,15 +39,6 @@ export async function GET(req: Request) {
             return NextResponse.json(null)
         }
 
-        if(effect) {
-            await prisma.gameAction.delete({
-                where: {
-                    userId: session.user.id,
-                    id: gameAction?.id
-                }
-            })
-        }
-
         return NextResponse.json(effect)
     } catch (err) {
         console.error("Effect Route.ts", err)
@@ -63,7 +49,9 @@ export async function GET(req: Request) {
 export async function POST(req: Request){
     const session = await auth()
     const userId = session?.user?.id
-    const { type, clubId } = await req.json()
+    const { clubData, effect } = await req.json()
+    const clubId = clubData?.id
+    const type = effect
 
     if (!session || !userId) return NextResponse.json({error: "Unauthorized"}, {status: 401})
 
@@ -93,8 +81,7 @@ export async function POST(req: Request){
     try{
         const existingEffect = await prisma.effect.findFirst({
             where: {
-                userClubId: userClub.id,
-                active: true
+                userClubId: userClub.id
             }
         })
 
@@ -117,6 +104,26 @@ export async function POST(req: Request){
             }
         })
 
+        const selectedDrink = drinks.find(d => DRINKS_MAP[d.id as keyof typeof DRINKS_MAP] === type)
+
+        if (!selectedDrink) {
+            console.error("Nie znaleziono drinku dla typu:", type)
+            return NextResponse.json({ error: "Invalid effect type" }, { status: 400 })
+        }
+
+        const price = selectedDrink.price
+
+        const club = await prisma.userClub.update({
+            where: {
+                id: userClub.id
+            },
+            data: {
+                money: {
+                    decrement: price
+                }
+            }
+        })
+
         if(effect) {
             await prisma.gameAction.delete({
                 where: {
@@ -126,14 +133,16 @@ export async function POST(req: Request){
             })
         }
 
-        return NextResponse.json(effect, { status: 201 })
+        return NextResponse.json({
+            money: club.money,
+            clubData: club
+        }, { status: 201 })
     }
-    catch(err){
-        console.error("Effect POST error:", err)
-        return NextResponse.json(
-            { error: "Cannot create effect" },
-            { status: 500 }
-        )
+    catch(err: any){
+        return NextResponse.json({
+            error: "Internal Server Error",
+            message: err.message
+        }, { status: 500 });
     }
 }
 

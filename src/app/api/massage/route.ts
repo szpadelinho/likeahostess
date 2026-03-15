@@ -31,7 +31,7 @@ export async function POST(req: Request){
     try{
         const massage = massageItems[massageId]
 
-        const hostesses = await prisma.userHostess.updateMany({
+        await prisma.userHostess.updateMany({
             where: {
                 userId: session.user.id,
             },
@@ -40,6 +40,23 @@ export async function POST(req: Request){
                     decrement: massage.fatigue
                 }
             }
+        })
+
+        await prisma.userHostess.updateMany({
+            where: {
+                userId: session.user.id,
+                fatigue: {
+                    lt: 0
+                }
+            },
+            data: {
+                fatigue: 0
+            }
+        })
+
+        const hostesses = await prisma.userHostess.findMany({
+            where: { userId: session.user.id },
+            include: { hostess: true }
         })
 
         const club = await prisma.userClub.update({

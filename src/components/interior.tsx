@@ -349,7 +349,7 @@ const Interior = ({
                                 )}
                                 {visit[i] && (
                                     <div className={`absolute left-12.5 z-50 ${TimePositioning(i)}`}>
-                                        <LoadingBar key={`loading-${i}-${barKeys}`} duration={60000}
+                                        <LoadingBar key={`loading-${i}-${barKeys[i]}`} duration={60000}
                                                     onComplete={() => setTimeout(() => InquiryHandler(i, "End", true), 0)}
                                                     paused={inquiry[i]}
                                                     onProgressChange={() => {

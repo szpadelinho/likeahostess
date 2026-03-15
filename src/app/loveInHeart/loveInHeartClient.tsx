@@ -105,7 +105,8 @@ export const LoveInHeartClient = () => {
 
     const massageItems = [
         {
-            title: "Normal service",
+            id: 0,
+            title: "Standard",
             Icon: FlowerLotus,
             description: "The most basic massage, mainly to refresh yourself.",
             fatigue: "Decreases the fatigue by 25.",
@@ -113,7 +114,8 @@ export const LoveInHeartClient = () => {
             onClick: () => setMassage("Standard")
         },
         {
-            title: "Deluxe service",
+            id: 1,
+            title: "Deluxe",
             Icon: FlowerRose,
             description: "A more premium option for those, who look for a more professional and softer service.",
             fatigue: "Decreases the fatigue by 50.",
@@ -121,7 +123,8 @@ export const LoveInHeartClient = () => {
             onClick: () => setMassage("Deluxe")
         },
         {
-            title: "VIP service",
+            id: 2,
+            title: "VIP",
             Icon: FlowerTulip,
             description: "For the lone souls seeking for a more intimate meeting.",
             fatigue: "Decreases the fatigue by 75.",
@@ -129,7 +132,8 @@ export const LoveInHeartClient = () => {
             onClick: () => setMassage("VIP")
         },
         {
-            title: "Super VIP service",
+            id: 3,
+            title: "Super VIP",
             Icon: FlowerStem,
             description: "Only for the real massage lovers. All cosmetics included.",
             fatigue: "Decreases the fatigue absolutely.",
@@ -310,13 +314,15 @@ export const LoveInHeartClient = () => {
                                                     borderImageRepeat: "round",
                                                 }}
                                                 className="bg-[url(/images/wood_texture2.png)] rounded-[5] flex flex-col justify-center items-center text-center gap-2 p-2">
-                                                <Image
-                                                    className="mix-blend-color-burn contrast-[5]"
-                                                    src={hostess.image}
-                                                    alt={`${hostess.name} ${hostess.surname} head shot`}
-                                                    height={60}
-                                                    width={100}
-                                                />
+                                                {hostess.image && (
+                                                    <Image
+                                                        className="mix-blend-color-burn contrast-[5]"
+                                                        src={hostess.image}
+                                                        alt={`${hostess.name} ${hostess.surname} head shot`}
+                                                        height={60}
+                                                        width={100}
+                                                    />
+                                                )}
                                                 <p>
                                                     Fatigue: {current}
                                                     {massage && (
@@ -334,7 +340,6 @@ export const LoveInHeartClient = () => {
                                                             style={{ width: `${predicted}%` }}/>
                                                     )}
                                                 </div>
-
                                             </div>
                                         )
                                     })}
@@ -349,10 +354,10 @@ export const LoveInHeartClient = () => {
                                     borderImageSlice: 30,
                                     borderImageRepeat: "round"
                                 }}
-                                onClick={() => {
+                                onClick={async () => {
                                     if(clubData && massage){
-                                        handleGameAction({type: "MASSAGE", status: "ACTIVE"}).then()
-                                        handleMassage({clubData, massageId: massageItems.findIndex((item) => item.title === massage), setHostesses, setMoney}).then()
+                                        await handleGameAction({type: "MASSAGE", status: "ACTIVE"}).then()
+                                        handleMassage({clubData, massageId: massageItems.findIndex(m => m.title === massage), setHostesses, setMoney}).then()
                                     }
                                     changeMode()
                                 }}

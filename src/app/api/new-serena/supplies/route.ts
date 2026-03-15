@@ -7,7 +7,7 @@ export async function POST(req: Request){
     if(!session?.user.id) return NextResponse.json({message: "Unauthorized"}, {status: 401})
 
     const { clubData, amount } = await req.json()
-    if(clubData === undefined || amount !== "number") return NextResponse.json({message: "Incorrect credentials"}, {status: 400})
+    if(!clubData || typeof amount !== "number") return NextResponse.json({message: "Incorrect credentials"}, {status: 400})
 
     const gameAction = await prisma.gameAction.findFirst({
         where: {
@@ -41,7 +41,10 @@ export async function POST(req: Request){
             })
         }
 
-        return NextResponse.json({clubData: club})
+        return NextResponse.json({
+            money: club.money,
+            supplies: club.supplies
+        })
     }
     catch(err){
         console.error(err)

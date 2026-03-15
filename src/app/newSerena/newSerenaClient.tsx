@@ -259,9 +259,9 @@ const NewSerenaClient = () => {
                                                             <h2 className={"z-1 text-[30px]"}>{drink.description}</h2>
                                                             <h3 className={"z-1 text-[70px] absolute -right-10 -bottom-15 border-white border-2 rounded-[5] bg-black/90"}>¥{drink.price}</h3>
                                                             <button
-                                                                onClick={() => {
+                                                                onClick={async () => {
                                                                     if(clubData){
-                                                                        handleGameAction({type: "EFFECT", status: "ACTIVE"}).then()
+                                                                        await handleGameAction({type: "EFFECT", status: "ACTIVE"}).then()
                                                                         handleEffect({clubData, effect: DRINKS_MAP[drink.id], setMoney, setClub}).then()
                                                                         switchMode("Selection")
                                                                     }
@@ -311,9 +311,9 @@ const NewSerenaClient = () => {
                                                 <h2 className={`text-[10px] ${newSerena.name === "Reina" ? "max-w-40" : "max-w-50"}`}>I am obliged to pay the full price of the product mentioned earlier. I fully understand all the rules and necessities which I must follow. The supplies are automatically my property after signing this contract and paying the price of:</h2>
                                                 <h1>¥{(100 - supplies) * 1000}</h1>
                                                 <button
-                                                    onClick={() => {
+                                                    onClick={async () => {
                                                         if(clubData) {
-                                                            handleGameAction({type: "SUPPLIES", status: "ACTIVE"}).then()
+                                                            await handleGameAction({type: "SUPPLIES", status: "ACTIVE"}).then()
                                                             handleSupplies({clubData, amount: 100 - supplies, setMoney, setSupplies, setClub}).then()
                                                         }
                                                         switchMode("Selection")

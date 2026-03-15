@@ -185,8 +185,8 @@ export const Inquiry = ({
         return false
     })()
 
-    const InquiryEndHandler = (type: "End" | "Extend", present: boolean, payment: boolean) => {
-        handleGameAction({type: "INQUIRY_END", status: "ACTIVE"}).then()
+    const InquiryEndHandler = async (type: "End" | "Extend", present: boolean, payment: boolean) => {
+        await handleGameAction({type: "INQUIRY_END", status: "ACTIVE"}).then()
         if (inquiryTableId !== null && hostesses[inquiryTableId] !== null && clubData) {
             if (present) {
                 handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "STOP", endOption: "PRESENT"}).then()
@@ -227,9 +227,9 @@ export const Inquiry = ({
         }
     }
 
-    const InquiryServiceHandler = (type: ServiceType) => {
+    const InquiryServiceHandler = async (type: ServiceType) => {
         if (inquiryTableId !== null && type === serviceType[inquiryTableId] && hostesses[inquiryTableId] !== null && clubData) {
-            handleGameAction({type: "INQUIRY_START", status: "ACTIVE"}).then()
+            await handleGameAction({type: "INQUIRY_START", status: "ACTIVE"}).then()
             handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "SERVICE"}).then()
             inquiryClose(inquiryTableId)
         } else {
@@ -331,7 +331,7 @@ export const Inquiry = ({
                         {isOrderCorrect && (
                             <button
                                 className={"absolute bottom-5 left-[69%] border-white border-2 rounded-[15] p-1 w-50 hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110"}
-                                onClick={() => {
+                                onClick={async () => {
                                     if (inquiryTableId !== null) {
                                         setDinedTables(prev => {
                                             const updated = [...prev]
@@ -341,8 +341,8 @@ export const Inquiry = ({
                                     }
                                     inquiryClose(inquiryTableId)
                                     if (hostesses[inquiryTableId] !== null && clubData) {
-                                        handleGameAction({type: "INQUIRY_START", status: "ACTIVE"}).then()
-                                        handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, mealId: randomMealIndex, beverageId: randomBeverageIndex, type: "START"}).then()
+                                        await handleGameAction({type: "INQUIRY_START", status: "ACTIVE"}).then()
+                                        handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, mealId: randomMeal ? randomMeal.id : undefined, beverageId: randomBeverage ? randomBeverage.id : undefined, type: "START"}).then()
                                     }
                                 }}>
                                 {dealButtonText}
@@ -374,7 +374,7 @@ export const Inquiry = ({
                                         <button
                                             className={`flex justify-center items-center border-white border-2 rounded-[20] p-5 transition-all duration-200 ease-in-out transform active:scale-110 ${wiggle === action.title ? "!bg-red-600 !hover:bg-red-600 !active:bg-red-600" : "bg-pink-900 hover:bg-white hover:text-black"}`}
                                             onClick={() => {
-                                                InquiryServiceHandler(action.title)
+                                                InquiryServiceHandler(action.title).then()
                                             }}>
                                             <action.Icon size={50}/>
                                         </button>

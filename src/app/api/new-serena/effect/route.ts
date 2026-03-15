@@ -2,6 +2,7 @@ import {auth} from "@/lib/auth";
 import {NextResponse} from "next/server";
 import {EffectType} from "@prisma/client";
 import {prisma} from "../../../../../prisma/prisma";
+import {drinks, DRINKS_MAP} from "@/app/types";
 
 export async function POST(req: Request){
     const session = await auth()
@@ -13,14 +14,6 @@ export async function POST(req: Request){
     }
     if(clubData === undefined || !Object.values(EffectType).includes(effect)) return NextResponse.json({message: "Incorrect credentials"}, {status: 400})
 
-    const EFFECT_PRICE_MAP: Record<EffectType, number> = {
-        DRAGON_OF_DOJIMA: 10000000,
-        LIFELINE_OF_KAMUROCHO: 2000000,
-        DRAGON_OF_KANSAI: 3000000,
-        SAFEKEEPER_OF_THE_TOJO_CLAN: 4000000,
-        FIGHTING_VIPER: 5000000
-    }
-
     const gameAction = await prisma.gameAction.findFirst({
         where: {
             userId: session.user.id
@@ -30,9 +23,20 @@ export async function POST(req: Request){
     if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
 
     try{
+        const userClub = await prisma.userClub.findUnique({
+            where: {
+                userId_clubId: {
+                    userId: session.user.id,
+                    clubId: clubData.id
+                }
+            }
+        })
+
+        if(!userClub) return NextResponse.json({message: "UserClub does not exist"}, {status: 404})
+
         const existing = await prisma.effect.findFirst({
             where: {
-                userClubId: clubData.id
+                userClubId: userClub.id
             }
         })
 
@@ -43,9 +47,18 @@ export async function POST(req: Request){
         const now = new Date()
         const expiresAt = new Date(now.getTime() + 60 * 60 * 1000)
 
+        const selectedDrink = drinks.find(d => DRINKS_MAP[d.id as keyof typeof DRINKS_MAP] === effect)
+
+        if (!selectedDrink) {
+            console.error("Nie znaleziono drinku dla typu:", effect)
+            return NextResponse.json({ error: "Invalid effect type" }, { status: 400 })
+        }
+
+        const price = selectedDrink.price
+
         await prisma.effect.create({
             data: {
-                userClubId: clubData.id,
+                userClubId: userClub.id,
                 type: effect,
                 createdAt: now,
                 expiresAt,
@@ -61,7 +74,7 @@ export async function POST(req: Request){
             },
             data: {
                 money: {
-                    decrement: EFFECT_PRICE_MAP[effect]
+                    decrement: price
                 }
             }
         })
@@ -74,6 +87,11 @@ export async function POST(req: Request){
                 }
             })
         }
+
+        return NextResponse.json({
+            money: club.money,
+            clubData: club
+        })
     }
     catch(err){
         console.error(err)

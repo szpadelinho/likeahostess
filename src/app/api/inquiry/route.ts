@@ -8,7 +8,9 @@ export async function POST(req: Request){
 
     const { hostessId, clubId, mealId, beverageId, type, endOption } = await req.json()
 
-    if(hostessId === null || clubId === null ||  mealId === null || beverageId === null) return NextResponse.json({ error: "Incorrect data types" }, { status: 402 })
+    if (!hostessId || !clubId || !type) {
+        return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    }
 
     const gameAction = await prisma.gameAction.findFirst({
         where: {
@@ -19,16 +21,16 @@ export async function POST(req: Request){
     if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
 
     try{
-        let popularity = Math.floor(Math.random() * (10 - 1) + 1)
-        const experience = Math.floor(Math.random() * (10 - 1) + 1)
+        let popularity = Math.floor(Math.random() * 9 + 1)
+        const experience = Math.floor(Math.random() * 9 + 1)
         let money = 0
         let supplies = 0
 
         switch(type){
             case "START":
                 const [meal, beverage] = await Promise.all([
-                    prisma.buffet.findFirst({ where: { id: mealId } }),
-                    prisma.buffet.findFirst({ where: { id: beverageId } })
+                    mealId ? prisma.buffet.findFirst({ where: { id: mealId } }) : null,
+                    beverageId ? prisma.buffet.findFirst({ where: { id: beverageId } }) : null
                 ])
 
                 if(meal) {
@@ -43,7 +45,7 @@ export async function POST(req: Request){
             case "SERVICE":
                 money = Math.floor(Math.random() * (1000 - 100) + 100)
                 break
-            case "END":
+            case "STOP":
                 switch(endOption) {
                     case "gift":
                         money = Math.floor(money / 2)
@@ -59,17 +61,20 @@ export async function POST(req: Request){
 
         const updatedHostess = await prisma.userHostess.update({
             where: { userId_hostessId: { userId: session.user.id, hostessId } },
-            data: { fatigue: { decrement: 1 } }
+            data: { fatigue: { increment: 1 } }
         })
+
         const hostesses = await prisma.userHostess.findMany({
-            where: { userId: session.user.id }
+            where: { userId: session.user.id },
+            include: { hostess: true }
         })
 
-        const updatedHostesses = hostesses.map(h =>
-            h.id === updatedHostess.id ? updatedHostess : h
-        )
+        const hostessesData = hostesses.map(h => ({
+            ...h.hostess,
+            fatigue: h.fatigue
+        }))
 
-        const club = prisma.userClub.findFirst({
+        const club = await prisma.userClub.findFirst({
             where: {
                 userId: session.user.id,
                 clubId: clubId,
@@ -104,7 +109,7 @@ export async function POST(req: Request){
         })
 
         if(updatedClub && user) {
-            await prisma.gameAction.delete({
+            await prisma.gameAction.deleteMany({
                 where: {
                     userId: session.user.id,
                     id: gameAction.id
@@ -112,9 +117,10 @@ export async function POST(req: Request){
             })
         }
 
-        return NextResponse.json({money: updatedClub.money, popularity: updatedClub.popularity, supplies: updatedClub.supplies, experience: user.experience, hostesses: updatedHostesses})
+        return NextResponse.json({money: updatedClub.money, popularity: updatedClub.popularity, supplies: updatedClub.supplies, experience: user.experience, hostesses: hostessesData})
     }
-    catch(err){
+    catch(err: any){
         console.error(err)
+        return NextResponse.json({ error: err.message || "Internal Server Error" }, { status: 500 })
     }
 }
