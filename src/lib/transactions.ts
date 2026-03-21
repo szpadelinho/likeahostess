@@ -167,8 +167,14 @@ export const handleLoan = async ({clubData, amount, setMoney, setClub}: LoanHand
         })
 
         const data = await res.json()
-        setClub(data.clubData)
-        setMoney(data.clubData.money)
+
+        if(!res.ok){
+            console.error("Loan transaction error: ", data)
+            return
+        }
+
+        setClub(prev => prev ? { ...prev, money: data.money } : null)
+        setMoney(data.money)
     }
     catch(err){
         console.error(err)

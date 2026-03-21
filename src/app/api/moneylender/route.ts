@@ -1,13 +1,55 @@
 import {auth} from "@/lib/auth";
 import {NextResponse} from "next/server";
 import {prisma} from "../../../../prisma/prisma";
+import {calculateAmount, calculateInterest} from "@/app/types";
+
+export async function GET(req: Request) {
+    const session = await auth()
+    const { searchParams } = new URL(req.url)
+    const clubId = searchParams.get("clubId")
+    const userId = session?.user?.id
+    if (!session || !userId || !clubId) return NextResponse.json({error: "Unauthorized"}, {status: 401})
+
+    const userClub = await prisma.userClub.findUnique({
+        where: {
+            userId_clubId: {
+                userId,
+                clubId
+            }
+        }
+    })
+
+    if(!userClub) return NextResponse.json(null)
+
+    try {
+        const loan = await prisma.loan.findFirst({
+            where: {
+                userClubId: userClub.id
+            }
+        })
+
+        if (!loan) return NextResponse.json(null)
+
+        const interest = calculateInterest(loan)
+        const amount = calculateAmount(loan)
+
+        return NextResponse.json({
+            ...loan,
+            currentInterest: interest,
+            amount
+        })
+    } catch (err) {
+        console.error("Moneylender Route.ts", err)
+        return NextResponse.json({error: "Cannot fetch loans"}, {status: 500})
+    }
+}
 
 export async function POST(req: Request){
     const session = await auth()
     if(!session?.user.id) return NextResponse.json({message: "Unauthorized"}, {status: 401})
 
     const { clubData, amount } = await req.json()
-    if(clubData === undefined || amount !== "number") return NextResponse.json({message: "Incorrect credentials"}, {status: 400})
+    if(clubData === undefined) return NextResponse.json({message: "Incorrect credentials"}, {status: 400})
 
     const gameAction = await prisma.gameAction.findFirst({
         where: {
@@ -17,10 +59,21 @@ export async function POST(req: Request){
 
     if(!gameAction) return NextResponse.json({message: "Illegal transaction"}, {status: 403})
 
+    const userClub = await prisma.userClub.findUnique({
+        where: {
+            userId_clubId: {
+                userId: session.user.id,
+                clubId: clubData.id
+            }
+        }
+    })
+
+    if(!userClub) return NextResponse.json({message: "UserClub has not been found"}, {status: 404})
+
     try{
         const existing = await prisma.loan.findFirst({
             where: {
-                userClubId: clubData.id
+                userClubId: userClub.id
             }
         })
 
@@ -45,9 +98,11 @@ export async function POST(req: Request){
                 }
             })
 
-            return NextResponse.json({clubData: club})
+            return NextResponse.json({clubData: club, money: club.money})
         }
         else{
+            if(typeof amount !== "number") return NextResponse.json({message: "Incorrect amount"}, {status: 400})
+
             const club = await prisma.userClub.update({
                 where: {
                     userId_clubId: {
@@ -67,7 +122,7 @@ export async function POST(req: Request){
 
             await prisma.loan.create({
                 data: {
-                    userClubId: clubData.id,
+                    userClubId: userClub.id,
                     amount,
                     interest: 1.2,
                     createdAt: now,
@@ -85,10 +140,11 @@ export async function POST(req: Request){
                 })
             }
 
-            return NextResponse.json({clubData: club})
+            return NextResponse.json({clubData: club, money: club.money})
         }
     }
     catch(err){
         console.error(err)
+        return NextResponse.json({error: err, status: 500})
     }
 }

@@ -249,7 +249,7 @@ const Main = () => {
         if(clubData){
             const fetchLoan = async () => {
                 try{
-                    const res = await fetch(`/api/loans?clubId=${clubData.id}`, {method: "GET"})
+                    const res = await fetch(`/api/moneylender?clubId=${clubData.id}`, {method: "GET"})
                     const data = await res.json()
                     if(data === null) return
                     setLoan(data)

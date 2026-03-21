@@ -10,7 +10,6 @@ import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import { Loan } from "@/app/types"
 import {handleGameAction, handleLoan} from "@/lib/transactions";
-import { useSession } from "next-auth/react";
 
 export const MoneylenderClient = () => {
     const [isPlaying, setIsPlaying] = useState(true)
@@ -152,9 +151,9 @@ export const MoneylenderClient = () => {
                                         <h1 className={"text-[75px]"}>¥{loan.amount}</h1>
                                         <p className={"w-95"}>I fully understand and I am fully obliged to return all of the important money in paper as of the moment of signing this deal.</p>
                                         <button
-                                            onClick={() => {
+                                            onClick={async () => {
                                                 if(clubData){
-                                                    handleGameAction({type: "LOAN", status: "ACTIVE"}).then()
+                                                    await handleGameAction({type: "LOAN", status: "ACTIVE"}).then()
                                                     handleLoan({clubData, setMoney, setClub}).then()
                                                     setLoan(null)
                                                 }
@@ -187,7 +186,7 @@ export const MoneylenderClient = () => {
                                         <p className={"w-95"}>By agreeing to this deal, you understand the importance of fair play rules. You must pay off your debt in time, or else... </p>
                                         <p className={"w-95"}>You have a day to pay off your debt. The count starts by the moment this paper is signed by you.</p>
                                         <button
-                                            onClick={() => {
+                                            onClick={async () => {
                                                 if(isNaN(value)) {
                                                     setValue(100000)
                                                     return
@@ -200,7 +199,7 @@ export const MoneylenderClient = () => {
                                                 }
                                                 else {
                                                     if(clubData){
-                                                        handleGameAction({type: "LOAN", status: "ACTIVE"}).then()
+                                                        await handleGameAction({type: "LOAN", status: "ACTIVE"}).then()
                                                         handleLoan({clubData, amount: value, setMoney, setClub}).then()
                                                         setLoading(true)
                                                         setTimeout(() => {
