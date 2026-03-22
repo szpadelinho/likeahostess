@@ -584,34 +584,6 @@ export const rankMap: Record<string, string> = {
     king: "King",
 }
 
-export const cards = {
-    "spades": ["spades_ace", "spades_two", "spades_three", "spades_four", "spades_five", "spades_six", "spades_seven", "spades_eight", "spades_nine", "spades_ten", "spades_jack", "spades_queen", "spades_king"],
-    "hearts": ["hearts_ace", "hearts_two", "hearts_three", "hearts_four", "hearts_five", "hearts_six", "hearts_seven", "hearts_eight", "hearts_nine", "hearts_ten", "hearts_jack", "hearts_queen", "hearts_king"],
-    "diamonds": ["diamonds_ace", "diamonds_two", "diamonds_three", "diamonds_four", "diamonds_five", "diamonds_six", "diamonds_seven", "diamonds_eight", "diamonds_nine", "diamonds_ten", "diamonds_jack", "diamonds_queen", "diamonds_king"],
-    "clubs": ["clubs_ace", "clubs_two", "clubs_three", "clubs_four", "clubs_five", "clubs_six", "clubs_seven", "clubs_eight", "clubs_nine", "clubs_ten", "clubs_jack", "clubs_queen", "clubs_king"],
-    "default": "default"
-}
-
-export const getCardValue = (card: string): number => {
-    const rankMap: Record<string, number> = {
-        "spades_ace": 11, "hearts_ace": 11, "diamonds_ace": 11, "clubs_ace": 11,
-        "spades_two": 2, "hearts_two": 2, "diamonds_two": 2, "clubs_two": 2,
-        "spades_three": 3, "hearts_three": 3, "diamonds_three": 3, "clubs_three": 3,
-        "spades_four": 4, "hearts_four": 4, "diamonds_four": 4, "clubs_four": 4,
-        "spades_five": 5, "hearts_five": 5, "diamonds_five": 5, "clubs_five": 5,
-        "spades_six": 6, "hearts_six": 6, "diamonds_six": 6, "clubs_six": 6,
-        "spades_seven": 7, "hearts_seven": 7, "diamonds_seven": 7, "clubs_seven": 7,
-        "spades_eight": 8, "hearts_eight": 8, "diamonds_eight": 8, "clubs_eight": 8,
-        "spades_nine": 9, "hearts_nine": 9, "diamonds_nine": 9, "clubs_nine": 9,
-        "spades_ten": 10, "hearts_ten": 10, "diamonds_ten": 10, "clubs_ten": 10,
-        "spades_jack": 10, "hearts_jack": 10, "diamonds_jack": 10, "clubs_jack": 10,
-        "spades_queen": 10, "hearts_queen": 10, "diamonds_queen": 10, "clubs_queen": 10,
-        "spades_king": 10, "hearts_king": 10, "diamonds_king": 10, "clubs_king": 10,
-    }
-
-    return rankMap[card] || 0
-}
-
 export const getLevel = (xp: number) => {
     return Math.min(Math.floor(xp / 1000), 100)
 }

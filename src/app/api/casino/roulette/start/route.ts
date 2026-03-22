@@ -22,7 +22,7 @@ export async function POST(req: Request){
         where: {
             userId_clubId: {
                 userId,
-                clubId: clubData.clubId
+                clubId: clubData.id
             }
         }
     })

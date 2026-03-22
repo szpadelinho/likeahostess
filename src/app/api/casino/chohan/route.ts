@@ -20,7 +20,7 @@ export async function POST(req: Request){
         where: {
             userId_clubId: {
                 userId,
-                clubId: clubData.clubId
+                clubId: clubData.id
             }
         }
     })
@@ -35,16 +35,21 @@ export async function POST(req: Request){
         }
 
         const total = sum.reduce((a, b) => a + b, 0)
+
         const isWin = total % 2 === 0
             ? game === "Even"
             : game === "Odd"
+
+        const score = total % 2 === 0
+            ? "even"
+            : "odd"
 
         if(isWin){
             userClub = await prisma.userClub.update({
                 where: {
                     userId_clubId: {
                         userId,
-                        clubId: clubData.clubId
+                        clubId: clubData.id
                     }
                 },
                 data: {
@@ -62,7 +67,7 @@ export async function POST(req: Request){
             }
         })
 
-        return NextResponse.json({clubData: userClub, array: sum, prize: isWin ? (bet * 2) : -bet })
+        return NextResponse.json({clubData: userClub, array: sum, prize: isWin ? (bet * 2) : -bet, score, total})
     }
     catch(err){
         console.log(err)

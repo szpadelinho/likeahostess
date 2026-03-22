@@ -21,7 +21,7 @@ export async function POST(req: Request){
         where: {
             userId_clubId: {
                 userId,
-                clubId: clubData.clubId
+                clubId: clubData.id
             }
         }
     })
@@ -74,6 +74,22 @@ export async function POST(req: Request){
             })
 
             return NextResponse.json({userClub, card, win: 2})
+        }
+
+        if(calculateHandValue(userCards) > 21){
+            await prisma.gameRound.delete({
+                where: {
+                    id: gameId
+                }
+            })
+
+            await prisma.gameAction.delete({
+                where: {
+                    id: gameAction.id
+                }
+            })
+
+            return NextResponse.json({userClub, card, win: 0})
         }
 
         await prisma.gameRound.update({

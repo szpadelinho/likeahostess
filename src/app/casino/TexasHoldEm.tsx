@@ -1,8 +1,8 @@
 import React, {useState, useEffect, forwardRef, useImperativeHandle} from "react"
 import Image from "next/image"
 import {Coins, JapaneseYen} from "lucide-react"
-import {cards, Club, yesteryear} from "@/app/types";
-import {Player} from "@/lib/casino";
+import {Club, yesteryear} from "@/app/types";
+import {cards, Player} from "@/lib/casino";
 
 interface TexasHoldEmProps {
     setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,

@@ -7,24 +7,26 @@ import {handleGameAction} from "@/lib/transactions";
 interface ChohanProps {
     clubData: StoredClub,
     setMoney: (fn: (x: number) => number) => void,
-    array: number[]
+    array: number[],
     setArray: (value: (((prevState: number[]) => number[]) | number[])) => void,
     setPrize: (value: (((prevState: number) => number) | number)) => void,
+    setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,
+    setTotal: (value: (((prevState: number) => number) | number)) => void
 }
 
-export const Chohan = ({clubData, setMoney, array, setArray, setPrize}: ChohanProps) => {
+export const Chohan = ({clubData, setMoney, array, setArray, setPrize, setScore, setTotal}: ChohanProps) => {
     const [bet, setBet] = useState<number>(1000)
     const [isRolling, setIsRolling] = useState<boolean>(false)
 
     const handleGame = async (game: "Even" | "Odd") => {
         setIsRolling(true)
 
-        handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
+        await handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
 
         try {
             const res = await fetch("api/casino/chohan", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     clubData,
                     bet,
@@ -37,6 +39,8 @@ export const Chohan = ({clubData, setMoney, array, setArray, setPrize}: ChohanPr
             setMoney(data.clubData.money)
             setArray(data.array)
             setPrize(data.prize)
+            setScore(data.score)
+            setTotal(data.total)
         } finally {
             setTimeout(() => {
                 setIsRolling(false)
@@ -47,7 +51,8 @@ export const Chohan = ({clubData, setMoney, array, setArray, setPrize}: ChohanPr
     return (
         <div className={"flex flex-col justify-center items-center gap-5"}>
             <div className={"flex flex-row justify-center items-center h-160 gap-5"}>
-                <GlassWater fill={"white"} size={400} className={`-rotate-180 transition-all duration-200 ${isRolling ?? "shake"}`}/>
+                <GlassWater fill={"white"} size={400}
+                            className={`-rotate-180 transition-all duration-200 ${isRolling ?? "shake"}`}/>
                 <div className={"flex flex-row justify-center items-center gap-5"}>
                     {array.map((item, i) => (
                         <div

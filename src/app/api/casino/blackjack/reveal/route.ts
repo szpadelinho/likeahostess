@@ -21,7 +21,7 @@ export async function POST(req: Request){
         where: {
             userId_clubId: {
                 userId,
-                clubId: clubData.clubId
+                clubId: clubData.id
             }
         }
     })
@@ -50,11 +50,15 @@ export async function POST(req: Request){
         }
 
         const dealerValue = calculateHandValue(dealerCards)
-        const userValue = calculateHandValue(userCards)
+        const playerValue = calculateHandValue(userCards)
 
-        if (dealerValue > 21 || userValue > dealerValue) {
+        if (playerValue > 21) {
+            win = 0
+        } else if (dealerValue > 21) {
             win = 2
-        } else if (dealerValue === userValue) {
+        } else if (playerValue > dealerValue) {
+            win = 2
+        } else if (playerValue === dealerValue) {
             win = 1
         } else {
             win = 0
@@ -99,7 +103,7 @@ export async function POST(req: Request){
             }
         })
 
-        return NextResponse.json({userClub, net, win})
+        return NextResponse.json({userClub, net, win, dealerCards})
     } catch (err) {
         console.log(err)
     }

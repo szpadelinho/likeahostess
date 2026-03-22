@@ -55,6 +55,10 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
 
     const [selectedBet, setSelectedBet] = useState<string | null>(null)
 
+    useEffect(() => {
+        setMoney(prev => prev + prize)
+    }, [prize])
+
     const handleRouletteResult = async (gameId: string) => {
         const end = await fetch("api/casino/roulette/reveal", {
             method: "POST",
@@ -143,7 +147,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             }
         }
         else if (type === "Blackjack") {
-            handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
+            await handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
             setIsPlayerTurn(true)
             setGameOver(false)
             setScore(null)
@@ -179,7 +183,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     }
 
     const playerHit = async () => {
-        if (!isPlayerTurn || gameOver || deck.length === 0) return
+        if (!isPlayerTurn || gameOver) return
 
         const res = await fetch("api/casino/blackjack/play", {
             method: "POST",
@@ -218,6 +222,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
         const data = await res.json()
         setWin(data.win)
         setGameOver(true)
+        setDealerCards(data.dealerCards)
         switch(data.win){
             case 2:
                 setScore("You sir are a winner!")
@@ -248,22 +253,14 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     }
 
     const handleBet = (type: string, action: "Add" | "Lower") => {
-        if (game === "Chohan") {
-            // setBet(prev => {
-            //     if (action === "Add") {
-            //         return Math.min(prev + 1000, 10000, money)
-            //     } else {
-            //         return Math.max(prev - 1000, 1000)
-            //     }
-            // })
-        } else if (game === "Blackjack") {
-            // setBet(prev => {
-            //     if (action === "Add") {
-            //         return Math.min(prev + 1000, 50000, money)
-            //     } else {
-            //         return Math.max(prev - 1000, 1000)
-            //     }
-            // })
+        if (game === "Blackjack") {
+            setBet(prev => {
+                if (action === "Add") {
+                    return Math.min(prev + 1000, 50000)
+                } else {
+                    return Math.max(prev - 1000, 1000)
+                }
+            })
         } else if (game === "Roulette") {
             setBets(prev => {
                 const existing = prev.find(b => b.type === type)
@@ -290,11 +287,11 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             {game === "Chohan" && (
                 <>
                     <h1 className={`text-[75px] ${yesteryear.className}`}>Chō-Han</h1>
-                    <Chohan clubData={clubData} setMoney={setMoney} array={array} setArray={setArray} setPrize={setPrize}/>
+                    <Chohan clubData={clubData} setMoney={setMoney} array={array} setArray={setArray} setPrize={setPrize} setScore={setScore} setTotal={setTotal}/>
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-md p-2 h-55 w-120 rounded-[20] text-[40px] flex justify-center items-center flex-col`}>
-                            <p>{score ? `You won ${prize}!` : `You lost ${prize}.`}</p>
-                            <p>{total ? `The sum  ${total} was ${value}.` : "The draw is rigged."}</p>
+                            <p>{prize > 0 ? `You won ¥${prize}!` : `You lost ¥${Math.abs(prize)}.`}</p>
+                            <p>{total ? `The sum ${total} was ${total % 2 === 0 ? "even" : "odd"}.` : "The draw is rigged."}</p>
                             <p>{array ? `The winning pair was ${array[0]} and ${array[1]}.` : "The draw is rigged."}</p>
                         </h1>
                     )}
@@ -328,7 +325,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                         <button
                             className={`${yesteryear.className} text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
                             onClick={async () => {
-                                handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
+                                await handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
                                 rouletteRef.current?.spin()
                             }}>
                             Spin the roulette

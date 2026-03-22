@@ -21,7 +21,7 @@ export async function POST(req: Request){
         where: {
             userId_clubId: {
                 userId,
-                clubId: clubData.clubId
+                clubId: clubData.id
             }
         }
     })
@@ -104,5 +104,6 @@ export async function POST(req: Request){
     }
     catch(err){
         console.log(err)
+        return NextResponse.json({error: err}, {status: 500})
     }
 }

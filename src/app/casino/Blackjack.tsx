@@ -1,7 +1,8 @@
 import Image from "next/image";
-import {cards, StoredClub, yesteryear} from "@/app/types";
+import {StoredClub, yesteryear} from "@/app/types";
 import {JapaneseYen, Minus, Plus} from "lucide-react";
 import React from "react";
+import {cards} from "@/lib/casino";
 
 interface BlackjackProps {
     clubData: StoredClub,

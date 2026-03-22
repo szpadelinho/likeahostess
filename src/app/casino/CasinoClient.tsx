@@ -2,7 +2,6 @@
 
 import ReactPlayer from "react-player";
 import React, {useEffect, useState} from "react";
-import {JapaneseYen} from "lucide-react";
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 import CasinoGame from "@/app/casino/CasinoGame";
@@ -34,7 +33,17 @@ const CasinoClient = () => {
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
         if (!stored) return console.error("Could not find stored clubData")
-        const parsedClub: StoredClub = JSON.parse(stored)
+        const parsed = JSON.parse(stored)
+        const parsedClub: StoredClub = {
+            id: parsed.id,
+            name: parsed.name,
+            host: parsed.host,
+            money: parsed.userClub?.[0]?.money || 0,
+            popularity: parsed.userClub?.[0]?.popularity || 0,
+            supplies: parsed.userClub?.[0]?.supplies || 0,
+            logo: parsed.logo
+        }
+        setMoney(parsedClub.money)
         setClubData(parsedClub)
         setLoading(false)
     }, [])
@@ -99,8 +108,7 @@ const CasinoClient = () => {
                         </div>
                         <div className={"flex flex-col justify-center w-[40%]"}>
                             <h2 className={"text-[20px] font-[400] flex flex-row justify-center items-center"}>
-                                <JapaneseYen/>
-                                <p>{money}</p>
+                                ¥{money}
                             </h2>
                         </div>
                     </div>

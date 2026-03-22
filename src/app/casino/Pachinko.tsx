@@ -35,7 +35,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
     }, [])
 
     const startGame = async () => {
-        handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
+        await handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
         const res = await fetch("/api/casino/pachinko/start", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -61,7 +61,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
     }
 
     const endGame = async () => {
-        const res = await fetch("api/casino/pachinko/result", {
+        const res = await fetch("api/casino/pachinko/reveal", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
