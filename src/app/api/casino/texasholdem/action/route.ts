@@ -21,7 +21,7 @@ export async function POST(req: Request){
         where: {
             userId_clubId: {
                 userId,
-                clubId: clubData.clubId
+                clubId: clubData.id
             }
         }
     })
@@ -43,14 +43,14 @@ export async function POST(req: Request){
         let newGameData = texasHoldEmTurn(gameData, action)
 
         if(newGameData.stage === "Showdown"){
-            newGameData = evaluateHands(newGameData)
 
             if(newGameData.score?.includes(clubData.host.surname)){
+                newGameData = evaluateHands(newGameData)
                 await prisma.userClub.update({
                     where: {
                         userId_clubId: {
                             userId,
-                            clubId: clubData.clubId
+                            clubId: clubData.id
                         }
                     },
                     data: {
@@ -84,7 +84,7 @@ export async function POST(req: Request){
                 gameData: JSON.parse(JSON.stringify(newGameData))
             }
         })
-
+        console.log(newGameData.score)
         return NextResponse.json({gameData: newGameData})
     } catch (err) {
         console.log(err)

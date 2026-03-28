@@ -38,7 +38,8 @@ export async function POST(req: Request){
         return NextResponse.json({ message: "Forbidden" }, { status: 403 })
 
     try{
-        const bets = gameRound.gameData as unknown as RouletteBet[]
+        const gameData = gameRound.gameData as unknown as { bets: RouletteBet[] }
+        const bets = gameData.bets
         const winningNumber = gameRound.winningNumber
         if(!winningNumber) return NextResponse.json({error: "Winning number does not exist..."}, {status: 404})
 
@@ -79,7 +80,7 @@ export async function POST(req: Request){
             }
         })
 
-        return NextResponse.json({userClub, net, win})
+        return NextResponse.json({userClub, net, win, winningNumber})
     }
     catch(err){
         console.log(err)

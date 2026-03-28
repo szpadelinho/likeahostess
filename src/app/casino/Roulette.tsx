@@ -26,7 +26,7 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult, clubData, b
         }
     }, [])
 
-    const drawRoulette = useCallback((ctx: CanvasRenderingContext2D, angleOffset: number, ballAngle: number) => {
+    const drawRoulette = useCallback((ctx: CanvasRenderingContext2D, angleOffset: number, ballAngle: number, ballDrop: number) => {
         const size = ctx.canvas.width
         const radius = size / 2
         const sliceAngle = (2 * Math.PI) / wheelNumbers.length
@@ -167,7 +167,7 @@ const Roulette = forwardRef(function Roulette({handleRouletteResult, clubData, b
         if (!ctx) return
 
         ctx.imageSmoothingEnabled = true
-        drawRoulette(ctx, rotation, ballRotation)
+        drawRoulette(ctx, rotation, ballRotation, ballDrop)
     }, [rotation, ballRotation, ballDrop, drawRoulette])
 
     const spin = async () => {

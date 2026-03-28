@@ -356,8 +356,8 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                     </div>
                     {(stage === null || stage === "Showdown") && (
                         <button
-                            onClick={() => {
-                                handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
+                            onClick={async () => {
+                                await handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
                                 pokerRef?.current.startGame()
                             }}
                             className={`${yesteryear.className} absolute bottom-5 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>

@@ -30,7 +30,8 @@ export async function POST(req: Request){
     if(!userClub) return NextResponse.json({message: "No such userClub"}, {status: 404})
 
     try{
-        const coverage = bets.reduce((sum, bet) => sum + bet, 0)
+        const coverage = bets.reduce((sum, bet) => sum + bet.amount, 0)
+        console.log(bets)
         const randomIndex = Math.floor(Math.random() * wheelNumbers.length)
         const winningNumber = wheelNumbers[randomIndex]
 
@@ -62,5 +63,9 @@ export async function POST(req: Request){
     }
     catch(err){
         console.log(err)
+        return NextResponse.json(
+            { error: "Internal server error" },
+            { status: 500 }
+        )
     }
 }

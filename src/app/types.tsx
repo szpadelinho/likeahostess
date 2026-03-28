@@ -661,7 +661,7 @@ export const getPageStyle = (page: string, isChatPanel?: boolean): string => {
         case "Auth":
             return `border-1 border-white text-white rounded-[10] ${!isChatPanel && "hover:bg-white hover:text-black"}`
         case "Casino":
-            return `border-2 backdrop-blur-sm text-white rounded-[10] hover:backdrop-blur-xl hover:opacity-100`
+            return `border-2 border-white/30 backdrop-blur-sm text-white/50 rounded-[10] hover:opacity-100`
         case "Moneylender":
             return `rounded-[5] bg-[url(/images/paper_texture.png)] bg-center text-stone-700 border-none ${!isChatPanel && "hover:text-black"}`
         case "NewSerena":

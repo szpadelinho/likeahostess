@@ -194,7 +194,12 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                             <Image
                                 onDoubleClick={() => {
                                 setLoading(true)
-                                router.push(`/profile/${msg.userId}`)
+                                if(msg.userId === session?.user?.id) {
+                                    router.push(`/profile`)
+                                }
+                                else {
+                                    router.push(`/profile/${msg.userId}`)
+                                }
                             }} src={msg.userImage ?? "/images/dragon.png"} alt={msg.username}
                                 height={24} width={24}
                                  className={"object-content rounded-full hover:scale-110 hover:opacity-50 transition-all transform duration-100 ease-in-out"}/>
@@ -222,7 +227,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     />
                 </div>
                 <button
-                    className={`absolute rounded-[10] active:scale-105 hover:scale-102 -right-5 -top-2 p-2 ${page && getPageStyle(page)} transform duration-300 ease-in-out`}
+                    className={`absolute rounded-[10] active:scale-105 hover:scale-102 -right-5 -top-2 p-2 ${page && getPageStyle(page)} ${page === "Casino" && "bg-black"} transform duration-300 ease-in-out`}
                     onClick={() => setMode("COMPACT")}>
                     <EyeClosed size={20}/>
                 </button>

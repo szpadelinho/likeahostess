@@ -72,14 +72,14 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
 
             const data = await res.json()
 
-            setPlayers(data.players)
-            setCommunityCards(data.communityCards)
-            setDeck(data.deck)
-            setStage(data.stage)
-            setPot(data.pot)
-            setScore(data.score ?? null)
+            setPlayers(data.gameData.players)
+            setCommunityCards(data.gameData.communityCards)
+            setDeck(data.gameData.deck)
+            setStage(data.gameData.stage)
+            setPot(data.gameData.pot)
+            setScore(data.gameData.score ?? null)
 
-            if (data.stage !== "Showdown") {
+            if (data.gameData.stage !== "Showdown") {
                 setPlayerActionPending(true)
             }
         }

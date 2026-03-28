@@ -348,7 +348,7 @@ export const texasHoldEmTurn = (gameData: TexasHoldemGameData, action: "Raise" |
             chips: newChips,
             folded: isFolded,
             hasActed: true,
-            score: null
+            score: gameData.score ?? null
         }
     })
 
@@ -371,13 +371,26 @@ export const texasHoldEmTurn = (gameData: TexasHoldemGameData, action: "Raise" |
             hasActed: false
         }))
 
-        const stageResult = nextStage({ players, deck, communityCards, stage, pot, score: null })
+        const stageResult = nextStage({ players, deck, communityCards, stage, pot, score: gameData.score ?? null })
 
-        players = stageResult.players
-        deck = stageResult.deck
-        communityCards = stageResult.communityCards
-        stage = stageResult.stage
-        pot = stageResult.pot
+        if(stageResult.stage === "Showdown") {
+            return evaluateHands({
+                ...gameData,
+                players: stageResult.players,
+                deck: stageResult.deck,
+                communityCards: stageResult.communityCards,
+                pot: stageResult.pot
+            })
+        }
+
+        return {
+            players: stageResult.players,
+            deck: stageResult.deck,
+            communityCards: stageResult.communityCards,
+            stage: stageResult.stage,
+            pot: stageResult.pot,
+            score: null
+        }
     }
 
     return {
@@ -385,7 +398,7 @@ export const texasHoldEmTurn = (gameData: TexasHoldemGameData, action: "Raise" |
         deck,
         communityCards,
         stage,
-        score: null,
+        score: gameData.score ?? null,
         pot
     }
 }
