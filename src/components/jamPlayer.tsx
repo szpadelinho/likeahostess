@@ -91,7 +91,7 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
             </button>
             <div className={"flex justify-center items-center group relative"}>
                 <button
-                    className={"active:text-pink-500 hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110 active:scale-120"}
+                    className={"z-[50] bg-pink-950 active:text-pink-500 hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110 active:scale-120"}
                     onClick={() => {
                     if(volume === 0) {
                         setVolume(100)
@@ -105,7 +105,7 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
                     {volume > 33 && volume < 67 && <Volume1/>}
                     {volume > 66 && <Volume2/>}
                 </button>
-                <div className={"scale-75 absolute duration-300 ease-in-out flex justify-center w-50 items-center h-10 bg-pink-950 -right-40 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none z-50"}>
+                <div className={"z-[49] scale-75 absolute duration-300 ease-in-out flex justify-center w-50 items-center h-10 bg-pink-950 -right-40 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none"}>
                     <ElasticSlider
                         leftIcon={<div className={"bg-pink-950"}><Volume color={"pink"}/></div>}
                         rightIcon={<Volume2 color={"pink"}/>}

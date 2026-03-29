@@ -61,7 +61,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                 setClosing(false)
             }, 0)
         }
-    }, [window, menu, setClosing, setMenu, setFade])
+    }, [windowType, menu, setClosing, setMenu, setFade])
 
     const handleWindow = useCallback((window: WindowType | null) => {
         if(menu){
@@ -81,7 +81,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
         else {
             setWindow(window)
         }
-    }, [window, menu, setClosing, setMenu, setFade])
+    }, [windowType, menu, setClosing, setMenu, setFade])
 
     const handleButton = useCallback((e: KeyboardEvent) => {
         if (isTyping) return

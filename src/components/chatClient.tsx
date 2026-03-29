@@ -147,7 +147,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
         <>
             <div
                 onClick={() => setMode("EXPANDED")}
-                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[50]`}
+                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105 pointer-events-auto" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[50]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -171,7 +171,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 </div>
             </div>
             <div
-                className={`${mode === "EXPANDED" ? "opacity-100" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page, true)} duration-300 ease-in-out fixed left-50 ${page === "Main" ? "top-5" : "top-10"} w-full max-w-lg mx-auto z-[50]`}
+                className={`${mode === "EXPANDED" ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page, true)} duration-300 ease-in-out fixed left-50 ${page === "Main" ? "top-5" : "top-10"} w-full max-w-lg mx-auto z-[49]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -188,72 +188,103 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                         />
                     )}
                 </h1>
-                <div className={"h-64 overflow-y-auto p-2 mb-2 overflow-x-hidden flex flex-col gap-1"}>
-                    {messages.map(msg => (
-                        <div key={msg.id} className={"flex items-center gap-2"}>
-                            <Image
-                                onDoubleClick={() => {
-                                setLoading(true)
-                                if(msg.userId === session?.user?.id) {
-                                    router.push(`/profile`)
-                                }
-                                else {
-                                    router.push(`/profile/${msg.userId}`)
-                                }
-                            }} src={msg.userImage ?? "/images/dragon.png"} alt={msg.username}
-                                height={24} width={24}
-                                 className={"object-content rounded-full hover:scale-110 hover:opacity-50 transition-all transform duration-100 ease-in-out"}/>
-                            <h1 className={"flex justify-center items-center gap-1"}
-                                onClick={() => {
-                                if (!input.includes(msg.username)) {
-                                    setInput(`@${msg.username}`)
-                                }
-                            }}>
-                                <p className={"hover:scale-102 hover:opacity-50 font-[700] duration-100 ease-in-out"}>{msg.username}:</p> {msg.content}
-                            </h1>
+                <div className={`flex flex-col relative`}>
+                    <div className={`${(!roomCreation && !list) ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} h-64 overflow-y-auto p-2 mb-2 overflow-x-hidden flex flex-col gap-1`}>
+                        {messages.map(msg => (
+                            <div key={msg.id} className={"flex items-center gap-2"}>
+                                <Image
+                                    onClick={() => {
+                                        if (!input.includes(msg.username)) {
+                                            setInput(`@${msg.username}`)
+                                        }
+                                    }}
+                                    onDoubleClick={() => {
+                                        setLoading(true)
+                                        if(msg.userId === session?.user?.id) {
+                                            router.push(`/profile`)
+                                        }
+                                        else {
+                                            router.push(`/profile/${msg.userId}`)
+                                        }
+                                    }}
+                                    src={msg.userImage ?? "/images/dragon.png"} alt={msg.username}
+                                    height={24} width={24}
+                                    className={"object-content rounded-full hover:scale-110 hover:opacity-50 transition-all transform duration-100 ease-in-out"}/>
+                                <h1 className={"flex justify-center items-center gap-1"}
+                                    onClick={() => {
+                                        if (!input.includes(msg.username)) {
+                                            setInput(`@${msg.username}`)
+                                        }
+                                    }}
+                                    onDoubleClick={() => {
+                                        setLoading(true)
+                                        if(msg.userId === session?.user?.id) {
+                                            router.push(`/profile`)
+                                        }
+                                        else {
+                                            router.push(`/profile/${msg.userId}`)
+                                        }
+                                    }}
+                                >
+                                    <p className={"hover:scale-102 hover:opacity-50 font-[700] duration-100 ease-in-out"}>{msg.username}:</p> {msg.content}
+                                </h1>
+                            </div>
+                        ))}
+                        <div ref={bottomRef}/>
+                    </div>
+                    <div className={`${(!roomCreation && !list) ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} flex items-center justify-center w-full`}>
+                        <input
+                            value={input}
+                            onFocus={() => setIsTyping?.(true)}
+                            onBlur={() => setIsTyping?.(false)}
+                            onChange={e => setInput(e.target.value)}
+                            onKeyDown={e => e.key === "Enter" && sendMessage()}
+                            className={`p-1 border-1 rounded-[10] w-[97%] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}
+                            placeholder={"Type a message..."}
+                        />
+                    </div>
+                    <div className={`absolute inset-0 z-[1] flex flex-col gap-2 items-center p-2 ${roomCreation ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} duration-300 ease-in-out`}>
+                        <div className={`duration-300 ease-in-out flex flex-col justify-between ${page && getPageStyle(page, true)}`}>
+                            {users.map(user => (
+                                <div
+                                    key={user.id}
+                                    onClick={() => {
+                                        setSelectedUsers(prev =>
+                                            prev.includes(user)
+                                                ? prev.filter(u => u.id !== user.id)
+                                                : [...prev, user]
+                                        )
+                                    }}
+                                    className={`
+                                    flex flex-row gap-2 items-center cursor-pointer p-1 rounded duration-200 ease-in-out hover:bg-pink-600/40
+                                    ${selectedUsers.includes(user) ? "bg-pink-400/40" : ""}
+                                `}
+                                >
+                                    <Image src={user.image ?? "/images/dragon.png"} alt={user.name} height={32} width={32} className={"object-content rounded-full"}/>
+                                    <h1 className={"font-[700]"}>
+                                        {user.name}
+                                    </h1>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                    <div ref={bottomRef}/>
+                        <div className={"flex flex-row gap-2"}>
+                            {selectedUsers.length > 1 && (
+                                <input
+                                    value={roomName}
+                                    onChange={e => setRoomName(e.target.value)}
+                                    placeholder="Room name"
+                                    className={`${page && getPageStyle(page)} p-1 mt-2`}
+                                />
+                            )}
+                            <button
+                                className={`absolute rounded-[10] active:scale-105 hover:scale-102 -bottom-14 left-1/2 -translate-x-[50%] p-2 ${page && getPageStyle(page)} ${page === "Casino" && "bg-black"} transform duration-300 ease-in-out`}
+                                onClick={newRoom}>
+                                <MessageSquarePlus/>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-                <div className={"flex items-center justify-center w-full"}>
-                    <input
-                        value={input}
-                        onFocus={() => setIsTyping?.(true)}
-                        onBlur={() => setIsTyping?.(false)}
-                        onChange={e => setInput(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && sendMessage()}
-                        className={`p-1 border-1 rounded-[10] w-[97%] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}
-                        placeholder={"Type a message..."}
-                    />
-                </div>
-                <button
-                    className={`absolute rounded-[10] active:scale-105 hover:scale-102 -right-5 -top-2 p-2 ${page && getPageStyle(page)} ${page === "Casino" && "bg-black"} transform duration-300 ease-in-out`}
-                    onClick={() => setMode("COMPACT")}>
-                    <EyeClosed size={20}/>
-                </button>
-                <div className={"flex flex-row justify-between"}>
-                    <button onClick={sendMessage}
-                            className={`m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>
-                        <Send/>
-                    </button>
-                    <button
-                        onClick={() => {
-                            if(roomCreation) {
-                                setRoomCreation(false)
-                                return
-                            }
-                            if(list){
-                                setList(false)
-                            }
-                            else {
-                                setList(true)
-                            }
-                        }}
-                        className={`m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>
-                        <List/>
-                    </button>
-                </div>
-                <div className={`${list ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} gap-2 w-50 duration-300 ease-in-out absolute flex flex-col justify-between ${page && getPageStyle(page, true)}`}>
+                <div className={`absolute inset-0 ${list ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} gap-2 duration-300 ease-in-out flex flex-col`}>
                     {rooms.map(room => (
                         <div
                             onClick={() => setCurrentRoom(room)}
@@ -273,43 +304,36 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                         <Plus/>
                     </div>
                 </div>
-                <div className={`absolute flex flex-col gap-2 items-center p-2 ${roomCreation ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} duration-300 ease-in-out ${page && getPageStyle(page)}`}>
-                    <div className={`duration-300 ease-in-out flex flex-col justify-between ${page && getPageStyle(page, true)}`}>
-                        {users.map(user => (
-                            <div
-                                key={user.id}
-                                onClick={() => {
-                                    setSelectedUsers(prev =>
-                                        prev.includes(user)
-                                            ? prev.filter(u => u.id !== user.id)
-                                            : [...prev, user]
-                                    )
-                                }}
-                                className={`
-                                    flex flex-row gap-2 items-center cursor-pointer p-1 rounded duration-200 ease-in-out
-                                    ${selectedUsers.includes(user) ? "bg-pink-400/40" : ""}
-                                `}
-                            >
-                                <Image src={user.image ?? "/images/dragon.png"} alt={user.name} height={32} width={32} className={"object-content rounded-full"}/>
-                                <h1 className={"font-[700]"}>
-                                    {user.name}
-                                </h1>
-                            </div>
-                        ))}
-                    </div>
-                    <div className={"flex flex-row gap-2"}>
-                        {selectedUsers.length > 1 && (
-                            <input
-                                value={roomName}
-                                onChange={e => setRoomName(e.target.value)}
-                                placeholder="Room name"
-                                className={`${page && getPageStyle(page)} p-1 mt-2`}
-                            />
-                        )}
-                        <button onClick={newRoom}>
-                            <MessageSquarePlus/>
-                        </button>
-                    </div>
+                <button
+                    className={`z-[50] absolute rounded-[10] active:scale-105 hover:scale-102 -right-5 -top-2 p-2 ${page && getPageStyle(page)} ${page === "Casino" && "bg-black"} transform duration-300 ease-in-out`}
+                    onClick={() => {
+                        setMode("COMPACT")
+                        setList(false)
+                        setRoomCreation(false)
+                    }}>
+                    <EyeClosed size={20}/>
+                </button>
+                <div className={"flex flex-row justify-between"}>
+                    <button onClick={sendMessage}
+                            className={`${(!roomCreation && !list) ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>
+                        <Send/>
+                    </button>
+                    <button
+                        onClick={() => {
+                            if(roomCreation) {
+                                setRoomCreation(false)
+                                return
+                            }
+                            if(list){
+                                setList(false)
+                            }
+                            else {
+                                setList(true)
+                            }
+                        }}
+                        className={`z-[50] m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>
+                        <List/>
+                    </button>
                 </div>
             </div>
         </>
