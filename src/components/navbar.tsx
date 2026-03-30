@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import React, {useEffect, useState} from "react";
 import {AppRouterInstance} from "next/dist/shared/lib/app-router-context.shared-runtime";
-import {signOut} from "next-auth/react";
+import {signOut, useSession} from "next-auth/react";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {getPageStyle, PageType, texturina} from "@/app/types";
@@ -57,6 +57,7 @@ const Navbar = ({
     const [showLamp, setShowLamp] = useState(false)
     const [fadeLamp, setFadeLamp] = useState(false)
     const {volume, setVolume} = useVolume()
+    const { update } = useSession()
 
     useEffect(() => {
         if (paper) {
@@ -274,11 +275,15 @@ const Navbar = ({
                 )}
                 {(page === "Tutorial" && isLogged) && (
                     <button
-                        onClick={() => {
+                        onClick={async () => {
                             setLoading?.(true)
+                            await fetch("/api/tutorial", { method: "POST" })
+                            await update({user: {
+                                tutorialDone: true
+                                }})
                             router?.push("/selection")
                         }}
-                        className={`flex flex-row justify-center items-center gap-2 ${getPageStyle(page)} left-1/2 -translate-x-[50%] z-10 absolute top-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
+                        className={`flex flex-row justify-center items-center gap-2 ${getPageStyle(page)} left-1/2 -translate-x-[50%] z-10 fixed top-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                         Start
                         <Play size={25}/>
                     </button>

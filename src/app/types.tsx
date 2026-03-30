@@ -21,6 +21,7 @@ import PixelBlast from "@/ui/PixelBlast";
 import LightPillar from "@/ui/LightPillar";
 import Ballpit from "@/ui/Ballpit";
 import Image from "next/image";
+import {UpdateSession} from "next-auth/react";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
