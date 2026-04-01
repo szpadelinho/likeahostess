@@ -93,7 +93,7 @@ export async function POST(req: Request){
             data: {
                 money: { increment: money },
                 popularity: { increment: popularity },
-                supplies: { increment: supplies }
+                supplies: { decrement: supplies }
             }
         })
 
