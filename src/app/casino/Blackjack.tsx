@@ -32,14 +32,13 @@ export const Blackjack = ({
                               handleGame
                           }: BlackjackProps) => {
     return (
-        <>
+        <div className={"absolute backdrop-blur-lg inset-0 flex flex-col justify-center items-center"}>
+            <div className="h-150 w-75 left-0 absolute bg-gradient-to-l from-transparent to-black/75" />
+            <div className="h-150 w-75 right-0 absolute bg-gradient-to-r from-transparent to-black/75" />
             <h1 className={`text-[75px] ${yesteryear.className}`}>Blackjack</h1>
             <div
-                className={`backdrop-blur-sm flex flex-row justify-center items-center gap-30 p-10 h-150 rounded-[20] ${yesteryear.className}`}>
-                <div className="w-60 h-screen flex justify-center items-center">
-                    <Image src={clubData.host.image} alt={"You"} height={250} width={170}/>
-                </div>
-                <h1 className={`z-50 text-white text-[30px] w-25 flex justify-center items-center`}>{clubData.host.name} {clubData.host.surname}</h1>
+                className={`flex flex-row justify-center items-center gap-30 p-10 rounded-[20] ${yesteryear.className}`}>
+                <Image className={"rotate-10 [mask-image:linear-gradient(to_top,transparent,black)] [-webkit-mask-image:linear-gradient(to_top,transparent,black)]"} src={`/images/${clubData.host.surname}_blackjack.png`} alt={"You"} height={300} width={300}/>
                 <div className={"relative flex flex-col justify-center items-center w-50 h-full"}>
                     <div className={"relative h-50 w-50"}>
                         {userCards.map((userCard, i) => (
@@ -59,6 +58,9 @@ export const Blackjack = ({
                         ))}
                     </div>
                 </div>
+                <h1 className={`text-[75px]`}>
+                    vs.
+                </h1>
                 <div className={"flex flex-col justify-center items-center w-50 h-full"}>
                     <div className={"relative h-50 w-50"}>
                         {dealerCards.map((dealerCard, i) => (
@@ -82,11 +84,7 @@ export const Blackjack = ({
                         ))}
                     </div>
                 </div>
-                <h1 className={"z-50 text-white text-[30px] w-25 flex justify-center items-center"}>Dealer
-                    Tanimura</h1>
-                <div className="w-60 h-screen flex justify-center items-center">
-                    <Image src={`/images/tanimura_cover.png`} alt={"Dealer"} height={250} width={150}/>
-                </div>
+                <Image className={"-rotate-10 [mask-image:linear-gradient(to_top,transparent,black)] [-webkit-mask-image:linear-gradient(to_top,transparent,black)]"} src={`/images/tanimura_blackjack.png`} alt={"Dealer"} height={300} width={300}/>
             </div>
             <div className={"flex flex-col justify-center items-center gap-5"}>
                 {isPlayerTurn && !gameOver ? (
@@ -129,6 +127,6 @@ export const Blackjack = ({
                     </div>
                 )}
             </div>
-        </>
+        </div>
     )
 }

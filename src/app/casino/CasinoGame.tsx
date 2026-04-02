@@ -303,7 +303,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
                             <p>{score}</p>
-                            <p>{win === 0 ? `- ${bet}.` : win === 1 ? `+ ${bet}.` : win === 2 && `+ ${bet * 2} `}</p>
+                            <p>{win === 0 ? `- ¥${bet}.` : win === 1 ? `+ ¥${bet}.` : win === 2 && `+ ¥${bet * 2} `}</p>
                         </h1>
                     )}
                 </div>
