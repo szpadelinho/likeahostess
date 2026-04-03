@@ -21,6 +21,7 @@ const CasinoClient = () => {
     const [game, setGame] = useState<"Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null>(null)
     const [background, setBackground] = useState("casino")
     const [money, setMoney] = useState<number>(0)
+    const [transition, setTransition] = useState<boolean>(false)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -52,7 +53,7 @@ const CasinoClient = () => {
         <div className={"flex flex-col h-screen w-screen items-center justify-center text-white z-50 gap-5"}>
             <LoadingBanner show={loading}/>
             <Image src={`/images/${background}.png`} alt={"Casino interior"} fill={true} className={"absolute inset-0 z-[-1]"}/>
-            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} page={"Casino"}/>
+            <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} setTransition={setTransition} page={"Casino"}/>
             <ReactPlayer
                 src={"https://youtube.com/embed/8mqRTo74g-0?autoplay=1"}
                 playing={isPlaying}
@@ -64,8 +65,9 @@ const CasinoClient = () => {
                 className={"flex absolute top-0 left-0 z-[-1]"}
                 style={{height: '0px', width: '0px', visibility: 'hidden', position: 'absolute'}}
             />
-            {!game ? (
-                <>
+            <div className={`${transition ? "opacity-0" : "opacity-100"} transform ease-in-out duration-300`}>
+                {!game ? (
+                    <>
                     <Image className={"absolute right-1/3 scale-80 top-60"} src={"/images/tanimura_cover.png"} alt={"Masayoshi Tanimura"} height={0} width={150}/>
                     <h1 className={`absolute top-20 text-[75px] ${yesteryear.className}`}>What will we play today?</h1>
                     {panels.map((panel, i) => (
@@ -73,8 +75,12 @@ const CasinoClient = () => {
                              className={`absolute ${panel.position} backdrop-blur-sm flex items-center justify-center rounded-[15] w-50 h-20 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-sm hover:shadow-white`}
                              onClick={() => {
                                  if(!game && panel.title !== null) {
-                                     setGame(panel.title)
-                                     setBackground(`casino_${panel.title.toLowerCase()}`)
+                                     setTransition(true)
+                                     setTimeout(() => {
+                                         setGame(panel.title)
+                                         if(panel.title !== null) setBackground(`casino_${panel.title.toLowerCase()}`)
+                                         setTransition(false)
+                                     }, 300)
                                  }
                                  else {
                                      setGame(null)
@@ -83,10 +89,11 @@ const CasinoClient = () => {
                             <h1 className={`text-[50px] ${yesteryear.className}`}>{panel.title}</h1>
                         </div>
                     ))}
-                </>
-            ):(
-                clubData && <CasinoGame game={game} clubData={clubData} setMoney={setMoney}/>
-            )}
+                    </>
+                ):(
+                    clubData && <CasinoGame game={game} clubData={clubData} setMoney={setMoney}/>
+                )}
+            </div>
             {clubData && game && (
                 <div
                     className={`absolute ${game !== "Blackjack" && game !== "Poker" ? "left-5 w-130 backdrop-blur-md" : "left-15"} bottom-5 h-25 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}>

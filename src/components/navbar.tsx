@@ -34,7 +34,8 @@ interface NavbarProps {
     setQuit?: (value: (((prevState: boolean) => boolean) | boolean)) => void,
     isLogged?: boolean,
     setEdit?: (show: boolean) => void,
-    isMe?: boolean
+    isMe?: boolean,
+    setTransition?: (value: (((prevState: boolean) => boolean) | boolean)) => void
 }
 
 const Navbar = ({
@@ -51,13 +52,14 @@ const Navbar = ({
                     setQuit,
                     isLogged,
                     setEdit,
-                    isMe
+                    isMe,
+                    setTransition
                 }: NavbarProps) => {
     const [loading, setLoading] = useState<boolean>(false)
     const [showLamp, setShowLamp] = useState(false)
     const [fadeLamp, setFadeLamp] = useState(false)
     const {volume, setVolume} = useVolume()
-    const { update } = useSession()
+    const {update} = useSession()
 
     useEffect(() => {
         if (paper) {
@@ -123,21 +125,22 @@ const Navbar = ({
                                 if (page !== "Selection") {
                                     router?.push("/")
                                 } else {
-                                    signOut({ redirectTo: "/auth" }).then()
+                                    signOut({redirectTo: "/auth"}).then()
                                 }
                             }}
-                                className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
-                                style={page === "LoveInHeart" ? {
-                                    borderWidth: "8px",
-                                    borderStyle: "solid",
-                                    borderImageSource: "url('/images/wood_texture2.png')",
-                                    borderImageSlice: 30,
-                                    borderImageRepeat: "round"
-                                } : {}}
+                            className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}
+                            style={page === "LoveInHeart" ? {
+                                borderWidth: "8px",
+                                borderStyle: "solid",
+                                borderImageSource: "url('/images/wood_texture2.png')",
+                                borderImageSlice: 30,
+                                borderImageRepeat: "round"
+                            } : {}}
                         >
                             <LogOut size={25}/>
                         </button>
-                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                        <span
+                            className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
                             Quit page
                         </span>
                     </div>
@@ -147,13 +150,18 @@ const Navbar = ({
                 {game && (
                     <div className={"relative group"}>
                         <button onClick={() => {
-                            setGame?.(null)
-                            setBackground?.("casino")
+                            setTransition?.(true)
+                            setTimeout(() => {
+                                setGame?.(null)
+                                setBackground?.("casino")
+                                setTransition?.(false)
+                            }, 300)
                         }}
                                 className={`${getPageStyle(page)} border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                             <University size={25}/>
                         </button>
-                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                        <span
+                            className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
                             Back to casino lobby
                         </span>
                     </div>
@@ -174,7 +182,8 @@ const Navbar = ({
                         >
                             <ConciergeBell size={25}/>
                         </button>
-                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                        <span
+                            className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
                             Back to massage selection
                         </span>
                     </div>
@@ -188,7 +197,8 @@ const Navbar = ({
                         >
                             <ConciergeBell size={25}/>
                         </button>
-                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                        <span
+                            className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
                             Back to bar selections
                         </span>
                     </div>
@@ -202,7 +212,8 @@ const Navbar = ({
                         >
                             <LampDesk size={25}/>
                         </button>
-                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                        <span
+                            className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
                             Return paper
                         </span>
                     </div>
@@ -218,7 +229,8 @@ const Navbar = ({
                                 className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                             <Medal size={25}/>
                         </button>
-                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                        <span
+                            className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
                             Check rankings
                         </span>
                     </div>
@@ -231,7 +243,8 @@ const Navbar = ({
                                 className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                             <Pen size={25}/>
                         </button>
-                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                        <span
+                            className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
                             Edit your profile
                         </span>
                     </div>
@@ -247,7 +260,8 @@ const Navbar = ({
                                 className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                             <User size={25}/>
                         </button>
-                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                        <span
+                            className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
                             Back to my profile
                         </span>
                     </div>
@@ -263,7 +277,8 @@ const Navbar = ({
                                 className={`${getPageStyle(page)} z-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
                             <Undo2 size={25}/>
                         </button>
-                        <span className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
+                        <span
+                            className={`absolute text-nowrap p-1 -bottom-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none ${getPageStyle(page)}`}>
                             View your profile
                         </span>
                     </div>
@@ -277,10 +292,12 @@ const Navbar = ({
                     <button
                         onClick={async () => {
                             setLoading?.(true)
-                            await fetch("/api/tutorial", { method: "POST" })
-                            await update({user: {
-                                tutorialDone: true
-                                }})
+                            await fetch("/api/tutorial", {method: "POST"})
+                            await update({
+                                user: {
+                                    tutorialDone: true
+                                }
+                            })
                             router?.push("/selection")
                         }}
                         className={`flex flex-row justify-center items-center gap-2 ${getPageStyle(page)} left-1/2 -translate-x-[50%] z-10 fixed top-10 border-2 p-2 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-110 active:scale-120`}>
