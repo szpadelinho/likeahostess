@@ -10,6 +10,7 @@ import {RouletteBet} from "@/lib/casino";
 import {Chohan} from "@/app/casino/Chohan";
 import {handleGameAction} from "@/lib/transactions";
 import {Blackjack} from "@/app/casino/Blackjack";
+import MessageSplash from "@/components/messageSplash";
 
 const yesteryear = Yesteryear({
     weight: "400",
@@ -35,6 +36,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     const [array, setArray] = useState<number[]>([])
     const [bet, setBet] = useState<number>(1000)
     const [prize, setPrize] = useState<number>(0)
+    const [message, setMessage] = useState<{ text: string; id: number } | null>(null)
 
     const [win, setWin] = useState<0 | 1 | 2>(0)
 
@@ -54,6 +56,10 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     const [bets, setBets] = useState<RouletteBet[]>([])
 
     const [selectedBet, setSelectedBet] = useState<string | null>(null)
+
+    const showMessage = (text: string) => {
+        setMessage({ text, id: Date.now() })
+    }
 
     useEffect(() => {
         setMoney(prev => prev + prize)
@@ -147,6 +153,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             }
         }
         else if (type === "Blackjack") {
+            showMessage("No more bets!")
             await handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
             setIsPlayerTurn(true)
             setGameOver(false)
@@ -185,6 +192,8 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     const playerHit = async () => {
         if (!isPlayerTurn || gameOver) return
 
+        showMessage("Hit!")
+
         const res = await fetch("api/casino/blackjack/play", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -200,6 +209,13 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             setUserCards(currentUserCards => [...currentUserCards, card])
         }
 
+        if(data.win === 0){
+            setIsPlayerTurn(false)
+            setGameOver(true)
+            setScore("You are a bust, sir.")
+            setWin(0)
+        }
+
         if(data.win === 2){
             setIsPlayerTurn(false)
             setGameOver(true)
@@ -210,6 +226,9 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
 
     const playerStand = async () => {
         setIsPlayerTurn(false)
+
+        showMessage("Stand!")
+
         const res = await fetch("api/casino/blackjack/reveal", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -284,6 +303,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
 
     return (
         <div className={"flex flex-col justify-center items-center"}>
+            <MessageSplash message={message}/>
             {game === "Chohan" && (
                 <>
                     <h1 className={`text-[75px] ${yesteryear.className}`}>Chō-Han</h1>
@@ -325,6 +345,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                         <button
                             className={`${yesteryear.className} text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
                             onClick={async () => {
+                                showMessage("No more bets!")
                                 await handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
                                 rouletteRef.current?.spin()
                             }}>

@@ -1,5 +1,6 @@
 import {BuffetType, EffectType, type Prisma} from "@prisma/client";
 import {
+    Bitcount_Grid_Double,
     Cookie, Coustard,
     Emilys_Candy,
     Fascinate_Inline, Federo, IM_Fell_English, Marck_Script,
@@ -21,7 +22,6 @@ import PixelBlast from "@/ui/PixelBlast";
 import LightPillar from "@/ui/LightPillar";
 import Ballpit from "@/ui/Ballpit";
 import Image from "next/image";
-import {UpdateSession} from "next-auth/react";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -341,6 +341,11 @@ export const monoton = Federo({
 })
 
 export const sourGummy = Sour_Gummy({
+    weight: "400",
+    subsets: ['latin'],
+})
+
+export const bitcountGridDouble = Bitcount_Grid_Double({
     weight: "400",
     subsets: ['latin'],
 })

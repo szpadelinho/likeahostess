@@ -3,6 +3,7 @@ import Image from "next/image"
 import {Coins, JapaneseYen} from "lucide-react"
 import {Club, yesteryear} from "@/app/types";
 import {cards, Player} from "@/lib/casino";
+import MessageSplash from "@/components/messageSplash";
 
 interface TexasHoldEmProps {
     setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,
@@ -36,7 +37,15 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
         const [pot, setPot] = useState<number>(0)
         const [gameId, setGameId] = useState<string | null>(null)
 
+        const [message, setMessage] = useState<{ text: string; id: number } | null>(null)
+
+        const showMessage = (text: string) => {
+            setMessage({ text, id: Date.now() })
+        }
+
         const startGame = async () => {
+            showMessage("No more bets!")
+
             const res = await fetch("api/casino/texasholdem/start", {
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
@@ -59,6 +68,7 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
         const turn = async (action: "Raise" | "Call" | "Fold") => {
             if (!playerActionPending) return
             setPlayerActionPending(false)
+            showMessage(`${action}!`)
 
             const res = await fetch("api/casino/texasholdem/action", {
                 method: "POST",
@@ -94,6 +104,7 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
 
         return (
             <div className="flex flex-col justify-center items-center h-full w-full">
+                <MessageSplash message={message}/>
                 <div className="flex gap-5 absolute">
                     {communityCards.map((card, i) => (
                         <Image key={i} src={`/cards/${card}.png`} alt={card} height={200} width={125}

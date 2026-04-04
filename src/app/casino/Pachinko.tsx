@@ -3,6 +3,7 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {elements, getIcon} from "@/lib/casino";
 import {StoredClub} from "@/app/types";
 import {handleGameAction} from "@/lib/transactions";
+import MessageSplash from "@/components/messageSplash";
 
 interface PachinkoProps {
     setScore: (value: (((prevState: (boolean | string | number | null)) => (boolean | string | number | null)) | boolean | string | number | null)) => void,
@@ -15,6 +16,12 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
     const [gameId, setGameId] = useState<string | null>(null)
     const [serverSlots, setServerSlots] = useState([0, 0, 0])
     const [spinning, setSpinning] = useState([false, false, false])
+
+    const [message, setMessage] = useState<{ text: string; id: number } | null>(null)
+
+    const showMessage = (text: string) => {
+        setMessage({ text, id: Date.now() })
+    }
 
     const loopRef = useRef<HTMLAudioElement | null>(null)
     const stopRef = useRef<HTMLAudioElement | null>(null)
@@ -35,6 +42,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
     }, [])
 
     const startGame = async () => {
+        showMessage("Nail the jackpot!")
         await handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
         const res = await fetch("/api/casino/pachinko/start", {
             method: "POST",
@@ -165,9 +173,10 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
 
     return (
         <>
+            <MessageSplash message={message}/>
             <Image className={"absolute bottom-0"} src={"/images/pachinko.png"} alt={"Pachinko slot"} height={1300}
                    width={800}/>
-            <div className={"flex flex-row justify-center items-center z-50 gap-12 absolute top-115"}>
+            <div className={"flex flex-row justify-center items-center z-50 gap-12 absolute top-105"}>
                 {slots.map((index, i) => {
                     const Icon = elements[index]
                     return (

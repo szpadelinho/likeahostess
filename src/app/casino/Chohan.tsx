@@ -1,8 +1,9 @@
 import {CircleSmall, GlassWater, JapaneseYen, Minus, Plus} from "lucide-react";
 import {StoredClub, yesteryear} from "@/app/types";
 import {renderDice} from "@/lib/casino";
-import {useState} from "react";
+import React, {useState} from "react";
 import {handleGameAction} from "@/lib/transactions";
+import MessageSplash from "@/components/messageSplash";
 
 interface ChohanProps {
     clubData: StoredClub,
@@ -17,9 +18,15 @@ interface ChohanProps {
 export const Chohan = ({clubData, setMoney, array, setArray, setPrize, setScore, setTotal}: ChohanProps) => {
     const [bet, setBet] = useState<number>(1000)
     const [isRolling, setIsRolling] = useState<boolean>(false)
+    const [message, setMessage] = useState<{ text: string; id: number } | null>(null)
+
+    const showMessage = (text: string) => {
+        setMessage({ text, id: Date.now() })
+    }
 
     const handleGame = async (game: "Even" | "Odd") => {
         setIsRolling(true)
+        showMessage("No more bets!")
 
         await handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
 
@@ -50,6 +57,7 @@ export const Chohan = ({clubData, setMoney, array, setArray, setPrize, setScore,
 
     return (
         <div className={"flex flex-col justify-center items-center gap-5"}>
+            <MessageSplash message={message}/>
             <div className={"flex flex-row justify-center items-center h-160 gap-5"}>
                 <GlassWater fill={"white"} size={400}
                             className={`-rotate-180 transition-all duration-200 ${isRolling ?? "shake"}`}/>
