@@ -33,6 +33,12 @@ export default function AuthClient() {
     const titleRef = useRef<HTMLAudioElement | null>(null)
 
     useEffect(() => {
+        const now = new Date()
+        if(now.getDate() === 31 && now.getMonth() === 9){
+            setGame({title: "Start of Nightmare (Yakuza: Dead Souls", intro: "u-o-cXjclUY", main: "u-o-cXjclUY"})
+            setSource("u-o-cXjclUY")
+        }
+
         const random = Math.floor(Math.random() * GAMES.length)
 
         setGame(GAMES[random])

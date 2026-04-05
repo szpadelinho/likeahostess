@@ -82,7 +82,6 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 table: 'ChatMessage',
                 filter: `roomId=eq.${currentRoom.id}`
             }, payload => {
-                /*console.log('Otrzymano nową wiadomość:', payload)*/
                 if (payload.new.content.includes(`@${userRef?.current?.username}`)) {
                     chatRef.current = new Audio("/sfx/msg_ping.mp3")
                 } else {
@@ -91,7 +90,6 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 chatRef.current.play().catch()
                 setMessages(prev => [...prev, payload.new as Message])
             })
-            .subscribe(/*status => console.log("Status subskrypcji:", status)*/)
 
         return () => {
             supabase.removeChannel(channel)
@@ -147,7 +145,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
         <>
             <div
                 onClick={() => setMode("EXPANDED")}
-                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105 pointer-events-auto" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[49]`}
+                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105 " : "opacity-0 pointer-events-none z-[-999]"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[49]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -171,7 +169,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 </div>
             </div>
             <div
-                className={`${mode === "EXPANDED" ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page, true)} duration-300 ease-in-out fixed left-50 ${page === "Main" ? "top-5" : "top-10"} w-full max-w-lg mx-auto z-[48]`}
+                className={`${mode === "EXPANDED" ? "opacity-100 " : "opacity-0 pointer-events-none z-[-999]"} ${page && getPageStyle(page, true)} duration-300 ease-in-out fixed left-50 ${page === "Main" ? "top-5" : "top-10"} w-full max-w-lg mx-auto z-[48]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -189,7 +187,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     )}
                 </h1>
                 <div className={`flex flex-col relative`}>
-                    <div className={`${(!roomCreation && !list) ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} h-64 overflow-y-auto p-2 mb-2 overflow-x-hidden flex flex-col gap-1`}>
+                    <div className={`${(!roomCreation && !list) ? "opacity-100 " : "opacity-0 pointer-events-none"} h-64 overflow-y-auto p-2 mb-2 overflow-x-hidden flex flex-col gap-1`}>
                         {messages.map(msg => (
                             <div key={msg.id} className={"flex items-center gap-2"}>
                                 <Image
@@ -232,7 +230,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                         ))}
                         <div ref={bottomRef}/>
                     </div>
-                    <div className={`${(!roomCreation && !list) ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} flex items-center justify-center w-full`}>
+                    <div className={`${(!roomCreation && !list) ? "opacity-100 " : "opacity-0 pointer-events-none"} flex items-center justify-center w-full`}>
                         <input
                             value={input}
                             onFocus={() => setIsTyping?.(true)}
@@ -243,7 +241,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                             placeholder={"Type a message..."}
                         />
                     </div>
-                    <div className={`absolute inset-0 z-[1] flex flex-col gap-2 items-center p-2 ${roomCreation ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} duration-300 ease-in-out`}>
+                    <div className={`absolute inset-0 z-[1] flex flex-col gap-2 items-center p-2 ${roomCreation ? "opacity-100 " : "opacity-0 pointer-events-none"} duration-300 ease-in-out`}>
                         <div className={`duration-300 ease-in-out flex flex-col justify-between ${page && getPageStyle(page, true)}`}>
                             {users.map(user => (
                                 <div
@@ -284,7 +282,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                         </div>
                     </div>
                 </div>
-                <div className={`absolute inset-0 ${list ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} gap-2 duration-300 ease-in-out flex flex-col`}>
+                <div className={`absolute inset-0 ${list ? "opacity-100 " : "opacity-0 pointer-events-none"} gap-2 duration-300 ease-in-out flex flex-col`}>
                     {rooms.map(room => (
                         <div
                             onClick={() => setCurrentRoom(room)}
@@ -315,7 +313,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 </button>
                 <div className={"flex flex-row justify-between"}>
                     <button onClick={sendMessage}
-                            className={`${(!roomCreation && !list) ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"} m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>
+                            className={`${(!roomCreation && !list) ? "opacity-100 " : "opacity-0 pointer-events-none"} m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>
                         <Send/>
                     </button>
                     <button

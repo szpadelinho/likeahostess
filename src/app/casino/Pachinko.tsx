@@ -16,6 +16,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
     const [gameId, setGameId] = useState<string | null>(null)
     const [serverSlots, setServerSlots] = useState([0, 0, 0])
     const [spinning, setSpinning] = useState([false, false, false])
+    const [isStarting, setIsStarting] = useState(false)
 
     const [message, setMessage] = useState<{ text: string; id: number } | null>(null)
 
@@ -42,29 +43,36 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
     }, [])
 
     const startGame = async () => {
-        showMessage("Nail the jackpot!")
-        await handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
-        const res = await fetch("/api/casino/pachinko/start", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                clubData
+        if(isStarting || spinning.some(s => s)) return
+        try{
+            showMessage("Nail the jackpot!")
+            setIsStarting(true)
+            await handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
+            const res = await fetch("/api/casino/pachinko/start", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    clubData
+                })
             })
-        })
 
-        const data = await res.json()
-        setGameId(data.gameId)
-        setMoney(data.userClub.money)
-        setServerSlots(data.slots)
+            const data = await res.json()
+            setGameId(data.gameId)
+            setMoney(data.userClub.money)
+            setServerSlots(data.slots)
 
-        setScore(null)
-        setSpinning([true, true, true])
+            setScore(null)
+            setSpinning([true, true, true])
 
-        const loop = loopRef.current
-        if (loop && loop.paused) {
-            loop.currentTime = 0
-            loop.play().catch(() => {
-            })
+            const loop = loopRef.current
+            if (loop && loop.paused) {
+                loop.currentTime = 0
+                loop.play().catch(() => {
+                })
+            }
+        }
+        finally{
+            setIsStarting(false)
         }
     }
 
@@ -176,7 +184,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
             <MessageSplash message={message}/>
             <Image className={"absolute bottom-0"} src={"/images/pachinko.png"} alt={"Pachinko slot"} height={1300}
                    width={800}/>
-            <div className={"flex flex-row justify-center items-center z-50 gap-12 absolute top-105"}>
+            <div className={"flex flex-row justify-center items-center z-1 gap-12 absolute top-105"}>
                 {slots.map((index, i) => {
                     const Icon = elements[index]
                     return (
@@ -192,7 +200,11 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
             <div className={"absolute bottom-0 w-[800px] h-[800px]"}>
                 <button
                     className={"absolute bottom-27 left-25 rounded-full h-13 w-13 duration-300 ease-in-out hover:backdrop-blur-sm"}
-                    onClick={startGame}/>
+                    onClick={() => {
+                        if (!isStarting && !spinning.some(s => s)) {
+                            startGame().then()
+                        }
+                    }}/>
                 <button
                     className={"absolute bottom-30 left-71 rounded-full h-12 w-12 duration-300 ease-in-out hover:backdrop-blur-sm"}
                     onClick={() => toggleHold(0)}/>

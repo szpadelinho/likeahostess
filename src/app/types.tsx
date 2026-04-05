@@ -22,6 +22,11 @@ import PixelBlast from "@/ui/PixelBlast";
 import LightPillar from "@/ui/LightPillar";
 import Ballpit from "@/ui/Ballpit";
 import Image from "next/image";
+import ColorBends from "@/ui/ColorBends";
+import Waves from "@/ui/Waves";
+import Silk from "@/ui/Silk";
+import SoftAurora from "@/ui/SoftAurora";
+import Grainient from "@/ui/Grainient";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -510,6 +515,7 @@ export const GAMES = [
     { title: "DOOR (Judgment)", intro: "M4JEwZeTKtI", main: "M4JEwZeTKtI" },
     { title: "Lost in the Rain (Lost Judgment)", intro: "LiSSAV1xpYo", main: "LiSSAV1xpYo" },
     { title: "Howl of the Old Dragon (Ryu Ga Gotoku Kenzan)", intro: "cxz7RqRPCpo", main: "cxz7RqRPCpo" },
+    { title: "Reign (Yakuza 0)", intro: "-WKq57ibDXc", main: "-WKq57ibDXc"}
 ]
 
 export const personaMap: Record<string, string> = {
@@ -832,6 +838,79 @@ export const backgroundRenders = [
         wallBounce={1}
         followCursor={false}
         colors={[ '#fff', '#808080', '#000000' ]}
+    />,
+    <ColorBends
+        colors={["#ffffff", "#dfdfdf", "#afafaf"]}
+        rotation={0}
+        speed={0.2}
+        scale={1}
+        frequency={1}
+        warpStrength={1}
+        mouseInfluence={2}
+        parallax={0.5}
+        noise={0.1}
+        transparent
+        autoRotate={0}
+    />,
+    <Waves
+        lineColor="#ffffff"
+        backgroundColor="rgba(255, 255, 255, 0.2)"
+        waveSpeedX={0.0125}
+        waveSpeedY={0.01}
+        waveAmpX={40}
+        waveAmpY={20}
+        friction={0.9}
+        tension={0.01}
+        maxCursorMove={120}
+        xGap={12}
+        yGap={36}
+    />,
+    <Silk
+        speed={9}
+        scale={.5}
+        color="#ffffff"
+        noiseIntensity={1}
+        rotation={0}
+    />,
+    <SoftAurora
+        speed={0.6}
+        scale={1.5}
+        brightness={1}
+        color1="#ffffff"
+        color2="#ffffff"
+        noiseFrequency={2.5}
+        noiseAmplitude={1}
+        bandHeight={0.5}
+        bandSpread={1}
+        octaveDecay={0.1}
+        layerOffset={0}
+        colorSpeed={1}
+        enableMouseInteraction={true}
+        mouseInfluence={0.25}
+    />,
+    <Grainient
+        color1="#ffffff"
+        color2="#000000"
+        color3="#858585"
+        timeSpeed={0.25}
+        colorBalance={0}
+        warpStrength={1}
+        warpFrequency={5}
+        warpSpeed={2}
+        warpAmplitude={50}
+        blendAngle={0}
+        blendSoftness={0.05}
+        rotationAmount={500}
+        noiseScale={2}
+        grainAmount={0.1}
+        grainScale={2}
+        grainAnimated={false}
+        contrast={1.5}
+        gamma={1}
+        saturation={1}
+        centerX={0}
+        centerY={0}
+        zoom={0.9}
     />
 ]
 
