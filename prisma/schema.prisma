@@ -13,6 +13,7 @@ model User {
   name          String?
   email         String     @unique
   emailVerified DateTime?
+  role RoleType @default(HOST)
   image         String?
   experience Int @default(0)
   createdAt     DateTime   @default(now())
@@ -287,10 +288,15 @@ enum BuffetType {
   Meal
 }
 
-enum EffectType{
+enum EffectType {
   DRAGON_OF_DOJIMA
   LIFELINE_OF_KAMUROCHO
   DRAGON_OF_KANSAI
   SAFEKEEPER_OF_THE_TOJO_CLAN
   FIGHTING_VIPER
+}
+
+enum RoleType {
+  MANAGER
+  HOST
 }

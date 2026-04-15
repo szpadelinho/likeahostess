@@ -1,4 +1,4 @@
-import {BuffetType, EffectType, type Prisma} from "@prisma/client";
+import {$Enums, BuffetType, EffectType, type Prisma} from "@prisma/client";
 import {
     Bitcount_Grid_Double,
     Cookie, Coustard,
@@ -233,7 +233,12 @@ export interface ProfileUser {
     name: string | null
     image: string | null
     experience: number
+    role: RoleType
 }
+
+export type RoleType =
+    "MANAGER"
+    | "HOST"
 
 export interface VolumeContextType {
     volume: number

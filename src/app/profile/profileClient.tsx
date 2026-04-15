@@ -122,7 +122,7 @@ const ProfileClient = ({totals, favClub, user, isMe}: ProfileClientProps) => {
             <LoadingBanner show={loading}/>
             <div className={"grayscale-100"}>
                 <ReactPlayer
-                    src={"https://youtube.com/embed/hU7iW2-RtzI?autoplay=1"}
+                    src={"https://youtube.com/embed/7NVanakpYXQ?autoplay=1"}
                     playing={isPlaying}
                     controls={false}
                     autoPlay={true}
@@ -172,7 +172,7 @@ const ProfileClient = ({totals, favClub, user, isMe}: ProfileClientProps) => {
                         <h1 className={`z-50 text-[50px] ${cookie.className}`}>
                             {user.name}&apos;s card
                         </h1>
-                        <Image src={"/images/dragon.png"} alt={"Dragon icon"} height={64} width={64}/>
+                        <Image src={user.role === "MANAGER" ? "/images/tojo_crest.png" : "/images/dragon.png"} alt={"Dragon icon"} height={64} width={64}/>
                     </div>
                     {totals && (
                         <div

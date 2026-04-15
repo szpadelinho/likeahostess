@@ -1,12 +1,22 @@
 'use client'
 
-import {Dispatch, SetStateAction, useEffect, useRef, useState} from "react"
+import React, {Dispatch, SetStateAction, useEffect, useRef, useState} from "react"
 import {supabase} from "@/lib/supabaseClient"
-import {ChatUser, ChatUserList, getPageStyle, Message, PageType, Room, RoomDisplay, yesteryear} from "@/app/types";
+import {
+    ChatUser,
+    ChatUserList,
+    getPageStyle,
+    Message,
+    PageType,
+    Room,
+    RoomDisplay,
+    yesteryear
+} from "@/app/types";
 import {useSession} from "next-auth/react";
 import {EyeClosed, List, MessageSquarePlus, Plus, Send} from "lucide-react";
 import {useRouter} from "next/navigation";
 import Image from "next/image";
+import {handleChat} from "@/lib/transactions";
 
 interface ChatClientProps {
     page?: PageType,
@@ -90,15 +100,24 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 chatRef.current.play().catch()
                 setMessages(prev => [...prev, payload.new as Message])
             })
+            .subscribe()
 
         return () => {
             supabase.removeChannel(channel)
         }
     }, [currentRoom])
 
-
     const sendMessage = async () => {
         if (!input.trim() || !userRef.current) return
+
+        if(input.toLowerCase() === "/clear" || input.toLowerCase() === "/c"){
+            const status = await handleChat("clear")
+            if (status.success) {
+                setMessages([])
+                setInput("")
+            }
+            return
+        }
 
         await fetch("/api/chat/send", {
             method: "POST",

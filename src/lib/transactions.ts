@@ -226,3 +226,15 @@ export const handleSupplies = async ({clubData, amount, setMoney, setSupplies, s
         console.error(err)
     }
 }
+
+export const handleChat = async (action: string) => {
+    const res = await fetch("api/chat/actions", {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            action
+        })
+    })
+
+    return res.json()
+}
