@@ -6,7 +6,7 @@ import {useRouter} from "next/navigation";
 import Image from "next/image";
 import CasinoGame from "@/app/casino/CasinoGame";
 import Navbar from "@/components/navbar";
-import {StoredClub, yesteryear} from "../types";
+import {Dealer, Dealers, StoredClub, yesteryear} from "../types";
 import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {panels} from "@/lib/casino";
@@ -22,6 +22,7 @@ const CasinoClient = () => {
     const [background, setBackground] = useState("casino")
     const [money, setMoney] = useState<number>(0)
     const [transition, setTransition] = useState<boolean>(false)
+    const [dealer, setDealer] = useState<Dealer | null>(null)
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -29,6 +30,11 @@ const CasinoClient = () => {
         }, 1)
 
         return () => clearTimeout(timer)
+    }, [])
+
+    useEffect(() => {
+        setDealer(Dealers[Math.floor(Math.random() * Dealers.length)])
+        console.log(dealer)
     }, [])
 
     useEffect(() => {
@@ -56,7 +62,7 @@ const CasinoClient = () => {
             <div className={`absolute inset-0 z-50 pointer-events-none ${transition ? "opacity-100" : "opacity-0"} transform ease-in-out duration-300 bg-black`}/>
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} setTransition={setTransition} page={"Casino"}/>
             <ReactPlayer
-                src={"https://youtube.com/embed/8mqRTo74g-0?autoplay=1"}
+                src={`https://youtube.com/embed/${dealer && dealer.id === 0 ? "8nOebf6Wcdc" : "0AxwRgmwOsk"}?autoplay=1`}
                 playing={isPlaying}
                 controls={false}
                 autoPlay={true}
@@ -68,7 +74,7 @@ const CasinoClient = () => {
             />
             {!game ? (
                 <>
-                    <Image className={"absolute right-1/3 scale-80 top-60"} src={"/images/tanimura_cover.png"} alt={"Masayoshi Tanimura"} height={0} width={150}/>
+                    {dealer && <Image className={"absolute right-1/3 scale-80 top-60"} src={`/images/${dealer.cover}`} alt={dealer.name} height={0} width={150}/>}
                     <h1 className={`absolute top-20 text-[75px] ${yesteryear.className}`}>What will we play today?</h1>
                     {panels.map((panel, i) => (
                         <div key={i}
@@ -91,7 +97,7 @@ const CasinoClient = () => {
                     ))}
                 </>
             ):(
-                clubData && <CasinoGame game={game} clubData={clubData} setMoney={setMoney}/>
+                clubData && <CasinoGame game={game} clubData={clubData} setMoney={setMoney} dealer={dealer}/>
             )}
             {clubData && game && (
                 <div

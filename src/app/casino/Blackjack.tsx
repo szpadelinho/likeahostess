@@ -1,5 +1,5 @@
 import Image from "next/image";
-import {StoredClub, yesteryear} from "@/app/types";
+import {Dealer, StoredClub, yesteryear} from "@/app/types";
 import {JapaneseYen, Minus, Plus} from "lucide-react";
 import React from "react";
 import {cards} from "@/lib/casino";
@@ -15,7 +15,8 @@ interface BlackjackProps {
     handleBet: (type: string, action: ("Add" | "Lower")) => void,
     playerHit: () => void,
     playerStand: () => void,
-    handleGame: (type: string, value: (string | null)) => void
+    handleGame: (type: string, value: (string | null)) => void,
+    dealer: Dealer | null
 }
 
 export const Blackjack = ({
@@ -29,16 +30,19 @@ export const Blackjack = ({
                               handleBet,
                               playerHit,
                               playerStand,
-                              handleGame
+                              handleGame,
+                              dealer
                           }: BlackjackProps) => {
     return (
         <div className={"absolute backdrop-blur-lg inset-0 flex flex-col justify-center items-center"}>
-            <div className="h-150 w-75 left-0 absolute bg-gradient-to-l from-transparent to-black/75" />
-            <div className="h-150 w-75 right-0 absolute bg-gradient-to-r from-transparent to-black/75" />
+            <div className="h-150 w-75 left-0 absolute bg-gradient-to-l from-transparent to-black/75"/>
+            <div className="h-150 w-75 right-0 absolute bg-gradient-to-r from-transparent to-black/75"/>
             <h1 className={`text-[75px] ${yesteryear.className}`}>Blackjack</h1>
             <div
                 className={`flex flex-row justify-center items-center gap-30 p-10 rounded-[20] ${yesteryear.className}`}>
-                <Image className={"rotate-10 [mask-image:linear-gradient(to_top,transparent,black)] [-webkit-mask-image:linear-gradient(to_top,transparent,black)]"} src={`/images/${clubData.host.surname}_blackjack.png`} alt={"You"} height={300} width={300}/>
+                <Image
+                    className={"rotate-10 [mask-image:linear-gradient(to_top,transparent,black)] [-webkit-mask-image:linear-gradient(to_top,transparent,black)]"}
+                    src={`/images/${clubData.host.surname}_blackjack.png`} alt={"You"} height={300} width={300}/>
                 <div className={"relative flex flex-col justify-center items-center w-50 h-full"}>
                     <div className={"relative h-50 w-50"}>
                         {userCards.map((userCard, i) => (
@@ -84,7 +88,9 @@ export const Blackjack = ({
                         ))}
                     </div>
                 </div>
-                <Image className={"-rotate-10 [mask-image:linear-gradient(to_top,transparent,black)] [-webkit-mask-image:linear-gradient(to_top,transparent,black)]"} src={`/images/tanimura_blackjack.png`} alt={"Dealer"} height={300} width={300}/>
+                {dealer && <Image
+                    className={"-rotate-10 [mask-image:linear-gradient(to_top,transparent,black)] [-webkit-mask-image:linear-gradient(to_top,transparent,black)]"}
+                    src={`/images/${dealer.blackjackCover}`} alt={dealer.name} height={300} width={300}/>}
             </div>
             <div className={"flex flex-col justify-center items-center gap-5"}>
                 {isPlayerTurn && !gameOver ? (

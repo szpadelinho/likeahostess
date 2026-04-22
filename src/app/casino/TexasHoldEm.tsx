@@ -1,7 +1,7 @@
 import React, {useState, useEffect, forwardRef, useImperativeHandle} from "react"
 import Image from "next/image"
 import {Coins, JapaneseYen} from "lucide-react"
-import {Club, yesteryear} from "@/app/types";
+import {Club, Dealer, yesteryear} from "@/app/types";
 import {cards, Player} from "@/lib/casino";
 import MessageSplash from "@/components/messageSplash";
 
@@ -14,6 +14,7 @@ interface TexasHoldEmProps {
     setShowCard: (value: (((prevState: (string | null)) => (string | null)) | string | null)) => void
     clubData: Club
     setDeck: (value: (((prevState: string[]) => string[]) | string[])) => void
+    dealer: Dealer | null
 }
 
 interface TexasHoldEmRef {
@@ -30,7 +31,8 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
          setPlayerActionPending,
          setShowCard,
          clubData,
-         setDeck
+         setDeck,
+         dealer
      }, ref) => {
         const [communityCards, setCommunityCards] = useState<string[]>([])
         const [players, setPlayers] = useState<Player[]>([])
@@ -40,7 +42,7 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
         const [message, setMessage] = useState<{ text: string; id: number } | null>(null)
 
         const showMessage = (text: string) => {
-            setMessage({ text, id: Date.now() })
+            setMessage({text, id: Date.now()})
         }
 
         const startGame = async () => {
@@ -50,7 +52,8 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
                 method: "POST",
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
-                    clubData
+                    clubData,
+                    dealer
                 })
             })
             const data = await res.json()

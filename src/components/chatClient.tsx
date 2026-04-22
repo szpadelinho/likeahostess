@@ -304,7 +304,10 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 <div className={`absolute inset-0 ${list ? "opacity-100 " : "opacity-0 pointer-events-none"} gap-2 duration-300 ease-in-out flex flex-col`}>
                     {rooms.map(room => (
                         <div
-                            onClick={() => setCurrentRoom(room)}
+                            onClick={() => {
+                                setCurrentRoom(room)
+                                setList(false)
+                            }}
                             key={room.id} className={`flex flex-row justify-center items-center text-center gap-2 rounded-[10] font-[700] duration-200 ease-in-out w-full ${page && getPageStyle(page)}`}>
                             <h1>
                                 <RoomDisplay

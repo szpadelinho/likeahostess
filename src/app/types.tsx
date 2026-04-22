@@ -240,12 +240,18 @@ export type RoleType =
     "MANAGER"
     | "HOST"
 
-export interface VolumeContextType {
-    volume: number
-    setVolume: (v: number) => void
-    fadeTo: (v: number, duration?: number) => void
-    restore: () => void
+export interface Dealer {
+    id: number
+    name: string
+    cover: string
+    blackjackCover: string
+    pokerCover: string
 }
+
+export const Dealers: Dealer[] = [
+    {id: 0, name: "Tanimura", cover: "tanimura_cover.png", blackjackCover: "tanimura_blacjack.png", pokerCover: "tanimura_poker.png"},
+    {id: 1, name: "Watase", cover: "watase_cover.png", blackjackCover: "watase_blacjack.png", pokerCover: "watase_poker.png"}
+]
 
 export interface Message{
     id?: string

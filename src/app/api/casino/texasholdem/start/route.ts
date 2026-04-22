@@ -5,9 +5,9 @@ import {buildDeck, handleDeckShuffle} from "@/lib/casino";
 
 export async function POST(req: Request){
     const session = await auth()
-    const { clubData } = await req.json()
+    const { clubData, dealer } = await req.json()
     const userId = session?.user?.id
-    if (!session || !userId || !clubData) return NextResponse.json({error: "Unauthorized"}, {status: 401})
+    if (!session || !userId || !clubData || !dealer) return NextResponse.json({error: "Unauthorized"}, {status: 401})
 
     const gameAction = await prisma.gameAction.findFirst({
         where: {
@@ -66,12 +66,12 @@ export async function POST(req: Request){
             },
             {
                 id: 3,
-                name: "Tanimura the Dealer",
+                name: dealer.name,
                 hand: freshDeck.slice(6, 8),
                 chips: 5000,
                 currentBet: 0,
                 folded: false,
-                image: "tanimura_poker",
+                image: dealer.pokerCover.replace(".png", ""),
                 hasActed: false,
                 isAI: true
             },

@@ -5,7 +5,7 @@ import RouletteBoard from "@/app/casino/RouletteBoard";
 import Roulette from "@/app/casino/Roulette";
 import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
 import {Pachinko} from "@/app/casino/Pachinko";
-import {personaMap, rankMap, StoredClub, suitMap} from "@/app/types";
+import {Dealer, personaMap, rankMap, StoredClub, suitMap} from "@/app/types";
 import {RouletteBet} from "@/lib/casino";
 import {Chohan} from "@/app/casino/Chohan";
 import {handleGameAction} from "@/lib/transactions";
@@ -20,10 +20,11 @@ const yesteryear = Yesteryear({
 interface CasinoGameProps {
     game: "Roulette" | "Blackjack" | "Poker" | "Chohan" | "Pachinko" | null,
     clubData: StoredClub,
-    setMoney: (fn: (x: number) => number) => void
+    setMoney: (fn: (x: number) => number) => void,
+    dealer: Dealer | null
 }
 
-const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
+const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
     const rouletteRef = useRef<{ spin: () => void } | null>(null)
     const pokerRef = useRef<any>(null)
 
@@ -58,7 +59,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
     const [selectedBet, setSelectedBet] = useState<string | null>(null)
 
     const showMessage = (text: string) => {
-        setMessage({ text, id: Date.now() })
+        setMessage({text, id: Date.now()})
     }
 
     useEffect(() => {
@@ -151,16 +152,15 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                     handleScore("Chohan", "odd", total, sum, false)
                 }
             }
-        }
-        else if (type === "Blackjack") {
+        } else if (type === "Blackjack") {
             showMessage("No more bets!")
-            await handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
+            await handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
             setIsPlayerTurn(true)
             setGameOver(false)
             setScore(null)
             const res = await fetch("api/casino/blackjack/start", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     clubData,
                     bet
@@ -169,7 +169,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             const data = await res.json()
             setUserCards(data.userHand)
             setDealerCards(data.dealerHand)
-            if(data.finished){
+            if (data.finished) {
                 setWin(data.win)
                 setGameOver(true)
                 switch (data.win) {
@@ -196,7 +196,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
 
         const res = await fetch("api/casino/blackjack/play", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 clubData,
                 gameId
@@ -209,14 +209,14 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             setUserCards(currentUserCards => [...currentUserCards, card])
         }
 
-        if(data.win === 0){
+        if (data.win === 0) {
             setIsPlayerTurn(false)
             setGameOver(true)
             setScore("You are a bust, sir.")
             setWin(0)
         }
 
-        if(data.win === 2){
+        if (data.win === 2) {
             setIsPlayerTurn(false)
             setGameOver(true)
             setScore("Blackjack! You sir are a winner!")
@@ -231,7 +231,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
 
         const res = await fetch("api/casino/blackjack/reveal", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: {"Content-Type": "application/json"},
             body: JSON.stringify({
                 clubData,
                 gameId,
@@ -242,7 +242,7 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
         setWin(data.win)
         setGameOver(true)
         setDealerCards(data.dealerCards)
-        switch(data.win){
+        switch (data.win) {
             case 2:
                 setScore("You sir are a winner!")
                 break
@@ -307,7 +307,8 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             {game === "Chohan" && (
                 <>
                     <h1 className={`text-[75px] ${yesteryear.className}`}>Chō-Han</h1>
-                    <Chohan clubData={clubData} setMoney={setMoney} array={array} setArray={setArray} setPrize={setPrize} setScore={setScore} setTotal={setTotal}/>
+                    <Chohan clubData={clubData} setMoney={setMoney} array={array} setArray={setArray}
+                            setPrize={setPrize} setScore={setScore} setTotal={setTotal}/>
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-md p-2 h-55 w-120 rounded-[20] text-[40px] flex justify-center items-center flex-col`}>
                             <p>{prize > 0 ? `You won ¥${prize}!` : `You lost ¥${Math.abs(prize)}.`}</p>
@@ -319,7 +320,10 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
             )}
             {game === "Blackjack" && (
                 <div className={"flex flex-col justify-center items-center gap-10"}>
-                    <Blackjack clubData={clubData} userCards={userCards} dealerCards={dealerCards} setShowCard={setShowCard} isPlayerTurn={isPlayerTurn} gameOver={gameOver} bet={bet} handleBet={handleBet} playerHit={playerHit} playerStand={playerStand} handleGame={handleGame}/>
+                    <Blackjack clubData={clubData} userCards={userCards} dealerCards={dealerCards}
+                               setShowCard={setShowCard} isPlayerTurn={isPlayerTurn} gameOver={gameOver} bet={bet}
+                               handleBet={handleBet} playerHit={playerHit} playerStand={playerStand}
+                               handleGame={handleGame} dealer={dealer}/>
                     {score !== null && (
                         <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
                             <p>{score}</p>
@@ -333,7 +337,8 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                     <h1 className={`absolute top-15 text-[75px] ${yesteryear.className}`}>Roulette</h1>
                     <div
                         className={"relative p-10 gap-20 flex justify-center items-center flex-row bg-green-800 rounded-[50] border-20 border-amber-950"}>
-                        <Roulette ref={rouletteRef} handleRouletteResult={handleRouletteResult} clubData={clubData} bets={bets} setMoney={setMoney}/>
+                        <Roulette ref={rouletteRef} handleRouletteResult={handleRouletteResult} clubData={clubData}
+                                  bets={bets} setMoney={setMoney}/>
                         <RouletteBoard handleBet={handleBet} bets={bets} selectedBet={selectedBet}
                                        setSelectedBet={setSelectedBet}/>
                         <div
@@ -372,7 +377,8 @@ const CasinoGame = ({game, clubData, setMoney}: CasinoGameProps) => {
                         className={"relative h-[75vh] w-[75vw] flex justify-center items-center flex-row bg-green-800 rounded-[100] border-20 border-amber-950"}>
                         <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
                                      playerActionPending={playerActionPending}
-                                     setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard} clubData={clubData} setDeck={setDeck}
+                                     setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard}
+                                     clubData={clubData} setDeck={setDeck} dealer={dealer}
                         />
                     </div>
                     {(stage === null || stage === "Showdown") && (
