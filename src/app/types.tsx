@@ -250,7 +250,7 @@ export interface Dealer {
 
 export const Dealers: Dealer[] = [
     {id: 0, name: "Tanimura", cover: "tanimura_cover.png", blackjackCover: "tanimura_blacjack.png", pokerCover: "tanimura_poker.png"},
-    {id: 1, name: "Watase", cover: "watase_cover.png", blackjackCover: "watase_blacjack.png", pokerCover: "watase_poker.png"}
+    {id: 1, name: "Watase", cover: "watase_cover.png", blackjackCover: "watase_blackjack.png", pokerCover: "watase_poker.png"}
 ]
 
 export interface Message{

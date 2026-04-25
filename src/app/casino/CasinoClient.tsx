@@ -33,8 +33,12 @@ const CasinoClient = () => {
     }, [])
 
     useEffect(() => {
-        setDealer(Dealers[Math.floor(Math.random() * Dealers.length)])
-        console.log(dealer)
+        if(Math.random() > 0.1){
+            setDealer(Dealers[0])
+        }
+        else{
+            setDealer(Dealers[1])
+        }
     }, [])
 
     useEffect(() => {
@@ -58,7 +62,7 @@ const CasinoClient = () => {
     return(
         <div className={"flex flex-col h-screen w-screen items-center justify-center text-white z-50 gap-5"}>
             <LoadingBanner show={loading}/>
-            <Image src={`/images/${background}.png`} alt={"Casino interior"} fill={true} className={"absolute inset-0 z-[-1]"}/>
+            <Image src={`/images/${background}.png`} alt={"Casino interior"} fill={true} className={"absolute inset-0 object-cover z-[-1]"}/>
             <div className={`absolute inset-0 z-50 pointer-events-none ${transition ? "opacity-100" : "opacity-0"} transform ease-in-out duration-300 bg-black`}/>
             <Navbar router={router} isPlaying={isPlaying} setIsPlaying={setIsPlaying} game={game} setGame={setGame} setBackground={setBackground} setTransition={setTransition} page={"Casino"}/>
             <ReactPlayer
@@ -74,7 +78,16 @@ const CasinoClient = () => {
             />
             {!game ? (
                 <>
-                    {dealer && <Image className={"absolute right-1/3 scale-80 top-60"} src={`/images/${dealer.cover}`} alt={dealer.name} height={0} width={150}/>}
+                    {dealer && (
+                        <div className="absolute right-1/3 top-70 w-[200px] h-[500px] flex items-center justify-center">
+                            <Image
+                                src={`/images/${dealer.cover}`}
+                                alt={dealer.name}
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
+                    )}
                     <h1 className={`absolute top-20 text-[75px] ${yesteryear.className}`}>What will we play today?</h1>
                     {panels.map((panel, i) => (
                         <div key={i}
