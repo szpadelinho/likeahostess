@@ -63,7 +63,7 @@ const Tutorial = ({isLogged}: TutorialClientProps) => {
                 <div
                     className={"relative grid grid-cols-9 items-center w-300 gap-4 p-2 whitespace-nowrap z-50 mix-blend-mode-burn mt-3"}>
                     <ReactPlayer
-                        src={"https://youtube.com/embed/OR9Xls1S0s4?autoplay=1"}
+                        src={"https://youtube.com/embed/s4XKil53wCk?autoplay=1"}
                         playing={isPlaying}
                         controls={false}
                         autoPlay={true}

@@ -137,13 +137,13 @@ const Activities = ({
                                                 className={"hover:text-pink-200 transition duration-200 ease-in-out transform active:-translate-x-3 scale-100 hover:scale-110"}>
                                             <SkipBack/>
                                         </button>
-                                        <div onClick={() => {
+                                        <div onClick={async () => {
                                             onCloseModal()
                                             setJamToggle(isJamPlaying)
                                             setIsJamPlaying(false)
                                             setSelectedActivity(performerActivities[activityIndex])
-                                            handleGameAction({type: "ACTIVITY", status: "ACTIVE"}).then()
-                                            handleActivity({clubData, activityId: activityIndex, setClub, setPopularity, setExperience, setMoney}).then()
+                                            await handleGameAction({type: "ACTIVITY", status: "ACTIVE"}).then()
+                                            await handleActivity({clubData, activityId: activityIndex + 1, setClub, setPopularity, setExperience, setMoney}).then()
                                         }}
                                              className={"flex justify-center items-center flex-row border-pink-200 border-2 rounded-[15] p-2 hover:bg-pink-950 hover:scale-102 active:scale-95 hover:text-pink-200 transition-all duration-200 ease-in-out"}>
                                             <p className={"w-100 flex flex-row justify-center items-center gap-2"}>{performerActivities[activityIndex].name}</p>

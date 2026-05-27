@@ -1,4 +1,4 @@
-import {$Enums, BuffetType, EffectType, type Prisma} from "@prisma/client";
+import {BuffetType, EffectType, type Prisma} from "@prisma/client";
 import {
     Bitcount_Grid_Double,
     Cookie, Coustard,
@@ -27,6 +27,8 @@ import Waves from "@/ui/Waves";
 import Silk from "@/ui/Silk";
 import SoftAurora from "@/ui/SoftAurora";
 import Grainient from "@/ui/Grainient";
+import DotGrid from "@/ui/DotGrid";
+import PrismaticBurst from "@/ui/PrismaticBurst";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -249,7 +251,7 @@ export interface Dealer {
 }
 
 export const Dealers: Dealer[] = [
-    {id: 0, name: "Tanimura", cover: "tanimura_cover.png", blackjackCover: "tanimura_blacjack.png", pokerCover: "tanimura_poker.png"},
+    {id: 0, name: "Tanimura", cover: "tanimura_cover.png", blackjackCover: "tanimura_blackjack.png", pokerCover: "tanimura_poker.png"},
     {id: 1, name: "Watase", cover: "watase_cover.png", blackjackCover: "watase_blackjack.png", pokerCover: "watase_poker.png"}
 ]
 
@@ -922,6 +924,29 @@ export const backgroundRenders = [
         centerX={0}
         centerY={0}
         zoom={0.9}
+    />,
+    <DotGrid
+        dotSize={5}
+        gap={20}
+        baseColor="#292838"
+        activeColor="#ffffff"
+        proximity={200}
+        shockRadius={250}
+        shockStrength={10}
+        resistance={750}
+        returnDuration={1.5}
+    />,
+    <PrismaticBurst
+        animationType="rotate3d"
+        intensity={2}
+        speed={0.5}
+        distort={0}
+        paused={false}
+        offset={{ x: 0, y: 0 }}
+        hoverDampness={0.25}
+        rayCount={0}
+        mixBlendMode="lighten"
+        colors={['#ffffff', '#858585', '#191919']}
     />
 ]
 

@@ -125,7 +125,11 @@ export const handleActivity = async ({clubData, activityId, setClub, setPopulari
 
         const data = await res.json()
 
-        setClub(data.clubData)
+        setClub(prev => ({
+            ...prev,
+            ...data.clubData,
+            host: data.clubData.host ?? prev?.host
+        }))
         setPopularity(data.clubData.popularity)
         setExperience(data.experience)
         setMoney(data.clubData.money)

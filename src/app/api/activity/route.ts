@@ -21,7 +21,7 @@ export async function POST(req: Request){
 
         const activity = await prisma.activity.findFirst({
             where: {
-                id: activityId
+                id: String(activityId)
             }
         })
 
@@ -64,9 +64,17 @@ export async function POST(req: Request){
             })
         }
 
-        return NextResponse.json({clubData: club, experience: user.experience})
+        return NextResponse.json({
+            clubData: club,
+            experience: user.experience
+        })
     }
     catch(err){
         console.error(err)
+
+        return NextResponse.json(
+            {message: "Internal server error"},
+            {status: 500}
+        )
     }
 }

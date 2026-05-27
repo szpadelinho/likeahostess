@@ -254,13 +254,13 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                     <div className={"relative rounded-[20] flex justify-center w-40"}>
                         <Image
                             className={"flex absolute -bottom-40"}
-                            src={club.host.image}
+                            src={club?.host?.image}
                             alt={"Host"}
                             height={500}
                             width={175}
                         />
                         <h1 className={`absolute right-3 -bottom-10 origin-bottom-right text-nowrap rotate-90 opacity-50 text-[clamp(24px,4vw,50px)] ${yesteryear.className}`}>
-                            {club.host.name} {club.host.name === "Kazuki" && "and"} {club.host.surname}
+                            {club?.host?.name} {club?.host?.name === "Kazuki" && "and"} {club?.host?.surname}
                         </h1>
                     </div>
                 </div>
