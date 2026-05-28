@@ -20,6 +20,7 @@ interface DroppableSlotsProps {
     onDrop: (id: string, correct: boolean) => void
     children: ReactNode
     expectedId: string
+    className?: string
 }
 
 interface DraggableDoorProps {
@@ -97,7 +98,7 @@ export const DraggableItem = ({item, type}: { item: Buffet; type: 'beverage' | '
     )
 }
 
-export const DroppableSlot = ({type, onDrop, children, expectedId}: DroppableSlotsProps) => {
+export const DroppableSlot = ({type, onDrop, children, expectedId, className}: DroppableSlotsProps) => {
     const [status, setStatus] = useState<'idle' | 'correct' | 'wrong'>('idle')
     const [droppedChild, setDroppedChild] = useState<ReactNode | null>(null)
 
@@ -134,7 +135,7 @@ export const DroppableSlot = ({type, onDrop, children, expectedId}: DroppableSlo
     return (
         <button
             ref={buttonRef}
-            className={`border-2 ${canDrop && "border-dotted"} p-5 rounded-[15] transition-all duration-300 hover:scale-110 ease-in-out ${colorStatus}`}>
+            className={`${className} border-2 ${canDrop && "border-dotted"} p-5 rounded-[15] transition-all duration-300 hover:scale-110 ease-in-out ${colorStatus}`}>
             {status === 'correct' ? droppedChild : children}
         </button>
     )

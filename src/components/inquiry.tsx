@@ -268,20 +268,20 @@ export const Inquiry = ({
                     <div className={"flex flex-row gap-40 justify-center items-center"}>
                         <div className={"flex flex-col justify-center items-center"}>
                             <div
-                                className={"flex w-120 h-15 justify-center items-center flex-row rounded-[15] p-2 text-[16px]"}
+                                className={"flex bg-[radial-gradient(ellipse_at_center,_rgba(134,10,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(125,10,80,1)_100%)] w-120 h-15 justify-center items-center flex-row rounded-[15] p-2 text-[16px]"}
                                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
                                 {orderSentence}
                             </div>
                             <div
-                                className={"absolute left-97 bottom-60 flex flex-row gap-5 justify-center items-center"}>
+                                className={"absolute left-104 bottom-60 flex flex-row gap-5 justify-center items-center perspective-dramatic"}>
                                 {randomBeverage && (
-                                    <DroppableSlot type={"beverage"} onDrop={handleBeverageDrop}
+                                    <DroppableSlot className={"rotate-x-[5deg]"} type={"beverage"} onDrop={handleBeverageDrop}
                                                    expectedId={randomBeverage.id}>
                                         <Martini size={50}/>
                                     </DroppableSlot>
                                 )}
                                 {randomMeal && (
-                                    <DroppableSlot type={"meal"} onDrop={handleMealDrop} expectedId={randomMeal.id}>
+                                    <DroppableSlot className={"rotate-x-[5deg]"} type={"meal"} onDrop={handleMealDrop} expectedId={randomMeal.id}>
                                         <ChefHat size={50}/>
                                     </DroppableSlot>
                                 )}
@@ -354,7 +354,7 @@ export const Inquiry = ({
                     <div className={"flex flex-row items-center justify-center gap-30"}>
                         <div className={"flex flex-col items-center justify-center"}>
                             <div
-                                className={"flex w-140 h-15 justify-center items-center flex-row bg-transparent rounded-[15] p-2 text-[16px]"}
+                                className={"flex w-140 h-15 justify-center items-center flex-row bg-[radial-gradient(ellipse_at_center,_rgba(134,10,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(125,10,80,1)_100%)] rounded-[15] p-2 text-[16px]"}
                                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
                                 {`Looks like ${hostesses[inquiryTableId]?.name} ${hostesses[inquiryTableId]?.surname !== null ? hostesses[inquiryTableId]?.surname : ""} is calling you for a service assistance`}
                             </div>
@@ -368,7 +368,7 @@ export const Inquiry = ({
                         <div
                             className={"flex flex-col justify-center items-center rounded-[20] text-white font-[600]"}
                             style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
-                            <div className={"grid grid-cols-3 grid-rows-2 gap-10 p-3"}>
+                            <div className={"grid grid-cols-3 grid-rows-2 gap-10 p-3 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(175,50,100,1)_100%)]"}>
                                 {serviceActions.map((action, i) => (
                                     <div key={i} className={"relative group"}>
                                         <button
@@ -391,7 +391,7 @@ export const Inquiry = ({
                     <div className={"flex flex-row gap-50 justify-center items-center"}>
                         <div className={"flex flex-col gap-20 bg-transparent justify-center items-center"}>
                             <div
-                                className={"flex w-120 h-15 justify-center items-center flex-row rounded-[15] p-2 text-[16px]"}
+                                className={"flex bg-[radial-gradient(ellipse_at_center,_rgba(134,10,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(125,10,80,1)_100%)] w-120 h-15 justify-center items-center flex-row rounded-[15] p-2 text-[16px]"}
                                 style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
                                 The visit is over. Please choose an option:
                             </div>
@@ -403,7 +403,7 @@ export const Inquiry = ({
                             />
                         </div>
                         <div
-                            className={"flex bg-transparent text-center items-center justify-center rounded-[20] text-white font-[600]"}
+                            className={"flex bg-[radial-gradient(ellipse_at_center,_rgba(150,20,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(175,50,100,1)_100%)] text-center items-center justify-center rounded-[20] text-white font-[600]"}
                             style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
                             <div className={"grid grid-cols-2 grid-rows-2 gap-10 p-3"}>
                                 {endActions.map((action, i) => (

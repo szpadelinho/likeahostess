@@ -29,6 +29,8 @@ import SoftAurora from "@/ui/SoftAurora";
 import Grainient from "@/ui/Grainient";
 import DotGrid from "@/ui/DotGrid";
 import PrismaticBurst from "@/ui/PrismaticBurst";
+import ReactPlayer from "react-player";
+import React from "react";
 
 export type FavClub = Prisma.UserClubGetPayload<{
     include: {
@@ -947,7 +949,59 @@ export const backgroundRenders = [
         rayCount={0}
         mixBlendMode="lighten"
         colors={['#ffffff', '#858585', '#191919']}
-    />
+    />,
+    <div className="fixed inset-0 object-cover overflow-hidden">
+        <ReactPlayer
+            src={"https://youtube.com/embed/-WKq57ibDXc?autoplay=1"}
+            playing={true}
+            controls={false}
+            muted={false}
+            volume={0}
+            loop={true}
+            width="100%"
+            height="100%"
+            className="absolute top-0 left-0"
+        />
+    </div>,
+    <div className="fixed inset-0 object-cover overflow-hidden">
+        <ReactPlayer
+            src={"https://youtube.com/embed/-RThWPhFT1k?autoplay=1"}
+            playing={true}
+            controls={false}
+            muted={false}
+            volume={0}
+            loop={true}
+            width="100%"
+            height="100%"
+            className="absolute top-0 left-0"
+        />
+    </div>,
+    <div className="fixed inset-0 object-cover overflow-hidden">
+        <ReactPlayer
+            src={"https://youtube.com/embed/rk1hVbU40Sw?autoplay=1"}
+            playing={true}
+            controls={false}
+            muted={false}
+            volume={0}
+            loop={true}
+            width="100%"
+            height="100%"
+            className="absolute top-0 left-0"
+        />
+    </div>,
+    <div className="fixed inset-0 object-cover overflow-hidden">
+        <ReactPlayer
+            src={"https://youtube.com/embed/mw4--Uc3j04?autoplay=1"}
+            playing={true}
+            controls={false}
+            muted={false}
+            volume={0}
+            loop={true}
+            width="100%"
+            height="100%"
+            className="absolute top-0 left-0"
+        />
+    </div>
 ]
 
 export const clientMugshots = [

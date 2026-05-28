@@ -3,7 +3,7 @@ import {
     Candy,
     Zap,
     Flame,
-    Droplet, Snowflake, PlugZap
+    Droplet, Snowflake, PlugZap, LucideIcon, Box, SunMoon, Sun, Martini
 } from "lucide-react";
 import {DraggableHostess} from "@/scripts/DNDItems";
 import {Hostess, marckScript} from "@/app/types";
@@ -16,6 +16,38 @@ interface Props {
 }
 
 const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostess}: Props) => {
+    const calculateAttractivenessIcon = (value?: number) => {
+        if(value === undefined) return
+        let Icon: LucideIcon
+        switch(value){
+            case 0:
+                Icon = Box
+                break
+            case 1:
+                Icon = Snowflake
+                break
+            case 2:
+                Icon = Droplet
+                break
+            case 3:
+                Icon = SunMoon
+                break
+            case 4:
+                Icon = Sun
+                break
+            case 5:
+                Icon = Flame
+                break
+            default:
+                Icon = Martini
+        }
+        return (
+            <p className={"text-pink-200/50 pointer-events-none"}>
+                <Icon size={25}/>
+            </p>
+        )
+    }
+
     return (
         <div
             onClick={onCloseModal}
@@ -44,7 +76,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                                         Attractiveness
                                     </p>
                                     <p className={"flex flex-row justify-center items-center gap-2"}>
-                                        <Candy/>{selectedHostess.attractiveness}/5
+                                        <Candy/>{selectedHostess.attractiveness}/5 {calculateAttractivenessIcon(selectedHostess.attractiveness)}
                                     </p>
                                 </h1>
                                 <h1 className={"flex flex-col justify-center items-center gap-2"}>
