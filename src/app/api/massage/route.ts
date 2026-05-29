@@ -54,10 +54,18 @@ export async function POST(req: Request){
             }
         })
 
-        const hostesses = await prisma.userHostess.findMany({
+        const hostessesRaw = await prisma.userHostess.findMany({
             where: { userId: session.user.id },
             include: { hostess: true }
         })
+
+        const hostesses = hostessesRaw.map(h => ({
+            id: h.id,
+            fatigue: h.fatigue,
+            name: h.hostess.name,
+            surname: h.hostess.surname,
+            image: h.hostess.image
+        }))
 
         const club = await prisma.userClub.update({
             where: {

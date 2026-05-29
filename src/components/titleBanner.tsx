@@ -30,8 +30,11 @@ const TitleBanner = ({bannerVisible}: Props) => {
             <div
                 className={`z-[999] flex h-screen w-screen items-center justify-center absolute transition duration-1000 transform ease-in-out ${bannerVisible ? "opacity-100" : "opacity-0"}`}>
                 <Image src={"/images/logo.png"} alt={"Gamepad"} height={1200} width={1200} className={"flex"}/>
-                <h1 className={`absolute bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-100%,_rgba(0,0,0,0)_75%)] ease-in-out animate-[pulseText_1.5s_ease-in-out_infinite] bottom-20 text-[75px] text-white ${yesteryear.className}`}>Press any button to
-                    continue...</h1>
+                <div className={`absolute flex text-center justify-center items-center h-50 w-250 bg-[radial-gradient(ellipse_at_center,_rgba(255,255,255,1)_-200%,_rgba(0,0,0,0)_70%)] ease-in-out animate-[pulseText_1.5s_ease-in-out_infinite] bottom-20 text-[75px] text-white ${yesteryear.className}`}>
+                    <h1>
+                        Press any button to continue...
+                    </h1>
+                </div>
             </div>
         </>
     )
