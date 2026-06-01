@@ -241,7 +241,7 @@ const Hud = ({club, windowType, setWindow, setFade, money, popularity, experienc
                             </h2>
                         </div>
                         <div className={`flex flex-row justify-center group ${yesteryear.className}`}>
-                            <div className={`flex flex-row justify-center items-center gap-10 opacity-50`}>
+                            <div className={`flex flex-row group-hover:opacity-0 duration-300 ease-in-out justify-center items-center gap-10 opacity-50`}>
                                 <p className={"ease-in-out duration-300 text-pink-200 hover:text-pink-100 text-[25px]"}>
                                     {rank.rank}
                                 </p>

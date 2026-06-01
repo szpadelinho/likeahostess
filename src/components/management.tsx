@@ -42,9 +42,9 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                 Icon = Martini
         }
         return (
-            <div className={"text-pink-200/50 pointer-events-none"}>
+            <p className={"text-pink-200/50 pointer-events-none"}>
                 <Icon size={25}/>
-            </div>
+            </p>
         )
     }
 
@@ -75,9 +75,9 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                                     <p>
                                         Attractiveness
                                     </p>
-                                    <p className={"flex flex-row justify-center items-center gap-2"}>
+                                    <div className={"flex flex-row justify-center items-center gap-2"}>
                                         <Candy/>{selectedHostess.attractiveness}/5 {calculateAttractivenessIcon(selectedHostess.attractiveness)}
-                                    </p>
+                                    </div>
                                 </h1>
                                 <h1 className={"flex flex-col justify-center items-center gap-2"}>
                                     <p>

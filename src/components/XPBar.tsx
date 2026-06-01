@@ -14,16 +14,17 @@ export const XPBar = ({value}: XPBarProps) => {
     return(
         <div className={"absolute -top-0.5 h-10 flex flex-row gap-5 justify-center items-center"}>
             <div
-                className={`h-full transition-all duration-100 ease-linear bg-pink-600/40 rounded-[20] text-[15px] justify-center items-center flex`}
-                style={{width: 200}}>
+                className="relative h-full w-[200px] bg-pink-600/40 rounded-full overflow-hidden"
+            >
                 <div
-                    className={"absolute left-0 h-full bg-pink-600 transition-all duration-300 rounded-[20]"}
+                    className="absolute left-0 top-0 h-full bg-pink-600 transition-all duration-300"
                     style={{
-                        width: `${percent}%`
+                        width: `${percent}%`,
                     }}
                 />
-                <p className={"absolute w-full text-center text-white text-[15px] font-semibold"}>
-                    {value}/1000
+
+                <p className="relative z-10 h-full flex items-center justify-center text-white text-[15px] font-semibold">
+                    {current}/1000
                 </p>
             </div>
             <div className={"flex flex-col justify-center items-center text-center opacity-50"}>

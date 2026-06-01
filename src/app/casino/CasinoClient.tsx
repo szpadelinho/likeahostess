@@ -42,21 +42,40 @@ const CasinoClient = () => {
     }, [])
 
     useEffect(() => {
-        const stored = localStorage.getItem("selectedClub")
-        if (!stored) return console.error("Could not find stored clubData")
-        const parsed = JSON.parse(stored)
-        const parsedClub: StoredClub = {
-            id: parsed.id,
-            name: parsed.name,
-            host: parsed.host,
-            money: parsed.userClub?.[0]?.money || 0,
-            popularity: parsed.userClub?.[0]?.popularity || 0,
-            supplies: parsed.userClub?.[0]?.supplies || 0,
-            logo: parsed.logo
+        const loadClub = async () => {
+            const stored = localStorage.getItem("selectedClub")
+            if (!stored) {
+                console.error("Could not find stored clubData")
+                return
+            }
+
+            const parsed = JSON.parse(stored)
+
+            const res = await fetch(`/api/user-club?clubId=${parsed.id}`, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+
+            const data = await res.json()
+
+            const parsedClub: StoredClub = {
+                id: parsed.id,
+                name: parsed.name,
+                host: parsed.host,
+                money: data.money ?? parsed.userClub[0].money,
+                popularity: data.popularity ?? parsed.userClub[0].popularity,
+                supplies: data.supplies ?? parsed.userClub[0].supplies,
+                logo: parsed.logo,
+            }
+
+            setMoney(parsedClub.money)
+            setClubData(parsedClub)
+            setLoading(false)
         }
-        setMoney(parsedClub.money)
-        setClubData(parsedClub)
-        setLoading(false)
+
+        loadClub()
     }, [])
 
     return(
