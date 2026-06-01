@@ -42,9 +42,9 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                 Icon = Martini
         }
         return (
-            <p className={"text-pink-200/50 pointer-events-none"}>
+            <div className={"text-pink-200/50 pointer-events-none"}>
                 <Icon size={25}/>
-            </p>
+            </div>
         )
     }
 

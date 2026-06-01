@@ -368,7 +368,7 @@ export const Inquiry = ({
                         <div
                             className={"flex flex-col justify-center items-center rounded-[20] text-white font-[600]"}
                             style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
-                            <div className={"grid grid-cols-3 grid-rows-2 gap-10 p-3 bg-[radial-gradient(ellipse_at_center,_rgba(150,20,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(175,50,100,1)_100%)]"}>
+                            <div className={"grid grid-cols-3 grid-rows-2 gap-10 p-3 rounded-[25] bg-[radial-gradient(ellipse_at_center,_rgba(150,20,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(175,50,100,1)_100%)]"}>
                                 {serviceActions.map((action, i) => (
                                     <div key={i} className={"relative group"}>
                                         <button

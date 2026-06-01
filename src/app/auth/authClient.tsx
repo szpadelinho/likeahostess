@@ -159,15 +159,6 @@ export default function AuthClient() {
                     <Image src={"/images/icon-full.png"} alt={"App icon"} height={150} width={150}
                            className={"absolute top-5 left-5 z-2"}/>
                     <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Auth"}/>
-                    <h1 className={`flex absolute bottom-3 right-3 text-white text-[15px] z-2 ${yesteryear.className}`}>{new Date().getFullYear()}</h1>
-                    <h4 className={"absolute bottom-4 left-4 z-2"}>
-                        <Link
-                            className={"text-white font-bold text-shadow-xl text-[13px] transition duration-200 ease-in-out hover:text-teal-500 hover:shadow-xl hover:text-shadow-teal-700 z-2"}
-                            target={"_blank"}
-                            href={"https://github.com/szpadelinho"}>
-                            Check out my other projects!
-                        </Link>
-                    </h4>
                     <div className={`absolute z-[999] inset-0 bg-black duration-1000 ease-in-out transform pointer-events-none ${showGamepadBanner || showTitleBanner ? "opacity-100" : "opacity-0"}`}>
                         {showGamepadBanner && (
                             <GamepadBanner bannerVisible={gamepadBannerVisible}/>
@@ -216,6 +207,7 @@ export default function AuthClient() {
                                                     <Key/><p>Log in</p>
                                                 </button>
                                             </div>
+                                            <h1 className={`flex absolute top-5 left-5 text-[15px] z-2 ${yesteryear.className}`}>{new Date().getFullYear()}</h1>
                                         </div>
                                     </StarBorder>
                                 </div>
