@@ -1,6 +1,6 @@
 import {useDrag, useDrop} from 'react-dnd';
 import {iconConverter} from "@/scripts/iconConverter";
-import {Dispatch, ReactNode, SetStateAction, useMemo, useRef, useState} from "react";
+import {Dispatch, ReactNode, SetStateAction, useRef, useState} from "react";
 import {
     ConciergeBell,
     BookUser, Box,
@@ -10,10 +10,10 @@ import {
     Laugh, LucideIcon, Martini,
     Meh,
     Smile, Snowflake, Sun, SunMoon,
-    VenetianMask
+    VenetianMask, Mars, Venus
 } from "lucide-react";
 import Image from "next/image";
-import {Hostess, WindowType, Buffet, Client, clientMugshots} from "@/app/types";
+import {Hostess, WindowType, Buffet, Client} from "@/app/types";
 
 interface DroppableSlotsProps {
     type: 'beverage' | 'meal'
@@ -24,7 +24,7 @@ interface DroppableSlotsProps {
 }
 
 interface DraggableDoorProps {
-    waitingClient: boolean
+    waitingClient: Client | null
 }
 
 interface DroppableClientProps {
@@ -33,9 +33,10 @@ interface DroppableClientProps {
     setClients: Dispatch<SetStateAction<(Client | null)[]>>,
     hostesses: (Hostess | null)[],
     InquiryHandler: (i: number, type: "Service" | "Buffet" | "End" | null, status: boolean) => void,
-    setWaitingClient: Dispatch<SetStateAction<boolean>>,
     inquiryType: ("Service" | "Buffet" | "End" | null)[],
-    attractiveness?: number
+    attractiveness?: number,
+    waitingClient: Client | null
+    setWaitingClient: (value: (((prevState: (Client | null)) => (Client | null)) | Client | null)) => void
 }
 
 interface DraggableHostessProps {
@@ -145,7 +146,7 @@ export const DraggableDoor = ({waitingClient}: DraggableDoorProps) => {
     const [{isDragging}, drag] = useDrag(() => ({
         type: 'client',
         item: {id: -1, type: 'client'},
-        canDrag: waitingClient,
+        canDrag: waitingClient?.present,
         collect: (monitor) => ({
             isDragging: monitor.isDragging(),
         }),
@@ -154,12 +155,6 @@ export const DraggableDoor = ({waitingClient}: DraggableDoorProps) => {
     const buttonRef = useRef<HTMLButtonElement>(null)
     drag(buttonRef)
 
-    const image = useMemo(() => {
-        return clientMugshots[
-            Math.floor(Math.random() * clientMugshots.length)
-            ]
-    }, [])
-
     return (
         <button
             ref={buttonRef}
@@ -167,7 +162,9 @@ export const DraggableDoor = ({waitingClient}: DraggableDoorProps) => {
                 waitingClient ? 'bg-red-950 text-pink-500 hover:bg-pink-950/70 hover:text-pink-700 active:text-pink-500 active:bg-pink-900' : 'bg-pink-900 text-pink-400 hover:bg-pink-800 hover:text-pink-500 active:text-pink-300 active:bg-pink-700'
             } ${isDragging ? 'opacity-50' : 'opacity-100'}`}
         >
-            {waitingClient ? <Image className={"rounded-[20]"} src={`/images/${image}`} alt={"Client mugshot"} fill={true}/> : <ConciergeBell size={50}/>}
+            {waitingClient ?
+                <Image className={"rounded-[20]"} src={`/images/${waitingClient.mugshot}`} alt={"Client mugshot"} fill={true}/> :
+                <ConciergeBell size={50}/>}
         </button>
     )
 }
@@ -175,9 +172,10 @@ export const DraggableDoor = ({waitingClient}: DraggableDoorProps) => {
 export const DroppableClient = ({
                                     index,
                                     clients,
-                                    setClients,
+    setClients,
                                     hostesses,
                                     InquiryHandler,
+    waitingClient,
                                     setWaitingClient,
                                     inquiryType,
                                     attractiveness
@@ -188,11 +186,14 @@ export const DroppableClient = ({
     }>({
         accept: 'client',
         drop: () => {
-            if (!clients[index]) {
-                const updatedClients = [...clients]
-                updatedClients[index] = {present: true, expectedAttractiveness: Math.round(Math.random() * 6)}
-                setClients(updatedClients)
-                setWaitingClient(false)
+            if (!clients[index] && waitingClient) {
+                setClients(prevClients => {
+                    const updatedClients = [...prevClients]
+                    updatedClients[index] = waitingClient
+                    return updatedClients
+                })
+
+                setWaitingClient(null)
                 if (hostesses[index] !== null && inquiryType[index] !== "Buffet") {
                     InquiryHandler(index, 'Buffet', true)
                 }
@@ -208,9 +209,9 @@ export const DroppableClient = ({
     drop(buttonRef)
 
     const calculateAttractivenessIcon = (value?: number) => {
-        if(value === undefined) return
+        if (value === undefined) return
         let Icon: LucideIcon
-        switch(value){
+        switch (value) {
             case 0:
                 Icon = Box
                 break
@@ -242,27 +243,40 @@ export const DroppableClient = ({
     const renderIcons = () => {
         let content
         if (!clients[index]) {
-            content = <BookUser size={50} />
+            content = <BookUser size={50}/>
         } else if (clients[index] && !hostesses[index]) {
             content = calculateAttractivenessIcon(clients[index].expectedAttractiveness)
         } else if (clients[index] && hostesses[index]) {
             const expected = clients[index].expectedAttractiveness
-            if (attractiveness && expected > attractiveness) {
-                content = <Meh size={50} />
+            if ((attractiveness && expected > attractiveness) || clients[index]?.preference !== hostesses[index].gender) {
+                content = <Meh size={50}/>
             } else if (expected === attractiveness) {
-                content = <Smile size={50} />
+                content = <Smile size={50}/>
             } else {
-                content = <Laugh size={50} />
+                content = <Laugh size={50}/>
             }
         }
 
         return content
     }
 
+    const renderPreference = () => {
+        let content
+        if (clients[index] && !hostesses[index]) {
+            if(clients[index]?.preference == "MALE"){
+                content = <Mars size={20}/>
+            }
+            else{
+                content = <Venus size={20}/>
+            }
+        }
+        return content
+    }
+
     return (
         <button
             ref={buttonRef}
-            className={`flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950/70 transition-all duration-200 ease-in-out transform active:scale-90 ${
+            className={`relative flex h-[104px] w-[104px] justify-center items-center rounded-[20] border-pink-200 hover:border-pink-400 hover:text-pink-400 border-2 opacity-70 hover:opacity-100 bg-pink-600 hover:bg-pink-950/70 transition-all duration-200 ease-in-out transform active:scale-90 ${
                 clients[index] ? 'bg-pink-800 opacity-100' : 'bg-pink-700'
             } ${
                 isOver && canDrop ? 'scale-110 bg-pink-900' : ''
@@ -270,6 +284,9 @@ export const DroppableClient = ({
             ${canDrop && "border-dotted"}`}
         >
             {renderIcons()}
+            <div className={"absolute right-2 top-2"}>
+                {renderPreference()}
+            </div>
         </button>
     )
 }

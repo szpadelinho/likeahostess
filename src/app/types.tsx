@@ -1,4 +1,4 @@
-import {BuffetType, EffectType, type Prisma} from "@prisma/client";
+import {BuffetType, EffectType, GenderType, type Prisma} from "@prisma/client";
 import {
     Bitcount_Grid_Double,
     Cookie, Coustard,
@@ -88,6 +88,7 @@ export interface Hostess {
     id: string
     name: string
     surname?: string
+    gender: GenderType
     image: string
     cover: string
     attractiveness: number
@@ -168,6 +169,9 @@ export interface Effect{
 export interface Client {
     present: boolean
     expectedAttractiveness: number
+    preference: GenderType
+    gender: GenderType
+    mugshot: string
 }
 
 export const SERVICE_TYPES = [
@@ -1005,6 +1009,8 @@ export const backgroundRenders = [
 ]
 
 export const clientMugshots = [
-    "client_mugshot.png",
-    "client_mugshot2.png"
+    "client_mugshot_m.png",
+    "client_mugshot_m_2.png",
+    "client_mugshot_f.png",
+    "client_mugshot_f_2.png"
 ]

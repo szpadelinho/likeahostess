@@ -3,7 +3,7 @@ import {
     Candy,
     Zap,
     Flame,
-    Droplet, Snowflake, PlugZap, LucideIcon, Box, SunMoon, Sun, Martini
+    Droplet, Snowflake, PlugZap, LucideIcon, Box, SunMoon, Sun, Martini, Mars, Venus
 } from "lucide-react";
 import {DraggableHostess} from "@/scripts/DNDItems";
 import {Hostess, marckScript} from "@/app/types";
@@ -69,7 +69,7 @@ const Management = ({onCloseModal, hostesses, selectedHostess, setSelectedHostes
                 {selectedHostess && (
                     <div className={"text-center content-center items-center justify-center flex flex-row gap-25"}>
                         <div className={"flex justify-center items-center flex-col max-w-175 gap-5"}>
-                            <h1 className={`text-[100px] ${marckScript.className}`}>{selectedHostess.name} {selectedHostess.surname}</h1>
+                            <h1 className={`text-[100px] ${marckScript.className} flex flex-col justify-center items-center`}><p>{selectedHostess.name} {selectedHostess.surname}</p> {selectedHostess.gender === "MALE" ? <Mars size={25}/> : <Venus size={25}/>}</h1>
                             <div className={"flex justify-center items-center flex-row gap-10"}>
                                 <h1 className={"flex flex-col justify-center items-center gap-2"}>
                                     <p>

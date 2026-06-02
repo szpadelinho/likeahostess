@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import LoadingBar from "@/components/loadingBar";
 import {DraggableDoor, DroppableClient, DroppableHostessTableSlot} from "@/scripts/DNDItems";
-import {ServiceType, SERVICE_TYPES, Hostess, Client, sourGummy} from "@/app/types";
+import {ServiceType, SERVICE_TYPES, Hostess, Client, sourGummy, clientMugshots} from "@/app/types";
 
 interface InteriorProps {
     hostesses: (Hostess | null)[],
@@ -66,7 +66,7 @@ const Interior = ({
 
     const [wiggleHostess, setWiggleHostess] = useState<boolean[]>(Array(8).fill(false))
 
-    const [waitingClient, setWaitingClient] = useState<boolean>(false)
+    const [waitingClient, setWaitingClient] = useState<Client | null>(null)
 
     const clientRef = useRef<HTMLAudioElement | null>(null)
 
@@ -75,7 +75,17 @@ const Interior = ({
             if (!waitingClient) {
                 const random = Math.floor(Math.random() * 19000) + 1000
                 const timer = setTimeout(() => {
-                    setWaitingClient(true)
+                    const gender = Math.random() < 0.5 ? "MALE" : "FEMALE"
+                    const filtered = gender === "MALE" ? clientMugshots.filter(e => e.includes("_m_")) : clientMugshots.filter(e => e.includes("_f_"))
+                    const image = clientMugshots[Math.floor(Math.random() * filtered.length)]
+
+                    setWaitingClient({
+                        present: true,
+                        expectedAttractiveness: Math.round(Math.random() * 6),
+                        preference: Math.random() < 0.5 ? "MALE" : "FEMALE",
+                        gender: Math.random() < 0.5 ? "MALE" : "FEMALE",
+                        mugshot: image
+                    })
                     clientRef.current = new Audio("/sfx/client_arrived.m4a")
                     clientRef.current.play().catch()
                 }, random)
@@ -334,7 +344,7 @@ const Interior = ({
                                 <DroppableClient index={i} clients={clients} setClients={setClients}
                                                  hostesses={hostesses}
                                                  InquiryHandler={InquiryHandler}
-                                                 setWaitingClient={setWaitingClient} inquiryType={inquiryType} attractiveness={hostesses[i]?.attractiveness}/>
+                                                 waitingClient={waitingClient} setWaitingClient={setWaitingClient} inquiryType={inquiryType} attractiveness={hostesses[i]?.attractiveness}/>
                                 {clients[i] && (
                                     <button onClick={() => {
                                         const updatedClients =

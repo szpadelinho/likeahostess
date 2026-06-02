@@ -2,7 +2,6 @@
 
 import {useSession, signIn} from "next-auth/react"
 import {Github, Key, LibraryBig, Undo2} from "lucide-react";
-import Link from "next/link";
 import React, {useEffect, useRef, useState} from "react";
 import {redirect, useRouter} from "next/navigation"
 import GamepadBanner from "@/components/gamepadBanner";
@@ -156,7 +155,7 @@ export default function AuthClient() {
             <>
                 <div
                     className={`duration-500 ease-in-out transition ${transition === "Parent" ? "opacity-0" : "opacity-100"}`}>
-                    <Image src={"/images/icon-full.png"} alt={"App icon"} height={150} width={150}
+                    <Image src={"/images/icon-full.png"} alt={"App icon"} height={225} width={225}
                            className={"absolute top-5 left-5 z-2"}/>
                     <Navbar isPlaying={isPlaying} setIsPlaying={setIsPlaying} page={"Auth"}/>
                     <div className={`absolute z-[999] inset-0 bg-black duration-1000 ease-in-out transform pointer-events-none ${showGamepadBanner || showTitleBanner ? "opacity-100" : "opacity-0"}`}>

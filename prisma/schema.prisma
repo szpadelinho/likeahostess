@@ -105,6 +105,7 @@ model Hostess {
   id              String            @id @default(cuid())
   name            String
   surname         String?
+  gender GenderType @default(FEMALE)
   image           String
   attractiveness  Int               @default(1)
   cover           String
@@ -299,4 +300,9 @@ enum EffectType {
 enum RoleType {
   MANAGER
   HOST
+}
+
+enum GenderType{
+  MALE
+  FEMALE
 }
