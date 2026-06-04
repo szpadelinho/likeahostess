@@ -18,7 +18,7 @@ import {towelFolded, cupSaucer} from "@lucide/lab";
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {DraggableItem, DroppableSlot} from "@/scripts/DNDItems";
-import {Buffet, ServiceType, Hostess, Club, StoredClub} from "@/app/types";
+import {Buffet, ServiceType, Hostess, Club, StoredClub, Client} from "@/app/types";
 import {Session} from "next-auth";
 import {handleGameAction, handleInquiry} from "@/lib/transactions";
 
@@ -47,7 +47,8 @@ interface Props {
     setPopularity: (value: (((prevState: number) => number) | number)) => void,
     setExperience: (value: (((prevState: number) => number) | number)) => void,
     setSupplies: (value: (((prevState: number) => number) | number)) => void,
-    setHostesses: Dispatch<SetStateAction<(Hostess | null)[]>>
+    setHostesses: Dispatch<SetStateAction<(Hostess | null)[]>>,
+    clients: (Client | null)[]
 }
 
 export const Inquiry = ({
@@ -68,7 +69,8 @@ export const Inquiry = ({
                             setPopularity,
                             setExperience,
                             setSupplies,
-                            setHostesses
+                            setHostesses,
+                            clients
                         }: Props) => {
     const [wiggle, setWiggle] = useState<"Beverage" | "Meal" | ServiceType | null>(null)
 
@@ -189,7 +191,17 @@ export const Inquiry = ({
         await handleGameAction({type: "INQUIRY_END", status: "ACTIVE"}).then()
         if (inquiryTableId !== null && hostesses[inquiryTableId] !== null && clubData) {
             if (present) {
-                handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "STOP", endOption: "PRESENT"}).then()
+                handleInquiry({
+                    setMoney,
+                    setPopularity,
+                    setExperience,
+                    setSupplies,
+                    setHostesses,
+                    hostessId: hostesses[inquiryTableId].id,
+                    clubId: clubData.id,
+                    type: "STOP",
+                    endOption: "PRESENT"
+                }).then()
             }
             if (type === "End") {
                 setVisit(prev => {
@@ -198,7 +210,17 @@ export const Inquiry = ({
                     return updated
                 })
                 if (payment) {
-                    handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "STOP", endOption: "GOODBYE"}).then()
+                    handleInquiry({
+                        setMoney,
+                        setPopularity,
+                        setExperience,
+                        setSupplies,
+                        setHostesses,
+                        hostessId: hostesses[inquiryTableId].id,
+                        clubId: clubData.id,
+                        type: "STOP",
+                        endOption: "GOODBYE"
+                    }).then()
                 }
             } else {
                 const extensionChance = Math.random()
@@ -220,9 +242,29 @@ export const Inquiry = ({
                         return updated
                     })
                 }
-                handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "STOP", endOption: "EXTEND"}).then()
+                handleInquiry({
+                    setMoney,
+                    setPopularity,
+                    setExperience,
+                    setSupplies,
+                    setHostesses,
+                    hostessId: hostesses[inquiryTableId].id,
+                    clubId: clubData.id,
+                    type: "STOP",
+                    endOption: "EXTEND"
+                }).then()
             }
-            handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "STOP", endOption: "COVER"}).then()
+            handleInquiry({
+                setMoney,
+                setPopularity,
+                setExperience,
+                setSupplies,
+                setHostesses,
+                hostessId: hostesses[inquiryTableId].id,
+                clubId: clubData.id,
+                type: "STOP",
+                endOption: "COVER"
+            }).then()
             inquiryClose(inquiryTableId)
         }
     }
@@ -230,7 +272,16 @@ export const Inquiry = ({
     const InquiryServiceHandler = async (type: ServiceType) => {
         if (inquiryTableId !== null && type === serviceType[inquiryTableId] && hostesses[inquiryTableId] !== null && clubData) {
             await handleGameAction({type: "INQUIRY_START", status: "ACTIVE"}).then()
-            handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, type: "SERVICE"}).then()
+            handleInquiry({
+                setMoney,
+                setPopularity,
+                setExperience,
+                setSupplies,
+                setHostesses,
+                hostessId: hostesses[inquiryTableId].id,
+                clubId: clubData.id,
+                type: "SERVICE"
+            }).then()
             inquiryClose(inquiryTableId)
         } else {
             setWiggle(type)
@@ -275,19 +326,21 @@ export const Inquiry = ({
                             <div
                                 className={"absolute left-104 bottom-60 flex flex-row gap-5 justify-center items-center perspective-dramatic"}>
                                 {randomBeverage && (
-                                    <DroppableSlot className={"rotate-x-[5deg]"} type={"beverage"} onDrop={handleBeverageDrop}
+                                    <DroppableSlot className={"rotate-x-[5deg]"} type={"beverage"}
+                                                   onDrop={handleBeverageDrop}
                                                    expectedId={randomBeverage.id}>
                                         <Martini size={50}/>
                                     </DroppableSlot>
                                 )}
                                 {randomMeal && (
-                                    <DroppableSlot className={"rotate-x-[5deg]"} type={"meal"} onDrop={handleMealDrop} expectedId={randomMeal.id}>
+                                    <DroppableSlot className={"rotate-x-[5deg]"} type={"meal"} onDrop={handleMealDrop}
+                                                   expectedId={randomMeal.id}>
                                         <ChefHat size={50}/>
                                     </DroppableSlot>
                                 )}
                             </div>
                             <Image
-                                src={"/images/hostess_buffet.png"}
+                                src={`/images/service/hostess_buffet_${hostesses[inquiryTableId]?.gender[0].toLowerCase()}.png`}
                                 alt={"Hostess is ordering"}
                                 height={200}
                                 width={700}/>
@@ -303,7 +356,8 @@ export const Inquiry = ({
                                             {beverages.map((beverage, i) => (
                                                 <div key={i} className={"relative group"}>
                                                     <DraggableItem item={beverage} type="beverage"/>
-                                                    <span className={`absolute text-nowrap -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-pink-950 text-pink-200 rounded-[10] p-1 z-50`}>
+                                                    <span
+                                                        className={`absolute text-nowrap -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-pink-950 text-pink-200 rounded-[10] p-1 z-50`}>
                                                         {beverage.name}
                                                     </span>
                                                 </div>
@@ -318,7 +372,8 @@ export const Inquiry = ({
                                             {meals.map((meal, i) => (
                                                 <div key={i} className={"relative group"}>
                                                     <DraggableItem key={i} item={meal} type={"meal"}/>
-                                                    <span className={`absolute text-nowrap -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-pink-950 text-pink-200 rounded-[10] p-1 z-50`}>
+                                                    <span
+                                                        className={`absolute text-nowrap -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-pink-950 text-pink-200 rounded-[10] p-1 z-50`}>
                                                         {meal.name}
                                                     </span>
                                                 </div>
@@ -342,7 +397,18 @@ export const Inquiry = ({
                                     inquiryClose(inquiryTableId)
                                     if (hostesses[inquiryTableId] !== null && clubData) {
                                         await handleGameAction({type: "INQUIRY_START", status: "ACTIVE"}).then()
-                                        handleInquiry({setMoney, setPopularity, setExperience, setSupplies, setHostesses, hostessId: hostesses[inquiryTableId].id, clubId: clubData.id, mealId: randomMeal ? randomMeal.id : undefined, beverageId: randomBeverage ? randomBeverage.id : undefined, type: "START"}).then()
+                                        handleInquiry({
+                                            setMoney,
+                                            setPopularity,
+                                            setExperience,
+                                            setSupplies,
+                                            setHostesses,
+                                            hostessId: hostesses[inquiryTableId].id,
+                                            clubId: clubData.id,
+                                            mealId: randomMeal ? randomMeal.id : undefined,
+                                            beverageId: randomBeverage ? randomBeverage.id : undefined,
+                                            type: "START"
+                                        }).then()
                                     }
                                 }}>
                                 {dealButtonText}
@@ -359,7 +425,7 @@ export const Inquiry = ({
                                 {`Looks like ${hostesses[inquiryTableId]?.name} ${hostesses[inquiryTableId]?.surname !== null ? hostesses[inquiryTableId]?.surname : ""} is calling you for a service assistance`}
                             </div>
                             <Image
-                                src={`/images/hostess_service_${serviceType[inquiryTableId]}.png`}
+                                src={`/images/service/hostess_service_${serviceType[inquiryTableId]}_${hostesses[inquiryTableId]?.gender[0].toLowerCase()}.png`}
                                 alt={"Hostess is calling for a service"}
                                 height={200}
                                 width={700}
@@ -368,7 +434,8 @@ export const Inquiry = ({
                         <div
                             className={"flex flex-col justify-center items-center rounded-[20] text-white font-[600]"}
                             style={{boxShadow: '0 0 25px rgba(0, 0, 0, .2)'}}>
-                            <div className={"grid grid-cols-3 grid-rows-2 gap-10 p-3 rounded-[25] bg-[radial-gradient(ellipse_at_center,_rgba(150,20,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(175,50,100,1)_100%)]"}>
+                            <div
+                                className={"grid grid-cols-3 grid-rows-2 gap-10 p-3 rounded-[25] bg-[radial-gradient(ellipse_at_center,_rgba(150,20,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(175,50,100,1)_100%)]"}>
                                 {serviceActions.map((action, i) => (
                                     <div key={i} className={"relative group"}>
                                         <button
@@ -378,7 +445,8 @@ export const Inquiry = ({
                                             }}>
                                             <action.Icon size={50}/>
                                         </button>
-                                        <span className={`absolute text-nowrap -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-pink-950 text-pink-200 rounded-[10] p-1 z-50`}>
+                                        <span
+                                            className={`absolute text-nowrap -bottom-12 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none bg-pink-950 text-pink-200 rounded-[10] p-1 z-50`}>
                                             {action.title.replace("_", " ").replace(/\b\w/g, c => c.toUpperCase())}
                                         </span>
                                     </div>
@@ -396,7 +464,7 @@ export const Inquiry = ({
                                 The visit is over. Please choose an option:
                             </div>
                             <Image
-                                src={dinedTables[inquiryTableId] ? "/images/hostess_end.png" : "/images/hostess_end_dined.png"}
+                                src={dinedTables[inquiryTableId] ? `/images/service/hostess_end_${hostesses[inquiryTableId]?.gender[0].toLowerCase()}_${clients[inquiryTableId]?.gender[0].toLowerCase()}.png` : `/images/service/hostess_end_dined_${hostesses[inquiryTableId]?.gender[0].toLowerCase()}_${clients[inquiryTableId]?.gender[0].toLowerCase()}.png`}
                                 alt={"Hostess is ordering"}
                                 height={200}
                                 width={700}

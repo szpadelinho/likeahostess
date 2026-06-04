@@ -26,7 +26,7 @@ import {
     ServiceType,
     StoredClub,
     CLUB_RANKS,
-    getLevel, getRank, Rank, WindowType, Loan, Effect
+    getLevel, getRank, Rank, WindowType, Loan, Effect, Client
 } from "@/app/types";
 import {useSession} from "next-auth/react";
 import {useVolume} from "@/app/context/volumeContext";
@@ -55,6 +55,8 @@ const Main = () => {
 
     const [performers, setPerformers] = useState<Performer[]>([])
     const [selectedPerformer, setSelectedPerformer] = useState<Performer | null>(null)
+
+    const [clients, setClients] = useState<(Client | null)[]>(Array(8).fill(null))
 
     const [hostessesManagement, setHostessesManagement] = useState<Hostess[]>([])
     const [hostessesPanel, setHostessesPanel] = useState<(Hostess | null)[]>(Array(6).fill(null))
@@ -291,7 +293,7 @@ const Main = () => {
                     }}
                 >
                     {({onCloseModal}) => (
-                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking} setHostesses={setHostessesWorking} setBarKeys={setBarKeys} session={session} clubData={clubData} setMoney={setMoney} setClub={setClub} setPopularity={setPopularity} setExperience={setExperience} setSupplies={setSupplies}/>
+                        <Inquiry buffet={buffet} onCloseModal={onCloseModal} dinedTables={dinedTables} setDinedTables={setDinedTables} inquiryTableId={inquiryTableId} inquiryType={inquiryType} setVisit={setVisit} setInquiryWindow={setInquiryWindow} setInquiryType={setInquiryType} setInquiry={setInquiry} serviceType={serviceType} setServiceType={setServiceType} hostesses={hostessesWorking} setHostesses={setHostessesWorking} setBarKeys={setBarKeys} session={session} clubData={clubData} setMoney={setMoney} setClub={setClub} setPopularity={setPopularity} setExperience={setExperience} setSupplies={setSupplies} clients={clients}/>
                     )}
                 </ModalWrapper>
             )}
@@ -320,7 +322,7 @@ const Main = () => {
                 <MainWrapper>
                     <ChatClient page={"Main"} setIsTyping={setIsTyping} setLoading={setLoading}/>
                     <JamPlayer jams={jams} isJamPlaying={isJamPlaying} setIsJamPlaying={setIsJamPlaying}/>
-                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType} barKeys={barKeys} money={money} supplies={supplies}/>
+                    <Interior hostesses={hostessesWorking} setHostesses={setHostessesWorking} selectedHostess={selectedHostess} setSelectedHostess={setSelectedHostess} setHostessesPanel={setHostessesPanel} dinedTables={dinedTables} setDinedTables={setDinedTables} setInquiryTableId={setInquiryTableId} setInquiryWindow={setInquiryWindow} inquiry={inquiry} setInquiry={setInquiry} inquiryType={inquiryType} setInquiryType={setInquiryType} visit={visit} setVisit={setVisit} serviceType={serviceType} setServiceType={setServiceType} barKeys={barKeys} money={money} supplies={supplies} clients={clients} setClients={setClients}/>
                     {club && (
                         <>
                             <HostessPanel hostesses={hostessesPanel} setHostesses={setHostessesPanel}
