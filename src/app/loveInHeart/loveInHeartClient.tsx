@@ -195,7 +195,7 @@ export const LoveInHeartClient = () => {
             )}
             {allFatigueZero ? (
                 <div
-                    className={`gap-10 h-screen w-screen flex flex-col items-center justify-center text-rose-100 ${emilysCandy.className}`}>
+                    className={`gap-10 scale-75 h-screen w-screen flex flex-col items-center justify-center text-rose-100 ${emilysCandy.className}`}>
                     <h1 className={"z-10 text-[50px]"}>Your hostesses are filled with energy!</h1>
                     <div
                         style={{
@@ -206,7 +206,7 @@ export const LoveInHeartClient = () => {
                             borderImageRepeat: "round"
                         }}
                         className={"relative bg-[url(/images/wood_texture.png)] flex items-center justify-center flex-col z-1 p-2 rounded-[5] duration-300 ease-in-out"}>
-                        <div className={"grid grid-cols-6 gap-10"}>
+                        <div className={"grid grid-cols-7 gap-10"}>
                             {hostesses.map((hostess) => {
                                 return (
                                     <div
@@ -287,7 +287,7 @@ export const LoveInHeartClient = () => {
                         </div>
                     ) : (
                         <div
-                            className={`gap-10 h-screen w-screen flex flex-col items-center justify-center text-rose-100 ${emilysCandy.className}`}>
+                            className={`gap-10 scale-75 h-screen w-screen flex flex-col items-center justify-center text-rose-100 ${emilysCandy.className}`}>
                             <h1 className={"z-10 text-[50px]"}>Do you accept the {massage} terms?</h1>
                             <div
                                 style={{
@@ -298,7 +298,7 @@ export const LoveInHeartClient = () => {
                                     borderImageRepeat: "round"
                                 }}
                                 className={"relative bg-[url(/images/wood_texture.png)] flex items-center justify-center flex-col z-1 p-2 rounded-[5] duration-300 ease-in-out"}>
-                                <div className={"grid grid-cols-6 gap-10"}>
+                                <div className={"grid grid-cols-7 gap-10"}>
                                     {hostesses.map((hostess) => {
                                         const current = hostess.fatigue
                                         const predicted = Math.max(0, current - reduction)
@@ -384,7 +384,7 @@ export const LoveInHeartClient = () => {
                 </div>
             )}
             <ReactPlayer
-                src={"https://youtube.com/embed/zm6Z9qBzcz0?autoplay=1"}
+                src={"https://youtube.com/embed/aPyaYUjHzpw?autoplay=1"}
                 playing={isPlaying}
                 controls={false}
                 autoPlay={true}

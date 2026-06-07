@@ -17,6 +17,8 @@ import {EyeClosed, List, MessageSquarePlus, Plus, Send} from "lucide-react";
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 import {handleChat} from "@/lib/transactions";
+import MessageContent from "@/components/messageContent";
+import Embed from "@/components/embed";
 
 interface ChatClientProps {
     page?: PageType,
@@ -209,25 +211,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     <div className={`${(!roomCreation && !list) ? "opacity-100 " : "opacity-0 pointer-events-none"} h-64 overflow-y-auto p-2 mb-2 overflow-x-hidden flex flex-col gap-1`}>
                         {messages.map(msg => (
                             <div key={msg.id} className={"flex items-center gap-2"}>
-                                <Image
-                                    onClick={() => {
-                                        if (!input.includes(msg.username)) {
-                                            setInput(`@${msg.username}`)
-                                        }
-                                    }}
-                                    onDoubleClick={() => {
-                                        setLoading(true)
-                                        if(msg.userId === session?.user?.id) {
-                                            router.push(`/profile`)
-                                        }
-                                        else {
-                                            router.push(`/profile/${msg.userId}`)
-                                        }
-                                    }}
-                                    src={msg.userImage ?? "/images/dragon.png"} alt={msg.username}
-                                    height={24} width={24}
-                                    className={"object-content rounded-full hover:scale-110 hover:opacity-50 transition-all transform duration-100 ease-in-out"}/>
-                                <h1 className={"flex justify-center items-center gap-1"}
+                                <h1 className={"flex flex-col gap-1"}
                                     onClick={() => {
                                         if (!input.includes(msg.username)) {
                                             setInput(`@${msg.username}`)
@@ -243,7 +227,31 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                                         }
                                     }}
                                 >
-                                    <p className={"hover:scale-102 hover:opacity-50 font-[700] duration-100 ease-in-out"}>{msg.username}:</p> {msg.content}
+                                    <div className={"flex flex-row gap-1"}>
+                                        <Image
+                                            onClick={() => {
+                                                if (!input.includes(msg.username)) {
+                                                    setInput(`@${msg.username}`)
+                                                }
+                                            }}
+                                            onDoubleClick={() => {
+                                                setLoading(true)
+                                                if(msg.userId === session?.user?.id) {
+                                                    router.push(`/profile`)
+                                                }
+                                                else {
+                                                    router.push(`/profile/${msg.userId}`)
+                                                }
+                                            }}
+                                            src={msg.userImage ?? "/images/dragon.png"} alt={msg.username}
+                                            height={24} width={24}
+                                            className={"object-content rounded-full hover:scale-110 hover:opacity-50 transition-all transform duration-100 ease-in-out"}/>
+                                        <p className={"hover:scale-102 hover:opacity-50 font-[700] duration-100 ease-in-out"}>
+                                            {msg.username}:
+                                        </p>
+                                        <MessageContent content={msg.content}/>
+                                    </div>
+                                    <Embed message={msg.content}/>
                                 </h1>
                             </div>
                         ))}

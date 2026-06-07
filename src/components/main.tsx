@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import Hud from "@/components/hud";
 import MainWrapper from "@/components/mainWrapper";
 import Interior from "@/components/interior";
@@ -92,6 +92,8 @@ const Main = () => {
     const [quit, setQuit] = useState<boolean>(false)
     const [isTyping, setIsTyping] = useState<boolean>(false)
 
+    const welcomeRef = useRef<HTMLAudioElement | null>(null)
+
     useEffect(() => {
         const fetchHostesses = async () => {
             try {
@@ -106,12 +108,6 @@ const Main = () => {
                 console.log(err)
             }
         }
-        if (session?.user?.id)
-            fetchHostesses()
-
-    }, [session?.user?.id])
-
-    useEffect(() => {
         const fetchActivities = async () => {
             try {
                 const res = await fetch("/api/activities")
@@ -122,11 +118,6 @@ const Main = () => {
                 console.log("Failed to fetch activities", err)
             }
         }
-
-        fetchActivities()
-    }, [])
-
-    useEffect(() => {
         const fetchJams = async () => {
             try {
                 const res = await fetch("/api/jams")
@@ -137,11 +128,6 @@ const Main = () => {
                 console.log("Failed to fetch jams", err)
             }
         }
-
-        fetchJams()
-    }, [])
-
-    useEffect(() => {
         const fetchBuffet = async () => {
             try {
                 const res = await fetch("/api/buffet")
@@ -152,21 +138,6 @@ const Main = () => {
                 console.log("Failed to fetch buffet", err)
             }
         }
-
-        fetchBuffet()
-    }, [])
-
-    useEffect(() => {
-        if (!club || jams.length === 0 || performers.length === 0 || activity.length === 0) {
-            setLoading(true)
-            setFetching(true)
-        } else {
-            setLoading(false)
-            setFetching(false)
-        }
-    }, [club, jams, performers, activity])
-
-    useEffect(() => {
         const fetchPerformers = async () => {
             try {
                 const res = await fetch("/api/performers")
@@ -177,9 +148,37 @@ const Main = () => {
                 console.log("Failed to fetch performers", err)
             }
         }
+        const fetchExperience = async () => {
+            try {
+                const res = await fetch("/api/user", {method: "GET"})
+                const data = await res.json()
+                setExperience(data.experience)
+            } catch (err) {
+                console.log("Failed to fetch user experience", err)
+            }
+        }
 
-        fetchPerformers()
-    }, [])
+        if (session?.user?.id) {
+            fetchHostesses()
+            fetchActivities()
+            fetchJams()
+            fetchBuffet()
+            fetchPerformers()
+            fetchExperience()
+        }
+
+
+    }, [session?.user?.id])
+
+    useEffect(() => {
+        if (!club || jams.length === 0 || performers.length === 0 || activity.length === 0) {
+            setLoading(true)
+            setFetching(true)
+        } else {
+            setLoading(false)
+            setFetching(false)
+        }
+    }, [club, jams, performers, activity])
 
     useEffect(() => {
         const stored = localStorage.getItem("selectedClub")
@@ -213,39 +212,34 @@ const Main = () => {
     }, [])
 
     useEffect(() => {
-        const fetchExperience = async () => {
-            try {
-                const res = await fetch("/api/user", {method: "GET"})
-                const data = await res.json()
-                setExperience(data.experience)
-            } catch (err) {
-                console.log("Failed to fetch user experience", err)
-            }
-        }
-        fetchExperience()
-    }, [])
-
-    useEffect(() => {
         const lvl = getLevel(experience)
         const rank = getRank(lvl)
         setRank({lvl, rank})
     }, [experience])
 
     useEffect(() => {
-        const isFromAuth = sessionStorage.getItem("firstEnter")
+        if (loading) return
 
-        if(isFromAuth == "true"){
-            setTimeout(() => {
-                sessionStorage.removeItem("firstEnter")
-                setShowInteriorBanner(true)
-                setTimeout(() => setAnimateInteriorBanner(true), 500)
-                setTimeout(() => {
-                    setAnimateInteriorBanner(false)
-                }, 3000)
-                setTimeout(() => setShowInteriorBanner(false), 3500)
-            }, 2500)
+        const isFromAuth = sessionStorage.getItem("firstEnter")
+        if (isFromAuth !== "true") return
+
+        sessionStorage.removeItem("firstEnter")
+        welcomeRef.current = new Audio("/sfx/greet.mp3")
+        welcomeRef.current.volume = .10
+
+        const start = setTimeout(() => {
+            setShowInteriorBanner(true)
+            welcomeRef.current.play().catch()
+            setTimeout(() => setAnimateInteriorBanner(true), 500)
+            setTimeout(() => setAnimateInteriorBanner(false), 3000)
+            setTimeout(() => setShowInteriorBanner(false), 3500)
+        }, 500)
+
+        return () => {
+            clearTimeout(start)
+            welcomeRef.current = null
         }
-    }, [])
+    }, [loading])
 
     useEffect(() => {
         if(clubData){
