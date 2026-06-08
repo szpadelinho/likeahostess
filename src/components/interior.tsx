@@ -80,13 +80,13 @@ const Interior = ({
                 const timer = setTimeout(() => {
                     const gender = Math.random() < 0.5 ? "MALE" : "FEMALE"
                     const filtered = gender === "MALE" ? clientMugshots.filter(e => e.includes("_m_")) : clientMugshots.filter(e => e.includes("_f_"))
-                    const image = clientMugshots[Math.floor(Math.random() * filtered.length)]
+                    const image = filtered[Math.floor(Math.random() * filtered.length)]
 
                     setWaitingClient({
                         present: true,
                         expectedAttractiveness: Math.round(Math.random() * 6),
                         preference: Math.random() < 0.5 ? "MALE" : "FEMALE",
-                        gender: gender === "FEMALE" ? "MALE" : "FEMALE",
+                        gender,
                         mugshot: image
                     })
                     clientRef.current = new Audio("/sfx/client_arrived.m4a")

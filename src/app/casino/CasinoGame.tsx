@@ -62,10 +62,6 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
         setMessage({text, id: Date.now()})
     }
 
-    useEffect(() => {
-        setMoney(prev => prev + prize)
-    }, [prize])
-
     const handleRouletteResult = async (gameId: string) => {
         const end = await fetch("api/casino/roulette/reveal", {
             method: "POST",
@@ -133,7 +129,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
 
     const handleGame = async (type: string, value: string | null) => {
         if (type === "Chohan" && value !== null) {
-            // updateMoney(-bet).then()
+            setMoney(prev => prev - bet)
             const sum = Array(2)
             for (let i = 0; i < 2; i++) {
                 sum[i] = Math.floor(Math.random() * (6 - 1)) + 1
@@ -155,6 +151,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
         } else if (type === "Blackjack") {
             showMessage("No more bets!")
             await handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
+            setMoney(prev => prev - bet)
             setIsPlayerTurn(true)
             setGameOver(false)
             setScore(null)
@@ -175,9 +172,11 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                 switch (data.win) {
                     case 2:
                         setScore("Blackjack! You sir are a winner!")
+                        setMoney(prev => prev + (2 * bet))
                         break
                     case 1:
                         setScore("Both players have a blackjack, sir.")
+                        setMoney(prev => prev + bet)
                         break
                     case 0:
                         setScore("Dealer with the blackjack, sir.")
@@ -220,6 +219,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
             setIsPlayerTurn(false)
             setGameOver(true)
             setScore("Blackjack! You sir are a winner!")
+            setMoney(prev => prev + (2 * bet))
             setWin(2)
         }
     }
@@ -245,9 +245,11 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
         switch (data.win) {
             case 2:
                 setScore("You sir are a winner!")
+                setMoney(prev => prev + bet)
                 break
             case 1:
                 setScore("It is a push, sir.")
+                setMoney(prev => prev + bet)
                 break
             case 0:
                 setScore("No luck today, sir. Dealer wins!")
@@ -265,6 +267,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
             setScore(won)
             if (won) {
                 setPrize(bet * 2)
+                setMoney(prev => prev + prize)
             } else {
                 setPrize(bet)
             }

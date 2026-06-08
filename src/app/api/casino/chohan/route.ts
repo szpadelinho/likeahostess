@@ -28,6 +28,20 @@ export async function POST(req: Request){
     if(!userClub) return NextResponse.json({message: "No such userClub"}, {status: 404})
 
     try{
+        userClub = await prisma.userClub.update({
+            where: {
+                userId_clubId: {
+                    userId,
+                    clubId: clubData.id
+                }
+            },
+            data: {
+                money: {
+                    decrement: bet
+                }
+            }
+        })
+
         const sum = Array(2)
 
         for (let i = 0; i < 2; i++) {
@@ -54,7 +68,7 @@ export async function POST(req: Request){
                 },
                 data: {
                     money: {
-                        increment: bet * 2
+                        increment: bet + (bet * 2)
                     }
                 }
             })

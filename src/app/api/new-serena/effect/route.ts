@@ -50,11 +50,16 @@ export async function POST(req: Request){
         const selectedDrink = drinks.find(d => DRINKS_MAP[d.id as keyof typeof DRINKS_MAP] === effect)
 
         if (!selectedDrink) {
-            console.error("Nie znaleziono drinku dla typu:", effect)
+            console.error("No drink found for:", effect)
             return NextResponse.json({ error: "Invalid effect type" }, { status: 400 })
         }
 
         const price = selectedDrink.price
+
+        if(price > userClub.money) {
+            console.error("You do not have enough money!")
+            return NextResponse.json({error: "Not enough money"}, {status: 403})
+        }
 
         await prisma.effect.create({
             data: {

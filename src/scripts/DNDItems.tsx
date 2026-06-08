@@ -163,7 +163,7 @@ export const DraggableDoor = ({waitingClient}: DraggableDoorProps) => {
             } ${isDragging ? 'opacity-50' : 'opacity-100'}`}
         >
             {waitingClient ?
-                <Image className={"rounded-[20]"} src={`/images/${waitingClient.mugshot}`} alt={"Client mugshot"} fill={true}/> :
+                <Image className={"rounded-[20]"} src={`/images/service/${waitingClient.mugshot}`} alt={"Client mugshot"} fill={true}/> :
                 <ConciergeBell size={50}/>}
         </button>
     )

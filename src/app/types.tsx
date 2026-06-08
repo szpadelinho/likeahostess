@@ -1009,8 +1009,8 @@ export const backgroundRenders = [
 ]
 
 export const clientMugshots = [
-    "client_mugshot_m.png",
+    "client_mugshot_m_.png",
     "client_mugshot_m_2.png",
-    "client_mugshot_f.png",
+    "client_mugshot_f_.png",
     "client_mugshot_f_2.png"
 ]

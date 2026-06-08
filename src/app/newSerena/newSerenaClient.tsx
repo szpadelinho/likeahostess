@@ -137,7 +137,7 @@ const NewSerenaClient = () => {
             }
             fetchEffect()
         }
-    }, [clubData])
+    }, [clubData, mode])
 
     useEffect(() => {
         const timer = setTimeout(() => {

@@ -19,7 +19,7 @@ function Embed({ message }: { message: string }) {
     if (!urls.length) return null
 
     return (
-        <div className="ml-10 mt-2 flex flex-col gap-2">
+        <div className="mt-2 ml-7 flex flex-col gap-2">
             {urls.map((url, i) => {
                 const type = getEmbedType(url)
 
