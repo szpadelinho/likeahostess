@@ -166,6 +166,11 @@ export interface Effect{
     active: boolean
 }
 
+export type ActiveLoan = Loan & {
+    currentInterest: number
+    amount: number
+}
+
 export interface Client {
     present: boolean
     expectedAttractiveness: number

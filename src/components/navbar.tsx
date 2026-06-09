@@ -16,7 +16,11 @@ import LoadingBanner from "@/components/loadingBanner";
 import {useVolume} from "@/app/context/volumeContext";
 import {getPageStyle, PageType, texturina} from "@/app/types";
 import ChatClient from "@/components/chatClient";
-import ElasticSlider from "@/ui/ElasticSlider";
+import dynamic from "next/dynamic"
+
+const ElasticSlider = dynamic(() => import("@/ui/ElasticSlider"), {
+    ssr: false,
+})
 
 interface NavbarProps {
     router?: AppRouterInstance,
@@ -61,6 +65,12 @@ const Navbar = ({
     const {volume, setVolume} = useVolume()
     const {update} = useSession()
 
+    const [mounted, setMounted] = useState(false)
+
+    useEffect(() => {
+        setMounted(true)
+    }, [])
+
     useEffect(() => {
         if (paper) {
             setShowLamp(true)
@@ -92,24 +102,32 @@ const Navbar = ({
                                 setVolume(0)
                             }
                         }}>
-                        {volume === 0 && <VolumeX/>}
-                        {volume > 0 && volume < 34 && <Volume/>}
-                        {volume > 33 && volume < 67 && <Volume1/>}
-                        {volume > 66 && <Volume2/>}
+                        {!mounted ? (
+                            <Volume1 />
+                        ) : (
+                            <>
+                                {volume === 0 && <VolumeX/>}
+                                {volume > 0 && volume < 34 && <Volume/>}
+                                {volume > 33 && volume < 67 && <Volume1/>}
+                                {volume > 66 && <Volume2/>}
+                            </>
+                        )}
                     </button>
                     <div
                         className={`absolute hover:opacity-100 p-5 cursor-alias transition-all duration-200 ease-in-out transform hover:scale-101 active:scale-102 flex justify-center items-center h-5 -bottom-11 opacity-0 group-hover:opacity-50 group-hover:pointer-events-auto pointer-events-none z-50`}
                     >
-                        <ElasticSlider
-                            leftIcon={<Volume color={"white"}/>}
-                            rightIcon={<Volume2 color={"white"}/>}
-                            startingValue={0}
-                            defaultValue={volume}
-                            maxValue={100}
-                            isStepped={false}
-                            stepSize={1}
-                            onChange={(val) => setVolume(val, true)}
-                        />
+                        {mounted && (
+                            <ElasticSlider
+                                leftIcon={<Volume color={"white"}/>}
+                                rightIcon={<Volume2 color={"white"}/>}
+                                startingValue={0}
+                                defaultValue={volume}
+                                maxValue={100}
+                                isStepped={false}
+                                stepSize={1}
+                                onChange={(val) => setVolume(val, true)}
+                            />
+                        )}
                     </div>
                 </div>
                 {page !== "Auth" && (

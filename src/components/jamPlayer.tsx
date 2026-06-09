@@ -12,7 +12,11 @@ import {
 import React, {useState} from "react";
 import ReactPlayer from "react-player"
 import {useVolume} from "@/app/context/volumeContext";
-import ElasticSlider from "@/ui/ElasticSlider";
+import dynamic from "next/dynamic"
+
+const ElasticSlider = dynamic(() => import("@/ui/ElasticSlider"), {
+    ssr: false,
+})
 
 interface Props {
     jams: Jam[]

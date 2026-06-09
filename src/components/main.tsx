@@ -95,107 +95,42 @@ const Main = () => {
     const welcomeRef = useRef<HTMLAudioElement | null>(null)
 
     useEffect(() => {
-        const fetchHostesses = async () => {
+        const initGame = async () => {
             try {
-                const res = await fetch("/api/hostess")
-                const data: Hostess[] = await res.json()
-                const sorted = data.sort(
+                const stored = localStorage.getItem("selectedClub")
+                if(!stored) return console.error("No such element as localStorage on Main")
+                const parsedClub: StoredClub = JSON.parse(stored)
+                setClubData(parsedClub)
+
+                const res = await fetch(`/api/init?clubId=${parsedClub.id}`)
+                const data = await res.json()
+
+                const hostesses: Hostess[] = data.hostesses
+                const sortedHostesses = hostesses.sort(
                     (a, b) => Number(a.id) - Number(b.id)
                 )
-                setHostessesManagement(sorted)
-                setLoading(false)
-            } catch (err) {
-                console.log(err)
-            }
-        }
-        const fetchActivities = async () => {
-            try {
-                const res = await fetch("/api/activities")
-                const data = await res.json()
-                const sortedData = data.sort((a: Activity, b: Activity) => Number(a.id) - Number(b.id))
-                setActivity(sortedData)
-            } catch (err) {
-                console.log("Failed to fetch activities", err)
-            }
-        }
-        const fetchJams = async () => {
-            try {
-                const res = await fetch("/api/jams")
-                const data = await res.json()
-                const sortedData = data.sort((a: Jam, b: Jam) => Number(a.id) - Number(b.id))
-                setJams(sortedData)
-            } catch (err) {
-                console.log("Failed to fetch jams", err)
-            }
-        }
-        const fetchBuffet = async () => {
-            try {
-                const res = await fetch("/api/buffet")
-                const data = await res.json()
-                const sortedData = data.sort((a: Buffet, b: Buffet) => Number(a.id) - Number(b.id))
-                setBuffet(sortedData)
-            } catch (err) {
-                console.log("Failed to fetch buffet", err)
-            }
-        }
-        const fetchPerformers = async () => {
-            try {
-                const res = await fetch("/api/performers")
-                const data = await res.json()
-                const sortedData = data.sort((a: Performer, b: Performer) => Number(a.id) - Number(b.id))
-                setPerformers(sortedData)
-            } catch (err) {
-                console.log("Failed to fetch performers", err)
-            }
-        }
-        const fetchExperience = async () => {
-            try {
-                const res = await fetch("/api/user", {method: "GET"})
-                const data = await res.json()
-                setExperience(data.experience)
-            } catch (err) {
-                console.log("Failed to fetch user experience", err)
-            }
-        }
+                setHostessesManagement(sortedHostesses)
 
-        if (session?.user?.id) {
-            fetchHostesses()
-            fetchActivities()
-            fetchJams()
-            fetchBuffet()
-            fetchPerformers()
-            fetchExperience()
-        }
+                const activities = data.activities
+                const sortedActivities = activities.sort((a: Activity, b: Activity) => Number(a.id) - Number(b.id))
+                setActivity(sortedActivities)
 
+                const jams = data.jams
+                const sortedJams = jams.sort((a: Jam, b: Jam) => Number(a.id) - Number(b.id))
+                setJams(sortedJams)
 
-    }, [session?.user?.id])
+                const buffet = data.buffet
+                const sortedBuffet = buffet.sort((a: Buffet, b: Buffet) => Number(a.id) - Number(b.id))
+                setBuffet(sortedBuffet)
 
-    useEffect(() => {
-        if (!club || jams.length === 0 || performers.length === 0 || activity.length === 0) {
-            setLoading(true)
-            setFetching(true)
-        } else {
-            setLoading(false)
-            setFetching(false)
-        }
-    }, [club, jams, performers, activity])
+                const performers = data.performers
+                const sortedPerformers = performers.sort((a: Performer, b: Performer) => Number(a.id) - Number(b.id))
+                setPerformers(sortedPerformers)
 
-    useEffect(() => {
-        const stored = localStorage.getItem("selectedClub")
-        if(!stored) return console.error("No such element as localStorage on Main")
-        const parsedClub: StoredClub = JSON.parse(stored)
-        setClubData(parsedClub)
+                const experience = data.experience
+                setExperience(experience)
 
-        fetch(`/api/user-club?clubId=${parsedClub.id}`, {method: "POST"})
-            .then(async (res) => {
-                const data = await res.text()
-                if (!res.ok) {
-                    console.error("API error:", res.status, data)
-                    throw new Error("Failed to fetch club data")
-                }
-                return JSON.parse(data)
-            })
-            .then((userData) => {
+                const userData = data.club
                 const mergedClub: Club = {
                     name: parsedClub.name,
                     host: parsedClub.host,
@@ -208,8 +143,27 @@ const Main = () => {
                 setMoney(userData.money)
                 setPopularity(userData.popularity)
                 setClub(mergedClub)
-            })
-    }, [])
+
+                const loan = data.loan
+                if(loan){
+                    setLoan(loan)
+                }
+
+                const effect = data.effect
+                if(effect){
+                    setEffect(effect)
+                }
+
+                setLoading(false)
+                setFetching(false)
+            }
+            catch(err) {
+                console.log(err)
+            }
+        }
+
+        if(session?.user?.id) initGame().then()
+    }, [session?.user?.id])
 
     useEffect(() => {
         const lvl = getLevel(experience)
@@ -229,7 +183,7 @@ const Main = () => {
 
         const start = setTimeout(() => {
             setShowInteriorBanner(true)
-            welcomeRef.current.play().catch()
+            welcomeRef?.current?.play().catch()
             setTimeout(() => setAnimateInteriorBanner(true), 500)
             setTimeout(() => setAnimateInteriorBanner(false), 3000)
             setTimeout(() => setShowInteriorBanner(false), 3500)
@@ -241,39 +195,6 @@ const Main = () => {
         }
     }, [loading])
 
-    useEffect(() => {
-        if(clubData){
-            const fetchLoan = async () => {
-                try{
-                    const res = await fetch(`/api/moneylender?clubId=${clubData.id}`, {method: "GET"})
-                    const data = await res.json()
-                    if(data === null) return
-                    setLoan(data)
-                }
-                catch(err){
-                    console.log("Failed to fetch loans", err)
-                }
-            }
-            fetchLoan()
-        }
-    }, [clubData])
-
-    useEffect(() => {
-        if(clubData){
-            const fetchEffect = async () => {
-                try{
-                    const res = await fetch(`/api/effect?clubId=${clubData.id}`, {method: "GET"})
-                    const data = await res.json()
-                    if(data === null) return
-                    setEffect(data)
-                }
-                catch(err){
-                    console.log("Failed to fetch effects", err)
-                }
-            }
-            fetchEffect()
-        }
-    }, [clubData])
 
     return (
         <DndProvider backend={HTML5Backend}>
