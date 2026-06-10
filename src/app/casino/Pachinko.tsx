@@ -17,6 +17,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
     const [serverSlots, setServerSlots] = useState([0, 0, 0])
     const [spinning, setSpinning] = useState([false, false, false])
     const [isStarting, setIsStarting] = useState(false)
+    const [isFinished, setIsFinished] = useState(true)
 
     const [message, setMessage] = useState<{ text: string; id: number } | null>(null)
 
@@ -43,10 +44,11 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
     }, [])
 
     const startGame = async () => {
-        if(isStarting || spinning.some(s => s)) return
+        if(isStarting || spinning.some(s => s) || !isFinished) return
         try{
             showMessage("Nail the jackpot!")
             setIsStarting(true)
+            setIsFinished(false)
             await handleGameAction({ type: "CASINO", status: "ACTIVE" }).then()
             const res = await fetch("/api/casino/pachinko/start", {
                 method: "POST",
@@ -89,6 +91,8 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
         const data = await res.json()
         setScore(data.score)
         setMoney(data.userClub.money)
+
+        setIsFinished(true)
     }
 
     const toggleHold = (index: number) => {
@@ -118,10 +122,10 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
             } else if (!spinning[0] && !spinning[1] && spinning[2]) {
                 toggleHold(2)
             } else {
-                startGame().then()
+                if(isFinished) startGame().then()
             }
         }
-    }, [spinning, slots, startGame, toggleHold, slots])
+    }, [spinning, slots, startGame, toggleHold, slots, isFinished])
 
     useEffect(() => {
         window.addEventListener("keydown", handleButton)
@@ -184,7 +188,7 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
             <MessageSplash message={message}/>
             <Image className={"absolute bottom-0"} src={"/images/pachinko.png"} alt={"Pachinko slot"} height={1300}
                    width={800}/>
-            <div className={"flex flex-row justify-center items-center z-1 gap-12 absolute top-105"}>
+            <div className={"flex flex-row justify-center items-center z-1 gap-12 absolute bottom-100"}>
                 {slots.map((index, i) => {
                     const Icon = elements[index]
                     return (

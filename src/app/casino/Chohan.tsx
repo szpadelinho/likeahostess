@@ -87,7 +87,7 @@ export const Chohan = ({clubData, setMoney, array, setArray, setPrize, setScore,
                     disabled={isRolling}
                     className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
                     onClick={() => {
-                        setBet(prev => prev - 1000)
+                        setBet(prev => Math.max(prev - 1000, 0))
                     }}>
                     <Minus size={30}/>
                 </button>
@@ -98,7 +98,7 @@ export const Chohan = ({clubData, setMoney, array, setArray, setPrize, setScore,
                     disabled={isRolling}
                     className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
                     onClick={() => {
-                        setBet(prev => prev + 1000)
+                        setBet(prev => Math.min(prev + 1000, 100000))
                     }}>
                     <Plus size={30}/>
                 </button>

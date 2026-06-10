@@ -539,7 +539,9 @@ export const GAMES = [
     { title: "DOOR (Judgment)", intro: "M4JEwZeTKtI", main: "M4JEwZeTKtI" },
     { title: "Lost in the Rain (Lost Judgment)", intro: "LiSSAV1xpYo", main: "LiSSAV1xpYo" },
     { title: "Howl of the Old Dragon (Ryu Ga Gotoku Kenzan)", intro: "cxz7RqRPCpo", main: "cxz7RqRPCpo" },
-    { title: "Reign (Yakuza 0)", intro: "-WKq57ibDXc", main: "-WKq57ibDXc"}
+    { title: "Reign (Yakuza 0)", intro: "-WKq57ibDXc", main: "-WKq57ibDXc"},
+    { title: "Turning point (Yakuza)", intro: "4tI9HTIrxys", main: "4tI9HTIrxys"},
+    { title: "Virtical point (Yakuza Kiwami)", intro: "d0gbu23PJhE", main: "d0gbu23PJhE" }
 ]
 
 export const personaMap: Record<string, string> = {

@@ -110,7 +110,7 @@ const CasinoClient = () => {
                     <h1 className={`absolute top-20 text-[75px] ${yesteryear.className}`}>What will we play today?</h1>
                     {panels.map((panel, i) => (
                         <div key={i}
-                             className={`absolute ${panel.position} backdrop-blur-sm flex items-center justify-center rounded-[15] w-50 h-20 hover:bg-white hover:text-black duration-200 ease-in-out hover:shadow-sm hover:shadow-white`}
+                             className={`absolute transition-all transform-all overflow-hidden ${panel.position} flex-col group backdrop-blur-sm flex items-center justify-start rounded-[15] w-50 h-auto max-h-20 hover:max-h-[600px] hover:bg-white hover:text-black duration-300 ease-in-out hover:shadow-sm hover:shadow-white`}
                              onClick={() => {
                                  if(!game && panel.title !== null) {
                                      setTransition(true)
@@ -124,7 +124,12 @@ const CasinoClient = () => {
                                      setGame(null)
                                  }
                              }}>
-                            <h1 className={`text-[50px] ${yesteryear.className}`}>{panel.title}</h1>
+                            <h1 className={`min-h-20 flex items-center justify-center text-[50px] ${yesteryear.className} shrink-0 duration-300`}>
+                                {panel.title}
+                            </h1>
+                            <div className={"opacity-0 p-0 group-hover:p-4 group-hover:opacity-100 transition-all transform-all duration-300 ease-in-out text-black hover:text-black text-center"}>
+                                {panel.description}
+                            </div>
                         </div>
                     ))}
                 </>
