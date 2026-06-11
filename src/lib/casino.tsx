@@ -399,7 +399,8 @@ export const texasHoldEmTurn = (gameData: TexasHoldemGameData, action: "Raise" |
                 players: stageResult.players,
                 deck: stageResult.deck,
                 communityCards: stageResult.communityCards,
-                pot: stageResult.pot
+                pot: stageResult.pot,
+                stage: stageResult.stage
             })
         }
 

@@ -105,7 +105,11 @@ export default function AuthClient() {
     useEffect(() => {
         if (!titleActive) return
 
-        const handleTitleInteraction = () => {
+        const handleTitleInteraction = (e?: MouseEvent | KeyboardEvent | TouchEvent) => {
+            if (e instanceof KeyboardEvent && e.code === "F11") {
+                return
+            }
+
             setSource(game && game.main)
             setTitleBannerVisible(false)
             setTitleActive(false)

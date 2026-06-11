@@ -526,9 +526,9 @@ export const DRINKS_MAP: Record<number, EffectType> = {
 export const GAMES = [
     { title: "Howl of the Dragon (Yakuza)", intro: "9qNuScKbYuc", main: "9qNuScKbYuc" },
     { title: "Roar of the Twin Dragons (Yakuza 2)", intro: "SbNYIduyg-U", main: "SbNYIduyg-U" },
-    { title: "Howl of the Dragon God (Yakuza 3)", intro: "Ga_NC3pXvbc", main: "AcUjoThA53Y" },
-    { title: "Roarless Dragon (Yakuza 4)", intro: "Ut37SOojuaE", main: "Ut37SOojuaE" },
-    { title: "The hearts of theirs (Yakuza 5)", intro: "Fn91JE4jYWk", main: "Fn91JE4jYWk" },
+    { title: "Howl of the Dragon God (Yakuza 3)", intro: "jqqIF2DJWdw", main: "AcUjoThA53Y" },
+    { title: "Roarless Dragon (Yakuza 4)", intro: "sJboAXTKK0Y", main: "Ut37SOojuaE" },
+    { title: "The hearts of theirs (Yakuza 5)", intro: "rcHxXvD_WNI", main: "Fn91JE4jYWk" },
     { title: "Howl of Yinglong (Yakuza 6)", intro: "9laKzDA-klQ", main: "9laKzDA-klQ" },
     { title: "Darkness in light (Yakuza: Like a Dragon)", intro: "ATH0ej8Thc4", main: "Esoo3VaxGHI" },
     { title: "Burned Out (Like a Dragon: Infinite Wealth)", intro: "73c7cjH8NE0", main: "73c7cjH8NE0" },
@@ -541,7 +541,12 @@ export const GAMES = [
     { title: "Howl of the Old Dragon (Ryu Ga Gotoku Kenzan)", intro: "cxz7RqRPCpo", main: "cxz7RqRPCpo" },
     { title: "Reign (Yakuza 0)", intro: "-WKq57ibDXc", main: "-WKq57ibDXc"},
     { title: "Turning point (Yakuza)", intro: "4tI9HTIrxys", main: "4tI9HTIrxys"},
-    { title: "Virtical point (Yakuza Kiwami)", intro: "d0gbu23PJhE", main: "d0gbu23PJhE" }
+    { title: "Virtical point (Yakuza Kiwami)", intro: "d0gbu23PJhE", main: "d0gbu23PJhE" },
+    { title: "Receive You", intro: "dSfASV74f1A", main: "dSfASV74f1A"},
+    { title: "As a man, as a brother", intro: "MurNbfnyA1w", main: "MurNbfnyA1w"},
+    { title: "Eikichi Yazawa - Loser (Yakuza 3)", intro: "nDyOwNiGx_s", main: "nDyOwNiGx_s"},
+    { title: "ZEEBRA - Butterfly City (Yakuza 4)", intro: "Luy73-vmEh4", main: "Luy73-vmEh4"},
+    { title: "Gospels of Judas - Bloody Moon (Yakuza 5)", intro: "B8iMluL_am0", main: "B8iMluL_am0"},
 ]
 
 export const personaMap: Record<string, string> = {
@@ -963,7 +968,7 @@ export const backgroundRenders = [
     />,
     <div className="fixed inset-0 object-cover overflow-hidden">
         <ReactPlayer
-            src={"https://youtube.com/embed/-WKq57ibDXc?autoplay=1"}
+            src={"https://youtube.com/embed/-WKq57ibDXc?autoplay=1&showinfo=0&title=0"}
             playing={true}
             controls={false}
             muted={false}
@@ -976,7 +981,7 @@ export const backgroundRenders = [
     </div>,
     <div className="fixed inset-0 object-cover overflow-hidden">
         <ReactPlayer
-            src={"https://youtube.com/embed/-RThWPhFT1k?autoplay=1"}
+            src={"https://youtube.com/embed/-RThWPhFT1k?autoplay=1&showinfo=0&title=0"}
             playing={true}
             controls={false}
             muted={false}
@@ -989,7 +994,7 @@ export const backgroundRenders = [
     </div>,
     <div className="fixed inset-0 object-cover overflow-hidden">
         <ReactPlayer
-            src={"https://youtube.com/embed/rk1hVbU40Sw?autoplay=1"}
+            src={"https://youtube.com/embed/rk1hVbU40Sw?autoplay=1&showinfo=0&title=0"}
             playing={true}
             controls={false}
             muted={false}
@@ -1002,7 +1007,7 @@ export const backgroundRenders = [
     </div>,
     <div className="fixed inset-0 object-cover overflow-hidden">
         <ReactPlayer
-            src={"https://youtube.com/embed/mw4--Uc3j04?autoplay=1"}
+            src={"https://youtube.com/embed/mw4--Uc3j04?autoplay=1&showinfo=0&title=0"}
             playing={true}
             controls={false}
             muted={false}
@@ -1010,7 +1015,7 @@ export const backgroundRenders = [
             loop={true}
             width="100%"
             height="100%"
-            className="absolute top-0 left-0"
+            className="absolute top-0 left-0 z-1"
         />
     </div>
 ]

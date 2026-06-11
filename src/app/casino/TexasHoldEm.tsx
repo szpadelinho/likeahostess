@@ -15,6 +15,7 @@ interface TexasHoldEmProps {
     clubData: Club
     setDeck: (value: (((prevState: string[]) => string[]) | string[])) => void
     dealer: Dealer | null
+    setMoney: (fn: (x: number) => number) => void
 }
 
 interface TexasHoldEmRef {
@@ -32,7 +33,8 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
          setShowCard,
          clubData,
          setDeck,
-         dealer
+         dealer,
+         setMoney
      }, ref) => {
         const [communityCards, setCommunityCards] = useState<string[]>([])
         const [players, setPlayers] = useState<Player[]>([])
@@ -91,6 +93,8 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
             setStage(data.gameData.stage)
             setPot(data.gameData.pot)
             setScore(data.gameData.score ?? null)
+
+            if (data.gameData.stage === "Showdown" && data.gameData.score.includes(data.gameData.players[0].surname)) setMoney(prev => prev + data.gameData.pot)
 
             if (data.gameData.stage !== "Showdown") {
                 setPlayerActionPending(true)

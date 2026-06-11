@@ -381,7 +381,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                         <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
                                      playerActionPending={playerActionPending}
                                      setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard}
-                                     clubData={clubData} setDeck={setDeck} dealer={dealer}
+                                     clubData={clubData} setDeck={setDeck} dealer={dealer} setMoney={setMoney}
                         />
                     </div>
                     {(stage === null || stage === "Showdown") && (
@@ -389,6 +389,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                             onClick={async () => {
                                 await handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
                                 pokerRef?.current.startGame()
+                                setMoney(prev => prev - 5000)
                             }}
                             className={`${yesteryear.className} absolute bottom-5 text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
                             Let the game begin
