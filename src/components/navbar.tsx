@@ -18,7 +18,7 @@ import {getPageStyle, PageType, texturina} from "@/app/types";
 import ChatClient from "@/components/chatClient";
 import dynamic from "next/dynamic"
 
-const ElasticSlider = dynamic(() => import("@/ui/ElasticSlider"), {
+const ElasticSlider = dynamic(() => import("@/subcomponents/ElasticSlider"), {
     ssr: false,
 })
 

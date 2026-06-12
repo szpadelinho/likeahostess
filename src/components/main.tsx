@@ -272,8 +272,12 @@ const Main = () => {
                         <ModalWrapper
                             fade={fade}
                             onClose={() => {
-                            setSelectedHostess(null)
-                            setWindow(null)
+                                setFade(true)
+                                setTimeout(() => {
+                                    setWindow(null)
+                                    setFade(false)
+                                    setSelectedHostess(null)
+                                }, 300)
                         }}>
                             {({onCloseModal}) => <Management onCloseModal={onCloseModal} hostesses={hostessesManagement}
                                                              selectedHostess={selectedHostess}
@@ -284,8 +288,12 @@ const Main = () => {
                         <ModalWrapper
                             fade={fade}
                             onClose={() => {
-                            setSelectedPerformer(null)
-                            setWindow(null)
+                                setFade(true)
+                                setTimeout(() => {
+                                    setWindow(null)
+                                    setFade(false)
+                                    setSelectedPerformer(null)
+                                }, 300)
                         }}>
                             {({onCloseModal}) => <Activities onCloseModal={onCloseModal} performers={performers}
                                                              selectedPerformer={selectedPerformer}

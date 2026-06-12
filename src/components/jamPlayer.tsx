@@ -1,4 +1,4 @@
-import { Jam } from "@/app/types";
+import {Jam} from "@/app/types";
 import {
     Play,
     Pause,
@@ -14,7 +14,7 @@ import ReactPlayer from "react-player"
 import {useVolume} from "@/app/context/volumeContext";
 import dynamic from "next/dynamic"
 
-const ElasticSlider = dynamic(() => import("@/ui/ElasticSlider"), {
+const ElasticSlider = dynamic(() => import("@/subcomponents/ElasticSlider"), {
     ssr: false,
 })
 
@@ -42,14 +42,12 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
     }
 
     const nextTrack = () => {
-        if(loop){
+        if (loop) {
             return
-        }
-        else{
-            if(shuffle){
+        } else {
+            if (shuffle) {
                 setCurrentTrack(Math.floor(Math.random() * jams.length))
-            }
-            else{
+            } else {
                 setCurrentTrack((prev) => (prev + 1) % jams.length)
             }
             setIsJamPlaying(true)
@@ -57,18 +55,21 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
     }
 
     const prevTrack = () => {
-        if(loop){
+        if (loop) {
             return
-        }
-        else{
+        } else {
             setCurrentTrack((prev) => (prev - 1 + jams.length) % jams.length)
             setIsJamPlaying(true)
         }
     }
 
-    return(
-        <div className={`absolute text-pink-200 z-49 top-5 right-5 ${hidden && "translate-x-180"} transform flex justify-center items-center flex-row text-[15px] bg-pink-950 p-3 rounded-[20] gap-5 transition-all duration-500 opacity-30 hover:opacity-100`} style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
-            <button className={"hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-115 scale-100 hover:scale-110"} onClick={() => setHidden(!hidden)}>
+    return (
+        <div
+            className={`absolute text-pink-200 z-49 top-5 right-5 ${hidden && "translate-x-180"} transform flex justify-center items-center flex-row text-[15px] bg-pink-950 p-3 rounded-[20] gap-5 transition-all duration-500 opacity-30 hover:opacity-100`}
+            style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
+            <button
+                className={"hover:text-pink-300 transition duration-200 ease-in-out transform active:scale-115 scale-100 hover:scale-110"}
+                onClick={() => setHidden(!hidden)}>
                 {!hidden ? <PanelRightClose/> : <PanelRightOpen/>}
             </button>
             <div
@@ -87,48 +88,58 @@ const JamPlayer = ({jams, isJamPlaying, setIsJamPlaying}: Props) => {
                     </div>
                 </div>
             </div>
-            <button onClick={() => {setLoop(!loop)}} className={`${loop && "!text-pink-500"} hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110`}>
+            <button onClick={() => {
+                setLoop(!loop)
+            }}
+                    className={`${loop && "!text-pink-500"} hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110`}>
                 <Repeat/>
             </button>
-            <button onClick={() => {setShuffle(!shuffle)}} className={`${shuffle && "!text-pink-500"} hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110`}>
+            <button onClick={() => {
+                setShuffle(!shuffle)
+            }}
+                    className={`${shuffle && "!text-pink-500"} hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110`}>
                 <Shuffle/>
             </button>
             <div className={"flex justify-center items-center group relative"}>
                 <button
-                    className={"z-[50] bg-pink-950 active:text-pink-500 hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110 active:scale-120"}
+                    className={"z-[50] active:text-pink-500 hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110 active:scale-120"}
                     onClick={() => {
-                    if(volume === 0) {
-                        setVolume(100)
-                    }
-                    else {
-                        setVolume(0)
-                    }
-                }}>
+                        if (volume === 0) {
+                            setVolume(100)
+                        } else {
+                            setVolume(0)
+                        }
+                    }}>
                     {volume === 0 && <VolumeX/>}
                     {volume > 0 && volume < 34 && <Volume/>}
                     {volume > 33 && volume < 67 && <Volume1/>}
                     {volume > 66 && <Volume2/>}
                 </button>
-                <div className={"z-[49] scale-75 absolute duration-300 ease-in-out flex justify-center w-50 items-center h-10 bg-pink-950 -right-40 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none"}>
+                <div
+                    className={"z-[49] scale-75 absolute duration-300 ease-in-out flex justify-center w-50 items-center h-10 top-5 opacity-0 group-hover:opacity-100 group-hover:pointer-events-auto pointer-events-none"}>
                     <ElasticSlider
-                        leftIcon={<div className={"bg-pink-950"}><Volume color={"pink"}/></div>}
+                        leftIcon={<Volume color={"pink"}/>}
                         rightIcon={<Volume2 color={"pink"}/>}
                         startingValue={0}
                         defaultValue={volume}
                         maxValue={100}
                         isStepped={false}
                         stepSize={1}
+                        isJamPlayer={true}
                         onChange={(val) => setVolume(val, true)}
                     />
                 </div>
             </div>
-            <button onClick={prevTrack} className={"hover:text-pink-300 transition duration-200 ease-in-out transform active:-translate-x-3 active:text-pink-500 scale-100 hover:scale-110"}>
+            <button onClick={prevTrack}
+                    className={"hover:text-pink-300 transition duration-200 ease-in-out transform active:-translate-x-3 active:text-pink-500 scale-100 hover:scale-110"}>
                 <StepBack/>
             </button>
-            <button onClick={() => setIsJamPlaying(!isJamPlaying)} className="hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110 transform active:text-pink-500 active:scale-130">
+            <button onClick={() => setIsJamPlaying(!isJamPlaying)}
+                    className="hover:text-pink-300 transition duration-200 ease-in-out scale-100 hover:scale-110 transform active:text-pink-500 active:scale-130">
                 {isJamPlaying ? <Pause/> : <Play/>}
             </button>
-            <button onClick={nextTrack} className={"hover:text-pink-300 transition duration-200 ease-in-out transform active:translate-x-3 active:text-pink-500 scale-100 hover:scale-110"}>
+            <button onClick={nextTrack}
+                    className={"hover:text-pink-300 transition duration-200 ease-in-out transform active:translate-x-3 active:text-pink-500 scale-100 hover:scale-110"}>
                 <StepForward/>
             </button>
             <ReactPlayer

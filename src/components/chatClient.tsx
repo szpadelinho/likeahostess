@@ -13,7 +13,7 @@ import {
     yesteryear
 } from "@/app/types";
 import {useSession} from "next-auth/react";
-import {EyeClosed, List, MessageSquarePlus, Plus, Send} from "lucide-react";
+import {EyeClosed, List, MessageSquare, MessageSquarePlus, Plus, Send} from "lucide-react";
 import {useRouter} from "next/navigation";
 import Image from "next/image";
 import {handleChat} from "@/lib/transactions";
@@ -164,9 +164,15 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
 
     return (
         <>
+            <button
+                className={`${mode === "COMPACT" ? "opacity-50 hover:opacity-100" : ""} z-[50] absolute rounded-[10] active:scale-105 hover:scale-102 top-2.5 left-170 p-2 ${page && getPageStyle(page)} ${page === "Casino" && "bg-black"} transform duration-300 ease-in-out`}
+                onClick={() => {
+                    mode === "COMPACT" ? setMode("EXPANDED") : setMode("COMPACT")
+                }}>
+                {mode === "COMPACT" ? <MessageSquare/> : <EyeClosed/>}
+            </button>
             <div
-                onClick={() => setMode("EXPANDED")}
-                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105 " : "opacity-0 pointer-events-none z-[-999]"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[49]`}
+                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105 pointer-events-auto z-[0]" : "opacity-0 pointer-events-none z-[-999]"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[49]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -190,7 +196,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 </div>
             </div>
             <div
-                className={`${mode === "EXPANDED" ? "opacity-100 " : "opacity-0 pointer-events-none z-[-999]"} ${page && getPageStyle(page, true)} duration-300 ease-in-out fixed left-50 ${page === "Main" ? "top-5" : "top-10"} w-full max-w-lg mx-auto z-[48]`}
+                className={`${mode === "EXPANDED" ? "opacity-100 h-[390px]" : "opacity-0 pointer-events-none h-[50px]"} ${page && getPageStyle(page, true)} transition-all duration-300 ease-in-out fixed left-50 ${page === "Main" ? "top-5" : "top-10"} w-full max-w-lg mx-auto z-[48]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -332,15 +338,6 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                         <Plus/>
                     </div>
                 </div>
-                <button
-                    className={`z-[50] absolute rounded-[10] active:scale-105 hover:scale-102 -right-5 -top-2 p-2 ${page && getPageStyle(page)} ${page === "Casino" && "bg-black"} transform duration-300 ease-in-out`}
-                    onClick={() => {
-                        setMode("COMPACT")
-                        setList(false)
-                        setRoomCreation(false)
-                    }}>
-                    <EyeClosed size={20}/>
-                </button>
                 <div className={"flex flex-row justify-between"}>
                     <button onClick={sendMessage}
                             className={`${(!roomCreation && !list) ? "opacity-100 " : "opacity-0 pointer-events-none"} m-2 p-2 rounded-[10] transform duration-300 ease-in-out ${page && getPageStyle(page)}`}>

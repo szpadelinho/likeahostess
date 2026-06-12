@@ -15,6 +15,7 @@ interface ElasticSliderProps {
     leftIcon?: React.ReactNode;
     rightIcon?: React.ReactNode;
     onChange?: (value: number) => void
+    isJamPlayer?: boolean
 }
 
 const ElasticSlider: React.FC<ElasticSliderProps> = ({
@@ -26,7 +27,8 @@ const ElasticSlider: React.FC<ElasticSliderProps> = ({
                                                          stepSize,
                                                          leftIcon,
                                                          rightIcon,
-                                                         onChange
+                                                         onChange,
+                                                         isJamPlayer
                                                      }) => {
     return (
         <div className={`flex flex-col items-center justify-center gap-4 w-48 ${className}`}>
@@ -39,6 +41,7 @@ const ElasticSlider: React.FC<ElasticSliderProps> = ({
                 leftIcon={leftIcon}
                 rightIcon={rightIcon}
                 onChange={onChange}
+                isJamPlayer={isJamPlayer}
             />
         </div>
     );
@@ -53,6 +56,7 @@ interface SliderProps {
     leftIcon: React.ReactNode;
     rightIcon: React.ReactNode;
     onChange?: (value: number) => void;
+    isJamPlayer?: boolean;
 }
 
 const Slider: React.FC<SliderProps> = ({
@@ -63,7 +67,8 @@ const Slider: React.FC<SliderProps> = ({
                                            stepSize,
                                            leftIcon,
                                            rightIcon,
-    onChange
+                                           onChange,
+                                           isJamPlayer
                                        }) => {
     const [value, setValue] = useState<number>(defaultValue);
     const sliderRef = useRef<HTMLDivElement>(null);
@@ -183,8 +188,9 @@ const Slider: React.FC<SliderProps> = ({
                         }}
                         className="flex flex-grow"
                     >
-                        <div className="relative h-full flex-grow overflow-hidden rounded-full bg-gray-400">
-                            <div className="absolute h-full bg-gray-500 rounded-full" style={{ width: `${getRangePercentage()}%` }} />
+                        <div className={`relative h-full flex-grow overflow-hidden rounded-full ${isJamPlayer ? "bg-pink-800" : "bg-gray-400"}`}>
+                            <div className={`absolute h-full ${isJamPlayer ? "bg-pink-400" : "bg-gray-500"} rounded-full`}
+                                 style={{ width: `${getRangePercentage()}%` }} />
                         </div>
                     </motion.div>
                 </div>
@@ -201,7 +207,7 @@ const Slider: React.FC<SliderProps> = ({
                     {rightIcon}
                 </motion.div>
             </motion.div>
-            <p className="absolute text-gray-400 transform -translate-y-4 text-xs font-medium tracking-wide">
+            <p className={`absolute ${isJamPlayer ? "text-pink-600" : "text-gray-400"} transform -translate-y-4 text-xs font-medium tracking-wide`}>
                 {Math.round(value)}
             </p>
         </>

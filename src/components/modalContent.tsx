@@ -216,7 +216,7 @@ export const ModalContent = ({
             <div
                 className={"w-200 flex content-center justify-center items-center flex-row"}>
                 <div
-                    className={"w-[250px] h-[250px] flex content-center justify-center items-center flex-row bg-pink-700 rounded-[20]"}
+                    className={"w-[250px] h-[250px] flex content-center justify-center items-center flex-row bg-[radial-gradient(ellipse_at_center,_rgba(100,10,50,1)_0%,_rgba(145,67,100,1)_50%,_rgba(160,40,100,1)_100%)] rounded-[20]"}
                     style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                     <Image
                         className={"rounded-[20] w-[250px] h-[250px]"}
@@ -227,7 +227,7 @@ export const ModalContent = ({
                     />
                 </div>
                 <div
-                    className={"h-50 p-10 flex content-center justify-center items-center flex-col gap-5 bg-pink-600 rounded-br-[20] rounded-tr-[20]"}
+                    className={"h-50 p-10 flex content-center justify-center items-center flex-col gap-5 bg-[radial-gradient(ellipse_at_center,_rgba(150,10,100,1)_0%,_rgba(134,16,67,1)_50%,_rgba(160,40,100,1)_100%)] rounded-br-[20] rounded-tr-[20]"}
                     style={{boxShadow: '0 0 25px rgba(0, 0, 0, .4)'}}>
                     <h1 className={`text-[40px] ${yesteryear.className} text-nowrap`}>
                         {activeModal.title}

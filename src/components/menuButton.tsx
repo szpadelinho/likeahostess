@@ -13,7 +13,7 @@ interface MenuButton {
 
 export const MenuButton = ({title, imageSrc, imageAlt, Icon, onClick}: MenuButton) => {
     return(
-        <button className={"relative flex flex-col items-center justify-center gap-5 rounded-[20] p-2 cursor-zoom-in hover:bg-pink-200 bg-pink-700 hover:text-pink-950 transition duration-200 ease-in-out transform active:scale-110 w-115 h-65"}
+        <button className={"relative flex flex-col items-center justify-center gap-5 rounded-[20] p-2 cursor-zoom-in hover:bg-pink-200 bg-pink-700/80 hover:text-pink-950 transition duration-200 ease-in-out transform active:scale-110 w-115 h-65"}
                 onClick={onClick}>
             <Image className={"absolute right-5 opacity-50"} src={imageSrc} alt={imageAlt} height={260} width={260}/>
             <Icon size={100} className={"absolute left-2 top-2"}/>
