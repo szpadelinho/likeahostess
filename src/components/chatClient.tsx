@@ -163,16 +163,16 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
     const lastMessage = messages.at(-1)
 
     return (
-        <>
+        <div className={`w-[512px] relative ${page === "Main" ? "fixed left-50 top-5" : "fixed -top-5"}`}>
             <button
-                className={`${mode === "COMPACT" ? "opacity-50 hover:opacity-100" : ""} z-[50] absolute rounded-[10] active:scale-105 hover:scale-102 top-2.5 left-170 p-2 ${page && getPageStyle(page)} ${page === "Casino" && "bg-black"} transform duration-300 ease-in-out`}
+                className={`${mode === "COMPACT" && "opacity-50 hover:opacity-100"} absolute right-0 z-[50] rounded-[10] active:scale-105 hover:scale-102 -top-2 right-[-20] p-2 ${page && getPageStyle(page)} transform duration-300 ease-in-out`}
                 onClick={() => {
                     mode === "COMPACT" ? setMode("EXPANDED") : setMode("COMPACT")
                 }}>
                 {mode === "COMPACT" ? <MessageSquare/> : <EyeClosed/>}
             </button>
             <div
-                className={`${mode === "COMPACT" ? "opacity-50 hover:scale-105 pointer-events-auto z-[0]" : "opacity-0 pointer-events-none z-[-999]"} ${page && getPageStyle(page)} ${page === "Main" && "fixed top-5 left-50"} hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[49]`}
+                className={`absolute ${mode === "COMPACT" ? "opacity-50 hover:scale-105 pointer-events-auto z-[0]" : "opacity-0 pointer-events-none z-[-999]"} ${page && getPageStyle(page)} overflow-hidden hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[49]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -188,7 +188,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     ) : (
                         <div className={"flex items-center gap-2"}>
                             <Image src={lastMessage?.userImage ?? "/images/dragon.png"} alt={lastMessage?.username ?? "Unknown"}
-                                   height={32} width={32} className={"object-content rounded-full"}/>
+                                   height={32} width={32} className={"h-6 w-6 object-content overflow-hidden rounded-full transition-all transform"}/>
                             <p><strong>{lastMessage?.username}:</strong> {lastMessage?.content}</p>
                         </div>
                     )}
@@ -196,7 +196,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 </div>
             </div>
             <div
-                className={`${mode === "EXPANDED" ? "opacity-100 h-[390px]" : "opacity-0 pointer-events-none h-[50px]"} ${page && getPageStyle(page, true)} transition-all duration-300 ease-in-out fixed left-50 ${page === "Main" ? "top-5" : "top-10"} w-full max-w-lg mx-auto z-[48]`}
+                className={`absolute ${mode === "EXPANDED" ? "opacity-100 h-[390px]" : "opacity-0 pointer-events-none h-[50px]"} ${page && getPageStyle(page, true)} transition-all duration-300 ease-in-out fixed w-full max-w-lg mx-auto z-[48]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -361,6 +361,6 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     </button>
                 </div>
             </div>
-        </>
+        </div>
     )
 }

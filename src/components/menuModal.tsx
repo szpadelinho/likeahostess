@@ -106,7 +106,7 @@ export const MenuModal = ({
 
     return (
         <div
-            className={`absolute inset-0 flex justify-center items-center z-50 backdrop-blur-sm transition duration-300 ease-in-out ${menu && !closing ? "opacity-100" : "opacity-0"}`}
+            className={`absolute inset-0 flex justify-center items-center z-50 bg-[radial-gradient(ellipse_at_center,_rgba(134,10,100,0)_0%,_rgba(134,16,67,0)_50%,_rgba(125,10,80,.67)_100%)] backdrop-blur-sm transition duration-300 ease-in-out ${menu && !closing ? "opacity-100" : "opacity-0"}`}
             onClick={handleClick}>
             <div
                 className={`grid grid-cols-3 grid-rows-3 gap-10 text-center justify-items-center text-pink-200 transition duration-300 ease-in-out ${menu && !closing ? "scale-100" : "scale-50"}`}>

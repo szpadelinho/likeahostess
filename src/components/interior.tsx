@@ -294,7 +294,7 @@ const Interior = ({
                                 <div
                                     className={"absolute h-75 w-75 -z-1 flex"}/>
                                 <div
-                                    className={"absolute -z-1 w-80 h-80 bg-[radial-gradient(ellipse_at_center,_rgba(170,0,100,1)_50%,_rgba(134,16,67,0)_70%,_rgba(134,16,67,0)_100%)]"}/>
+                                    className={"absolute -z-1 w-80 h-80 bg-[radial-gradient(ellipse_at_center,_rgba(170,0,100,.8)_50%,_rgba(134,16,67,0)_70%,_rgba(134,16,67,0)_100%)]"}/>
                                 <Image
                                     src={getPositionImage(i)}
                                     alt={"Meeting position"}
