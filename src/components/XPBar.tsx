@@ -17,7 +17,7 @@ export const XPBar = ({value}: XPBarProps) => {
                 className="relative h-full w-[200px] bg-pink-600/40 rounded-full overflow-hidden"
             >
                 <div
-                    className="absolute left-0 top-0 h-full bg-pink-600 transition-all duration-300"
+                    className="absolute left-0 top-0 h-full bg-linear-to-r from-indigo-950 via-pink-950 via-20% to-pink-800 to-90% transition-all duration-300"
                     style={{
                         width: `${percent}%`,
                     }}
