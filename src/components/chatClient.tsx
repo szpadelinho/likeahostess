@@ -166,6 +166,13 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
         <div className={`w-[512px] relative ${page === "Main" ? "fixed left-50 top-5" : "fixed -top-5"}`}>
             <button
                 className={`${mode === "COMPACT" && "opacity-50 hover:opacity-100"} absolute right-0 z-[50] rounded-[10] active:scale-105 hover:scale-102 -top-2 right-[-20] p-2 ${page && getPageStyle(page)} transform duration-300 ease-in-out`}
+                style={page === "LoveInHeart" ? {
+                    borderWidth: "8px",
+                    borderStyle: "solid",
+                    borderImageSource: "url('/images/wood_texture2.png')",
+                    borderImageSlice: 30,
+                    borderImageRepeat: "round",
+                } : {}}
                 onClick={() => {
                     mode === "COMPACT" ? setMode("EXPANDED") : setMode("COMPACT")
                 }}>
@@ -179,7 +186,6 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                     borderImageSource: "url('/images/wood_texture2.png')",
                     borderImageSlice: 30,
                     borderImageRepeat: "round",
-                    bottom: -35
                 } : {}}
             >
                 <div className={"overflow-y-auto p-2 overflow-x-hidden"}>
