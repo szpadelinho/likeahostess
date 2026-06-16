@@ -511,7 +511,7 @@ export const drinks: Drink[] = [
     {id: 0, title: "Essence of the Dragon of Dojima", description: "Apparently really pricey. However, only one person managed to demolish this booze.", price: 10000000, color: "red", tattoo: "oryu"},
     {id: 1, title: "Essence of the Lifeline of Kamurocho", description: "From what is known, this alcohol boosts your luck to gain more money... Huge if true.", price: 2000000, color: "purple", tattoo: "phoenix"},
     {id: 2, title: "Essence of the Dragon of Kansai", description: "Supposedly cools off the atmosphere of your club.", price: 3000000, color: "pink", tattoo: "yellow_dragon"},
-    {id: 3, title: "Essence of the Safekeeper of the Tojo CLan", description: "The purpose of this drink is to freshen your mind to manage your resources more carefully and rationally.", price: 4000000, color: "yellow", tattoo: "kirin"},
+    {id: 3, title: "Essence of the Safekeeper of the Tojo Clan", description: "The purpose of this drink is to freshen your mind to manage your resources more carefully and rationally.", price: 4000000, color: "yellow", tattoo: "kirin"},
     {id: 4, title: "Essence of the Fighting Viper", description: "A drink with no known benefit... apparently gives you a random boost.", price: 5000000, color: "green", tattoo: "viper"}
 ]
 

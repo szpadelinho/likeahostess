@@ -358,6 +358,12 @@ export const LoveInHeartClient = () => {
                                     if(clubData && massage){
                                         await handleGameAction({type: "MASSAGE", status: "ACTIVE"}).then()
                                         handleMassage({clubData, massageId: massageItems.findIndex(m => m.title === massage), setHostesses, setMoney}).then()
+                                        setHostesses(prev =>
+                                            prev.map(hostess => ({
+                                                ...hostess,
+                                                fatigue: Math.max(0, hostess.fatigue - reduction)
+                                            }))
+                                        )
                                     }
                                     changeMode()
                                 }}

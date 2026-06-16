@@ -156,6 +156,7 @@ export const MoneylenderClient = () => {
                                                     await handleGameAction({type: "LOAN", status: "ACTIVE"}).then()
                                                     handleLoan({clubData, setMoney, setClub}).then()
                                                     setLoan(null)
+                                                    setContract(false)
                                                 }
                                             }}
                                             className={"border-b-2 border-black w-75 opacity-50 hover:opacity-100 duration-300 ease-in-out"}>
@@ -201,10 +202,17 @@ export const MoneylenderClient = () => {
                                                     if(clubData){
                                                         await handleGameAction({type: "LOAN", status: "ACTIVE"}).then()
                                                         handleLoan({clubData, amount: value, setMoney, setClub}).then()
-                                                        setLoading(true)
-                                                        setTimeout(() => {
-                                                            router.push("/")
-                                                        }, 500)
+                                                        setLoan({
+                                                            createdAt: new Date(),
+                                                            dueAt: new Date(),
+                                                            interest: value * 1.2,
+                                                            paid: false,
+                                                            paidAt: null,
+                                                            id: "TEMP",
+                                                            userClubId: clubData.id,
+                                                            amount: value
+                                                        })
+                                                        setContract(false)
                                                     }
                                                 }
                                             }}
