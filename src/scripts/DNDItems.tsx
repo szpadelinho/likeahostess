@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import {Hostess, WindowType, Buffet, Client} from "@/app/types";
+import {FatigueBar} from "@/components/FatigueBar";
 
 interface DroppableSlotsProps {
     type: 'beverage' | 'meal'
@@ -418,6 +419,7 @@ export const DroppableHostessSlot = ({
         >
             {hostess ? (
                 <div className="flex justify-center items-center flex-col">
+                    <FatigueBar hostess={hostess} source={"panel"}/>
                     <DraggableHostess hostess={hostess} source="panel"/>
                     <button
                         onClick={handleRemove}
@@ -513,13 +515,16 @@ export const DroppableHostessTableSlot = ({
             }`}
         >
             {hostessAtTable ? (
-                <Image
-                    src={hostessAtTable.image}
-                    alt={hostessAtTable.name}
-                    width={100}
-                    height={100}
-                    className={`rounded-[18]`}
-                />
+                    <>
+                        <FatigueBar hostess={hostessAtTable} source={"table"}/>
+                        <Image
+                            src={hostessAtTable.image}
+                            alt={hostessAtTable.name}
+                            width={100}
+                            height={100}
+                            className={`rounded-[18]`}
+                        />
+                    </>
             ) : <VenetianMask size={50}/>}
         </div>
     )
