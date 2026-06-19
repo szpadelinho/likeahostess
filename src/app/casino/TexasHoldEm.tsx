@@ -16,6 +16,7 @@ interface TexasHoldEmProps {
     setDeck: (value: (((prevState: string[]) => string[]) | string[])) => void
     dealer: Dealer | null
     setMoney: (fn: (x: number) => number) => void
+    bet: number
 }
 
 interface TexasHoldEmRef {
@@ -34,7 +35,8 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
          clubData,
          setDeck,
          dealer,
-         setMoney
+         setMoney,
+         bet
      }, ref) => {
         const [communityCards, setCommunityCards] = useState<string[]>([])
         const [players, setPlayers] = useState<Player[]>([])
@@ -55,7 +57,8 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
                 headers: {"Content-Type": "application/json"},
                 body: JSON.stringify({
                     clubData,
-                    dealer
+                    dealer,
+                    bet
                 })
             })
             const data = await res.json()

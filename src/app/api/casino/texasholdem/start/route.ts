@@ -5,7 +5,7 @@ import {buildDeck, handleDeckShuffle} from "@/lib/casino";
 
 export async function POST(req: Request){
     const session = await auth()
-    const { clubData, dealer } = await req.json()
+    const { clubData, dealer, bet } = await req.json()
     const userId = session?.user?.id
     if (!session || !userId || !clubData || !dealer) return NextResponse.json({error: "Unauthorized"}, {status: 401})
 
@@ -29,13 +29,15 @@ export async function POST(req: Request){
     if(!userClub) return NextResponse.json({message: "No such userClub"}, {status: 404})
 
     try{
+        const forPot = Math.round((bet /2 ) / 1000) * 1000
+        const forPlayer = bet - forPot
         const freshDeck = handleDeckShuffle(buildDeck())
         const players = [
             {
                 id: 0,
                 name: clubData.host.surname,
                 hand: freshDeck.slice(0, 2),
-                chips: 5000,
+                chips: forPlayer,
                 currentBet: 0,
                 folded: false,
                 image: `${clubData.host.surname.toLowerCase()}_poker`,
@@ -46,7 +48,7 @@ export async function POST(req: Request){
                 id: 1,
                 name: "Someya",
                 hand: freshDeck.slice(2, 4),
-                chips: 5000,
+                chips: forPlayer,
                 currentBet: 0,
                 folded: false,
                 image: "someya_poker",
@@ -57,7 +59,7 @@ export async function POST(req: Request){
                 id: 2,
                 name: "Nagumo",
                 hand: freshDeck.slice(4, 6),
-                chips: 5000,
+                chips: forPlayer,
                 currentBet: 0,
                 folded: false,
                 image: "nagumo_poker",
@@ -68,7 +70,7 @@ export async function POST(req: Request){
                 id: 3,
                 name: dealer.name,
                 hand: freshDeck.slice(6, 8),
-                chips: 5000,
+                chips: forPlayer,
                 currentBet: 0,
                 folded: false,
                 image: dealer.pokerCover.replace(".png", ""),
@@ -80,12 +82,12 @@ export async function POST(req: Request){
         const deck = freshDeck.slice(8)
         const stage = "PreFlop"
         const score = null
-        const pot = 0
+        const pot = forPot * 4
 
         const round = await prisma.$transaction(async (tx) => {
             const updatedClub = await tx.userClub.update({
                 where: { id: userClub.id },
-                data: { money: { decrement: 5000 } }
+                data: { money: { decrement: bet } }
             })
 
             const newGame = await tx.gameRound.create({
@@ -93,7 +95,7 @@ export async function POST(req: Request){
                     userId,
                     gameType: "TEXASHOLDEM",
                     status: "SPINNING",
-                    totalBet: 5000,
+                    totalBet: bet,
                     gameData: {
                         players,
                         communityCards,
