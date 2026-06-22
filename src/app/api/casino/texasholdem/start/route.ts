@@ -29,7 +29,7 @@ export async function POST(req: Request){
     if(!userClub) return NextResponse.json({message: "No such userClub"}, {status: 404})
 
     try{
-        const forPot = Math.round((bet /2 ) / 1000) * 1000
+        const forPot = Math.round((bet / 2) / 1000) * 1000
         const forPlayer = bet - forPot
         const freshDeck = handleDeckShuffle(buildDeck())
         const players = [

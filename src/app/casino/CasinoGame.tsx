@@ -40,6 +40,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
     const [prize, setPrize] = useState<number>(0)
     const [message, setMessage] = useState<{ text: string; id: number } | null>(null)
 
+    const [pokerBet, setPokerBet] = useState<number>(10000)
     const [win, setWin] = useState<0 | 1 | 2>(0)
 
     const [dealerCards, setDealerCards] = useState<string[]>([])
@@ -58,6 +59,8 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
     const [bets, setBets] = useState<RouletteBet[]>([])
 
     const [selectedBet, setSelectedBet] = useState<string | null>(null)
+
+    const [maxBet, setMaxBet] = useState<number>(bet)
 
     const showMessage = (text: string) => {
         setMessage({text, id: Date.now()})
@@ -350,7 +353,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                             <p>Total bet: ¥{bets.reduce((sum, bet) => sum + bet.amount, 0).toLocaleString()}</p>
                         </div>
                     </div>
-                    <div className={"flex flex-row absolute bottom-10 gap-5 left-1/2 -translate-x-[50%]"}>
+                    <div className={"flex flex-row absolute bottom-10 gap-5 left-1/2 -translate-x-[50%] rounded-[15] border-2 border-stone-500"}>
                         <button
                             className={`${yesteryear.className} text-[40px] p-2 w-75 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
                             onClick={async () => {
@@ -383,11 +386,11 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                                      playerActionPending={playerActionPending}
                                      setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard}
                                      clubData={clubData} setDeck={setDeck} dealer={dealer} setMoney={setMoney}
-                                     bet={bet}
+                                     bet={bet} setMaxBet={setMaxBet} setPokerBet={setPokerBet}
                         />
                     </div>
                     {(stage === null || stage === "Showdown") && (
-                        <div className={"absolute bottom-10 rounded-[10] backdrop-blur-md flex flex-row justify-center items-center"}>
+                        <div className={"border-2 border-stone-500 absolute bottom-10 rounded-[10] backdrop-blur-md flex flex-row justify-center items-center"}>
                             <button
                                 className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
                                 onClick={() => {
@@ -401,34 +404,53 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                                     await handleGameAction({type: "CASINO", status: "ACTIVE"}).then()
                                     pokerRef?.current.startGame()
                                     setMoney(prev => prev - bet)
+                                    setMaxBet(bet - Math.round((bet / 2) / 1000) * 1000)
                                 }}>
                                 <JapaneseYen size={20}/>{bet}
                             </button>
                             <button
                                 className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
                                 onClick={() => {
-                                    setBet(prev => Math.min(prev + 1000, 50000))
+                                    setBet(prev => Math.min(prev + 1000, 100000))
                                 }}>
                                 <Plus size={30}/>
                             </button>
                         </div>
                     )}
                     {playerActionPending && stage && (
-                        <div className={"absolute bottom-5 flex flex-row gap-10"}>
+                        <div className={"absolute bottom-5 flex flex-row gap-5 backdrop-blur-md border-2 border-stone-500 rounded-[15]"}>
+                            <div className={"flex flex-col justify-center items-center"}>
+                                <button
+                                    className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
+                                    onClick={() => {
+                                        setPokerBet(prev => Math.min(prev + 1000, maxBet))
+                                    }}>
+                                    <Plus size={20}/>
+                                </button>
+                                <button
+                                    className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
+                                    onClick={() => {
+                                        setPokerBet(prev => Math.max(prev - 1000, 1000))
+                                    }}>
+                                    <Minus size={20}/>
+                                </button>
+                            </div>
                             <button
-                                onClick={() => pokerRef?.current.turn("Raise")}
-                                className={`${yesteryear.className} text-[40px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
+                                onClick={() => pokerRef?.current.turn("Raise", pokerBet)}
+                                className={`${yesteryear.className} relative text-[35px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
                                 <p>Raise</p>
-                                <p>{}</p>
+                                <p className={"absolute bottom-0 text-[14px] text-stone-300 -translate-x-[50%] left-1/2"}>
+                                   [¥{pokerBet}]
+                                </p>
                             </button>
                             <button
                                 onClick={() => pokerRef?.current.turn("Call")}
-                                className={`${yesteryear.className} text-[40px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
+                                className={`${yesteryear.className} text-[35px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
                                 Call
                             </button>
                             <button
                                 onClick={() => pokerRef?.current.turn("Fold")}
-                                className={`${yesteryear.className} text-[40px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
+                                className={`${yesteryear.className} text-[35px] p-2 w-40 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}>
                                 Fold
                             </button>
                         </div>

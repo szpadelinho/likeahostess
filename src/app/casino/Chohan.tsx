@@ -73,7 +73,7 @@ export const Chohan = ({clubData, setMoney, array, setArray, setPrize, setScore,
                 </div>
             </div>
             <div
-                className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
+                className={"border-2 border-stone-500 rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
                 <button
                     disabled={isRolling}
                     className={`${yesteryear.className} gap-5 flex flex-row backdrop-blur-xl text-[30px] rounded-[10] p-2 w-35 items-center justify-center cursor-alias hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}

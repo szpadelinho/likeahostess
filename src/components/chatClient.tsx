@@ -165,7 +165,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
     return (
         <div className={`w-[512px] relative ${page === "Main" ? "fixed left-50 top-5" : "fixed -top-5"}`}>
             <button
-                className={`${mode === "COMPACT" && "opacity-50 hover:opacity-100"} absolute right-0 z-[10] rounded-[10] active:scale-105 hover:scale-102 -top-2 right-[-20] p-2 ${page && getPageStyle(page)} transform duration-300 ease-in-out`}
+                className={`${mode === "COMPACT" && "opacity-50 hover:opacity-100"} absolute right-0 z-[11] rounded-[10] active:scale-105 hover:scale-102 -top-2 right-[-20] p-2 ${page && getPageStyle(page)} transform duration-300 ease-in-out`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -179,7 +179,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 {mode === "COMPACT" ? <MessageSquare/> : <EyeClosed/>}
             </button>
             <div
-                className={`absolute ${mode === "COMPACT" ? "opacity-50 hover:scale-105 pointer-events-auto z-[0]" : "opacity-0 pointer-events-none z-[-999]"} ${page && getPageStyle(page)} overflow-hidden hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15] z-[49]`}
+                className={`absolute ${mode === "COMPACT" ? "opacity-50 hover:scale-105 pointer-events-auto" : "opacity-0 pointer-events-none"} ${page && getPageStyle(page)} z-[10] overflow-hidden hover:opacity-100 transform duration-300 ease-in-out w-full max-w-lg rounded-[15]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",
@@ -202,7 +202,7 @@ export default function ChatClient({page, setIsTyping, setLoading}: ChatClientPr
                 </div>
             </div>
             <div
-                className={`absolute ${mode === "EXPANDED" ? "opacity-100 h-[390px]" : "opacity-0 pointer-events-none h-[50px]"} ${page && getPageStyle(page, true)} transition-all duration-300 ease-in-out fixed w-full max-w-lg mx-auto z-[48]`}
+                className={`absolute ${mode === "EXPANDED" ? "opacity-100 h-[390px]" : "opacity-0 pointer-events-none h-[50px]"} ${page && getPageStyle(page, true)} z-[10] transition-all duration-300 ease-in-out fixed w-full max-w-lg mx-auto z-[10]`}
                 style={page === "LoveInHeart" ? {
                     borderWidth: "8px",
                     borderStyle: "solid",

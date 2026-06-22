@@ -5,7 +5,7 @@ import {evaluateHands, TexasHoldemGameData, texasHoldEmTurn} from "@/lib/casino"
 
 export async function POST(req: Request){
     const session = await auth()
-    const { clubData, gameId, action } = await req.json()
+    const { clubData, gameId, action, raiseAmount } = await req.json()
     const userId = session?.user?.id
     if (!session || !userId || !clubData || !gameId || !action) return NextResponse.json({error: "Unauthorized"}, {status: 401})
 
@@ -40,11 +40,12 @@ export async function POST(req: Request){
     try {
         const gameData = gameRound.gameData as unknown as TexasHoldemGameData
 
-        let newGameData = texasHoldEmTurn(gameData, action)
+        let newGameData = texasHoldEmTurn(gameData, action, raiseAmount)
 
         if(newGameData.stage === "Showdown"){
 
             if(newGameData.score?.includes(clubData.host.surname)){
+                const winnings = newGameData.pot
                 newGameData = evaluateHands(newGameData)
                 await prisma.userClub.update({
                     where: {
@@ -55,7 +56,7 @@ export async function POST(req: Request){
                     },
                     data: {
                         money: {
-                            increment: newGameData.pot
+                            increment: winnings
                         }
                     }
                 })

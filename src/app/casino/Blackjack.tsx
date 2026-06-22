@@ -95,7 +95,7 @@ export const Blackjack = ({
             <div className={"flex flex-col justify-center items-center gap-5"}>
                 {isPlayerTurn && !gameOver ? (
                     <div
-                        className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
+                        className={"border-2 border-stone-500 rounded-[10] backdrop-blur-md flex flex-row justify-center items-center gap-5"}>
                         <button
                             className={`${yesteryear.className} text-[20px] p-2 w-25 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white`}
                             onClick={playerHit}>
@@ -108,7 +108,7 @@ export const Blackjack = ({
                         </button>
                     </div>
                 ) : (
-                    <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center"}>
+                    <div className={"rounded-[10] backdrop-blur-md flex flex-row justify-center items-center border-2 border-stone-500"}>
                         <button
                             className={"p-2 rounded-[10] justify-center items-center text-center hover:bg-white hover:text-black transition-all duration-200 ease-in-out transform active:scale-110 text-white"}
                             onClick={() => {

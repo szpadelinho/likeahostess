@@ -17,11 +17,14 @@ interface TexasHoldEmProps {
     dealer: Dealer | null
     setMoney: (fn: (x: number) => number) => void
     bet: number
+    setMaxBet: (value: (((prevState: number) => number) | number)) => void
+    setPokerBet: (value: (((prevState: number) => number) | number)) => void
 }
 
 interface TexasHoldEmRef {
     startGame: () => void,
     turn: (action: "Raise" | "Call" | "Fold") => void,
+    raiseAmount?: number
 }
 
 export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
@@ -36,7 +39,9 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
          setDeck,
          dealer,
          setMoney,
-         bet
+         bet,
+         setMaxBet,
+         setPokerBet
      }, ref) => {
         const [communityCards, setCommunityCards] = useState<string[]>([])
         const [players, setPlayers] = useState<Player[]>([])
@@ -64,6 +69,8 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
             const data = await res.json()
 
             setPlayers(data.players)
+            setMaxBet(data.players[0].chips)
+            setPokerBet(data.players[0].currentBet + 1000)
             setCommunityCards(data.communityCards)
             setDeck(data.deck)
             setStage(data.stage)
@@ -73,10 +80,13 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
             setGameId(data.gameId)
         }
 
-        const turn = async (action: "Raise" | "Call" | "Fold") => {
+        const turn = async (action: "Raise" | "Call" | "Fold", raiseAmount?: number) => {
             if (!playerActionPending) return
             setPlayerActionPending(false)
-            showMessage(`${action}!`)
+            const actionMessage = action === "Raise" && raiseAmount
+                ? `Raise to ¥${raiseAmount}!`
+                : `${action}!`
+            showMessage(actionMessage)
 
             const res = await fetch("api/casino/texasholdem/action", {
                 method: "POST",
@@ -84,13 +94,16 @@ export const TexasHoldEm = forwardRef<TexasHoldEmRef, TexasHoldEmProps>(
                 body: JSON.stringify({
                     clubData,
                     gameId,
-                    action
+                    action,
+                    raiseAmount
                 })
             })
 
             const data = await res.json()
 
             setPlayers(data.gameData.players)
+            setMaxBet(data.gameData.players[0].chips)
+            setPokerBet(Math.max(...data.gameData.players.map((player: Player) => player.currentBet)) + 1000)
             setCommunityCards(data.gameData.communityCards)
             setDeck(data.gameData.deck)
             setStage(data.gameData.stage)

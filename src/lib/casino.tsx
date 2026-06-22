@@ -316,187 +316,153 @@ export type TexasHoldemGameData = {
 
 export type TexasHoldEmStage = "PreFlop" | "Flop" | "Turn" | "River" | "Showdown"
 
-export const texasHoldEmTurn = (gameData: TexasHoldemGameData, action: "Raise" | "Call" | "Fold"): TexasHoldemGameData => {
-    let { players, deck, communityCards, stage, pot } = gameData
-    const maxBet = getMaxBet(players)
+export function texasHoldEmTurn(
+    gameData: TexasHoldemGameData,
+    action: "Raise" | "Call" | "Fold",
+    raiseAmount?: number
+): TexasHoldemGameData {
+    const updated = JSON.parse(JSON.stringify(gameData)) as TexasHoldemGameData
+    const player = updated.players[0]
 
-    let humanRaised = false
-
-    players = players.map((p, i) => {
-        if(i !== 0 ) return p
-
-        let newBet = p.currentBet
-        let newChips = p.chips
-        let isFolded: boolean = p.folded
-
-        if (action === "Raise") {
-            const raiseAmount = maxBet + 1000
-            const costToRaise = raiseAmount - p.currentBet
-
-            if (p.chips < costToRaise) {
-                const costToCall = maxBet - p.currentBet
-                if (p.chips >= costToCall) {
-                    newChips -= costToCall
-                    newBet = maxBet
-                } else {
-                    isFolded = true
-                }
-            } else {
-                newChips -= costToRaise
-                newBet = raiseAmount
-                humanRaised = true
-            }
-        }
-
-        if (action === "Call") {
-            const toCall = maxBet - p.currentBet
-            if (p.chips < toCall) {
-                isFolded = true
-            } else {
-                newChips -= toCall
-                newBet = maxBet
-            }
-        }
-
-        if (action === "Fold") {
-            isFolded = true
-        }
-
-        return {
-            ...p,
-            currentBet: newBet,
-            chips: newChips,
-            folded: isFolded,
-            hasActed: true,
-            score: gameData.score ?? null
-        }
-    })
-
-    if (humanRaised) {
-        players = players.map((p, i) =>
-            i !== 0 && !p.folded ? { ...p, hasActed: false } : p
-        )
+    if (action === "Fold") {
+        player.folded = true
+        updated.stage = "Showdown"
+        updated.score = "Spasowałeś. Przeciwnicy przejmują pulę."
+        return updated
     }
 
-    players = runAITurns(players)
+    let targetBet = Math.max(...updated.players.filter(p => !p.folded).map(p => p.currentBet))
 
-    if(isBettingComplete(players)) {
-        const totalPot = players.reduce((sum, p) => sum + p.currentBet, 0)
-
-        pot += totalPot
-
-        players = players.map(p => ({
-            ...p,
-            currentBet: 0,
-            hasActed: false
-        }))
-
-        const stageResult = nextStage({ players, deck, communityCards, stage, pot, score: gameData.score ?? null })
-
-        if(stageResult.stage === "Showdown") {
-            return evaluateHands({
-                ...gameData,
-                players: stageResult.players,
-                deck: stageResult.deck,
-                communityCards: stageResult.communityCards,
-                pot: stageResult.pot,
-                stage: stageResult.stage
-            })
+    if (action === "Raise" && raiseAmount !== undefined) {
+        if (raiseAmount > player.chips) {
+            raiseAmount = player.chips
         }
-
-        return {
-            players: stageResult.players,
-            deck: stageResult.deck,
-            communityCards: stageResult.communityCards,
-            stage: stageResult.stage,
-            pot: stageResult.pot,
-            score: null
+        const addition = raiseAmount - player.currentBet
+        if (addition > 0) {
+            player.chips -= addition
+            player.currentBet = raiseAmount
+            updated.pot += addition
+        }
+    } else if (action === "Call") {
+        const addition = targetBet - player.currentBet
+        if (addition > 0) {
+            const actualAddition = Math.min(addition, player.chips)
+            player.chips -= actualAddition
+            player.currentBet += actualAddition
+            updated.pot += actualAddition
         }
     }
 
-    return {
-        players,
-        deck,
-        communityCards,
-        stage,
-        score: gameData.score ?? null,
-        pot
-    }
-}
+    player.hasActed = true
 
-export const runAITurns = (players: Player[]): Player[] => {
-    let updatedPlayers = [...players]
-
-    for (let i = 1; i < updatedPlayers.length; i++) {
-        const p = updatedPlayers[i]
+    for (let i = 1; i < updated.players.length; i++) {
+        const p = updated.players[i]
         if (p.folded) continue
 
-        let currentMaxBet = getMaxBet(updatedPlayers)
-        let action: "Call" | "Fold" | "Raise"
+        const currentTarget = Math.max(...updated.players.filter(pl => !pl.folded).map(pl => pl.currentBet))
+        const toCall = currentTarget - p.currentBet
 
-        if (p.currentBet < currentMaxBet) {
-            action = Math.random() > 0.2 ? "Call" : "Fold"
-        } else {
-            action = Math.random() > 0.7 ? "Raise" : "Call"
-        }
+        if (p.hasActed && toCall === 0) continue
 
-        let newBet = p.currentBet
-        let newChips = p.chips
-        let isFolded: boolean = p.folded
-        let aiRaised = false
+        let aiAction: "Fold" | "Call" | "Raise" = "Call"
+        const random = Math.random()
 
-        if (action === "Call") {
-            const toCall = currentMaxBet - p.currentBet
+        if (toCall > 0) {
             if (p.chips < toCall) {
-                isFolded = true
+                aiAction = random < 0.2 ? "Call" : "Fold"
             } else {
-                newChips -= toCall
-                newBet = currentMaxBet
-            }
-        }
-
-        if (action === "Raise") {
-            const raiseAmount = currentMaxBet + 1000
-            const costToRaise = raiseAmount - p.currentBet
-
-            if (p.chips < costToRaise) {
-                const toCall = currentMaxBet - p.currentBet
-                if (p.chips >= toCall) {
-                    newChips -= toCall
-                    newBet = currentMaxBet
+                if (random < 0.15 && p.chips > toCall + 1000) {
+                    aiAction = "Raise"
+                } else if (random > 0.9) {
+                    aiAction = "Fold"
                 } else {
-                    isFolded = true
+                    aiAction = "Call"
                 }
+            }
+        } else {
+            if (random < 0.22 && p.chips >= 1000) {
+                aiAction = "Raise"
             } else {
-                newChips -= costToRaise
-                newBet = raiseAmount
-                aiRaised = true
+                aiAction = "Call"
             }
         }
 
-        if (action === "Fold") {
-            isFolded = true
-        }
+        if (aiAction === "Fold") {
+            p.folded = true
+        } else if (aiAction === "Call") {
+            const amountToSubtract = Math.min(toCall, p.chips)
+            p.chips -= amountToSubtract
+            p.currentBet += amountToSubtract
+            updated.pot += amountToSubtract
+            p.hasActed = true;
+        } else if (aiAction === "Raise") {
+            const raiseStep = 1000
+            const newBet = currentTarget + raiseStep
+            const totalToSubtract = newBet - p.currentBet
 
-        updatedPlayers[i] = {
-            ...p,
-            currentBet: newBet,
-            chips: newChips,
-            folded: isFolded,
-            hasActed: true
-        }
+            if (p.chips >= totalToSubtract) {
+                p.chips -= totalToSubtract
+                p.currentBet = newBet
+                updated.pot += totalToSubtract
+                p.hasActed = true
 
-        if (aiRaised) {
-            updatedPlayers = updatedPlayers.map((other, idx) => {
-                if (idx !== i && !other.folded) {
-                    return { ...other, hasActed: false }
-                }
-                return other
-            })
+                updated.players.forEach((otherP, otherIdx) => {
+                    if (otherIdx !== i && !otherP.folded) {
+                        otherP.hasActed = false
+                    }
+                })
+            } else {
+                const amountToSubtract = Math.min(toCall, p.chips)
+                p.chips -= amountToSubtract
+                p.currentBet += amountToSubtract
+                updated.pot += amountToSubtract
+                p.hasActed = true
+            }
         }
     }
 
-    return updatedPlayers
+    const activePlayers = updated.players.filter(p => !p.folded)
+
+    if (activePlayers.length <= 1) {
+        const remainingWinner = activePlayers[0]
+        updated.stage = "Showdown"
+        updated.score = `${remainingWinner?.name || "Gracz"} wygrywa rundę (reszta graczy spasowała)!`
+        return updated
+    }
+
+    const maxBet = Math.max(...activePlayers.map(p => p.currentBet))
+    const allEqualized = activePlayers.every(p => p.currentBet === maxBet)
+    const allActed = activePlayers.every(p => p.hasActed)
+
+    if (allActed && allEqualized) {
+        updated.players.forEach(p => {
+            p.currentBet = 0
+            p.hasActed = false
+        });
+
+        if (updated.stage === "PreFlop") {
+            updated.stage = "Flop"
+            if (updated.deck.length >= 3) {
+                updated.communityCards.push(...updated.deck.splice(0, 3))
+            }
+        } else if (updated.stage === "Flop") {
+            updated.stage = "Turn"
+            if (updated.deck.length >= 1) {
+                updated.communityCards.push(updated.deck.shift()!)
+            }
+        } else if (updated.stage === "Turn") {
+            updated.stage = "River"
+            if (updated.deck.length >= 1) {
+                updated.communityCards.push(updated.deck.shift()!)
+            }
+        } else if (updated.stage === "River") {
+            updated.stage = "Showdown"
+            const withScore = evaluateHands(updated)
+            updated.score = withScore.score
+        }
+    }
+
+    return updated
 }
 
 export const evaluateHands = (gameData: TexasHoldemGameData): TexasHoldemGameData => {
