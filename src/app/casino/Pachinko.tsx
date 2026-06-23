@@ -210,13 +210,13 @@ export const Pachinko = ({setScore, clubData, setMoney}: PachinkoProps) => {
                         }
                     }}/>
                 <button
-                    className={"absolute bottom-30 left-71 rounded-full h-12 w-12 duration-300 ease-in-out hover:backdrop-blur-sm"}
+                    className={"absolute border-2 border-stone-500 bottom-30 left-71 rounded-full h-12 w-12 duration-300 ease-in-out hover:backdrop-blur-sm"}
                     onClick={() => toggleHold(0)}/>
                 <button
-                    className={"absolute bottom-30 left-94 rounded-full h-12 w-12 duration-300 ease-in-out hover:backdrop-blur-sm"}
+                    className={"absolute border-2 border-stone-500 bottom-30 left-93.5 rounded-full h-12 w-12 duration-300 ease-in-out hover:backdrop-blur-sm"}
                     onClick={() => toggleHold(1)}/>
                 <button
-                    className={"absolute bottom-30 left-116 rounded-full h-12 w-12 duration-300 ease-in-out hover:backdrop-blur-sm"}
+                    className={"absolute border-2 border-stone-500 bottom-30 left-116 rounded-full h-12 w-12 duration-300 ease-in-out hover:backdrop-blur-sm"}
                     onClick={() => toggleHold(2)}/>
             </div>
         </>

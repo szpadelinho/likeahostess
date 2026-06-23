@@ -327,7 +327,6 @@ export function texasHoldEmTurn(
     if (action === "Fold") {
         player.folded = true
         updated.stage = "Showdown"
-        updated.score = "Spasowałeś. Przeciwnicy przejmują pulę."
         return updated
     }
 

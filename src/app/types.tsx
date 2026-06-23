@@ -547,7 +547,8 @@ export const GAMES = [
     { title: "Eikichi Yazawa - Loser (Yakuza 3)", intro: "nDyOwNiGx_s", main: "nDyOwNiGx_s"},
     { title: "ZEEBRA - Butterfly City (Yakuza 4)", intro: "Luy73-vmEh4", main: "Luy73-vmEh4"},
     { title: "Gospels of Judas - Bloody Moon (Yakuza 5)", intro: "B8iMluL_am0", main: "B8iMluL_am0"},
-    { title: "The Battle for the Dream", intro: "9WRoscJT76s", main: "9WRoscJT76s"}
+    { title: "The Battle for the Dream", intro: "9WRoscJT76s", main: "9WRoscJT76s"},
+    { title: "Dawn of Violence (Kurohyou)", intro: "J1v4qUTi1Xo", main: "J1v4qUTi1Xo"}
 ]
 
 export const personaMap: Record<string, string> = {

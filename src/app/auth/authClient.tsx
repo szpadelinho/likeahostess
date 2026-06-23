@@ -32,6 +32,28 @@ export default function AuthClient() {
     const [lastProvider, setLastProvider] = useState<"discord" | "github" | "google" | null>(null)
     const titleRef = useRef<HTMLAudioElement | null>(null)
 
+    const titleActiveRef = useRef(false)
+
+    useEffect(() => {
+        titleActiveRef.current = titleActive
+    }, [titleActive])
+
+    const handleTitle = (e: KeyboardEvent) => {
+        if (e.code !== "Escape") return
+
+        if (titleActiveRef.current) return
+
+        titleActiveRef.current = true
+
+        setShowTitleBanner(true)
+        setTitleActive(true)
+        setTitleBannerVisible(true)
+
+        titleRef.current = new Audio("/sfx/button_cancel.wav")
+        titleRef.current.volume = volume / 100
+        titleRef.current.play().catch()
+    }
+
     useEffect(() => {
         const now = new Date()
         if(now.getDate() === 31 && now.getMonth() === 9){
@@ -103,10 +125,18 @@ export default function AuthClient() {
     }, [])
 
     useEffect(() => {
+        window.addEventListener("keydown", handleTitle)
+
+        return () => {
+            window.removeEventListener("keydown", handleTitle)
+        }
+    }, [titleActive])
+
+    useEffect(() => {
         if (!titleActive) return
 
         const handleTitleInteraction = (e?: MouseEvent | KeyboardEvent | TouchEvent) => {
-            if (e instanceof KeyboardEvent && e.code === "F11") {
+            if (e instanceof KeyboardEvent && (e.code === "F11" || e.code === "Escape")) {
                 return
             }
 

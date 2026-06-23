@@ -44,10 +44,10 @@ export async function POST(req: Request){
         let prize
 
         if (a === b && b === c) {
-            score = "JACKPOT!!! +100000"
+            score = "JACKPOT!!! +¥100000"
             prize = 100000
         } else if (a === b || b === c || a === c) {
-            score = "Two of a kind! +10000"
+            score = "Two of a kind! +¥10000"
             prize = 10000
         } else {
             score = "No luck."

@@ -138,7 +138,7 @@ const CasinoClient = () => {
             )}
             {clubData && game && (
                 <div
-                    className={`absolute ${game !== "Blackjack" && game !== "Poker" ? "left-5 w-130 backdrop-blur-md" : "left-15"} bottom-5 h-25 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}>
+                    className={`absolute ${game !== "Blackjack" && game !== "Poker" ? "left-5 w-130" : "left-15"} ${transition ? "opacity-0" : "opacity-100"} ease-in-out duration-300 backdrop-blur-md border-2 border-stone-500 bottom-5 h-25 text-center content-center items-center flex flex-row text-[20px] rounded-[20] text-white z-50`}>
                     {game !== "Blackjack" && game !== "Poker" && (
                         <div className={"backdrop-blur-xl h-[130%] w-[30%] rounded-[20] flex justify-center relative"}>
                             <Image
