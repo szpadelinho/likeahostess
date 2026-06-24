@@ -6,7 +6,7 @@ import Roulette from "@/app/casino/Roulette";
 import {TexasHoldEm} from "@/app/casino/TexasHoldEm";
 import {Pachinko} from "@/app/casino/Pachinko";
 import {Dealer, personaMap, rankMap, StoredClub, suitMap} from "@/app/types";
-import {RouletteBet} from "@/lib/casino";
+import {randomPokerTableBackgroundColor, RouletteBet} from "@/lib/casino";
 import {Chohan} from "@/app/casino/Chohan";
 import {handleGameAction} from "@/lib/transactions";
 import {Blackjack} from "@/app/casino/Blackjack";
@@ -61,6 +61,8 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
     const [selectedBet, setSelectedBet] = useState<string | null>(null)
 
     const [maxBet, setMaxBet] = useState<number>(bet)
+
+    const [tableColor] = useState(randomPokerTableBackgroundColor())
 
     const showMessage = (text: string) => {
         setMessage({text, id: Date.now()})
@@ -176,7 +178,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                 switch (data.win) {
                     case 2:
                         setScore("Blackjack! You sir are a winner!")
-                        setMoney(prev => prev + (2 * bet))
+                        setMoney(prev => prev + (2.5 * bet))
                         break
                     case 1:
                         setScore("Both players have a blackjack, sir.")
@@ -332,9 +334,9 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                                handleBet={handleBet} playerHit={playerHit} playerStand={playerStand}
                                handleGame={handleGame} dealer={dealer}/>
                     {score !== null && (
-                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
+                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[35px] flex justify-center items-center flex-row gap-20`}>
                             <p>{score}</p>
-                            <p>{win === 0 ? `- ¥${bet}.` : win === 1 ? `+ ¥${bet}.` : win === 2 && `+ ¥${bet * 2} `}</p>
+                            <p>{win === 0 ? `- ¥${bet}.` : win === 1 ? `+ ¥${bet}.` : win === 2 && `+ ¥${bet * 2.5}`}</p>
                         </h1>
                     )}
                 </div>
@@ -381,7 +383,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                 <>
                     <h1 className={`absolute top-5 text-[75px] ${yesteryear.className}`}>Poker</h1>
                     <div
-                        className={"relative h-[75vh] w-[75vw] flex justify-center items-center flex-row bg-green-800 rounded-[100] border-20 border-amber-950"}>
+                        className={`relative h-[75vh] w-[90vw] flex justify-center items-center flex-row ${tableColor} rounded-[100] border-20`}>
                         <TexasHoldEm ref={pokerRef} setScore={setScore} stage={stage} setStage={setStage}
                                      playerActionPending={playerActionPending}
                                      setPlayerActionPending={setPlayerActionPending} setShowCard={setShowCard}

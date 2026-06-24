@@ -1,7 +1,20 @@
 import {Apple, Cherry, CircleSmall, Citrus, createLucideIcon, Heart, Star} from "lucide-react";
 import React from "react";
 import {flowerTulip, peach, pear, pumpkin, strawberry, watermelon} from "@lucide/lab";
+
 const Hand: any = require("pokersolver").Hand
+
+export const randomPokerTableBackgroundColor = () => {
+    const random = Math.random()
+    let colorset
+
+    if(random < 0.25) colorset = "bg-red-800 border-stone-950"
+    else if (random < 0.50) colorset = "bg-green-800 border-amber-950"
+    else if (random < 0.75) colorset = "bg-blue-700 border-gray-700"
+    else colorset = "bg-stone-950 border-gray-300"
+
+    return colorset
+}
 
 export const cards = {
     "spades": ["spades_ace", "spades_two", "spades_three", "spades_four", "spades_five", "spades_six", "spades_seven", "spades_eight", "spades_nine", "spades_ten", "spades_jack", "spades_queen", "spades_king"],
@@ -251,15 +264,6 @@ export const calculateHandValue = (hand: string[]): number => {
     return total
 }
 
-export const getMaxBet = (currentPlayers: Player[]) => Math.max(...currentPlayers.map(p => p.currentBet))
-
-export const isBettingComplete = (currentPlayers: Player[]) => {
-    const activePlayers = currentPlayers.filter(p => !p.folded)
-    if (activePlayers.length < 2) return true
-    const maxBet = getMaxBet(activePlayers)
-    return activePlayers.every(p => p.hasActed && p.currentBet === maxBet)
-}
-
 export const numbers = [
     [3, 6, 9, 12, 15, 18, 21, 24, 27, 30, 33, 36],
     [2, 5, 8, 11, 14, 17, 20, 23, 26, 29, 32, 35],
@@ -326,8 +330,124 @@ export function texasHoldEmTurn(
 
     if (action === "Fold") {
         player.folded = true
-        updated.stage = "Showdown"
-        return updated
+        player.hasActed = true
+
+        let raisesInStreet = 0
+
+        while (updated.stage !== "Showdown") {
+            const activePlayers = updated.players.filter(p => !p.folded)
+
+            if (activePlayers.length <= 1) {
+                updated.stage = "Showdown"
+                break
+            }
+
+            for (let i = 1; i < updated.players.length; i++) {
+                const p = updated.players[i]
+                if (p.folded) continue
+
+                const currentTarget = Math.max(...updated.players.filter(pl => !pl.folded).map(pl => pl.currentBet))
+                const toCall = currentTarget - p.currentBet
+
+                if (p.hasActed && toCall === 0) continue
+
+                let aiAction: "Fold" | "Call" | "Raise" = "Call"
+                const random = Math.random()
+
+                if (toCall > 0) {
+                    if (p.chips < toCall) {
+                        aiAction = random < 0.2 ? "Call" : "Fold"
+                    } else {
+                        if (random < 0.1 && p.chips > toCall + 1000 && raisesInStreet < 3) {
+                            aiAction = "Raise"
+                        } else if (random > 0.95) {
+                            aiAction = "Fold"
+                        } else {
+                            aiAction = "Call"
+                        }
+                    }
+                } else {
+                    if (random < 0.15 && p.chips >= 1000 && raisesInStreet < 3) {
+                        aiAction = "Raise"
+                    } else {
+                        aiAction = "Call"
+                    }
+                }
+
+                if (aiAction === "Fold") {
+                    p.folded = true
+                } else if (aiAction === "Call") {
+                    const amountToSubtract = Math.min(toCall, p.chips)
+                    p.chips -= amountToSubtract
+                    p.currentBet += amountToSubtract
+                    updated.pot += amountToSubtract
+                    p.hasActed = true
+                } else if (aiAction === "Raise") {
+                    const raiseStep = 1000
+                    const newBet = currentTarget + raiseStep
+                    const totalToSubtract = newBet - p.currentBet
+
+                    if (p.chips >= totalToSubtract) {
+                        p.chips -= totalToSubtract
+                        p.currentBet = newBet
+                        updated.pot += totalToSubtract
+                        p.hasActed = true
+                        raisesInStreet++
+
+                        updated.players.forEach((otherP, otherIdx) => {
+                            if (otherIdx !== i && !otherP.folded) {
+                                otherP.hasActed = false
+                            }
+                        })
+                    } else {
+                        const amountToSubtract = Math.min(toCall, p.chips)
+                        p.chips -= amountToSubtract
+                        p.currentBet += amountToSubtract
+                        updated.pot += amountToSubtract
+                        p.hasActed = true
+                    }
+                }
+            }
+
+            const currentActive = updated.players.filter(p => !p.folded)
+            if (currentActive.length <= 1) {
+                updated.stage = "Showdown"
+                break
+            }
+
+            const maxBet = Math.max(...currentActive.map(p => p.currentBet))
+            const allEqualized = currentActive.every(p => p.currentBet === maxBet)
+            const allActed = currentActive.every(p => p.hasActed)
+
+            if (allActed && allEqualized) {
+                raisesInStreet = 0
+                updated.players.forEach(p => {
+                    p.currentBet = 0
+                    p.hasActed = false
+                })
+
+                if (updated.stage === "PreFlop") {
+                    updated.stage = "Flop"
+                    if (updated.deck.length >= 3) {
+                        updated.communityCards.push(...updated.deck.splice(0, 3))
+                    }
+                } else if (updated.stage === "Flop") {
+                    updated.stage = "Turn"
+                    if (updated.deck.length >= 1) {
+                        updated.communityCards.push(updated.deck.shift()!)
+                    }
+                } else if (updated.stage === "Turn") {
+                    updated.stage = "River"
+                    if (updated.deck.length >= 1) {
+                        updated.communityCards.push(updated.deck.shift()!)
+                    }
+                } else if (updated.stage === "River") {
+                    updated.stage = "Showdown"
+                }
+            }
+        }
+
+        return evaluateHands(updated)
     }
 
     let targetBet = Math.max(...updated.players.filter(p => !p.folded).map(p => p.currentBet))
@@ -393,7 +513,7 @@ export function texasHoldEmTurn(
             p.chips -= amountToSubtract
             p.currentBet += amountToSubtract
             updated.pot += amountToSubtract
-            p.hasActed = true;
+            p.hasActed = true
         } else if (aiAction === "Raise") {
             const raiseStep = 1000
             const newBet = currentTarget + raiseStep
@@ -425,7 +545,7 @@ export function texasHoldEmTurn(
     if (activePlayers.length <= 1) {
         const remainingWinner = activePlayers[0]
         updated.stage = "Showdown"
-        updated.score = `${remainingWinner?.name || "Gracz"} wygrywa rundę (reszta graczy spasowała)!`
+        updated.score = `${remainingWinner?.name || "Player"} takes it all!`
         return updated
     }
 
@@ -437,7 +557,7 @@ export function texasHoldEmTurn(
         updated.players.forEach(p => {
             p.currentBet = 0
             p.hasActed = false
-        });
+        })
 
         if (updated.stage === "PreFlop") {
             updated.stage = "Flop"
@@ -520,54 +640,5 @@ export const evaluateHands = (gameData: TexasHoldemGameData): TexasHoldemGameDat
         players: updatedPlayers,
         pot: 0,
         score: `Winner: ${winnerHands.map(w => w.player.name).join(", ")}`
-    }
-}
-
-export const nextStage = (gameData: TexasHoldemGameData): TexasHoldemGameData => {
-    const { players, deck, communityCards, stage, pot } = gameData
-    const activePlayers = players.filter(p => !p.folded)
-
-    if (activePlayers.length <= 1) {
-        return { ...gameData, stage: "Showdown" }
-    }
-
-    let newCommunityCards = [...communityCards]
-    let newDeck = [...deck]
-    let newStage: TexasHoldEmStage = stage
-
-    switch (stage) {
-        case "PreFlop":
-            newCommunityCards = newDeck.slice(0, 3)
-            newDeck = newDeck.slice(3)
-            newStage = "Flop"
-            break
-        case "Flop":
-            newCommunityCards = [...newCommunityCards, newDeck[0]]
-            newDeck = newDeck.slice(1)
-            newStage = "Turn"
-            break
-        case "Turn":
-            newCommunityCards = [...newCommunityCards, newDeck[0]]
-            newDeck = newDeck.slice(1)
-            newStage = "River"
-            break
-        case "River":
-            newStage = "Showdown"
-            break
-    }
-
-    const newPlayers = players.map(p => ({
-        ...p,
-        currentBet: 0,
-        hasActed: false
-    }))
-
-    return {
-        ...gameData,
-        players: newPlayers,
-        deck: newDeck,
-        communityCards: newCommunityCards,
-        stage: newStage,
-        pot
     }
 }
