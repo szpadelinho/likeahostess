@@ -334,7 +334,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                                handleBet={handleBet} playerHit={playerHit} playerStand={playerStand}
                                handleGame={handleGame} dealer={dealer}/>
                     {score !== null && (
-                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 w-175 rounded-[20] text-[35px] flex justify-center items-center flex-row gap-20`}>
+                        <h1 className={`${yesteryear.className} border-stone-500 border-2 absolute bottom-5 right-5 backdrop-blur-sm h-20 w-175 rounded-[20] text-[35px] flex justify-center items-center flex-row gap-20`}>
                             <p>{score}</p>
                             <p>{win === 0 ? `- ¥${bet}.` : win === 1 ? `+ ¥${bet}.` : win === 2 && `+ ¥${bet * 2.5}`}</p>
                         </h1>
@@ -372,7 +372,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                         </button>
                     </div>
                     {score !== null && (
-                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
+                        <h1 className={`${yesteryear.className} border-stone-500 border-2 absolute bottom-5 right-5 backdrop-blur-sm p-2 h-25 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20`}>
                             <p>The winning number is {score}</p>
                             <p>¥{bet}</p>
                         </h1>
@@ -458,7 +458,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                         </div>
                     )}
                     {score !== null && (
-                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
+                        <h1 className={`${yesteryear.className} border-stone-500 border-2 absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
                             <p>{score}</p>
                         </h1>
                     )}
@@ -468,7 +468,7 @@ const CasinoGame = ({game, clubData, setMoney, dealer}: CasinoGameProps) => {
                 <>
                     <Pachinko clubData={clubData} setMoney={setMoney} setScore={setScore}/>
                     {score !== null && (
-                        <h1 className={`${yesteryear.className} absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
+                        <h1 className={`${yesteryear.className} border-stone-500 border-2 absolute bottom-5 right-5 backdrop-blur-sm p-2 w-125 rounded-[20] text-[40px] flex justify-center items-center flex-row gap-20 text-nowrap`}>
                             <p>{score}</p>
                         </h1>
                     )}

@@ -63,7 +63,7 @@ export default function RouletteBoard({
         return (
             <div
                 className={
-                    `absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/50 backdrop-blur-sm p-1 rounded-[20] flex flex-row items-center justify-center gap-5 z-[100] ${(type === "Column 1" || type === "Column 2" || type === "Column 3") && "rotate-90"}`
+                    `border-stone-500 border-2 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/50 backdrop-blur-sm p-1 rounded-[20] flex flex-row items-center justify-center gap-5 z-[100] ${(type === "Column 1" || type === "Column 2" || type === "Column 3") && "rotate-90"}`
                 }
             >
                 <div

@@ -31,14 +31,12 @@ export const ChipContainer = ({amount} : ChipContainerProps) => {
     }
 
     return(
-        <div className={"flex items-center justify-center"}>
-            <div>
-                {chipsToRender.map((src, i) => (
-                    <div key={i} style={{bottom: `${i * 4}px`, zIndex: i}}>
-                        <Image src={`/chips/${src}.png`} alt={`Chip ${i}`} height={40} width={40} />
-                    </div>
-                ))}
-            </div>
+        <div className={"flex flex-row items-center justify-center"}>
+            {chipsToRender.map((src, i) => (
+                <div key={i} style={{bottom: `${i * 4}px`, zIndex: i}} className={`${i === 0 ? "" : "-ml-15"}`}>
+                    <Image src={`/chips/${src}.png`} alt={`Chip ${i}`} height={40} width={40} />
+                </div>
+            ))}
         </div>
     )
 }

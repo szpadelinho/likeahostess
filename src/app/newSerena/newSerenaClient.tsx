@@ -264,6 +264,14 @@ const NewSerenaClient = () => {
                                                                         await handleGameAction({type: "EFFECT", status: "ACTIVE"}).then()
                                                                         handleEffect({clubData, effect: DRINKS_MAP[drink.id], setMoney, setClub}).then()
                                                                         switchMode("Selection")
+                                                                        setEffect({
+                                                                            active: true,
+                                                                            createdAt: new Date(),
+                                                                            expiresAt: new Date(),
+                                                                            id: "THIS IS FOR THE UI PURPOSES ONLY :)",
+                                                                            type: DRINKS_MAP[drink.id],
+                                                                            userClubId: clubData.id
+                                                                        })
                                                                     }
                                                                 }}
                                                                 className={"flex text-white flex-col items-center justify-center hover:bg-white hover:text-black duration-300 ease-in-out border-2 border-white rounded-[5] p-2"}>

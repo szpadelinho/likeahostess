@@ -244,25 +244,24 @@ const ProfileClient = ({totals, favClub, user, isMe}: ProfileClientProps) => {
                         </div>
                     )}
                     <div className={"absolute top-120 flex justify-center items-center gap-1 flex-col"}>
-                        <h1 className={`z-50 text-[30px] ${cookie.className}`}>
+                        <h1 className={`text-[30px] ${cookie.className}`}>
                             Favourite club
                         </h1>
-                        <div className={"relative flex justify-center items-center z-50"}>
+                        <div className={"relative flex justify-center items-center"}>
                             {favClub && (
                                 <>
-                                    <Image src={favClub.club.logo} alt={"Club logo"} width={200} height={100}
-                                           className={"z-50"}/>
+                                    <Image src={favClub.club.logo} alt={"Club logo"} width={200} height={100}/>
                                     <Image src={favClub.club.host.image} alt={"Host render"} width={40} height={100}
-                                           className={"absolute z-50 ml-55 mt-15"}/>
+                                           className={"absolute ml-55 mt-15"}/>
                                 </>
                             )}
                             <div
-                                className={"absolute flex h-full w-full scale-200 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,.5)_-50%,_rgba(0,0,0,0)_50%)] z-49"}/>
+                                className={"absolute flex h-full w-full scale-200 bg-[radial-gradient(ellipse_at_center,_rgba(0,0,0,.5)_-50%,_rgba(0,0,0,0)_50%)]"}/>
                         </div>
                     </div>
                     {isMe && (
                         <>
-                            <div className={"flex justify-center items-center gap-5 flex-row absolute bottom-50 left-[42%]"}>
+                            <div className={"z-[10] flex justify-center items-center gap-5 flex-row absolute bottom-50 left-[42%]"}>
                                 <button
                                     className={"border-black border-2 rounded-sm opacity-70 p-2 flex justify-between flex-row cursor-pointer hover:opacity-100 transition-all duration-200 ease-in-out transform active:scale-110 gap-2"}
                                     onClick={() => setModal("Reset")}>
